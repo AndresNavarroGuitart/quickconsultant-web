@@ -1,0 +1,20 @@
+# Scripts de desarrollo (no van al repo)
+*.ps1
+!serve.ps1
+
+# Carpetas de otros proyectos
+facturacion-app/
+tarjeta_LucasC/
+tarjeta_Negro/
+tarjeta_Quick/
+
+# Fotos personales
+*.jpeg
+*.jpg
+
+# Config local de Claude
+.claude/
+
+# Sistema
+Thumbs.db
+.DS_Store

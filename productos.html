@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Productos - Quick Consultant</title>
+  <link rel="icon" type="image/png" href="logo_quickConsultantWS.PNG" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SZDPGXNBJG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', 'G-SZDPGXNBJG');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --pink: #e91e8c; --purple: #7b2d8b;
+      --grad: linear-gradient(135deg, #e91e8c 0%, #7b2d8b 100%);
+      --dark: #111118; --text: #1a1a2e; --muted: #6b7280;
+      --light: #f9f9fb; --white: #ffffff; --border: #f0f0f5;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--white); overflow-x: hidden; }
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .grad-text { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .tag { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); margin-bottom: 12px; }
+    .section-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; line-height: 1.1; }
+    .section-sub { font-size: 1.05rem; color: var(--muted); line-height: 1.7; max-width: 620px; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: #ffffff; border-bottom: 2px solid transparent; border-image: var(--grad) 1; box-shadow: 0 2px 24px rgba(0,0,0,0.08); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .logo { display: flex; align-items: center; text-decoration: none; }
+    .logo img { height: 48px; width: auto; display: block; object-fit: contain; mix-blend-mode: multiply; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: 0.9rem; font-weight: 600; color: var(--text); transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--pink); }
+    .btn-nav { background: var(--grad); color: white !important; padding: 10px 24px; border-radius: 100px; font-weight: 700; font-size: 0.88rem; transition: opacity .2s, transform .2s; }
+    .btn-nav:hover { opacity: 0.88; transform: translateY(-1px); }
+    .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: .3s; }
+
+    /* ── HERO INTERNO ── */
+    #page-hero { background: var(--dark); padding: 120px 0 40px; position: relative; overflow: hidden; text-align: center; }
+    #page-hero .glow1 { position: absolute; top: -80px; right: -80px; width: 480px; height: 480px; border-radius: 50%; background: radial-gradient(circle, rgba(233,30,140,0.18) 0%, transparent 70%); pointer-events: none; }
+    #page-hero .glow2 { position: absolute; bottom: -60px; left: -60px; width: 360px; height: 360px; border-radius: 50%; background: radial-gradient(circle, rgba(123,45,139,0.22) 0%, transparent 70%); pointer-events: none; }
+    #page-hero .tag { color: rgba(255,255,255,0.6); }
+    #page-hero .section-title { color: white; margin-bottom: 16px; }
+    #page-hero .section-sub { color: rgba(255,255,255,0.6); margin: 0 auto; }
+
+    /* ── PRODUCTOS ── */
+    #productos { background: #f5f4f9; padding: 16px 0 80px; }
+    .productos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 0; }
+    .producto-card { background: white; border: 1.5px solid rgba(233,30,140,0.3); border-radius: 24px; padding: 36px 32px; display: flex; flex-direction: column; gap: 16px; transition: box-shadow .25s, transform .25s, border-color .25s; position: relative; overflow: hidden; box-shadow: 0 0 18px rgba(233,30,140,0.25), 0 0 40px rgba(233,30,140,0.1); }
+    .producto-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--grad); opacity: 0; transition: opacity .25s; }
+    .producto-card:hover { box-shadow: 0 16px 48px rgba(233,30,140,0.12); transform: translateY(-5px); border-color: rgba(233,30,140,0.3); }
+    .producto-card:hover::before { opacity: 1; }
+    .producto-head { display: flex; align-items: center; gap: 16px; }
+    .producto-icon { width: 60px; height: 60px; border-radius: 16px; background: var(--grad); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .producto-icon svg { width: 30px; height: 30px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .producto-titles { display: flex; flex-direction: column; gap: 2px; }
+    .producto-name { font-size: 1.25rem; font-weight: 800; color: var(--text); margin: 0; line-height: 1.2; }
+    .producto-tagline { font-size: 0.78rem; font-weight: 600; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .producto-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.75; flex: 1; }
+    .producto-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+    .producto-tag { font-size: 0.7rem; font-weight: 700; padding: 4px 11px; border-radius: 100px; letter-spacing: .02em; }
+    .producto-tag.pink { border: 1.5px solid rgba(233,30,140,0.35); color: var(--pink); background: rgba(233,30,140,0.05); }
+    .producto-tag.purple { border: 1.5px solid rgba(123,45,139,0.35); color: var(--purple); background: rgba(123,45,139,0.05); }
+
+    /* ── FORMULARIO PRODUCTOS ── */
+    .productos-contact-wrap { margin-top: 72px; background: var(--dark); border-radius: 28px; padding: 60px 56px; text-align: center; position: relative; overflow: hidden; }
+    .productos-contact-wrap::before { content: ''; position: absolute; top: -120px; right: -120px; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(233,30,140,0.18) 0%, transparent 70%); pointer-events: none; }
+    .productos-contact-wrap::after  { content: ''; position: absolute; bottom: -80px; left: -80px; width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle, rgba(123,45,139,0.22) 0%, transparent 70%); pointer-events: none; }
+    .productos-contact-wrap h3 { font-size: 1.9rem; font-weight: 800; color: white; margin-bottom: 10px; }
+    .productos-contact-wrap > p { color: rgba(255,255,255,0.6); margin-bottom: 40px; font-size: 1rem; }
+    .productos-contact-wrap .contact-form { max-width: 640px; margin: 0 auto; position: relative; z-index: 1; display: flex; flex-direction: column; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field-wrap { position: relative; }
+    .form-input { background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px 18px; font-size: 0.95rem; font-family: inherit; color: white; outline: none; transition: border-color .2s; width: 100%; }
+    .form-input::placeholder { color: rgba(255,255,255,0.35); }
+    .form-input:focus { border-color: var(--pink); }
+    .form-input option { color: var(--text); background: white; }
+    textarea.form-input { min-height: 120px; resize: vertical; }
+    .btn-submit { background: var(--grad); color: white; padding: 17px 40px; border-radius: 100px; font-weight: 700; font-size: 1rem; border: none; cursor: pointer; transition: opacity .2s, transform .2s; width: 100%; }
+    .btn-submit:hover { opacity: .88; transform: translateY(-2px); }
+    .field-error { display: none; position: absolute; bottom: calc(100% + 8px); left: 0; background: linear-gradient(135deg, #e91e8c, #7b2d8b); color: white; font-size: 0.78rem; font-weight: 600; padding: 6px 12px; border-radius: 20px; white-space: nowrap; z-index: 10; pointer-events: none; box-shadow: 0 4px 16px rgba(233,30,140,0.35); }
+    .field-error::after { content: ''; position: absolute; top: 100%; left: 18px; border: 6px solid transparent; border-top-color: #7b2d8b; }
+    .field-error.show { display: block; animation: popIn .2s ease; }
+    @keyframes popIn { 0%{ opacity:0; transform:translateY(4px); } 100%{ opacity:1; transform:translateY(0); } }
+
+    /* ── FOOTER ── */
+    footer { background: #0a0a10; color: rgba(255,255,255,0.5); padding: 48px 0; text-align: center; font-size: 0.85rem; }
+    .footer-social { display: flex; align-items: center; justify-content: center; gap: 28px; margin-bottom: 20px; }
+    .footer-social a { display: flex; align-items: center; text-decoration: none; transition: opacity .2s, transform .2s; opacity: 0.7; }
+    .footer-social a:hover { opacity: 1; transform: translateY(-2px); }
+    .footer-social svg { width: 26px; height: 26px; flex-shrink: 0; fill: white; }
+
+    /* ── WHATSAPP FLOAT ── */
+    .wa-float { position: fixed; bottom: 28px; right: 24px; z-index: 999; display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: #25d366; box-shadow: 0 4px 20px rgba(37,211,102,0.5); text-decoration: none; animation: waPulse 2.5s ease-in-out infinite; }
+    .wa-float svg { width: 30px; height: 30px; fill: white; }
+    @keyframes waPulse { 0%,100%{ box-shadow: 0 4px 20px rgba(37,211,102,0.5); } 50%{ box-shadow: 0 4px 32px rgba(37,211,102,0.8); } }
+
+    /* ── FADE-UP ── */
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+    .fade-up.visible { opacity: 1; transform: none; }
+    .fade-up-delay-1.visible { transition-delay: .1s; }
+    .fade-up-delay-2.visible { transition-delay: .2s; }
+
+    /* ── MOBILE ── */
+    @media(max-width:768px) {
+      .hamburger { display: flex; }
+      .nav-links { display: none; position: absolute; top: 72px; left: 0; right: 0; flex-direction: column; background: white; padding: 20px 24px; border-bottom: 1px solid var(--border); box-shadow: 0 16px 40px rgba(0,0,0,0.1); gap: 16px; }
+      .nav-links.open { display: flex; }
+      #page-hero { padding: 100px 0 24px; }
+      #productos { padding: 16px 0 52px; }
+      .productos-grid { grid-template-columns: 1fr; gap: 16px; }
+      .productos-contact-wrap { padding: 36px 20px; }
+      .productos-contact-wrap h3 { font-size: 1.4rem; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <img src="logo_quickConsultantWS.PNG" alt="Quick Consultant" />
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#nosotros">Nosotros</a></li>
+        <li><a href="index.html#servicios">Servicios</a></li>
+        <li><a href="index.html#metodologia">Metodolog&#237;a</a></li>
+        <li><a href="index.html#experiencia">Experiencia</a></li>
+        <li><a href="index.html#equipo">Equipo</a></li>
+        <li><a href="productos.html" class="active">Productos</a></li>
+        <li><a href="index.html#contacto" class="btn-nav">Contacto</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero interno -->
+  <section id="page-hero">
+    <div class="glow1"></div>
+    <div class="glow2"></div>
+    <div class="container">
+      <span class="tag">Nuestros Productos</span>
+      <h2 class="section-title">Soluciones digitales<br><span class="grad-text">listas para escalar</span></h2>
+      <p class="section-sub">Herramientas propias desarrolladas para automatizar, optimizar y potenciar tu operaci&#243;n desde el d&#237;a uno.</p>
+    </div>
+  </section>
+
+  <!-- Grid de productos -->
+  <section id="productos">
+    <div class="container">
+
+      <div class="productos-grid">
+
+        <!-- FATTURA -->
+        <div class="producto-card fade-up">
+          <div class="producto-head">
+            <div class="producto-icon">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/><polyline points="9 9 10 9"/></svg>
+            </div>
+            <div class="producto-titles">
+              <p class="producto-name">FaTTura</p>
+              <p class="producto-tagline">Gesti&#243;n de Legajos de Importaci&#243;n</p>
+            </div>
+          </div>
+          <p class="producto-desc">Centraliz&#225; y automatiz&#225; el seguimiento de tus operaciones de comercio exterior. Control&#225; estados, documentos, aranceles y vencimientos en tiempo real desde un panel unificado. Elimin&#225; errores manuales y reduc&#237; tiempos operativos hasta un 60%.</p>
+          <div class="producto-tags">
+            <span class="producto-tag pink">Importadoras</span>
+            <span class="producto-tag purple">Distribuidoras</span>
+            <span class="producto-tag pink">Manufactura</span>
+            <span class="producto-tag purple">Comercio Exterior</span>
+          </div>
+        </div>
+
+        <!-- VENDIA -->
+        <div class="producto-card fade-up fade-up-delay-1">
+          <div class="producto-head">
+            <div class="producto-icon">
+              <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div class="producto-titles">
+              <p class="producto-name">VendIA</p>
+              <p class="producto-tagline">Asistente de Ventas con Inteligencia Artificial</p>
+            </div>
+          </div>
+          <p class="producto-desc">Tu equipo de ventas potenciado con IA conversacional. Respond&#233; consultas, calific&#225; leads y cerr&#225; m&#225;s oportunidades de forma autom&#225;tica, 24/7. Se integra con WhatsApp, Instagram y tu sitio web sin fricci&#243;n.</p>
+          <div class="producto-tags">
+            <span class="producto-tag pink">Retail</span>
+            <span class="producto-tag purple">E-commerce</span>
+            <span class="producto-tag pink">Inmobiliarias</span>
+            <span class="producto-tag purple">Servicios</span>
+          </div>
+        </div>
+
+        <!-- SNAPCAT -->
+        <div class="producto-card fade-up fade-up-delay-1">
+          <div class="producto-head">
+            <div class="producto-icon">
+              <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/><line x1="17.5" y1="9" x2="17.51" y2="9"/></svg>
+            </div>
+            <div class="producto-titles">
+              <p class="producto-name">SnapCat</p>
+              <p class="producto-tagline">Fot&#243;grafo Digital y Cat&#225;logo con IA</p>
+            </div>
+          </div>
+          <p class="producto-desc">Gener&#225; im&#225;genes de producto de calidad profesional y arm&#225; cat&#225;logos digitales interactivos en minutos usando inteligencia artificial. Sin estudio fotogr&#225;fico, sin esperas. Public&#225; en tu tienda online, redes y marketplaces al instante.</p>
+          <div class="producto-tags">
+            <span class="producto-tag pink">E-commerce</span>
+            <span class="producto-tag purple">Moda &amp; Indumentaria</span>
+            <span class="producto-tag pink">Gastronom&#237;a</span>
+            <span class="producto-tag purple">Retail</span>
+          </div>
+        </div>
+
+        <!-- FLOWOPS -->
+        <div class="producto-card fade-up fade-up-delay-2">
+          <div class="producto-head">
+            <div class="producto-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
+            </div>
+            <div class="producto-titles">
+              <p class="producto-name">FlowOps</p>
+              <p class="producto-tagline">Automatizaci&#243;n de Procesos Operativos</p>
+            </div>
+          </div>
+          <p class="producto-desc">Connect&#225; tus sistemas, elimin&#225; tareas manuales repetitivas y tom&#225; decisiones basadas en datos en tiempo real. FlowOps orquesta tus flujos de trabajo integrando ERP, CRM, e-commerce y herramientas de comunicaci&#243;n en un solo ecosistema.</p>
+          <div class="producto-tags">
+            <span class="producto-tag pink">Manufactura</span>
+            <span class="producto-tag purple">Log&#237;stica</span>
+            <span class="producto-tag pink">Consultor&#237;a</span>
+            <span class="producto-tag purple">Fintech</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Formulario de contacto -->
+      <div class="productos-contact-wrap fade-up">
+        <h3>&#191;Te interesa alguno de nuestros productos?</h3>
+        <p>Cont&#225;nos tu caso y te asesoramos sin compromiso.</p>
+        <form class="contact-form" onsubmit="handleFormProductos(event)" novalidate>
+          <div class="form-row">
+            <div class="field-wrap">
+              <input class="form-input" type="text" name="name" placeholder="Tu nombre" required />
+              <span class="field-error">&#128521; Campo obligatorio</span>
+            </div>
+            <div class="field-wrap">
+              <input class="form-input" type="email" name="email" placeholder="Tu email" required />
+              <span class="field-error">&#128521; Campo obligatorio</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field-wrap">
+              <input class="form-input" type="text" name="empresa" placeholder="Empresa" required />
+              <span class="field-error">&#128521; Campo obligatorio</span>
+            </div>
+            <div class="field-wrap">
+              <select class="form-input" name="producto" required style="cursor:pointer;">
+                <option value="" disabled selected>&#191;Qu&#233; producto te interesa?</option>
+                <option value="FaTTura">FaTTura &#8212; Legajos de Importaci&#243;n</option>
+                <option value="VendIA">VendIA &#8212; Asistente de Ventas IA</option>
+                <option value="SnapCat">SnapCat &#8212; Cat&#225;logo Digital</option>
+                <option value="FlowOps">FlowOps &#8212; Automatizaci&#243;n Operativa</option>
+              </select>
+              <span class="field-error">&#128521; Campo obligatorio</span>
+            </div>
+          </div>
+          <div class="field-wrap">
+            <textarea class="form-input" name="message" placeholder="Cont&#225;nos m&#225;s sobre tu necesidad..." rows="4" required></textarea>
+            <span class="field-error">&#128521; Campo obligatorio</span>
+          </div>
+          <button type="submit" class="btn-submit">Quiero saber m&#225;s &#8594;</button>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-social">
+        <a href="https://www.linkedin.com/company/quickconsultant/?viewAsMember=true" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="https://wa.me/5493513344814" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/quickconsultant" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </a>
+      </div>
+      <p>&copy; 2025 Quick Consultant. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- WhatsApp flotante -->
+  <a class="wa-float" href="https://wa.me/5493513344814?text=Hola%21%20Te%20contacto%20desde%20la%20p%C3%A1gina%20de%20Productos%20de%20Quick%20Consultant%20%F0%9F%91%8B" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+  </a>
+
+  <script>
+    // Nav hamburger
+    document.getElementById('hamburger').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // Fade-up con IntersectionObserver
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-up').forEach(function(el) { observer.observe(el); });
+
+    // Form handler
+    function handleFormProductos(e) {
+      e.preventDefault();
+      var form = e.target;
+      var valid = true;
+      form.querySelectorAll('[required]').forEach(function(field) {
+        var wrap = field.closest('.field-wrap');
+        var err  = wrap ? wrap.querySelector('.field-error') : null;
+        if (!field.value.trim()) {
+          valid = false;
+          field.classList.add('invalid');
+          if (err) err.classList.add('show');
+        } else {
+          field.classList.remove('invalid');
+          if (err) err.classList.remove('show');
+        }
+      });
+      if (!valid) return;
+      var btn = form.querySelector('.btn-submit');
+      btn.textContent = 'Enviando...'; btn.disabled = true;
+      fetch('https://formsubmit.co/ajax/andresnavarro.di@gmail.com', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(form)
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(){
+        btn.textContent = '✓ Mensaje enviado!';
+        btn.style.background = '#22c55e'; btn.disabled = false;
+        setTimeout(function(){ btn.textContent = 'Quiero saber más →'; btn.style.background = ''; form.reset(); }, 3500);
+      })
+      .catch(function(){
+        btn.textContent = 'Error. Intentá de nuevo.';
+        btn.style.background = '#ef4444'; btn.disabled = false;
+        setTimeout(function(){ btn.textContent = 'Quiero saber más →'; btn.style.background = ''; }, 3000);
+      });
+    }
+  </script>
+</body>
+</html>
