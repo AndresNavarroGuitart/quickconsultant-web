@@ -31,7 +31,15 @@
     .tag { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); margin-bottom: 12px; }
     .section-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; line-height: 1.1; }
     .section-sub { font-size: 1.05rem; color: var(--muted); line-height: 1.7; max-width: 560px; }
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: #ffffff; border-bottom: 2px solid transparent; border-image: var(--grad) 1; transition: box-shadow .3s; }
+    /* ── TOP BANNER ── */
+    .top-banner { position: fixed; top: 0; left: 0; right: 0; height: 38px; z-index: 101; background: var(--dark); overflow: hidden; display: flex; align-items: center; }
+    .top-banner-track { display: flex; gap: 0; white-space: nowrap; animation: bannerScroll 28s linear infinite; }
+    .top-banner-item { display: inline-flex; align-items: center; gap: 10px; padding: 0 48px; font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.9); letter-spacing: 0.04em; }
+    .top-banner-item a { color: #f472b6; text-decoration: none; font-weight: 700; transition: color .2s; }
+    .top-banner-item a:hover { color: white; }
+    .top-banner-sep { color: rgba(255,255,255,0.25); }
+    @keyframes bannerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    nav { position: fixed; top: 38px; left: 0; right: 0; z-index: 100; background: #ffffff; border-bottom: 2px solid transparent; border-image: var(--grad) 1; transition: box-shadow .3s; }
     nav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.10); }
     .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
     .logo { display: flex; align-items: center; text-decoration: none; }
@@ -43,7 +51,7 @@
     .btn-nav:hover { opacity: 0.88; transform: translateY(-1px); }
     .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; background: none; border: none; padding: 4px; }
     .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: .3s; }
-    #hero { min-height: 100vh; display: flex; align-items: center; padding-top: 72px; overflow: hidden; position: relative; background: var(--white); }
+    #hero { min-height: 100vh; display: flex; align-items: center; padding-top: 110px; overflow: hidden; position: relative; background: var(--white); }
     .hero-bg-shape { position: absolute; top: -120px; right: -120px; width: 620px; height: 620px; border-radius: 50%; background: linear-gradient(135deg, rgba(233,30,140,0.12) 0%, rgba(123,45,139,0.12) 100%); pointer-events: none; }
     .hero-bg-shape2 { position: absolute; bottom: -80px; left: -80px; width: 360px; height: 360px; border-radius: 50%; background: linear-gradient(135deg, rgba(233,30,140,0.07) 0%, rgba(123,45,139,0.07) 100%); pointer-events: none; }
     .dot-grid { display: grid; grid-template-columns: repeat(8,8px); gap: 7px; position: absolute; pointer-events: none; }
@@ -267,7 +275,7 @@
       section { padding: 48px 0; }
 
       /* Hero */
-      #hero { min-height: auto; padding-top: 96px; padding-bottom: 48px; }
+      #hero { min-height: auto; padding-top: 130px; padding-bottom: 48px; }
       .hero-inner { grid-template-columns: 1fr; gap: 32px; }
       .hero-badge { display: none; }
       .hero-title { font-size: 2.4rem; }
@@ -412,6 +420,14 @@
   </style>
 </head>
 <body>
+
+  <!-- Banner superior -->
+  <div class="top-banner">
+    <div class="top-banner-track">
+      <span class="top-banner-item">&#128640; <a href="productos.html">Conoc&#233; nuestros productos</a> <span class="top-banner-sep">&nbsp;&nbsp;&#183;&nbsp;&nbsp;</span> &#9889; Implementaci&#243;n &#225;gil. Bajo costo. Alto impacto. <span class="top-banner-sep">&nbsp;&nbsp;&#183;&nbsp;&nbsp;</span> &#127775; Soluciones digitales listas para escalar. <span class="top-banner-sep">&nbsp;&nbsp;&#183;&nbsp;&nbsp;</span></span>
+      <span class="top-banner-item">&#128640; <a href="productos.html">Conoc&#233; nuestros productos</a> <span class="top-banner-sep">&nbsp;&nbsp;&#183;&nbsp;&nbsp;</span> &#9889; Implementaci&#243;n &#225;gil. Bajo costo. Alto impacto. <span class="top-banner-sep">&nbsp;&nbsp;&#183;&nbsp;&nbsp;</span> &#127775; Soluciones digitales listas para escalar. <span class="top-banner-sep">&nbsp;&nbsp;&#183;&nbsp;&nbsp;</span></span>
+    </div>
+  </div>
 
   <nav id="navbar">
     <div class="container nav-inner">
@@ -1259,12 +1275,12 @@
       </svg>
     </div>
     <div class="popup-body">
-      <span class="popup-tag">Innovaci&#243;n para tu negocio</span>
-      <h2 class="popup-title">&#191;Quer&#233;s un asistente virtual para mejorar tus ventas o capacitar a tus colaboradores?</h2>
-      <p class="popup-sub">Conoc&#233; nuestros productos de IA conversacional. Escribinos y dise&#241;amos la soluci&#243;n ideal para vos.</p>
+      <span class="popup-tag">Nuestros productos</span>
+      <h2 class="popup-title">&#191;Ten&#233;s un problema operativo sin resolver?</h2>
+      <p class="popup-sub">Digitalizamos tu proceso en <strong>semanas, no meses</strong>. Cont&#225;nos tu necesidad y dise&#241;amos en conjunto la mejor soluci&#243;n.</p>
       <div class="popup-actions">
-        <a href="#contacto" class="popup-btn-primary" id="popupFormBtn">Ir al formulario</a>
-        <a href="https://wa.me/5493513344814?text=Hola%21%20Vi%20tu%20popup%20en%20la%20web%20de%20Quick%20Consultant%20y%20me%20interesa%20el%20asistente%20virtual%20%F0%9F%A4%96" target="_blank" rel="noopener" class="popup-btn-wa">
+        <a href="productos.html" class="popup-btn-primary" id="popupFormBtn">Ver productos &#8594;</a>
+        <a href="https://wa.me/5493513344814?text=Hola%21%20Vi%20tu%20web%20de%20Quick%20Consultant%20y%20quiero%20contarles%20mi%20necesidad%20%F0%9F%91%8B" target="_blank" rel="noopener" class="popup-btn-wa">
           <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
           WhatsApp
         </a>

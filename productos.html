@@ -31,8 +31,18 @@
     .section-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; line-height: 1.1; }
     .section-sub { font-size: 1.05rem; color: var(--muted); line-height: 1.7; max-width: 620px; }
 
+    /* ── TOP BANNER ── */
+    .top-banner { position: fixed; top: 0; left: 0; right: 0; height: 38px; z-index: 101; background: var(--dark); overflow: hidden; display: flex; align-items: center; }
+    .top-banner-track { display: flex; gap: 0; white-space: nowrap; animation: bannerScroll 28s linear infinite; }
+    .top-banner-item { display: inline-flex; align-items: center; gap: 10px; padding: 0 48px; font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.9); letter-spacing: 0.04em; }
+    .top-banner-item a { color: #f472b6; text-decoration: none; font-weight: 700; transition: color .2s; }
+    .top-banner-item a:hover { color: white; }
+    .top-banner-sep { color: rgba(255,255,255,0.25); }
+    @keyframes bannerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
     /* ── NAV ── */
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: #ffffff; border-bottom: 2px solid transparent; border-image: var(--grad) 1; box-shadow: 0 2px 24px rgba(0,0,0,0.08); }
+    nav { position: fixed; top: 38px; left: 0; right: 0; z-index: 100; background: #ffffff; border-bottom: 2px solid transparent; border-image: var(--grad) 1; transition: box-shadow .3s; }
+    nav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.10); }
     .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
     .logo { display: flex; align-items: center; text-decoration: none; }
     .logo img { height: 48px; width: auto; display: block; object-fit: contain; mix-blend-mode: multiply; }
@@ -45,12 +55,19 @@
     .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: .3s; }
 
     /* ── HERO INTERNO ── */
-    #page-hero { background: var(--dark); padding: 120px 0 40px; position: relative; overflow: hidden; text-align: center; }
+    #page-hero { background: var(--dark); padding: 158px 0 40px; position: relative; overflow: hidden; text-align: center; }
     #page-hero .glow1 { position: absolute; top: -80px; right: -80px; width: 480px; height: 480px; border-radius: 50%; background: radial-gradient(circle, rgba(233,30,140,0.18) 0%, transparent 70%); pointer-events: none; }
     #page-hero .glow2 { position: absolute; bottom: -60px; left: -60px; width: 360px; height: 360px; border-radius: 50%; background: radial-gradient(circle, rgba(123,45,139,0.22) 0%, transparent 70%); pointer-events: none; }
     #page-hero .tag { color: rgba(255,255,255,0.6); }
     #page-hero .section-title { color: white; margin-bottom: 16px; }
     #page-hero .section-sub { color: rgba(255,255,255,0.6); margin: 0 auto; }
+
+    /* ── FILOSOFÍA ── */
+    .filosofia-wrap { padding: 40px 0 32px; margin-bottom: 8px; }
+    .filosofia-title { font-size: 1.3rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 20px; }
+    .filosofia-text { font-size: 0.95rem; color: var(--muted); line-height: 1.8; margin-bottom: 14px; }
+    .filosofia-text strong { color: var(--text); }
+    .filosofia-cta { font-size: 1rem; color: var(--pink); font-weight: 700; margin-top: 8px; }
 
     /* ── PRODUCTOS ── */
     #productos { background: #f5f4f9; padding: 16px 0 80px; }
@@ -65,7 +82,16 @@
     .producto-titles { display: flex; flex-direction: column; gap: 2px; }
     .producto-name { font-size: 1.25rem; font-weight: 800; color: var(--text); margin: 0; line-height: 1.2; }
     .producto-tagline { font-size: 0.78rem; font-weight: 600; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .producto-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.75; flex: 1; }
+    .producto-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.75; max-height: 92px; overflow: hidden; transition: max-height .4s ease; }
+    .producto-desc.expanded { max-height: 800px; }
+    .producto-desc-wrap { position: relative; }
+    .desc-fade { position: absolute; bottom: 0; left: 0; right: 0; height: 38px; background: linear-gradient(to bottom, transparent, white); pointer-events: none; transition: opacity .3s; }
+    .desc-fade.hidden { opacity: 0; }
+    .leer-mas-btn { background: none; border: none; color: var(--pink); font-size: 0.79rem; font-weight: 700; cursor: pointer; padding: 2px 0 0; letter-spacing: .02em; font-family: inherit; text-align: left; display: block; transition: color .2s; }
+    .leer-mas-btn:hover { color: var(--purple); }
+    .productos-section-title { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: 20px; }
+    .producto-web { font-size: 0.78rem; font-weight: 700; color: var(--purple); text-decoration: none; letter-spacing: .02em; transition: color .2s; }
+    .producto-web:hover { color: var(--pink); }
     .producto-tags { display: flex; flex-wrap: wrap; gap: 7px; }
     .producto-tag { font-size: 0.7rem; font-weight: 700; padding: 4px 11px; border-radius: 100px; letter-spacing: .02em; }
     .producto-tag.pink { border: 1.5px solid rgba(233,30,140,0.35); color: var(--pink); background: rgba(233,30,140,0.05); }
@@ -115,7 +141,7 @@
       .hamburger { display: flex; }
       .nav-links { display: none; position: absolute; top: 72px; left: 0; right: 0; flex-direction: column; background: white; padding: 20px 24px; border-bottom: 1px solid var(--border); box-shadow: 0 16px 40px rgba(0,0,0,0.1); gap: 16px; }
       .nav-links.open { display: flex; }
-      #page-hero { padding: 100px 0 24px; }
+      #page-hero { padding: 138px 0 24px; }
       #productos { padding: 16px 0 52px; }
       .productos-grid { grid-template-columns: 1fr; gap: 16px; }
       .productos-contact-wrap { padding: 36px 20px; }
@@ -125,6 +151,14 @@
   </style>
 </head>
 <body>
+
+  <!-- Banner superior -->
+  <div class="top-banner">
+    <div class="top-banner-track">
+      <span class="top-banner-item">&#128640; <a href="index.html">Volver al inicio</a> <span class="top-banner-sep">&nbsp;&nbsp;&#183;&nbsp;&nbsp;</span> &#9889; Implementaci&#243;n &#225;gil. Bajo costo. Alto impacto. <span class="top-banner-sep">&nbsp;&nbsp;&#183;&nbsp;&nbsp;</span> &#127775; Soluciones digitales listas para escalar. <span class="top-banner-sep">&nbsp;&nbsp;&#183;&nbsp;&nbsp;</span></span>
+      <span class="top-banner-item">&#128640; <a href="index.html">Volver al inicio</a> <span class="top-banner-sep">&nbsp;&nbsp;&#183;&nbsp;&nbsp;</span> &#9889; Implementaci&#243;n &#225;gil. Bajo costo. Alto impacto. <span class="top-banner-sep">&nbsp;&nbsp;&#183;&nbsp;&nbsp;</span> &#127775; Soluciones digitales listas para escalar. <span class="top-banner-sep">&nbsp;&nbsp;&#183;&nbsp;&nbsp;</span></span>
+    </div>
+  </div>
 
   <nav>
     <div class="container nav-inner">
@@ -161,6 +195,16 @@
   <section id="productos">
     <div class="container">
 
+      <!-- Filosofía de producto -->
+      <div class="filosofia-wrap fade-up">
+        <h3 class="filosofia-title">Nuestra filosof&#237;a de producto</h3>
+        <p class="filosofia-text">En Quick Consultant creemos que la tecnolog&#237;a debe resolver problemas reales, r&#225;pido y sin fricciones.</p>
+        <p class="filosofia-text">Cada uno de nuestros productos est&#225; dise&#241;ado para implementarse en <strong>semanas, no meses</strong>, con una inversi&#243;n accesible y resultados medibles desde el primer d&#237;a. No reemplazamos tu sistema de gesti&#243;n ni tu estrategia: los <strong>potenciamos</strong>. Atacamos el problema puntual que te est&#225; frenando hoy: un proceso manual, una oportunidad de venta perdida, un legajo desorganizado. Y lo convertimos en una ventaja competitiva, siempre con la mirada puesta en el crecimiento integral de tu empresa.</p>
+        <p class="filosofia-cta"><strong>Implementaci&#243;n &#225;gil. Bajo costo. Alto impacto.</strong></p>
+      </div>
+
+      <h3 class="productos-section-title">Algunos de nuestros productos:</h3>
+
       <div class="productos-grid">
 
         <!-- FATTURA -->
@@ -171,75 +215,144 @@
             </div>
             <div class="producto-titles">
               <p class="producto-name">FaTTura</p>
-              <p class="producto-tagline">Gesti&#243;n de Legajos de Importaci&#243;n</p>
+              <p class="producto-tagline">Lectura de Documentos</p>
             </div>
           </div>
-          <p class="producto-desc">Centraliz&#225; y automatiz&#225; el seguimiento de tus operaciones de comercio exterior. Control&#225; estados, documentos, aranceles y vencimientos en tiempo real desde un panel unificado. Elimin&#225; errores manuales y reduc&#237; tiempos operativos hasta un 60%.</p>
+          <div class="producto-desc-wrap">
+            <p class="producto-desc">Aplicaci&#243;n web y mobile que digitaliza y organiza comprobantes f&#237;sicos de forma autom&#225;tica. Sub&#237; una foto o archivo de facturas (tipo A, B o C), remitos, notas de cr&#233;dito/d&#233;bito, recibos de sueldo u otros comprobantes, y el sistema extrae autom&#225;ticamente los datos clave: proveedor, cliente, fecha, tipo de documento y montos. Los documentos quedan disponibles en un m&#243;dulo con filtros por fecha, proveedor, cliente y tipo de comprobante, con exportaci&#243;n a CSV y un dashboard visual que resume toda la informaci&#243;n. Resuelve el problema de la carga manual y desordenada de papeles administrativos, convirtiendo comprobantes en datos estructurados y consultables.</p>
+            <div class="desc-fade"></div>
+          </div>
+          <button class="leer-mas-btn" onclick="toggleDesc(this)">Leer m&#225;s &#9660;</button>
           <div class="producto-tags">
-            <span class="producto-tag pink">Importadoras</span>
-            <span class="producto-tag purple">Distribuidoras</span>
-            <span class="producto-tag pink">Manufactura</span>
-            <span class="producto-tag purple">Comercio Exterior</span>
+            <span class="producto-tag pink">Pymes</span>
+            <span class="producto-tag purple">Log&#237;stica</span>
+            <span class="producto-tag pink">Comercios</span>
+            <span class="producto-tag purple">RRHH</span>
+            <span class="producto-tag pink">Distribuci&#243;n</span>
           </div>
         </div>
 
-        <!-- VENDIA -->
+        <!-- LEG-AI -->
         <div class="producto-card fade-up fade-up-delay-1">
           <div class="producto-head">
             <div class="producto-icon">
-              <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
             </div>
             <div class="producto-titles">
-              <p class="producto-name">VendIA</p>
-              <p class="producto-tagline">Asistente de Ventas con Inteligencia Artificial</p>
+              <p class="producto-name">LEG-AI</p>
+              <p class="producto-tagline">Asistente de armado y control de legajos</p>
             </div>
           </div>
-          <p class="producto-desc">Tu equipo de ventas potenciado con IA conversacional. Respond&#233; consultas, calific&#225; leads y cerr&#225; m&#225;s oportunidades de forma autom&#225;tica, 24/7. Se integra con WhatsApp, Instagram y tu sitio web sin fricci&#243;n.</p>
+          <div class="producto-desc-wrap">
+            <p class="producto-desc">Asistente basado en IA que automatiza el armado y control de legajos de exportaci&#243;n. El usuario carga los documentos del embarque (factura, packing list, certificado de an&#225;lisis, fitosanitario, conocimiento de embarque, documentaci&#243;n aduanera, etc.) sin importar el orden, y la herramienta identifica y clasifica cada documento, lo contrasta contra el checklist exigido por el pa&#237;s de destino, detecta qu&#233; falta, cruza datos clave entre documentos (pesos, lotes, n&#250;mero de contrato) para verificar consistencia y arma un resumen ordenado del legajo con alertas y pendientes. Actualmente implementado para exportaci&#243;n de man&#237; blanqueado hacia Rotterdam; replicable a cualquier operaci&#243;n de comercio exterior que dependa de m&#250;ltiples documentos que deben ser consistentes entre s&#237;.</p>
+            <div class="desc-fade"></div>
+          </div>
+          <button class="leer-mas-btn" onclick="toggleDesc(this)">Leer m&#225;s &#9660;</button>
           <div class="producto-tags">
-            <span class="producto-tag pink">Retail</span>
-            <span class="producto-tag purple">E-commerce</span>
-            <span class="producto-tag pink">Inmobiliarias</span>
-            <span class="producto-tag purple">Servicios</span>
+            <span class="producto-tag pink">Agroindustria</span>
+            <span class="producto-tag purple">Qu&#237;micas</span>
+            <span class="producto-tag pink">Miner&#237;a</span>
+            <span class="producto-tag purple">Automotriz</span>
+            <span class="producto-tag pink">Comercio Exterior</span>
           </div>
         </div>
 
-        <!-- SNAPCAT -->
+        <!-- PIKTURA -->
         <div class="producto-card fade-up fade-up-delay-1">
           <div class="producto-head">
             <div class="producto-icon">
-              <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/><line x1="17.5" y1="9" x2="17.51" y2="9"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
             </div>
             <div class="producto-titles">
-              <p class="producto-name">SnapCat</p>
-              <p class="producto-tagline">Fot&#243;grafo Digital y Cat&#225;logo con IA</p>
+              <p class="producto-name">PIKTURA</p>
+              <p class="producto-tagline">&#193;lbum colaborativo de eventos por QR</p>
             </div>
           </div>
-          <p class="producto-desc">Gener&#225; im&#225;genes de producto de calidad profesional y arm&#225; cat&#225;logos digitales interactivos en minutos usando inteligencia artificial. Sin estudio fotogr&#225;fico, sin esperas. Public&#225; en tu tienda online, redes y marketplaces al instante.</p>
-          <div class="producto-tags">
-            <span class="producto-tag pink">E-commerce</span>
-            <span class="producto-tag purple">Moda &amp; Indumentaria</span>
-            <span class="producto-tag pink">Gastronom&#237;a</span>
-            <span class="producto-tag purple">Retail</span>
+          <div class="producto-desc-wrap">
+            <p class="producto-desc">Servicio que permite recopilar autom&#225;ticamente las fotos que sacan los invitados en casamientos, cumplea&#241;os, eventos deportivos, corporativos u otros eventos, mediante un c&#243;digo QR. Los invitados escanean el c&#243;digo y suben sus fotos a un &#225;lbum privado del evento, sin necesidad de instalar apps ni crear cuentas. El organizador (sal&#243;n, wedding planner o filmmaker) puede moderar el contenido y entregarlo al cliente final como un archivo descargable completo, diferenci&#225;ndose de la competencia al sumar este servicio adicional a su propuesta.</p>
+            <div class="desc-fade"></div>
           </div>
+          <button class="leer-mas-btn" onclick="toggleDesc(this)">Leer m&#225;s &#9660;</button>
+          <div class="producto-tags">
+            <span class="producto-tag pink">Deporte</span>
+            <span class="producto-tag purple">Empresas</span>
+            <span class="producto-tag pink">Pymes</span>
+            <span class="producto-tag purple">ONG</span>
+          </div>
+          <a href="https://piktura.com.ar/" target="_blank" rel="noopener" class="producto-web">piktura.com.ar</a>
         </div>
 
-        <!-- FLOWOPS -->
+        <!-- ENCUESTADOR CX -->
         <div class="producto-card fade-up fade-up-delay-2">
           <div class="producto-head">
             <div class="producto-icon">
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
             </div>
             <div class="producto-titles">
-              <p class="producto-name">FlowOps</p>
-              <p class="producto-tagline">Automatizaci&#243;n de Procesos Operativos</p>
+              <p class="producto-name">Encuestador CX</p>
+              <p class="producto-tagline">Gestor de encuestas CX</p>
             </div>
           </div>
-          <p class="producto-desc">Connect&#225; tus sistemas, elimin&#225; tareas manuales repetitivas y tom&#225; decisiones basadas en datos en tiempo real. FlowOps orquesta tus flujos de trabajo integrando ERP, CRM, e-commerce y herramientas de comunicaci&#243;n en un solo ecosistema.</p>
+          <div class="producto-desc-wrap">
+            <p class="producto-desc">Sistema de gesti&#243;n de encuestas de satisfacci&#243;n automatizadas a clientes. Funciona con tres roles de acceso: el operador ve sus trabajos asignados con seguimiento de estado, filtros por cliente y fechas, y exportaci&#243;n de datos. El gestor de casos administra los reclamos abiertos a partir de las respuestas, clasificando el sentimiento del cliente en detractor, neutro o promotor (NPS), con detalle y evoluci&#243;n de cada caso. El panel de administrador centraliza todo: gestiona el env&#237;o de encuestas por WhatsApp o email, con reenv&#237;o autom&#225;tico a las 48 horas si no hubo respuesta, y muestra m&#233;tricas generales de encuestas enviadas, respondidas y nivel de satisfacci&#243;n.</p>
+            <div class="desc-fade"></div>
+          </div>
+          <button class="leer-mas-btn" onclick="toggleDesc(this)">Leer m&#225;s &#9660;</button>
           <div class="producto-tags">
-            <span class="producto-tag pink">Manufactura</span>
-            <span class="producto-tag purple">Log&#237;stica</span>
-            <span class="producto-tag pink">Consultor&#237;a</span>
-            <span class="producto-tag purple">Fintech</span>
+            <span class="producto-tag pink">Telcos</span>
+            <span class="producto-tag purple">CX</span>
+            <span class="producto-tag pink">RRHH</span>
+            <span class="producto-tag purple">BPO</span>
+            <span class="producto-tag pink">Gesti&#243;n de clientes</span>
+          </div>
+        </div>
+
+        <!-- QUICKDATO -->
+        <div class="producto-card fade-up">
+          <div class="producto-head">
+            <div class="producto-icon">
+              <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/><line x1="2" y1="21" x2="22" y2="21"/></svg>
+            </div>
+            <div class="producto-titles">
+              <p class="producto-name">QuickDato</p>
+              <p class="producto-tagline">Inteligencia de mercado inmobiliario</p>
+            </div>
+          </div>
+          <div class="producto-desc-wrap">
+            <p class="producto-desc">Plataforma de inteligencia de mercado inmobiliario para corredores y peque&#241;as inmobiliarias en Argentina. Tres herramientas integradas sobre una misma base de datos: el <strong>Informe General</strong> con m&#233;tricas comparadas por barrio, tipolog&#237;a y per&#237;odo; el <strong>Constructor de gr&#225;ficos</strong> con editor drag &amp; drop y ocho tipos de visualizaci&#243;n; y el m&#243;dulo de <strong>ACM y Tasaci&#243;n</strong> que genera autom&#225;ticamente una tasaci&#243;n con comparables, sem&#225;foro de precios e informe PDF con marca propia desde la URL de una publicaci&#243;n (Zonaprop, Argenprop). Demo gratuita sin tarjeta ni instalaci&#243;n, con l&#237;mites de uso mensual (hasta 3 tasaciones ACM y 5 vistas guardadas; Informe General ilimitado).</p>
+            <div class="desc-fade"></div>
+          </div>
+          <button class="leer-mas-btn" onclick="toggleDesc(this)">Leer m&#225;s &#9660;</button>
+          <div class="producto-tags">
+            <span class="producto-tag pink">Inmobiliarias</span>
+            <span class="producto-tag purple">Consumo Masivo</span>
+            <span class="producto-tag pink">Retail</span>
+            <span class="producto-tag purple">Desarrollistas</span>
+          </div>
+          <a href="https://www.quickdato.com/" target="_blank" rel="noopener" class="producto-web">quickdato.com</a>
+        </div>
+
+        <!-- CAPA -->
+        <div class="producto-card fade-up fade-up-delay-1">
+          <div class="producto-head">
+            <div class="producto-icon">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="4"/><circle cx="9" cy="10" r="1.2"/><circle cx="15" cy="10" r="1.2"/><path d="M9 14c.8.8 5.2.8 6 0" stroke-linecap="round"/><path d="M12 2v2M8 2.5l.5 1.5M16 2.5l-.5 1.5"/></svg>
+            </div>
+            <div class="producto-titles">
+              <p class="producto-name">CAPA</p>
+              <p class="producto-tagline">La forma m&#225;s inteligente de entrenar a tu equipo</p>
+            </div>
+          </div>
+          <div class="producto-desc-wrap">
+            <p class="producto-desc">Plataforma que combina inteligencia artificial, procesos core y entrenamiento continuo para que cada colaborador mejore en el d&#237;a a d&#237;a con simulaciones reales y un asistente que lo acompa&#241;a en el momento exacto de la gesti&#243;n: qu&#233; decir, c&#243;mo responder y cu&#225;ndo cerrar. Con CAPA, tu equipo no solo aprende: vende y gestiona mejor, en cualquier canal digital, de forma autom&#225;tica y consistente. Pensada para empresas con equipos comerciales, administrativos u operativos que quieren profesionalizar su operaci&#243;n sin perder agilidad. Vas a lograr mejores tasas de conversi&#243;n, menos tiempo en tareas de gesti&#243;n, mayor consistencia entre colaboradores, escalabilidad sin sumar estructura, ahorro en capacitaci&#243;n y un onboarding mucho m&#225;s &#225;gil.</p>
+            <div class="desc-fade"></div>
+          </div>
+          <button class="leer-mas-btn" onclick="toggleDesc(this)">Leer m&#225;s &#9660;</button>
+          <div class="producto-tags">
+            <span class="producto-tag pink">RRHH</span>
+            <span class="producto-tag purple">Automotores</span>
+            <span class="producto-tag pink">Telcos</span>
+            <span class="producto-tag purple">Banca</span>
           </div>
         </div>
 
@@ -266,15 +379,21 @@
               <span class="field-error">&#128521; Campo obligatorio</span>
             </div>
             <div class="field-wrap">
-              <select class="form-input" name="producto" required style="cursor:pointer;">
-                <option value="" disabled selected>&#191;Qu&#233; producto te interesa?</option>
-                <option value="FaTTura">FaTTura &#8212; Legajos de Importaci&#243;n</option>
-                <option value="VendIA">VendIA &#8212; Asistente de Ventas IA</option>
-                <option value="SnapCat">SnapCat &#8212; Cat&#225;logo Digital</option>
-                <option value="FlowOps">FlowOps &#8212; Automatizaci&#243;n Operativa</option>
-              </select>
-              <span class="field-error">&#128521; Campo obligatorio</span>
+              <input class="form-input" type="tel" name="telefono" placeholder="Tel&#233;fono" />
             </div>
+          </div>
+          <div class="field-wrap">
+            <select class="form-input" name="producto" required style="cursor:pointer;">
+              <option value="" disabled selected>&#191;Qu&#233; producto te interesa?</option>
+              <option value="FaTTura">FaTTura &#8212; Lectura de Documentos</option>
+              <option value="LEG-AI">LEG-AI &#8212; Armado y Control de Legajos</option>
+              <option value="PIKTURA">PIKTURA &#8212; &#193;lbum colaborativo por QR</option>
+              <option value="Encuestador CX">Encuestador CX &#8212; Gestor de Encuestas</option>
+              <option value="QuickDato">QuickDato &#8212; Inteligencia de Mercado</option>
+              <option value="CAPA">CAPA &#8212; Entrenamiento inteligente de equipos</option>
+              <option value="Otro">Otro...</option>
+            </select>
+            <span class="field-error">&#128521; Campo obligatorio</span>
           </div>
           <div class="field-wrap">
             <textarea class="form-input" name="message" placeholder="Cont&#225;nos m&#225;s sobre tu necesidad..." rows="4" required></textarea>
@@ -310,9 +429,37 @@
   </a>
 
   <script>
+    // Nav scroll shadow
+    window.addEventListener('scroll', function() {
+      document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 10);
+    });
+
     // Nav hamburger
     document.getElementById('hamburger').addEventListener('click', function() {
       document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // Leer más / Leer menos toggle
+    function toggleDesc(btn) {
+      var wrap = btn.previousElementSibling;
+      var desc = wrap.querySelector('.producto-desc');
+      var fade = wrap.querySelector('.desc-fade');
+      var expanded = desc.classList.toggle('expanded');
+      if (fade) fade.classList.toggle('hidden', expanded);
+      btn.innerHTML = expanded ? 'Leer menos &#9650;' : 'Leer m&#225;s &#9660;';
+    }
+
+    // Ocultar botón si el texto no desborda
+    window.addEventListener('load', function() {
+      document.querySelectorAll('.producto-desc-wrap').forEach(function(wrap) {
+        var desc = wrap.querySelector('.producto-desc');
+        var fade = wrap.querySelector('.desc-fade');
+        var btn = wrap.nextElementSibling;
+        if (desc.scrollHeight <= desc.clientHeight + 4) {
+          if (fade) fade.style.display = 'none';
+          if (btn && btn.classList.contains('leer-mas-btn')) btn.style.display = 'none';
+        }
+      });
     });
 
     // Fade-up con IntersectionObserver
