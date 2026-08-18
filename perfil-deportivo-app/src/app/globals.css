@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Identidad de marca: verde esmeralda como color primario (deportivo,
+     asociado a cancha/rendimiento), naranja como acento (energía, CTAs).
+     Un solo lugar para ajustar el color de marca en toda la app. */
+  --color-brand-50: #ecfdf5;
+  --color-brand-100: #d1fae5;
+  --color-brand-200: #a7f3d0;
+  --color-brand-300: #6ee7b7;
+  --color-brand-400: #34d399;
+  --color-brand-500: #10b981;
+  --color-brand-600: #059669;
+  --color-brand-700: #047857;
+  --color-brand-800: #065f46;
+  --color-brand-900: #064e3b;
+
+  --color-accent-400: #fb923c;
+  --color-accent-500: #f97316;
+  --color-accent-600: #ea580c;
+
+  /* Paleta "sport": pinceladas de color al estilo del splash de referencia,
+     pensada para usarse en dosis chicas (íconos, chips, bordes finos) sobre
+     un fondo predominantemente blanco — nunca como relleno de áreas grandes. */
+  --color-sport-yellow: #f5b400;
+  --color-sport-pink: #e6399b;
+  --color-sport-red: #e63946;
+  --color-sport-cyan: #00b4d8;
+  --color-sport-lime: #7cb518;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}

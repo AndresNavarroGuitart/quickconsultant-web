@@ -1,0 +1,283 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// El id coincide con auth.users.id de Supabase (no @default: se setea
+// explicitamente al crear la fila, la primera vez que el usuario entra
+// autenticado a la app).
+model User {
+  id          String   @id
+  email       String   @unique
+  isAdmin     Boolean  @default(false)
+  trialEndsAt DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  profile       AthleteProfile?
+  subscriptions Subscription[]
+  suggestions   Suggestion[]
+  notifications Notification[]
+}
+
+enum ProfileSubjectType {
+  SELF
+  DEPENDENT
+}
+
+model AthleteProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  slug        String   @unique
+  displayName String
+  sport       String
+  bio         String?
+  avatarUrl   String?
+  coverUrl    String?
+  location    String?
+  isPublic    Boolean  @default(true)
+
+  birthDate    DateTime? // fecha de cumpleaños
+  position     String? // posicion general del deportista (distinta del rol por club)
+  heightCm     Int?
+  country      String? // codigo ISO 3166-1 alpha-2 (ej. "AR"), para mostrar la bandera
+  jerseyNumber Int?
+
+  // Quien registra el perfil no siempre es el deportista (ej. un padre/madre
+  // registrando a su hijo/a). Si es DEPENDENT, se exige nombre del
+  // responsable y se deja timestamp de consentimiento como registro de
+  // auditoria (relevante por ser datos/fotos de un menor).
+  subjectType          ProfileSubjectType @default(SELF)
+  guardianName         String?
+  guardianRelationship String?
+  guardianConsentAt    DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  photos      Photo[]
+  athleteClubs AthleteClub[]
+  matches     Match[]
+
+  @@index([userId])
+}
+
+// Fotos asociadas a un partido puntual (el avatar es un campo directo en
+// AthleteProfile, no una fila de Photo). athleteProfileId se mantiene aunque
+// siempre haya matchId para simplificar el chequeo de ownership al borrar.
+model Photo {
+  id               String   @id @default(uuid())
+  athleteProfileId String
+  athleteProfile   AthleteProfile @relation(fields: [athleteProfileId], references: [id], onDelete: Cascade)
+  matchId          String?
+  match            Match?   @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  storagePath      String
+  url              String
+  caption          String?
+  createdAt        DateTime @default(now())
+
+  @@index([athleteProfileId])
+  @@index([matchId])
+}
+
+// Entidad global (no pertenece a un solo atleta): distintos atletas pueden
+// compartir el mismo club via AthleteClub.
+model Club {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  city      String?
+  logoUrl   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  athletes AthleteClub[]
+  matches  Match[]
+}
+
+model AthleteClub {
+  id               String    @id @default(uuid())
+  athleteProfileId String
+  athleteProfile   AthleteProfile @relation(fields: [athleteProfileId], references: [id], onDelete: Cascade)
+  clubId           String
+  club             Club      @relation(fields: [clubId], references: [id])
+  startDate        DateTime
+  endDate          DateTime?
+  // Deporte practicado en este club (puede diferir del deporte "principal"
+  // del perfil si el atleta juega mas de uno). Texto libre: cubre tanto las
+  // opciones fijas del selector como el valor manual cuando se elige "Otro".
+  sport            String    @default("Otro")
+  // Campeonato o liga en la que participa dentro de este club.
+  league           String?
+  role             String?
+  // Numero de camiseta en este club (puede diferir del de otros clubes).
+  jerseyNumber     Int?
+  createdAt        DateTime  @default(now())
+
+  @@index([athleteProfileId])
+  @@index([clubId])
+}
+
+enum MatchResult {
+  WIN
+  LOSS
+  DRAW
+}
+
+enum MatchCondition {
+  LOCAL
+  VISITANTE
+}
+
+model Match {
+  id               String   @id @default(uuid())
+  athleteProfileId String
+  athleteProfile   AthleteProfile @relation(fields: [athleteProfileId], references: [id], onDelete: Cascade)
+  clubId           String?
+  club             Club?    @relation(fields: [clubId], references: [id])
+  opponent         String
+  matchDate        DateTime
+  result           MatchResult
+  condition        MatchCondition?
+  pointsScored     Int      @default(0)
+  notes            String?
+  // Se muestra en la pagina publica compartible (fase 5).
+  isHighlight      Boolean  @default(false)
+
+  // Posicion jugada en este partido: las opciones que ve el usuario dependen
+  // del deporte cargado en AthleteProfile.sport (ver src/lib/athlete/positions.ts).
+  position      String?
+  minutesPlayed Int?
+
+  // Estadisticas especificas de arquero, solo relevantes cuando position es
+  // "Arquero". Se guardan como columnas propias (no un modelo aparte) porque
+  // son pocas y siempre pertenecen 1 a 1 a este partido.
+  cleanSheet         Boolean @default(false)
+  saves              Int?
+  successfulPasses   Int?
+  oneOnOnes          Int?
+  goalsConceded      Int?
+  penaltiesConceded  Int?
+  penaltiesSaved     Int?
+
+  // Estadisticas de jugador de campo (defensor/delantero). Se reutilizan las
+  // mismas columnas para conceptos compartidos entre posiciones (goles,
+  // asistencias, gambetas, faltas, tarjetas) en vez de duplicarlas por
+  // posicion — un gol es un gol independientemente de si lo metio un
+  // defensor o un delantero.
+  duelsWon       Int?
+  aerialDuels    Int?
+  recoveries     Int?
+  interceptions  Int?
+  dribbles       Int?
+  assists        Int?
+  goals          Int?
+  fouls          Int?
+  yellowCards    Int?
+  redCards       Int?
+  headers        Int?
+  penaltiesTaken Int?
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  photos Photo[]
+
+  @@index([athleteProfileId])
+  @@index([clubId])
+  @@index([matchDate])
+}
+
+enum SubscriptionStatus {
+  PENDING
+  AUTHORIZED
+  PAUSED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  IN_PROCESS
+  REJECTED
+  CANCELLED
+  REFUNDED
+  CHARGED_BACK
+}
+
+model Subscription {
+  id                       String             @id @default(uuid())
+  userId                   String
+  user                     User               @relation(fields: [userId], references: [id])
+  mercadopagoPreapprovalId String             @unique
+  status                   SubscriptionStatus @default(PENDING)
+  amount                   Decimal            @db.Decimal(10, 2)
+  currency                 String
+  startedAt                DateTime?
+  nextPaymentDate          DateTime?
+  cancelledAt              DateTime?
+  createdAt                DateTime           @default(now())
+  updatedAt                DateTime           @updatedAt
+
+  payments Payment[]
+
+  @@index([userId])
+}
+
+model Payment {
+  id                   String        @id @default(uuid())
+  subscriptionId       String
+  subscription         Subscription  @relation(fields: [subscriptionId], references: [id])
+  mercadopagoPaymentId String        @unique
+  status               PaymentStatus
+  amount               Decimal       @db.Decimal(10, 2)
+  currency             String
+  paidAt               DateTime?
+  // Payload crudo de MercadoPago, para auditoría/debug sin tener que
+  // reconsultar la API si necesitamos reprocesar algo.
+  rawPayload           Json?
+  createdAt            DateTime      @default(now())
+
+  @@index([subscriptionId])
+}
+
+enum SuggestionStatus {
+  NEW
+  PLANNED
+  IN_PROGRESS
+  DONE
+  REJECTED
+}
+
+model Suggestion {
+  id          String           @id @default(uuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id])
+  title       String
+  description String
+  status      SuggestionStatus @default(NEW)
+  adminNote   String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+// Una fila por destinatario: un broadcast del admin inserta una fila por
+// usuario en vez de modelar una relación de "leido por" aparte.
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  body      String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
