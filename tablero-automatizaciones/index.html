@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tablero de Automatizaciones — Not a Bot Agency</title>
+  <meta name="description" content="Panel de control de los procesos automatizados de Not a Bot Agency: estado, últimas ejecuciones y métricas de cada automatización." />
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Alegreya+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="./">
+        <img src="assets/logo.svg" alt="Not a Bot Agency" height="40" />
+      </a>
+      <div class="topbar__actions">
+        <span class="updated" id="updated">Actualizado —</span>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar tema">
+          <span class="theme-toggle__icon" aria-hidden="true">◐</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="page-head">
+      <p class="eyebrow">Operaciones</p>
+      <h1>Tablero de Automatizaciones</h1>
+      <p class="lede">
+        Estado y rendimiento de los procesos que corren solos. Un lugar para ver
+        qué está en verde, qué pide atención y cuándo fue la última corrida.
+      </p>
+    </section>
+
+    <section class="kpis" id="kpis" aria-label="Indicadores generales"></section>
+
+    <section class="toolbar">
+      <div class="search">
+        <span class="search__icon" aria-hidden="true">⌕</span>
+        <input type="search" id="search" placeholder="Buscar proceso, categoría o responsable…" aria-label="Buscar" />
+      </div>
+      <div class="filters" id="filters" role="group" aria-label="Filtrar por estado">
+        <button class="chip is-active" data-estado="todos" type="button">Todos</button>
+        <button class="chip" data-estado="operativo" type="button"><i class="dot dot--operativo"></i>Operativo</button>
+        <button class="chip" data-estado="atencion" type="button"><i class="dot dot--atencion"></i>Atención</button>
+        <button class="chip" data-estado="detenido" type="button"><i class="dot dot--detenido"></i>Detenido</button>
+      </div>
+    </section>
+
+    <section class="grid" id="grid" aria-live="polite"></section>
+    <p class="empty" id="empty" hidden>No hay procesos que coincidan con el filtro.</p>
+  </main>
+
+  <footer class="foot">
+    <div class="foot__inner">
+      <img src="assets/logo.svg" alt="" height="34" />
+      <p>Not a Bot Agency · Humanizar la tecnología con criterio.</p>
+    </div>
+  </footer>
+
+  <!-- Panel de detalle -->
+  <div class="drawer" id="drawer" hidden>
+    <div class="drawer__backdrop" data-close></div>
+    <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+      <button class="drawer__close" data-close type="button" aria-label="Cerrar">✕</button>
+      <div id="drawerBody"></div>
+    </aside>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
