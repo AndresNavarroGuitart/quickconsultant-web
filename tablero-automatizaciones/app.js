@@ -94,9 +94,14 @@
 
   function cardHTML(proc) {
     var cat = CATS[proc.categoria] || { label: proc.categoria };
+    var esModulo = !!proc.enlace;
+    var open = esModulo
+      ? '<a class="card card--modulo" href="' + escapeAttr(proc.enlace) + '" data-id="' + proc.id + '" ' +
+        'aria-label="Abrir ' + escapeAttr(proc.nombre) + '">'
+      : '<article class="card" tabindex="0" role="button" data-id="' + proc.id + '" ' +
+        'aria-label="Ver detalle de ' + escapeAttr(proc.nombre) + '">';
     return (
-      '<article class="card" tabindex="0" role="button" data-id="' + proc.id + '" ' +
-      'aria-label="Ver detalle de ' + escapeAttr(proc.nombre) + '">' +
+      open +
         '<div class="card__top">' +
           '<span class="card__cat" ' + catStyle(proc.categoria) + ">" + cat.label + "</span>" +
           '<span class="card__status"><i class="dot dot--' + proc.estado + '"></i>' + ESTADO_LABEL[proc.estado] + "</span>" +
@@ -108,7 +113,8 @@
           "<div><dt>Frecuencia</dt><dd>" + (proc.frecuencia || "—") + "</dd></div>" +
           "<div><dt>Éxito 7d</dt><dd>" + (proc.estado === "detenido" ? "—" : (proc.exito7d + "%")) + "</dd></div>" +
         "</dl>" +
-      "</article>"
+        (esModulo ? '<span class="card__go">Abrir módulo <span aria-hidden="true">→</span></span>' : "") +
+      (esModulo ? "</a>" : "</article>")
     );
   }
 
@@ -211,12 +217,15 @@
 
   $grid.addEventListener("click", function (e) {
     var card = e.target.closest(".card");
-    if (card) openDrawer(card.dataset.id);
+    if (!card || card.tagName === "A") return; // los módulos navegan solos
+    openDrawer(card.dataset.id);
   });
   $grid.addEventListener("keydown", function (e) {
     if (e.key !== "Enter" && e.key !== " ") return;
     var card = e.target.closest(".card");
-    if (card) { e.preventDefault(); openDrawer(card.dataset.id); }
+    if (!card || card.tagName === "A") return;
+    e.preventDefault();
+    openDrawer(card.dataset.id);
   });
 
   $drawer.addEventListener("click", function (e) {
