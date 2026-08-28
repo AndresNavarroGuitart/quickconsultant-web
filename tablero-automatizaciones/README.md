@@ -13,11 +13,31 @@ terracota `#C84E1E`. Soporta tema claro/oscuro.
 
 | Archivo | Rol |
 |---|---|
-| `index.html` | Estructura de la página |
-| `styles.css` | Estilos y tokens de marca |
+| `index.html` | Tablero: estructura de la página |
+| `styles.css` | Estilos propios del tablero |
 | `app.js` | Render de KPIs, grilla, filtros y panel de detalle |
-| `data.js` | **Fuente de datos** (hoy datos de ejemplo) |
+| `data.js` | **Fuente de datos** del tablero (hoy datos de ejemplo) |
+| `assets/theme.css` | Tokens de marca + shell (topbar, botones, footer) compartido por todas las vistas |
 | `assets/logo.svg` | Logo Not a Bot Agency (vectorial) |
+| `nomina/` | **Módulo Nómina de empleados** (ver abajo) |
+
+## Módulo: Nómina de empleados (`nomina/`)
+
+Alta y ficha de empleados. Al entrar se ve la lista; desde ahí se crea el
+**perfil inicial** de cada persona: la sección **Datos personales** (foto, nombre,
+apellido, DNI/RUT/Cédula, pasaporte, CUIT/CUIL, dirección legal, barrio, localidad,
+provincia, país, mail, LinkedIn, tipo de contrato y cantidad de horas). Las
+secciones siguientes de la ficha (datos bancarios, contrato, documentación) quedan
+listadas como próximos pasos.
+
+Los datos se guardan en `localStorage` del navegador (clave `nba-nomina-empleados`),
+sin backend. Router por hash: `#/` lista · `#/nuevo` alta · `#/empleado/:id` edición.
+
+| Archivo | Rol |
+|---|---|
+| `nomina/index.html` | Estructura + plantillas de lista y formulario |
+| `nomina/nomina.css` | Estilos de la lista y la ficha |
+| `nomina/nomina.js` | Router, CRUD sobre localStorage, validación del formulario |
 
 ## Cómo agregar o editar un proceso
 
@@ -56,7 +76,8 @@ corra `app.js`, manteniendo la misma forma de objeto en `window.TABLERO`.
 Servir la carpeta con cualquier servidor estático. Desde la raíz del repo:
 
 ```bash
-powershell -File serve.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File serve.ps1
 ```
 
-y abrir `http://localhost:3005/tablero-automatizaciones/`.
+y abrir `http://localhost:3005/tablero-automatizaciones/index.html`
+(el módulo Nómina queda en `.../tablero-automatizaciones/nomina/index.html`).

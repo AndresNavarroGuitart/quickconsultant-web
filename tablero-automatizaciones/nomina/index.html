@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nómina de empleados — Not a Bot Agency</title>
+  <meta name="description" content="Alta y ficha de empleados de Not a Bot Agency. Perfil inicial con los datos personales de cada persona." />
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Alegreya+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/theme.css" />
+  <link rel="stylesheet" href="nomina.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="../index.html">
+        <img src="../assets/logo.svg" alt="Not a Bot Agency" height="40" />
+        <span class="brand__back">‹ Tablero</span>
+      </a>
+      <div class="topbar__actions">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar tema">
+          <span aria-hidden="true">◐</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" id="app"></main>
+
+  <footer class="foot">
+    <div class="foot__inner">
+      <img src="../assets/logo.svg" alt="" height="34" />
+      <p>Not a Bot Agency · Los datos se guardan en este navegador (localStorage).</p>
+    </div>
+  </footer>
+
+  <template id="tpl-lista">
+    <section class="page-head page-head--row">
+      <div>
+        <p class="eyebrow">RRHH &amp; Nómina</p>
+        <h1>Nómina de empleados</h1>
+      </div>
+      <a class="btn" href="#/nuevo">+ Nuevo empleado</a>
+    </section>
+
+    <div class="lista-toolbar">
+      <div class="search">
+        <span class="search__icon" aria-hidden="true">⌕</span>
+        <input type="search" id="buscar" placeholder="Buscar por nombre, documento o mail…" aria-label="Buscar empleado" />
+      </div>
+      <span class="lista-count" id="listaCount"></span>
+    </div>
+
+    <ul class="empleados" id="empleados"></ul>
+
+    <div class="vacio" id="vacio" hidden>
+      <p class="vacio__title">Todavía no hay empleados cargados</p>
+      <p class="vacio__hint">Empezá creando el perfil inicial de la primera persona: sus datos personales.</p>
+      <a class="btn" href="#/nuevo">+ Cargar primer empleado</a>
+    </div>
+  </template>
+
+  <template id="tpl-form">
+    <section class="page-head">
+      <p class="eyebrow"><a href="#/">Nómina</a> · Ficha de empleado</p>
+      <h1 id="formTitulo">Nuevo empleado</h1>
+      <p class="lede">Perfil inicial. Completá los datos personales; el resto de la ficha se habilita después.</p>
+    </section>
+
+    <div class="ficha">
+      <nav class="ficha__nav" aria-label="Secciones de la ficha">
+        <ol>
+          <li><span class="ficha__step is-current"><b>1</b> Datos personales</span></li>
+          <li><span class="ficha__step is-locked"><b>2</b> Datos bancarios <em>pronto</em></span></li>
+          <li><span class="ficha__step is-locked"><b>3</b> Contrato y jornada <em>pronto</em></span></li>
+          <li><span class="ficha__step is-locked"><b>4</b> Documentación <em>pronto</em></span></li>
+        </ol>
+      </nav>
+
+      <form class="ficha__form" id="form" novalidate>
+        <fieldset class="grupo">
+          <legend>Datos personales</legend>
+
+          <div class="foto-field">
+            <div class="foto" id="fotoPreview" data-empty="true" aria-hidden="true"><span id="fotoIniciales">–</span></div>
+            <div class="foto-field__ctrl">
+              <label class="btn btn--ghost" for="foto">Subir foto</label>
+              <button type="button" class="foto-field__clear" id="fotoClear" hidden>Quitar</button>
+              <input type="file" id="foto" name="foto" accept="image/*" class="sr-only" />
+              <p class="hint">JPG o PNG. Se guarda solo en este navegador.</p>
+            </div>
+          </div>
+
+          <div class="campos">
+            <label class="campo">
+              <span>Nombre <b>*</b></span>
+              <input type="text" name="nombre" autocomplete="given-name" required />
+            </label>
+            <label class="campo">
+              <span>Apellido <b>*</b></span>
+              <input type="text" name="apellido" autocomplete="family-name" required />
+            </label>
+
+            <label class="campo">
+              <span>DNI / RUT / Cédula <b>*</b></span>
+              <input type="text" name="documento" inputmode="numeric" required />
+            </label>
+            <label class="campo">
+              <span>N.º de pasaporte</span>
+              <input type="text" name="pasaporte" />
+            </label>
+
+            <label class="campo">
+              <span>CUIT / CUIL</span>
+              <input type="text" name="cuit" inputmode="numeric" placeholder="20-12345678-3" />
+            </label>
+            <label class="campo">
+              <span>País <b>*</b></span>
+              <select name="pais" required>
+                <option value="">Elegí un país…</option>
+                <option>Argentina</option>
+                <option>Uruguay</option>
+                <option>Chile</option>
+                <option>Paraguay</option>
+                <option>Bolivia</option>
+                <option>Perú</option>
+                <option>Colombia</option>
+                <option>Ecuador</option>
+                <option>Venezuela</option>
+                <option>México</option>
+                <option>Brasil</option>
+                <option>España</option>
+                <option>Estados Unidos</option>
+                <option>Otro</option>
+              </select>
+            </label>
+
+            <label class="campo campo--wide">
+              <span>Dirección legal</span>
+              <input type="text" name="direccionLegal" autocomplete="street-address" placeholder="Calle, número, piso/depto" />
+            </label>
+
+            <label class="campo">
+              <span>Barrio</span>
+              <input type="text" name="barrio" />
+            </label>
+            <label class="campo">
+              <span>Localidad</span>
+              <input type="text" name="localidad" autocomplete="address-level2" />
+            </label>
+            <label class="campo">
+              <span>Provincia / Estado</span>
+              <input type="text" name="provincia" autocomplete="address-level1" />
+            </label>
+            <label class="campo">
+              <span>Mail <b>*</b></span>
+              <input type="email" name="mail" autocomplete="email" required placeholder="persona@empresa.com" />
+            </label>
+
+            <label class="campo campo--wide">
+              <span>LinkedIn</span>
+              <input type="url" name="linkedin" placeholder="https://www.linkedin.com/in/…" />
+            </label>
+
+            <label class="campo">
+              <span>Tipo de contrato <b>*</b></span>
+              <select name="tipoContrato" required>
+                <option value="">Elegí…</option>
+                <option>Relación de dependencia</option>
+                <option>Monotributo</option>
+                <option>Autónomo</option>
+                <option>Contractor / Externalizado</option>
+                <option>Pasantía</option>
+                <option>Freelance por proyecto</option>
+              </select>
+            </label>
+            <label class="campo">
+              <span>Cantidad de hs. <b>*</b></span>
+              <input type="number" name="horas" min="0" max="168" step="1" required placeholder="40" />
+              <small class="hint">Horas semanales pactadas.</small>
+            </label>
+          </div>
+        </fieldset>
+
+        <p class="form-error" id="formError" hidden></p>
+
+        <div class="ficha__actions">
+          <button type="submit" class="btn">Guardar datos personales</button>
+          <a href="#/" class="btn btn--ghost">Cancelar</a>
+          <button type="button" class="btn btn--ghost ficha__delete" id="btnEliminar" hidden>Eliminar empleado</button>
+        </div>
+      </form>
+    </div>
+  </template>
+
+  <script src="nomina.js"></script>
+</body>
+</html>

@@ -37,7 +37,7 @@ window.TABLERO = {
       exito7d: 100,
       ejecuciones7d: 1,
       responsable: "Equipo RRHH",
-      enlace: null,
+      enlace: "nomina/index.html",
       corridas: [
         { fecha: "2026-08-25T14:20:00-03:00", estado: "ok", detalle: "38 recibos generados · neto total conciliado" },
         { fecha: "2026-07-25T14:12:00-03:00", estado: "aviso", detalle: "2 legajos sin CBU — completados a mano antes del pago" },

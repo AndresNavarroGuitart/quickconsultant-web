@@ -150,7 +150,7 @@
     $drawerBody.innerHTML =
       '<div class="detail">' +
         '<span class="detail__cat" style="background:' + cat.color + '">' + cat.label + "</span>" +
-        "<h2>" + proc.nombre + "</h2>" +
+        '<h2 id="drawerTitle">' + proc.nombre + "</h2>" +
         '<p class="detail__desc">' + proc.descripcion + "</p>" +
         '<dl class="detail__stats">' +
           stats.map(function (s) {
