@@ -33,11 +33,16 @@ listadas como próximos pasos.
 Los datos se guardan en `localStorage` del navegador (clave `nba-nomina-empleados`),
 sin backend. Router por hash: `#/` lista · `#/nuevo` alta · `#/empleado/:id` edición.
 
+La primera vez que se abre el módulo se cargan **10 empleados de ejemplo**
+(`empleados-demo.js`). Desde el estado vacío hay un botón para volver a cargarlos.
+Al conectar datos reales, borrar `empleados-demo.js` y su `<script>` en `index.html`.
+
 | Archivo | Rol |
 |---|---|
 | `nomina/index.html` | Estructura + plantillas de lista y formulario |
 | `nomina/nomina.css` | Estilos de la lista y la ficha |
 | `nomina/nomina.js` | Router, CRUD sobre localStorage, validación del formulario |
+| `nomina/empleados-demo.js` | Dataset de ejemplo (10 empleados) |
 
 ## Cómo agregar o editar un proceso
 

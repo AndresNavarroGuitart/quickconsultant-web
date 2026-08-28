@@ -58,7 +58,10 @@
     <div class="vacio" id="vacio" hidden>
       <p class="vacio__title">Todavía no hay empleados cargados</p>
       <p class="vacio__hint">Empezá creando el perfil inicial de la primera persona: sus datos personales.</p>
-      <a class="btn" href="#/nuevo">+ Cargar primer empleado</a>
+      <div class="vacio__acciones">
+        <a class="btn" href="#/nuevo">+ Cargar primer empleado</a>
+        <button type="button" class="btn btn--ghost" id="cargarDemo">Cargar 10 de ejemplo</button>
+      </div>
     </div>
   </template>
 
@@ -195,6 +198,7 @@
     </div>
   </template>
 
+  <script src="empleados-demo.js"></script>
   <script src="nomina.js"></script>
 </body>
 </html>

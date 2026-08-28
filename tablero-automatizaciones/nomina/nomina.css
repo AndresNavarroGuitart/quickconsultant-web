@@ -54,8 +54,9 @@
   font-family: var(--font-head); font-size: 1.05rem; color: var(--teal-2);
   border: 1px solid var(--border);
 }
+.empleado__main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .empleado__nombre { font-weight: 700; font-size: 1.05rem; }
-.empleado__sub { color: var(--muted); font-size: 13px; }
+.empleado__sub { color: var(--muted); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .empleado__dato { font-size: 14px; }
 .empleado__dato span { display: block; color: var(--muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; }
 .empleado__chevron { color: var(--muted); font-size: 20px; }
@@ -78,6 +79,7 @@
 }
 .vacio__title { font-family: var(--font-head); font-size: 1.4rem; color: var(--heading-strong); margin: 0; }
 .vacio__hint { color: var(--muted); margin: 0 0 12px; max-width: 42ch; }
+.vacio__acciones { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 
 /* ---------- Ficha (formulario) ---------- */
 .ficha {
@@ -202,12 +204,10 @@
   .campos { grid-template-columns: 1fr; }
   .empleado {
     grid-template-columns: 42px 1fr auto;
-    grid-template-areas: "av nom chev" "av sub chev";
-    row-gap: 2px;
+    grid-template-areas: "av main chev";
   }
   .empleado .avatar { grid-area: av; }
-  .empleado__nombre { grid-area: nom; }
-  .empleado__sub { grid-area: sub; }
-  .empleado__chevron { grid-area: chev; }
+  .empleado__main { grid-area: main; }
+  .empleado__chevron { grid-area: chev; align-self: center; }
   .empleado__dato { display: none; }
 }

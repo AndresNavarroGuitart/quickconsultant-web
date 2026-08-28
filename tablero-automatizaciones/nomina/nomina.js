@@ -26,12 +26,25 @@
 
   /* ---------- Almacenamiento ---------- */
   function load() {
-    try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; }
-    catch (e) { return []; }
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (raw === null && Array.isArray(window.NOMINA_DEMO)) {
+        // Primera vez: se siembra el dataset de ejemplo.
+        localStorage.setItem(STORE_KEY, JSON.stringify(window.NOMINA_DEMO));
+        return window.NOMINA_DEMO.slice();
+      }
+      return JSON.parse(raw) || [];
+    } catch (e) { return []; }
   }
   function save(list) {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(list)); }
     catch (e) { alert("No se pudo guardar: el almacenamiento del navegador está lleno o bloqueado."); }
+  }
+  function cargarDemo() {
+    if (!Array.isArray(window.NOMINA_DEMO)) return;
+    save(window.NOMINA_DEMO.slice());
+    toast(window.NOMINA_DEMO.length + " empleados de ejemplo cargados");
+    vistaLista();
   }
   function uid() {
     return "e" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -71,6 +84,8 @@
     var $vacio = document.getElementById("vacio");
     var $count = document.getElementById("listaCount");
     var $buscar = document.getElementById("buscar");
+    var $demo = document.getElementById("cargarDemo");
+    if ($demo) $demo.addEventListener("click", cargarDemo);
 
     function pinta(filtro) {
       var list = load();
@@ -93,7 +108,7 @@
         return (
           '<li><a class="empleado" href="#/empleado/' + esc(e.id) + '">' +
             avatar +
-            '<span>' +
+            '<span class="empleado__main">' +
               '<span class="empleado__nombre">' + esc(e.nombre) + " " + esc(e.apellido) + "</span>" +
               '<span class="empleado__sub">' + esc(e.documento || "sin documento") +
                 (e.mail ? " · " + esc(e.mail) : "") + "</span>" +
