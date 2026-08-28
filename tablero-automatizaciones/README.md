@@ -27,7 +27,7 @@ Editar el array `procesos` en [`data.js`](data.js). Cada entrada:
 {
   id: "slug-unico",
   nombre: "Nombre visible",
-  categoria: "ventas",          // clave de TABLERO.categorias
+  categoria: "comercial",       // clave de TABLERO.categorias
   estado: "operativo",          // operativo | atencion | detenido
   descripcion: "Qué hace el proceso.",
   frecuencia: "Diaria · 07:00",
@@ -36,7 +36,7 @@ Editar el array `procesos` en [`data.js`](data.js). Cada entrada:
   exito7d: 98,                  // %
   ejecuciones7d: 7,
   responsable: "Nombre",
-  enlace: "../facturacion-app/", // o null
+  enlace: "../alguna-app/",     // o null
   corridas: [
     { fecha: "2026-08-28T07:03:00-03:00", estado: "ok", detalle: "..." }
     // estado: ok | aviso | error
