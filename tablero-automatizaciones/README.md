@@ -23,12 +23,22 @@ terracota `#C84E1E`. Soporta tema claro/oscuro.
 
 ## Módulo: Nómina de empleados (`nomina/`)
 
-Alta y ficha de empleados. Al entrar se ve la lista; desde ahí se crea el
-**perfil inicial** de cada persona: la sección **Datos personales** (foto, nombre,
-apellido, DNI/RUT/Cédula, pasaporte, CUIT/CUIL, dirección legal, barrio, localidad,
-provincia, país, mail, LinkedIn, tipo de contrato y cantidad de horas). Las
-secciones siguientes de la ficha (datos bancarios, contrato, documentación) quedan
-listadas como próximos pasos.
+Alta y ficha de empleados. La lista es una planilla; cada fila abre la ficha del
+empleado, que tiene **5 solapas**:
+
+1. **Datos personales** — foto, nombre, apellido, DNI/RUT/Cédula, pasaporte,
+   CUIT/CUIL, dirección legal, barrio, localidad, provincia, país, mail, LinkedIn,
+   tipo de contrato y cantidad de horas.
+2. **Licencias** — tabla de licencias (tipo, fechas, días calculados, estado) con
+   alta y baja; resumen de días tomados y pendientes.
+3. **Desempeño** — evaluaciones por período (evaluador, calificación, resumen).
+4. **Documentos** — documentos del legajo (nombre, tipo, fecha y archivo opcional
+   guardado en el navegador).
+5. **Administración** — legajo, fecha de ingreso, centro de costo, datos bancarios,
+   moneda, remuneración, periodicidad y cobertura.
+
+En un empleado nuevo, las solapas 2–5 se habilitan recién al guardar los datos
+personales.
 
 Los datos se guardan en `localStorage` del navegador (clave `nba-nomina-empleados`),
 sin backend. Router por hash: `#/` lista · `#/nuevo` alta · `#/empleado/:id` edición.

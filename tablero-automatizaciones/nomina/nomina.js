@@ -140,6 +140,231 @@
     pinta("");
   }
 
+  /* ---------- Persistencia parcial ---------- */
+  function patchEmp(empId, patch) {
+    var next = load();
+    var i = next.findIndex(function (e) { return e.id === empId; });
+    if (i < 0) return null;
+    next[i] = Object.assign({}, next[i], patch, { actualizado: new Date().toISOString() });
+    save(next);
+    return next[i];
+  }
+  function getEmp(empId) { return load().find(function (e) { return e.id === empId; }) || null; }
+  function fechaCorta(s) {
+    var d = s ? new Date(s + (s.length === 10 ? "T00:00:00" : "")) : null;
+    if (!d || isNaN(d)) return "—";
+    return d.toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "numeric" });
+  }
+  function diasEntre(a, b) {
+    var d1 = new Date(a), d2 = new Date(b);
+    if (isNaN(d1) || isNaN(d2) || d2 < d1) return 0;
+    return Math.round((d2 - d1) / 86400000) + 1;
+  }
+
+  /* ---------- Campos (helpers de markup) ---------- */
+  function campo(name, label, type, req, extra) {
+    return '<label class="campo"><span>' + label + (req ? ' <b>*</b>' : "") + "</span>" +
+      '<input type="' + (type || "text") + '" name="' + name + '"' + (req ? " required" : "") +
+      (extra || "") + " /></label>";
+  }
+  function campoSel(name, label, opts, req) {
+    return '<label class="campo"><span>' + label + (req ? ' <b>*</b>' : "") + '</span><select name="' + name + '"' +
+      (req ? " required" : "") + '><option value="">Elegí…</option>' +
+      opts.map(function (o) { return "<option>" + esc(o) + "</option>"; }).join("") + "</select></label>";
+  }
+  function estadoBadge(txt) {
+    return '<span class="badge">' + esc(txt || "—") + "</span>";
+  }
+
+  var LIC_TIPOS = ["Vacaciones", "Enfermedad", "Licencia especial", "Sin goce de sueldo", "Estudio / examen", "Maternidad / Paternidad", "Duelo"];
+  var LIC_ESTADOS = ["Solicitada", "Aprobada", "En curso", "Tomada", "Rechazada"];
+  var DES_CALIF = ["Excelente", "Muy bueno", "Cumple expectativas", "A mejorar", "No cumple"];
+  var DOC_TIPOS = ["Contrato", "Identificación (DNI/RUT/Cédula)", "CV", "Certificado", "Alta AFIP / Monotributo", "Título / Diploma", "Constancia de CBU", "Otro"];
+
+  /* ---------- Solapa: Licencias ---------- */
+  function renderLicencias(empId) {
+    var emp = getEmp(empId); if (!emp) return;
+    var arr = emp.licencias || [];
+    var diasTomados = arr.filter(function (l) { return l.estado === "Tomada" || l.estado === "En curso"; })
+      .reduce(function (s, l) { return s + (Number(l.dias) || 0); }, 0);
+    var pend = arr.filter(function (l) { return l.estado === "Solicitada"; }).length;
+
+    var filas = arr.length ? arr.map(function (l) {
+      return "<tr><td>" + esc(l.tipo) + "</td><td>" + fechaCorta(l.desde) + "</td><td>" + fechaCorta(l.hasta) +
+        '</td><td class="col-num">' + esc(l.dias || "—") + "</td><td>" + estadoBadge(l.estado) +
+        '</td><td class="col-num"><button type="button" class="mini-del" data-del="' + esc(l.id) + '" aria-label="Quitar licencia">✕</button></td></tr>';
+    }).join("") : '<tr><td colspan="6" class="sub-vacio">Sin licencias registradas.</td></tr>';
+
+    document.getElementById("panel-licencias").innerHTML =
+      '<div class="subpanel">' +
+        '<div class="subpanel__head"><h2>Licencias</h2><div class="chips">' +
+          '<span class="chip-stat">' + diasTomados + " días tomados</span>" +
+          '<span class="chip-stat">' + pend + " pendientes</span></div></div>" +
+        '<div class="tabla-wrap"><table class="planilla"><thead><tr>' +
+          "<th>Tipo</th><th>Desde</th><th>Hasta</th><th class=\"col-num\">Días</th><th>Estado</th><th></th>" +
+        '</tr></thead><tbody id="licBody">' + filas + "</tbody></table></div>" +
+        '<form class="sub-form" id="licForm">' +
+          campoSel("tipo", "Tipo", LIC_TIPOS, true) +
+          campoSel("estado", "Estado", LIC_ESTADOS, true) +
+          campo("desde", "Desde", "date", true) +
+          campo("hasta", "Hasta", "date", true) +
+          campo("nota", "Nota", "text", false, ' class=""') +
+          '<button type="submit" class="btn">Agregar licencia</button>' +
+        "</form>" +
+      "</div>";
+
+    document.getElementById("licBody").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-del]"); if (!b) return;
+      patchEmp(empId, { licencias: (getEmp(empId).licencias || []).filter(function (l) { return l.id !== b.dataset.del; }) });
+      toast("Licencia quitada"); renderLicencias(empId);
+    });
+    document.getElementById("licForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var f = e.target;
+      var reg = { id: uid(), tipo: f.tipo.value, estado: f.estado.value, desde: f.desde.value, hasta: f.hasta.value, nota: f.nota.value.trim() };
+      if (!reg.tipo || !reg.estado || !reg.desde || !reg.hasta) { toast("Completá tipo, estado y fechas"); return; }
+      if (new Date(reg.hasta) < new Date(reg.desde)) { toast("La fecha 'hasta' es anterior a 'desde'"); return; }
+      reg.dias = diasEntre(reg.desde, reg.hasta);
+      patchEmp(empId, { licencias: (getEmp(empId).licencias || []).concat([reg]) });
+      toast("Licencia agregada"); renderLicencias(empId);
+    });
+  }
+
+  /* ---------- Solapa: Desempeño ---------- */
+  function renderDesempeno(empId) {
+    var emp = getEmp(empId); if (!emp) return;
+    var arr = emp.desempeno || [];
+    var ultima = arr.length ? arr[arr.length - 1].calificacion : null;
+
+    var filas = arr.length ? arr.map(function (d) {
+      return "<tr><td>" + esc(d.periodo) + "</td><td>" + esc(d.evaluador || "—") + "</td><td>" + estadoBadge(d.calificacion) +
+        "</td><td>" + esc(d.resumen || "—") +
+        '</td><td class="col-num"><button type="button" class="mini-del" data-del="' + esc(d.id) + '" aria-label="Quitar evaluación">✕</button></td></tr>';
+    }).join("") : '<tr><td colspan="5" class="sub-vacio">Sin evaluaciones cargadas.</td></tr>';
+
+    document.getElementById("panel-desempeno").innerHTML =
+      '<div class="subpanel">' +
+        '<div class="subpanel__head"><h2>Desempeño</h2>' +
+          (ultima ? '<div class="chips"><span class="chip-stat">Última: ' + esc(ultima) + "</span></div>" : "") +
+        "</div>" +
+        '<div class="tabla-wrap"><table class="planilla"><thead><tr>' +
+          "<th>Período</th><th>Evaluador</th><th>Calificación</th><th>Resumen</th><th></th>" +
+        '</tr></thead><tbody id="desBody">' + filas + "</tbody></table></div>" +
+        '<form class="sub-form" id="desForm">' +
+          campo("periodo", "Período", "text", true, ' placeholder="1er semestre 2026"') +
+          campo("evaluador", "Evaluador", "text", false) +
+          campoSel("calificacion", "Calificación", DES_CALIF, true) +
+          campo("resumen", "Resumen", "text", false) +
+          '<button type="submit" class="btn">Agregar evaluación</button>' +
+        "</form>" +
+      "</div>";
+
+    document.getElementById("desBody").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-del]"); if (!b) return;
+      patchEmp(empId, { desempeno: (getEmp(empId).desempeno || []).filter(function (d) { return d.id !== b.dataset.del; }) });
+      toast("Evaluación quitada"); renderDesempeno(empId);
+    });
+    document.getElementById("desForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var f = e.target;
+      var reg = { id: uid(), periodo: f.periodo.value.trim(), evaluador: f.evaluador.value.trim(), calificacion: f.calificacion.value, resumen: f.resumen.value.trim() };
+      if (!reg.periodo || !reg.calificacion) { toast("Completá período y calificación"); return; }
+      patchEmp(empId, { desempeno: (getEmp(empId).desempeno || []).concat([reg]) });
+      toast("Evaluación agregada"); renderDesempeno(empId);
+    });
+  }
+
+  /* ---------- Solapa: Documentos ---------- */
+  function renderDocumentos(empId) {
+    var emp = getEmp(empId); if (!emp) return;
+    var arr = emp.documentos || [];
+
+    var filas = arr.length ? arr.map(function (d) {
+      var archivo = d.archivo
+        ? '<a class="doc-link" href="' + esc(d.archivo) + '" target="_blank" rel="noopener">abrir</a>'
+        : (d.archivoNombre ? esc(d.archivoNombre) : "—");
+      return "<tr><td>" + esc(d.nombre) + "</td><td>" + esc(d.tipo || "—") + "</td><td>" + fechaCorta(d.fecha) +
+        "</td><td>" + archivo +
+        '</td><td class="col-num"><button type="button" class="mini-del" data-del="' + esc(d.id) + '" aria-label="Quitar documento">✕</button></td></tr>';
+    }).join("") : '<tr><td colspan="5" class="sub-vacio">Sin documentos cargados.</td></tr>';
+
+    document.getElementById("panel-documentos").innerHTML =
+      '<div class="subpanel">' +
+        '<div class="subpanel__head"><h2>Documentos</h2><div class="chips"><span class="chip-stat">' + arr.length + " archivo(s)</span></div></div>" +
+        '<div class="tabla-wrap"><table class="planilla"><thead><tr>' +
+          "<th>Documento</th><th>Tipo</th><th>Fecha</th><th>Archivo</th><th></th>" +
+        '</tr></thead><tbody id="docBody">' + filas + "</tbody></table></div>" +
+        '<form class="sub-form" id="docForm">' +
+          campo("nombre", "Nombre del documento", "text", true) +
+          campoSel("tipo", "Tipo", DOC_TIPOS, true) +
+          campo("fecha", "Fecha", "date", false) +
+          '<label class="campo"><span>Archivo (opcional)</span><input type="file" name="archivo" /></label>' +
+          '<p class="hint campo--wide">Los archivos se guardan solo en este navegador. Máximo 4 MB.</p>' +
+          '<button type="submit" class="btn">Agregar documento</button>' +
+        "</form>" +
+      "</div>";
+
+    document.getElementById("docBody").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-del]"); if (!b) return;
+      patchEmp(empId, { documentos: (getEmp(empId).documentos || []).filter(function (d) { return d.id !== b.dataset.del; }) });
+      toast("Documento quitado"); renderDocumentos(empId);
+    });
+    document.getElementById("docForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var f = e.target;
+      var reg = { id: uid(), nombre: f.nombre.value.trim(), tipo: f.tipo.value, fecha: f.fecha.value, archivo: "", archivoNombre: "" };
+      if (!reg.nombre || !reg.tipo) { toast("Completá nombre y tipo"); return; }
+      var file = f.archivo.files && f.archivo.files[0];
+      var guardar = function () {
+        patchEmp(empId, { documentos: (getEmp(empId).documentos || []).concat([reg]) });
+        toast("Documento agregado"); renderDocumentos(empId);
+      };
+      if (file) {
+        if (file.size > 4 * 1024 * 1024) { toast("El archivo supera los 4 MB"); return; }
+        reg.archivoNombre = file.name;
+        var reader = new FileReader();
+        reader.onload = function () { reg.archivo = reader.result; guardar(); };
+        reader.readAsDataURL(file);
+      } else { guardar(); }
+    });
+  }
+
+  /* ---------- Solapa: Administración ---------- */
+  var ADM_CAMPOS = ["legajo", "fechaIngreso", "centroCosto", "modalidadPago", "banco", "cuenta", "alias", "moneda", "remuneracion", "periodicidad", "cobertura", "notas"];
+  function renderAdministracion(empId) {
+    var emp = getEmp(empId); if (!emp) return;
+    var a = emp.administracion || {};
+
+    document.getElementById("panel-administracion").innerHTML =
+      '<form class="ficha__form" id="admForm" novalidate><fieldset class="grupo"><legend>Administración</legend>' +
+        '<div class="campos">' +
+          campo("legajo", "Legajo") +
+          campo("fechaIngreso", "Fecha de ingreso", "date") +
+          campo("centroCosto", "Centro de costo") +
+          campoSel("modalidadPago", "Modalidad de pago", ["Transferencia bancaria", "Efectivo", "Cheque", "Plataforma de pago"]) +
+          campo("banco", "Banco") +
+          campo("cuenta", "CBU / IBAN / N.º de cuenta") +
+          campo("alias", "Alias") +
+          campoSel("moneda", "Moneda", ["ARS", "UYU", "USD", "EUR", "CLP", "COP", "MXN", "BRL"]) +
+          campo("remuneracion", "Remuneración bruta", "number", false, ' min="0" step="0.01"') +
+          campoSel("periodicidad", "Periodicidad", ["Mensual", "Quincenal", "Semanal", "Por hora", "Por entregable"]) +
+          campo("cobertura", "Obra social / Cobertura médica", "text", false, ' class=""') +
+          '<label class="campo campo--wide"><span>Notas</span><input type="text" name="notas" /></label>' +
+        "</div>" +
+        '<div class="ficha__actions"><button type="submit" class="btn">Guardar administración</button></div>' +
+      "</fieldset></form>";
+
+    var $adm = document.getElementById("admForm");
+    ADM_CAMPOS.forEach(function (k) { if ($adm.elements[k] && a[k] != null) $adm.elements[k].value = a[k]; });
+    $adm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var obj = {};
+      ADM_CAMPOS.forEach(function (k) { obj[k] = $adm.elements[k] ? $adm.elements[k].value.trim() : ""; });
+      patchEmp(empId, { administracion: obj });
+      toast("Administración guardada");
+    });
+  }
+
   /* ---------- Vista: ficha / formulario ---------- */
   function vistaForm(id) {
     var list = load();
@@ -148,6 +373,47 @@
 
     $app.innerHTML = "";
     $app.appendChild(tpl("tpl-form"));
+
+    /* --- Solapas --- */
+    var $tabs = [].slice.call(document.querySelectorAll(".ficha__tab"));
+    function activarTab(name) {
+      $tabs.forEach(function (t) {
+        var on = t.dataset.tab === name;
+        t.classList.toggle("is-current", on);
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        t.tabIndex = on ? 0 : -1;
+        var p = document.getElementById("panel-" + t.dataset.tab);
+        if (p) { p.hidden = !on; p.classList.toggle("is-current", on); }
+      });
+    }
+    $tabs.forEach(function (t, idx) {
+      if (!emp && t.dataset.tab !== "datos") {
+        t.disabled = true;
+        t.title = "Se habilita al guardar los datos personales";
+      }
+      t.addEventListener("click", function () { if (!t.disabled) activarTab(t.dataset.tab); });
+      t.addEventListener("keydown", function (e) {
+        var dir = e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
+        if (!dir) return;
+        e.preventDefault();
+        var j = idx;
+        do { j = (j + dir + $tabs.length) % $tabs.length; } while ($tabs[j].disabled && j !== idx);
+        $tabs[j].focus();
+        if (!$tabs[j].disabled) activarTab($tabs[j].dataset.tab);
+      });
+    });
+
+    if (emp) {
+      renderLicencias(emp.id);
+      renderDesempeno(emp.id);
+      renderDocumentos(emp.id);
+      renderAdministracion(emp.id);
+    } else {
+      ["licencias", "desempeno", "documentos", "administracion"].forEach(function (n) {
+        document.getElementById("panel-" + n).innerHTML =
+          '<p class="panel-bloqueado">Guardá primero los datos personales para cargar esta sección.</p>';
+      });
+    }
 
     var $form = document.getElementById("form");
     var $error = document.getElementById("formError");
@@ -160,6 +426,8 @@
 
     if (emp) {
       document.getElementById("formTitulo").textContent = emp.nombre + " " + emp.apellido;
+      var $lede = document.getElementById("fichaLede");
+      if ($lede) $lede.textContent = "Ficha completa. Elegí una solapa para ver o cargar datos.";
       CAMPOS.forEach(function (k) {
         if (k === "foto") return;
         var el = $form.elements[k];
@@ -246,14 +514,17 @@
       if (emp) {
         var i = next.findIndex(function (e) { return e.id === emp.id; });
         next[i] = Object.assign({}, next[i], datos, { actualizado: new Date().toISOString() });
+        save(next);
+        toast("Datos actualizados");
+        location.hash = "#/";
       } else {
         datos.id = uid();
         datos.creado = new Date().toISOString();
         next.push(datos);
+        save(next);
+        toast("Empleado creado — ya podés cargar el resto de las solapas");
+        location.hash = "#/empleado/" + datos.id;
       }
-      save(next);
-      toast(emp ? "Datos actualizados" : "Empleado agregado a la nómina");
-      location.hash = "#/";
     });
 
     pintaFoto();

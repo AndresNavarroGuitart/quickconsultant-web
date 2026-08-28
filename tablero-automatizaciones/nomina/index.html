@@ -84,19 +84,22 @@
     <section class="page-head">
       <p class="eyebrow"><a href="#/">Nómina</a> · Ficha de empleado</p>
       <h1 id="formTitulo">Nuevo empleado</h1>
-      <p class="lede">Perfil inicial. Completá los datos personales; el resto de la ficha se habilita después.</p>
+      <p class="lede" id="fichaLede">Perfil inicial. Completá los datos personales; el resto de las solapas se habilita al guardar.</p>
     </section>
 
     <div class="ficha">
       <nav class="ficha__nav" aria-label="Secciones de la ficha">
-        <ol>
-          <li><span class="ficha__step is-current"><b>1</b> Datos personales</span></li>
-          <li><span class="ficha__step is-locked"><b>2</b> Datos bancarios <em>pronto</em></span></li>
-          <li><span class="ficha__step is-locked"><b>3</b> Contrato y jornada <em>pronto</em></span></li>
-          <li><span class="ficha__step is-locked"><b>4</b> Documentación <em>pronto</em></span></li>
-        </ol>
+        <div class="ficha__tabs" role="tablist" aria-orientation="vertical">
+          <button type="button" class="ficha__tab is-current" role="tab" id="tab-datos" data-tab="datos" aria-controls="panel-datos" aria-selected="true"><b>1</b> Datos personales</button>
+          <button type="button" class="ficha__tab" role="tab" id="tab-licencias" data-tab="licencias" aria-controls="panel-licencias" aria-selected="false" tabindex="-1"><b>2</b> Licencias</button>
+          <button type="button" class="ficha__tab" role="tab" id="tab-desempeno" data-tab="desempeno" aria-controls="panel-desempeno" aria-selected="false" tabindex="-1"><b>3</b> Desempeño</button>
+          <button type="button" class="ficha__tab" role="tab" id="tab-documentos" data-tab="documentos" aria-controls="panel-documentos" aria-selected="false" tabindex="-1"><b>4</b> Documentos</button>
+          <button type="button" class="ficha__tab" role="tab" id="tab-administracion" data-tab="administracion" aria-controls="panel-administracion" aria-selected="false" tabindex="-1"><b>5</b> Administración</button>
+        </div>
       </nav>
 
+      <div class="ficha__panels">
+      <section class="ficha__panel is-current" id="panel-datos" role="tabpanel" aria-labelledby="tab-datos">
       <form class="ficha__form" id="form" novalidate>
         <fieldset class="grupo">
           <legend>Datos personales</legend>
@@ -210,6 +213,13 @@
           <button type="button" class="btn btn--ghost ficha__delete" id="btnEliminar" hidden>Eliminar empleado</button>
         </div>
       </form>
+      </section>
+
+      <section class="ficha__panel" id="panel-licencias" role="tabpanel" aria-labelledby="tab-licencias" hidden></section>
+      <section class="ficha__panel" id="panel-desempeno" role="tabpanel" aria-labelledby="tab-desempeno" hidden></section>
+      <section class="ficha__panel" id="panel-documentos" role="tabpanel" aria-labelledby="tab-documentos" hidden></section>
+      <section class="ficha__panel" id="panel-administracion" role="tabpanel" aria-labelledby="tab-administracion" hidden></section>
+      </div>
     </div>
   </template>
 
