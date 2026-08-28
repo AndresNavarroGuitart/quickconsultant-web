@@ -1,5 +1,5 @@
 /*
- * Tablero de Automatizaciones — Not a Bot Agency
+ * Tablero de Operaciones — Not a Bot Agency
  * ------------------------------------------------
  * Fuente de datos del tablero. Por ahora son datos de ejemplo (mock).
  * Para conectar con un backend real, reemplazar el contenido por un fetch

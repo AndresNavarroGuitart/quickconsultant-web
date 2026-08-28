@@ -1,4 +1,4 @@
-/* Tablero de Automatizaciones — lógica de UI */
+/* Tablero de Operaciones — lógica de UI */
 (function () {
   "use strict";
 

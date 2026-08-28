@@ -1,4 +1,4 @@
-# Tablero de Automatizaciones — Not a Bot Agency
+# Tablero de Operaciones — Not a Bot Agency
 
 Panel de control único para ver el estado y el rendimiento de los procesos
 automatizados de la agencia: qué está operativo, qué pide atención, cuándo fue la
