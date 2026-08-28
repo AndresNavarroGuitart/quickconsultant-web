@@ -80,12 +80,15 @@
     $app.innerHTML = "";
     $app.appendChild(tpl("tpl-lista"));
 
-    var $ul = document.getElementById("empleados");
+    var $tbody = document.getElementById("empleados");
+    var $tablaWrap = document.getElementById("tablaWrap");
     var $vacio = document.getElementById("vacio");
     var $count = document.getElementById("listaCount");
     var $buscar = document.getElementById("buscar");
     var $demo = document.getElementById("cargarDemo");
     if ($demo) $demo.addEventListener("click", cargarDemo);
+
+    function irA(id) { if (id) location.hash = "#/empleado/" + id; }
 
     function pinta(filtro) {
       var list = load();
@@ -97,32 +100,41 @@
       });
 
       $vacio.hidden = list.length !== 0;
+      $tablaWrap.hidden = list.length === 0;
       $count.textContent = list.length
         ? (vis.length === list.length ? list.length + " empleados" : vis.length + " de " + list.length)
         : "";
 
-      $ul.innerHTML = vis.map(function (e) {
+      $tbody.innerHTML = vis.map(function (e) {
         var avatar = e.foto
           ? '<img class="avatar" src="' + esc(e.foto) + '" alt="" />'
           : '<span class="avatar">' + esc(iniciales(e)) + "</span>";
+        var nombre = esc(e.nombre) + " " + esc(e.apellido);
         return (
-          '<li><a class="empleado" href="#/empleado/' + esc(e.id) + '">' +
-            avatar +
-            '<span class="empleado__main">' +
-              '<span class="empleado__nombre">' + esc(e.nombre) + " " + esc(e.apellido) + "</span>" +
-              '<span class="empleado__sub">' + esc(e.documento || "sin documento") +
-                (e.mail ? " · " + esc(e.mail) : "") + "</span>" +
-            "</span>" +
-            '<span class="empleado__dato"><span>Contrato</span>' +
-              (e.tipoContrato ? '<span class="badge">' + esc(e.tipoContrato) + "</span>" : "—") + "</span>" +
-            '<span class="empleado__dato"><span>Jornada</span>' +
-              (e.horas ? esc(e.horas) + " hs" : "—") +
-              (e.pais ? " · " + esc(e.pais) : "") + "</span>" +
-            '<span class="empleado__chevron" aria-hidden="true">›</span>' +
-          "</a></li>"
+          '<tr tabindex="0" data-id="' + esc(e.id) + '" aria-label="Abrir ficha de ' + nombre + '">' +
+            '<th scope="row" class="col-emp"><span class="col-emp__wrap">' + avatar +
+              '<a class="planilla__nombre" href="#/empleado/' + esc(e.id) + '">' + nombre + "</a></span></th>" +
+            "<td>" + esc(e.documento || "—") + "</td>" +
+            '<td class="col-mail">' + (e.mail ? esc(e.mail) : "—") + "</td>" +
+            "<td>" + (e.tipoContrato ? '<span class="badge">' + esc(e.tipoContrato) + "</span>" : "—") + "</td>" +
+            '<td class="col-pais">' + esc(e.pais || "—") + "</td>" +
+            '<td class="col-num">' + (e.horas ? esc(e.horas) : "—") + "</td>" +
+            '<td class="col-chev" aria-hidden="true">›</td>' +
+          "</tr>"
         );
       }).join("");
     }
+
+    $tbody.addEventListener("click", function (ev) {
+      if (ev.target.closest("a")) return; // el link navega solo
+      var tr = ev.target.closest("tr");
+      if (tr) irA(tr.dataset.id);
+    });
+    $tbody.addEventListener("keydown", function (ev) {
+      if (ev.key !== "Enter" && ev.key !== " ") return;
+      var tr = ev.target.closest("tr");
+      if (tr) { ev.preventDefault(); irA(tr.dataset.id); }
+    });
 
     $buscar.addEventListener("input", function () { pinta(this.value); });
     pinta("");

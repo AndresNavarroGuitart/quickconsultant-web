@@ -53,7 +53,22 @@
       <span class="lista-count" id="listaCount"></span>
     </div>
 
-    <ul class="empleados" id="empleados"></ul>
+    <div class="tabla-wrap" id="tablaWrap">
+      <table class="planilla">
+        <thead>
+          <tr>
+            <th scope="col">Empleado</th>
+            <th scope="col">DNI / RUT / Cédula</th>
+            <th scope="col" class="col-mail">Mail</th>
+            <th scope="col">Tipo de contrato</th>
+            <th scope="col" class="col-pais">País</th>
+            <th scope="col" class="col-num">Hs.</th>
+            <th scope="col"><span class="sr-only">Abrir</span></th>
+          </tr>
+        </thead>
+        <tbody id="empleados"></tbody>
+      </table>
+    </div>
 
     <div class="vacio" id="vacio" hidden>
       <p class="vacio__title">Todavía no hay empleados cargados</p>
