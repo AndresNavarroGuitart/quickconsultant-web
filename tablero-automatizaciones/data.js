@@ -57,7 +57,7 @@ window.TABLERO = {
       exito7d: 91,
       ejecuciones7d: 78,
       responsable: "Equipo Comercial",
-      enlace: null,
+      enlace: "pipeline/index.html",
       corridas: [
         { fecha: "2026-08-28T08:00:00-03:00", estado: "aviso", detalle: "6 oportunidades sin actividad — recordatorio enviado a los owners" },
         { fecha: "2026-08-28T06:00:00-03:00", estado: "ok", detalle: "24 oportunidades sincronizadas · pronóstico actualizado" },

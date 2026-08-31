@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pipeline de Clientes — Not a Bot Agency</title>
+  <meta name="description" content="Seguimiento de leads de Not a Bot Agency: tablero Kanban por etapa, vista lista y ficha de lead con registro de actividad." />
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Alegreya+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/theme.css" />
+  <link rel="stylesheet" href="pipeline.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="../index.html">
+        <img src="../assets/logo.svg" alt="Not a Bot Agency" height="40" />
+        <span class="brand__back">‹ Tablero</span>
+      </a>
+      <div class="topbar__actions">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar tema">
+          <span aria-hidden="true">◐</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <p class="eyebrow">Comercial</p>
+      <h1>Pipeline de Clientes</h1>
+      <p class="lede">Seguimiento de leads por etapa. Arrastrá una tarjeta para moverla de columna; hacé clic para ver la ficha y registrar actividad.</p>
+    </div>
+
+    <section class="kpis" id="kpis" aria-label="Indicadores del pipeline"></section>
+
+    <div class="toolbar">
+      <div class="seg" role="tablist" aria-label="Vista">
+        <button id="v-kanban" class="is-active" role="tab" aria-selected="true" type="button">Kanban</button>
+        <button id="v-lista" role="tab" aria-selected="false" type="button">Lista</button>
+      </div>
+      <div class="toolbar__right">
+        <select class="selectish" id="filtroResp" aria-label="Filtrar por responsable"></select>
+        <button class="btn" id="btnNuevo" type="button">+ Nuevo lead</button>
+      </div>
+    </div>
+
+    <section class="board" id="board" hidden></section>
+    <div class="tabla-wrap" id="listaWrap" hidden>
+      <table class="planilla">
+        <thead>
+          <tr>
+            <th scope="col">Lead</th>
+            <th scope="col">Empresa</th>
+            <th scope="col">Etapa</th>
+            <th scope="col" class="num">Valor</th>
+            <th scope="col">Próxima acción</th>
+            <th scope="col">Último contacto</th>
+            <th scope="col">Responsable</th>
+          </tr>
+        </thead>
+        <tbody id="listaBody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div class="foot__inner">
+      <img src="../assets/logo.svg" alt="" height="34" />
+      <p>Not a Bot Agency · Los datos se guardan en este navegador (localStorage). Dataset de ejemplo hasta conectar el CRM.</p>
+    </div>
+  </footer>
+
+  <div class="drawer" id="drawer" hidden>
+    <div class="drawer__backdrop" data-close></div>
+    <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="dTitle">
+      <button class="drawer__close" data-close type="button" aria-label="Cerrar">✕</button>
+      <div id="drawerBody"></div>
+    </aside>
+  </div>
+
+  <script src="leads-demo.js"></script>
+  <script src="pipeline.js"></script>
+</body>
+</html>

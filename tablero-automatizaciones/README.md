@@ -20,6 +20,7 @@ terracota `#C84E1E`. Soporta tema claro/oscuro.
 | `assets/theme.css` | Tokens de marca + shell (topbar, botones, footer) compartido por todas las vistas |
 | `assets/logo.svg` | Logo Not a Bot Agency (vectorial) |
 | `nomina/` | **Módulo Nómina de empleados** (ver abajo) |
+| `pipeline/` | **Módulo Pipeline de Clientes** (ver abajo) |
 
 ## Módulo: Nómina de empleados (`nomina/`)
 
@@ -53,6 +54,34 @@ Al conectar datos reales, borrar `empleados-demo.js` y su `<script>` en `index.h
 | `nomina/nomina.css` | Estilos de la lista y la ficha |
 | `nomina/nomina.js` | Router, CRUD sobre localStorage, validación del formulario |
 | `nomina/empleados-demo.js` | Dataset de ejemplo (10 empleados) |
+
+## Módulo: Pipeline de Clientes (`pipeline/`)
+
+Seguimiento de leads. Dos vistas del mismo dato:
+
+- **Kanban** — columnas por etapa (Nuevo · Contactado · Calificado · Propuesta
+  enviada · Negociación · Ganado · Perdido). Se arrastra la tarjeta entre columnas
+  para avanzar la etapa.
+- **Lista** — planilla ordenada por próxima acción, con las vencidas resaltadas.
+
+**Ficha del lead** (drawer): datos de contacto, origen, servicio, valor + moneda,
+probabilidad (por etapa), responsable · **Seguimiento** (próxima acción + fecha) ·
+**Actividad** (historial con fecha y tipo + alta). Alta de lead nuevo y baja desde
+la misma ficha.
+
+KPIs calculados: pipeline abierto, pipeline ponderado (valor × probabilidad),
+seguimientos vencidos, tasa de conversión.
+
+Persistencia en `localStorage` (`nba-pipeline-leads`), sin backend. 14 leads de
+ejemplo en `leads-demo.js` (se siembran al abrir). Al conectar el CRM/Notion,
+borrar `leads-demo.js` y su `<script>` en `index.html`.
+
+| Archivo | Rol |
+|---|---|
+| `pipeline/index.html` | Estructura (KPIs, toolbar, board, lista, drawer) |
+| `pipeline/pipeline.css` | Estilos del Kanban, la lista y la ficha |
+| `pipeline/pipeline.js` | Estado, drag & drop, KPIs, ficha y alta |
+| `pipeline/leads-demo.js` | Dataset de ejemplo (14 leads) |
 
 ## Cómo agregar o editar un proceso
 
