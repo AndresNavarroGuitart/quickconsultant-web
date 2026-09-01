@@ -3,6 +3,16 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es/).
 Versionado: `tablero-vMAJOR.MINOR.PATCH` (tags de git + releases en GitHub).
 
+## [tablero-v1.0.1] — 2026-09-01
+
+### Corregido
+
+- **Cache del navegador**: las referencias a JS/CSS ahora llevan `?v=1.0.1`, así
+  cada release invalida la caché y los clientes ven la última versión sin tener
+  que forzar recarga. `proyectos-data.js` queda sin versión (se refresca por la
+  caché corta de GitHub Pages y por el sync).
+  > Al publicar una nueva versión, subir el número de `?v=` en los `index.html`.
+
 ## [tablero-v1.0.0] — 2026-09-01
 
 Primera versión estable, publicada en GitHub Pages y compartible con clientes:
@@ -31,4 +41,5 @@ Primera versión estable, publicada en GitHub Pages y compartible con clientes:
   hasta cargar el secret `NOTION_TOKEN` (ver `proyectos/SYNC.md`).
 - `assets/theme.css` compartido por todas las vistas.
 
+[tablero-v1.0.1]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.1
 [tablero-v1.0.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.0
