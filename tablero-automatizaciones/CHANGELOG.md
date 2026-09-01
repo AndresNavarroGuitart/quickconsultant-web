@@ -3,6 +3,13 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es/).
 Versionado: `tablero-vMAJOR.MINOR.PATCH` (tags de git + releases en GitHub).
 
+## [tablero-v1.0.3] — 2026-09-01
+
+### Cambiado
+
+- Ancho máximo de la página: **1120 → 1200px** (`.wrap`, topbar y footer en
+  `assets/theme.css`). Aplica a todas las vistas.
+
 ## [tablero-v1.0.2] — 2026-09-01
 
 ### Cambiado
@@ -49,6 +56,7 @@ Primera versión estable, publicada en GitHub Pages y compartible con clientes:
   hasta cargar el secret `NOTION_TOKEN` (ver `proyectos/SYNC.md`).
 - `assets/theme.css` compartido por todas las vistas.
 
+[tablero-v1.0.3]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.3
 [tablero-v1.0.2]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.2
 [tablero-v1.0.1]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.1
 [tablero-v1.0.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.0
