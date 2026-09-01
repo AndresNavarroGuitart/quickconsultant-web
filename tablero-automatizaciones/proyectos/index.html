@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Proyectos — Not a Bot Agency</title>
+  <meta name="description" content="Estado de los proyectos de Not a Bot Agency, sincronizado desde el tablero de Notion." />
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Alegreya+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/theme.css" />
+  <link rel="stylesheet" href="proyectos.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="../index.html">
+        <img src="../assets/logo.svg" alt="Not a Bot Agency" height="40" />
+        <span class="brand__back">‹ Tablero</span>
+      </a>
+      <div class="topbar__actions">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar tema">
+          <span aria-hidden="true">◐</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <p class="eyebrow">Delivery</p>
+      <h1>Proyectos</h1>
+      <p class="lede">Estado de cada proyecto por etapa. Es un espejo de solo lectura del tablero de Notion; para editarlo, se hace en Notion.</p>
+    </div>
+
+    <p class="sync" id="sync"></p>
+
+    <section class="kpis" id="kpis" aria-label="Indicadores de proyectos"></section>
+
+    <div class="toolbar">
+      <div class="seg" role="tablist" aria-label="Vista">
+        <button id="v-kanban" class="is-active" role="tab" aria-selected="true" type="button">Kanban</button>
+        <button id="v-lista" role="tab" aria-selected="false" type="button">Lista</button>
+      </div>
+    </div>
+
+    <div class="filtros" role="group" aria-label="Filtros">
+      <div class="search">
+        <span class="search__icon" aria-hidden="true">⌕</span>
+        <input type="search" id="fBuscar" placeholder="Buscar proyecto, cliente o producto…" aria-label="Buscar" />
+      </div>
+      <select class="selectish" id="fCliente" aria-label="Filtrar por cliente"></select>
+      <select class="selectish" id="fEtapa" aria-label="Filtrar por etapa"></select>
+      <select class="selectish" id="fLider" aria-label="Filtrar por líder"></select>
+      <button class="btn btn--ghost" id="fLimpiar" type="button" hidden>Limpiar</button>
+    </div>
+
+    <section class="board" id="board" hidden></section>
+    <div class="tabla-wrap" id="listaWrap" hidden>
+      <table class="planilla">
+        <thead>
+          <tr>
+            <th scope="col">Proyecto</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Etapa</th>
+            <th scope="col">Líder</th>
+            <th scope="col">Producto / Servicio</th>
+            <th scope="col">Fin</th>
+          </tr>
+        </thead>
+        <tbody id="listaBody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div class="foot__inner">
+      <img src="../assets/logo.svg" alt="" height="34" />
+      <p>Not a Bot Agency · Datos sincronizados desde Notion.</p>
+    </div>
+  </footer>
+
+  <div class="drawer" id="drawer" hidden>
+    <div class="drawer__backdrop" data-close></div>
+    <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="dTitle">
+      <button class="drawer__close" data-close type="button" aria-label="Cerrar">✕</button>
+      <div id="drawerBody"></div>
+    </aside>
+  </div>
+
+  <script src="proyectos-data.js"></script>
+  <script src="proyectos.js"></script>
+</body>
+</html>

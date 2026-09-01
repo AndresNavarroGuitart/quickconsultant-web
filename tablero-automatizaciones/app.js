@@ -51,8 +51,16 @@
   function datosLeads() { return leerLS("nba-pipeline-leads") || window.PIPELINE_DEMO || []; }
   var CERRADAS_LEAD = { ganado: 1, perdido: 1 };
 
+  function datosProyectos() { return (window.PROYECTOS_DATA && window.PROYECTOS_DATA.proyectos) || []; }
+  function proyectosActivos() {
+    var arr = datosProyectos();
+    if (arr.length) return arr.filter(function (p) { return p.estado === "En curso"; }).length;
+    return DATA.proyectosActivos != null ? DATA.proyectosActivos : "—";
+  }
+
   function ultimaActualizacionISO() {
     var ts = [DATA.actualizado];
+    if (window.PROYECTOS_DATA) ts.push(window.PROYECTOS_DATA.sincronizado);
     datosEmpleados().forEach(function (e) { ts.push(e.actualizado, e.creado); });
     datosLeads().forEach(function (l) {
       ts.push(l.actualizado, l.creado);
@@ -69,12 +77,11 @@
   function renderKpis() {
     var empleados = datosEmpleados();
     var leadsProceso = datosLeads().filter(function (l) { return !CERRADAS_LEAD[l.etapa]; }).length;
-    var proyectos = DATA.proyectosActivos != null ? DATA.proyectosActivos : "—";
     var upd = ultimaActualizacionISO();
 
     var cards = [
       { label: "Total de empleados activos", value: empleados.length, hint: "en la nómina", accent: true },
-      { label: "Proyectos activos", value: proyectos, hint: "en curso" },
+      { label: "Proyectos activos", value: proyectosActivos(), hint: "en curso" },
       { label: "Leads en proceso", value: leadsProceso, hint: "en el pipeline", accent: true },
       { label: "Última actualización", value: relativo(upd), hint: fechaLarga(upd) },
     ];

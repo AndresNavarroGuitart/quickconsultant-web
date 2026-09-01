@@ -21,6 +21,7 @@ terracota `#C84E1E`. Soporta tema claro/oscuro.
 | `assets/logo.svg` | Logo Not a Bot Agency (vectorial) |
 | `nomina/` | **Módulo Nómina de empleados** (ver abajo) |
 | `pipeline/` | **Módulo Pipeline de Clientes** (ver abajo) |
+| `proyectos/` | **Módulo Proyectos** — espejo del tablero de Notion (ver abajo) |
 
 ## Módulo: Nómina de empleados (`nomina/`)
 
@@ -86,6 +87,29 @@ borrar `leads-demo.js` y su `<script>` en `index.html`.
 | `pipeline/pipeline.css` | Estilos del Kanban, la lista y la ficha |
 | `pipeline/pipeline.js` | Estado, drag & drop, KPIs, ficha y alta |
 | `pipeline/leads-demo.js` | Dataset de ejemplo (14 leads) |
+
+## Módulo: Proyectos (`proyectos/`)
+
+**Espejo de solo lectura** del tablero de Notion "Status de temas · Equipo NOT A
+BOT". Kanban por **Estado** (Sin Iniciar · En curso · Std By · Finalizado) + vista
+Lista, con filtros por cliente, etapa y líder, y búsqueda. Cada proyecto abre una
+ficha con sus datos y un botón **Abrir en Notion**. No se edita desde acá: los
+cambios se hacen en Notion.
+
+Los datos están en `proyectos-data.js`. Hoy es un **snapshot**; para el sync
+automático (GitHub Actions, sin servidor) seguir [`SYNC.md`](proyectos/SYNC.md).
+El KPI "Proyectos activos" del tablero principal cuenta los "En curso" de este
+módulo.
+
+| Archivo | Rol |
+|---|---|
+| `proyectos/index.html` | Estructura (banner de sync, KPIs, toolbar, board, lista, drawer) |
+| `proyectos/proyectos.css` | Estilos del Kanban, la lista y la ficha |
+| `proyectos/proyectos.js` | Render, filtros y ficha (solo lectura) |
+| `proyectos/proyectos-data.js` | Datos (snapshot de Notion o generado por el sync) |
+| `proyectos/sync-proyectos.mjs` | Script que baja el tablero de Notion y regenera el `.js` |
+| `proyectos/SYNC.md` | Cómo activar el sync automático |
+| `../.github/workflows/sync-proyectos.yml` | Workflow que corre el sync cada hora |
 
 ## Cómo agregar o editar un proceso
 

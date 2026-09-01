@@ -1,0 +1,41 @@
+name: Sync Proyectos desde Notion
+
+on:
+  schedule:
+    - cron: "0 * * * *"      # cada hora en punto (UTC)
+  workflow_dispatch: {}       # botón "Run workflow" en la pestaña Actions
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-proyectos
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Traer el tablero de Notion
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DB_PROYECTOS: ${{ secrets.NOTION_DB_PROYECTOS }}
+        run: node tablero-automatizaciones/proyectos/sync-proyectos.mjs
+
+      - name: Commitear si cambió
+        run: |
+          if [[ -n "$(git status --porcelain tablero-automatizaciones/proyectos/proyectos-data.js)" ]]; then
+            git config user.name  "notabot-sync[bot]"
+            git config user.email "notabot-sync@users.noreply.github.com"
+            git add tablero-automatizaciones/proyectos/proyectos-data.js
+            git commit -m "Sync proyectos desde Notion"
+            git push
+          else
+            echo "Sin cambios."
+          fi

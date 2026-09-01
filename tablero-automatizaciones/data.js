@@ -16,8 +16,9 @@ window.TABLERO = {
   // la actividad de los módulos Nómina y Pipeline).
   actualizado: "2026-08-28T09:15:00-03:00",
 
-  // Proyectos activos — placeholder hasta que exista el módulo Proyectos.
-  proyectosActivos: 11,
+  // Proyectos activos — fallback si no cargó proyectos-data.js (el KPI real
+  // cuenta los "En curso" del módulo Proyectos, que sincroniza desde Notion).
+  proyectosActivos: 6,
 
   categorias: {
     rrhh: { label: "RRHH & Nómina", color: "#03524E" },
@@ -75,14 +76,14 @@ window.TABLERO = {
       categoria: "delivery",
       estado: "operativo",
       descripcion:
-        "Consolida horas cargadas, avance de hitos y estado de cada proyecto activo. Marca desvíos de plazo o presupuesto y actualiza el tablero de delivery para el equipo y el cliente.",
-      frecuencia: "Diaria · 19:00",
-      ultimaEjecucion: "2026-08-27T19:02:00-03:00",
-      duracionMedia: "≈ 50 s",
+        "Espejo del tablero de Notion 'Status de temas'. Muestra cada proyecto por cliente, etapa y estado, con líder interno y fechas. Sincronizado periódicamente.",
+      frecuencia: "Sync desde Notion",
+      ultimaEjecucion: "2026-09-01T14:00:00-03:00",
+      duracionMedia: "≈ 15 s",
       exito7d: 100,
       ejecuciones7d: 7,
       responsable: "Delivery / PMO",
-      enlace: null,
+      enlace: "proyectos/index.html",
       corridas: [
         { fecha: "2026-08-27T19:02:00-03:00", estado: "ok", detalle: "11 proyectos actualizados · 1 con desvío de plazo (flag)" },
         { fecha: "2026-08-26T19:01:00-03:00", estado: "ok", detalle: "11 proyectos actualizados" },
