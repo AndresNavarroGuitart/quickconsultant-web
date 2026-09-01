@@ -27,11 +27,7 @@
   var ORIGENES = ["Web", "Referido", "LinkedIn", "Evento", "Outbound", "Otro"];
   var MOTIVOS = ["Precio", "Timing", "Competidor", "Sin respuesta", "Presupuesto", "Otro"];
   var TIPOS_ACT = ["Llamada", "Email", "Reunión", "WhatsApp", "Nota"];
-  var MONEDAS = ["USD", "EUR", "ARS", "UYU", "MXN", "COP", "CLP"];
-  var RATE = { USD: 1, EUR: 1.08 };
 
-  function usd(l) { return (l.valor || 0) * (RATE[l.moneda] || 1); }
-  function money(n, m) { return (m || "USD") + " " + Math.round(n).toLocaleString("es-AR"); }
   function iniciales(nombre) { return String(nombre).split(" ").map(function (p) { return p.charAt(0); }).slice(0, 2).join("").toUpperCase() || "?"; }
   function fechaCorta(s) {
     if (!s) return "—";
@@ -75,7 +71,7 @@
 
   var leads = load();
   var vista = "kanban";
-  var filtroResp = "";
+  var F = { q: "", etapa: "", origen: "", servicio: "", resp: "", venc: false };
 
   var $board = document.getElementById("board");
   var $listaWrap = document.getElementById("listaWrap");
@@ -83,7 +79,13 @@
   var $kpis = document.getElementById("kpis");
   var $drawer = document.getElementById("drawer");
   var $drawerBody = document.getElementById("drawerBody");
-  var $filtroResp = document.getElementById("filtroResp");
+  var $fBuscar = document.getElementById("fBuscar");
+  var $fEtapa = document.getElementById("fEtapa");
+  var $fOrigen = document.getElementById("fOrigen");
+  var $fServicio = document.getElementById("fServicio");
+  var $fResp = document.getElementById("fResp");
+  var $fVenc = document.getElementById("fVenc");
+  var $fLimpiar = document.getElementById("fLimpiar");
 
   /* ---------- Tema (compartido con el tablero) ---------- */
   (function () {
@@ -98,30 +100,50 @@
     });
   })();
 
+  function sinProxima(l) { return !CERRADAS[l.etapa] && !l.proximaAccion; }
+
   function visibles() {
-    return leads.filter(function (l) { return !filtroResp || l.responsable === filtroResp; });
+    var q = F.q.trim().toLowerCase();
+    return leads.filter(function (l) {
+      if (F.etapa && l.etapa !== F.etapa) return false;
+      if (F.origen && l.origen !== F.origen) return false;
+      if (F.servicio && l.servicio !== F.servicio) return false;
+      if (F.resp && l.responsable !== F.resp) return false;
+      if (F.venc && !esVencida(l)) return false;
+      if (q && [l.contacto, l.empresa, l.email].join(" ").toLowerCase().indexOf(q) === -1) return false;
+      return true;
+    });
   }
 
-  function renderFiltro() {
+  function renderFiltros() {
     var resp = leads.map(function (l) { return l.responsable; })
       .filter(function (v, i, a) { return v && a.indexOf(v) === i; }).sort();
-    $filtroResp.innerHTML = '<option value="">Todos los responsables</option>' +
-      resp.map(function (r) { return "<option" + (r === filtroResp ? " selected" : "") + ">" + esc(r) + "</option>"; }).join("");
+    var orig = leads.map(function (l) { return l.origen; })
+      .filter(function (v, i, a) { return v && a.indexOf(v) === i; }).sort();
+    $fEtapa.innerHTML = '<option value="">Todas las etapas</option>' +
+      STAGES.map(function (s) { return '<option value="' + s.id + '"' + (s.id === F.etapa ? " selected" : "") + ">" + esc(s.label) + "</option>"; }).join("");
+    $fOrigen.innerHTML = '<option value="">Todos los orígenes</option>' +
+      orig.map(function (o) { return "<option" + (o === F.origen ? " selected" : "") + ">" + esc(o) + "</option>"; }).join("");
+    $fServicio.innerHTML = '<option value="">Todos los servicios</option>' +
+      Object.keys(SERVICIOS).map(function (s) { return "<option" + (s === F.servicio ? " selected" : "") + ">" + esc(s) + "</option>"; }).join("");
+    $fResp.innerHTML = '<option value="">Todos los responsables</option>' +
+      resp.map(function (r) { return "<option" + (r === F.resp ? " selected" : "") + ">" + esc(r) + "</option>"; }).join("");
+    var activo = F.q || F.etapa || F.origen || F.servicio || F.resp || F.venc;
+    $fLimpiar.hidden = !activo;
   }
 
   function renderKpis() {
     var abiertos = leads.filter(function (l) { return !CERRADAS[l.etapa]; });
-    var total = abiertos.reduce(function (s, l) { return s + usd(l); }, 0);
-    var pond = abiertos.reduce(function (s, l) { return s + usd(l) * STAGE[l.etapa].prob; }, 0);
     var venc = abiertos.filter(esVencida).length;
+    var sinPx = abiertos.filter(sinProxima).length;
     var cerrados = leads.filter(function (l) { return CERRADAS[l.etapa]; });
     var ganados = leads.filter(function (l) { return l.etapa === "ganado"; }).length;
     var conv = cerrados.length ? Math.round(ganados / cerrados.length * 100) : 0;
 
     var cards = [
-      { l: "Pipeline abierto", v: "≈ " + money(total, "USD"), h: abiertos.length + " leads activos", accent: true },
-      { l: "Pipeline ponderado", v: "≈ " + money(pond, "USD"), h: "valor × probabilidad de etapa" },
-      { l: "Seguimientos vencidos", v: venc, h: venc ? "revisar próximas acciones" : "todo al día", alert: venc > 0 },
+      { l: "Leads activos", v: abiertos.length, h: "en el pipeline", accent: true },
+      { l: "Seguimientos vencidos", v: venc, h: venc ? "accionar hoy" : "todo al día", alert: venc > 0 },
+      { l: "Sin próxima acción", v: sinPx, h: sinPx ? "cargales un próximo paso" : "todos con próximo paso", alert: sinPx > 0 },
       { l: "Conversión", v: conv + "%", h: ganados + " ganados / " + cerrados.length + " cerrados", accent: true },
     ];
     $kpis.innerHTML = cards.map(function (c) {
@@ -139,7 +161,7 @@
     else chip = '<span class="next">sin próx. acción</span>';
     return '<article class="lead" draggable="true" tabindex="0" data-id="' + esc(l.id) + '" aria-label="Ver ' + esc(l.contacto) + '">' +
       '<div class="lead__top"><span class="tag" style="background:' + (SERVICIOS[l.servicio] || "#697082") + '">' + esc((l.servicio || "").split(" ")[0]) + "</span>" +
-        '<span class="lead__valor">' + money(l.valor, l.moneda) + "</span></div>" +
+        '<span class="lead__origen">' + esc(l.origen || "") + "</span></div>" +
       '<div><div class="lead__contacto">' + esc(l.contacto) + '</div><div class="lead__empresa">' + esc(l.empresa) + "</div></div>" +
       '<div class="lead__foot"><span class="who"><i>' + esc(iniciales(l.responsable)) + "</i>" + esc(String(l.responsable).split(" ")[0]) + "</span>" + chip + "</div>" +
       "</article>";
@@ -149,11 +171,9 @@
     var vis = visibles();
     $board.innerHTML = STAGES.map(function (s) {
       var col = vis.filter(function (l) { return l.etapa === s.id; });
-      var tot = col.reduce(function (a, l) { return a + usd(l); }, 0);
       var mod = s.id === "ganado" ? " col--ganado" : s.id === "perdido" ? " col--perdido" : "";
       return '<div class="col' + mod + '">' +
-        '<div class="col__head"><div class="col__title">' + esc(s.label) + '<span class="col__count">' + col.length + "</span></div>" +
-          '<div class="col__total">≈ ' + money(tot, "USD") + "</div></div>" +
+        '<div class="col__head"><div class="col__title">' + esc(s.label) + '<span class="col__count">' + col.length + "</span></div></div>" +
         '<div class="col__body" data-stage="' + s.id + '">' + col.map(leadCard).join("") + "</div></div>";
     }).join("");
     wireDnD();
@@ -163,16 +183,16 @@
     var vis = visibles().slice().sort(function (a, b) {
       return (a.proximaFecha || "9999").localeCompare(b.proximaFecha || "9999");
     });
-    $listaBody.innerHTML = vis.map(function (l) {
+    $listaBody.innerHTML = vis.length ? vis.map(function (l) {
       var venc = esVencida(l);
       var uc = ultimoContacto(l);
       return '<tr tabindex="0" data-id="' + esc(l.id) + '"' + (venc ? ' class="row-overdue"' : "") + ">" +
         '<td class="strong">' + esc(l.contacto) + "</td><td>" + esc(l.empresa) + "</td>" +
         '<td><span class="pill">' + esc(STAGE[l.etapa].label) + "</span></td>" +
-        '<td class="num">' + money(l.valor, l.moneda) + "</td>" +
+        "<td>" + esc(l.origen || "—") + "</td>" +
         "<td>" + (CERRADAS[l.etapa] ? "—" : (l.proximaAccion ? (venc ? "⚠ " : "") + esc(l.proximaAccion) + " · " + fechaCorta(l.proximaFecha) : "—")) + "</td>" +
         "<td>" + (uc ? fechaCorta(uc) : "—") + "</td><td>" + esc(l.responsable) + "</td></tr>";
-    }).join("");
+    }).join("") : '<tr><td colspan="7" class="lista-vacia">Ningún lead coincide con los filtros.</td></tr>';
   }
 
   function render() {
@@ -233,8 +253,6 @@
         '<div class="field"><span>Teléfono</span><input name="telefono" value="' + esc(l.telefono || "") + '" /></div>' +
         '<div class="field"><span>Origen</span><select name="origen">' + opciones(ORIGENES, l.origen) + "</select></div>" +
         '<div class="field"><span>Servicio</span><select name="servicio">' + opciones(Object.keys(SERVICIOS), l.servicio) + "</select></div>" +
-        '<div class="field"><span>Valor estimado</span><input name="valor" type="number" min="0" step="100" value="' + esc(l.valor || 0) + '" /></div>' +
-        '<div class="field"><span>Moneda</span><select name="moneda">' + opciones(MONEDAS, l.moneda) + "</select></div>" +
         '<div class="field"><span>Responsable <b>*</b></span><input name="responsable" value="' + esc(l.responsable) + '" required /></div>' +
       '</div><button class="btn" type="submit">Guardar datos</button></form></div>' +
       '<div class="d-sec"><h3>Etapa</h3>' +
@@ -270,10 +288,8 @@
       l.telefono = f.telefono.value.trim();
       l.origen = f.origen.value;
       l.servicio = f.servicio.value;
-      l.valor = Number(f.valor.value) || 0;
-      l.moneda = f.moneda.value;
       l.responsable = f.responsable.value.trim();
-      toast("Datos del lead actualizados"); renderFiltro(); render(); openDrawer(id);
+      toast("Datos del lead actualizados"); renderFiltros(); render(); openDrawer(id);
     });
 
     document.getElementById("mv").addEventListener("change", function () {
@@ -297,7 +313,7 @@
     document.getElementById("delLead").addEventListener("click", function () {
       if (!confirm("¿Eliminar el lead de " + l.contacto + " (" + l.empresa + ")?")) return;
       leads = leads.filter(function (x) { return x.id !== l.id; });
-      renderFiltro(); render(); closeDrawer(); toast("Lead eliminado");
+      renderFiltros(); render(); closeDrawer(); toast("Lead eliminado");
     });
 
     $drawer.hidden = false;
@@ -316,8 +332,6 @@
           '<div class="field"><span>Teléfono</span><input name="telefono" /></div></div>' +
         '<div class="row2"><div class="field"><span>Origen</span><select name="origen">' + opciones(ORIGENES) + "</select></div>" +
           '<div class="field"><span>Servicio</span><select name="servicio">' + opciones(Object.keys(SERVICIOS)) + "</select></div></div>" +
-        '<div class="row2"><div class="field"><span>Valor estimado</span><input name="valor" type="number" min="0" step="100" /></div>' +
-          '<div class="field"><span>Moneda</span><select name="moneda">' + opciones(MONEDAS, "USD") + "</select></div></div>" +
         '<div class="row2"><div class="field"><span>Etapa</span><select name="etapa">' +
           STAGES.filter(function (s) { return !CERRADAS[s.id]; }).map(function (s) { return '<option value="' + s.id + '">' + esc(s.label) + "</option>"; }).join("") + "</select></div>" +
           '<div class="field"><span>Responsable <b>*</b></span><input name="responsable" required /></div></div>' +
@@ -338,13 +352,12 @@
         id: uid(), contacto: f.contacto.value.trim(), empresa: f.empresa.value.trim(),
         email: f.email.value.trim(), telefono: f.telefono.value.trim(),
         origen: f.origen.value, servicio: f.servicio.value,
-        valor: Number(f.valor.value) || 0, moneda: f.moneda.value,
         etapa: f.etapa.value, responsable: f.responsable.value.trim(),
         proximaAccion: f.proximaAccion.value.trim(), proximaFecha: f.proximaFecha.value,
         creado: hoyISO(), actividad: [],
       };
       leads.push(lead);
-      renderFiltro(); render(); toast("Lead creado");
+      renderFiltros(); render(); toast("Lead creado");
       openDrawer(lead.id);
     });
 
@@ -372,9 +385,22 @@
   }
   document.getElementById("v-kanban").addEventListener("click", function () { setVista("kanban"); });
   document.getElementById("v-lista").addEventListener("click", function () { setVista("lista"); });
-  $filtroResp.addEventListener("change", function () { filtroResp = this.value; render(); });
   document.getElementById("btnNuevo").addEventListener("click", openNuevo);
 
-  renderFiltro();
+  function aplicar() { renderFiltros(); render(); }
+  var deb;
+  $fBuscar.addEventListener("input", function () { F.q = this.value; clearTimeout(deb); deb = setTimeout(aplicar, 150); });
+  $fEtapa.addEventListener("change", function () { F.etapa = this.value; aplicar(); });
+  $fOrigen.addEventListener("change", function () { F.origen = this.value; aplicar(); });
+  $fServicio.addEventListener("change", function () { F.servicio = this.value; aplicar(); });
+  $fResp.addEventListener("change", function () { F.resp = this.value; aplicar(); });
+  $fVenc.addEventListener("change", function () { F.venc = this.checked; aplicar(); });
+  $fLimpiar.addEventListener("click", function () {
+    F = { q: "", etapa: "", origen: "", servicio: "", resp: "", venc: false };
+    $fBuscar.value = ""; $fVenc.checked = false;
+    aplicar();
+  });
+
+  renderFiltros();
   render();
 })();

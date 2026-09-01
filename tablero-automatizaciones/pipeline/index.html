@@ -42,9 +42,21 @@
         <button id="v-lista" role="tab" aria-selected="false" type="button">Lista</button>
       </div>
       <div class="toolbar__right">
-        <select class="selectish" id="filtroResp" aria-label="Filtrar por responsable"></select>
         <button class="btn" id="btnNuevo" type="button">+ Nuevo lead</button>
       </div>
+    </div>
+
+    <div class="filtros" role="group" aria-label="Filtros de leads">
+      <div class="search">
+        <span class="search__icon" aria-hidden="true">⌕</span>
+        <input type="search" id="fBuscar" placeholder="Buscar lead, empresa o mail…" aria-label="Buscar" />
+      </div>
+      <select class="selectish" id="fEtapa" aria-label="Filtrar por etapa"></select>
+      <select class="selectish" id="fOrigen" aria-label="Filtrar por origen"></select>
+      <select class="selectish" id="fServicio" aria-label="Filtrar por servicio"></select>
+      <select class="selectish" id="fResp" aria-label="Filtrar por responsable"></select>
+      <label class="chk"><input type="checkbox" id="fVenc" /> Solo vencidos</label>
+      <button class="btn btn--ghost" id="fLimpiar" type="button" hidden>Limpiar</button>
     </div>
 
     <section class="board" id="board" hidden></section>
@@ -55,7 +67,7 @@
             <th scope="col">Lead</th>
             <th scope="col">Empresa</th>
             <th scope="col">Etapa</th>
-            <th scope="col" class="num">Valor</th>
+            <th scope="col">Origen</th>
             <th scope="col">Próxima acción</th>
             <th scope="col">Último contacto</th>
             <th scope="col">Responsable</th>

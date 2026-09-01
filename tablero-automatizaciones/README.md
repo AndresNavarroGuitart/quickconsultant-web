@@ -64,13 +64,17 @@ Seguimiento de leads. Dos vistas del mismo dato:
   para avanzar la etapa.
 - **Lista** — planilla ordenada por próxima acción, con las vencidas resaltadas.
 
-**Ficha del lead** (drawer): datos de contacto, origen, servicio, valor + moneda,
-probabilidad (por etapa), responsable · **Seguimiento** (próxima acción + fecha) ·
-**Actividad** (historial con fecha y tipo + alta). Alta de lead nuevo y baja desde
-la misma ficha.
+**Filtros** (barra sobre las dos vistas): búsqueda por nombre/empresa/mail, y
+selects por etapa, origen, servicio y responsable, más un toggle "solo vencidos".
+Botón "Limpiar" cuando hay algún filtro activo.
 
-KPIs calculados: pipeline abierto, pipeline ponderado (valor × probabilidad),
-seguimientos vencidos, tasa de conversión.
+**Ficha del lead** (drawer): datos editables (contacto, empresa, mail, teléfono,
+origen, servicio, responsable) · **Seguimiento** (próxima acción + fecha) ·
+**Actividad** (historial con fecha y tipo + alta). Alta de lead nuevo y baja desde
+la misma ficha. La probabilidad se deriva de la etapa (informativa, no editable).
+
+KPIs calculados: leads activos, seguimientos vencidos, leads sin próxima acción,
+tasa de conversión.
 
 Persistencia en `localStorage` (`nba-pipeline-leads`), sin backend. 14 leads de
 ejemplo en `leads-demo.js` (se siembran al abrir). Al conectar el CRM/Notion,
