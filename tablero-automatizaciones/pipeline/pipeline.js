@@ -25,6 +25,7 @@
     "Transformación digital": "#cc3366",
   };
   var ORIGENES = ["Web", "Referido", "LinkedIn", "Evento", "Outbound", "Otro"];
+  var RESPONSABLES = ["Joaquín", "Seba R.", "Andrés"];
   var MOTIVOS = ["Precio", "Timing", "Competidor", "Sin respuesta", "Presupuesto", "Otro"];
   var TIPOS_ACT = ["Llamada", "Email", "Reunión", "WhatsApp", "Nota"];
 
@@ -116,8 +117,8 @@
   }
 
   function renderFiltros() {
-    var resp = leads.map(function (l) { return l.responsable; })
-      .filter(function (v, i, a) { return v && a.indexOf(v) === i; }).sort();
+    var resp = RESPONSABLES.concat(leads.map(function (l) { return l.responsable; }))
+      .filter(function (v, i, a) { return v && a.indexOf(v) === i; });
     var orig = leads.map(function (l) { return l.origen; })
       .filter(function (v, i, a) { return v && a.indexOf(v) === i; }).sort();
     $fEtapa.innerHTML = '<option value="">Todas las etapas</option>' +
@@ -253,7 +254,7 @@
         '<div class="field"><span>Teléfono</span><input name="telefono" value="' + esc(l.telefono || "") + '" /></div>' +
         '<div class="field"><span>Origen</span><select name="origen">' + opciones(ORIGENES, l.origen) + "</select></div>" +
         '<div class="field"><span>Servicio</span><select name="servicio">' + opciones(Object.keys(SERVICIOS), l.servicio) + "</select></div>" +
-        '<div class="field"><span>Responsable <b>*</b></span><input name="responsable" value="' + esc(l.responsable) + '" required /></div>' +
+        '<div class="field"><span>Responsable <b>*</b></span><select name="responsable">' + opciones(RESPONSABLES, l.responsable) + "</select></div>" +
       '</div><button class="btn" type="submit">Guardar datos</button></form></div>' +
       '<div class="d-sec"><h3>Etapa</h3>' +
         '<div class="field"><span>Mover a</span><select id="mv">' +
@@ -334,7 +335,7 @@
           '<div class="field"><span>Servicio</span><select name="servicio">' + opciones(Object.keys(SERVICIOS)) + "</select></div></div>" +
         '<div class="row2"><div class="field"><span>Etapa</span><select name="etapa">' +
           STAGES.filter(function (s) { return !CERRADAS[s.id]; }).map(function (s) { return '<option value="' + s.id + '">' + esc(s.label) + "</option>"; }).join("") + "</select></div>" +
-          '<div class="field"><span>Responsable <b>*</b></span><input name="responsable" required /></div></div>' +
+          '<div class="field"><span>Responsable <b>*</b></span><select name="responsable">' + opciones(RESPONSABLES) + "</select></div></div>" +
         '<div class="row2"><div class="field"><span>Próxima acción</span><input name="proximaAccion" /></div>' +
           '<div class="field"><span>Fecha</span><input name="proximaFecha" type="date" /></div></div>' +
         '<p class="form-error" id="nErr" hidden></p>' +
