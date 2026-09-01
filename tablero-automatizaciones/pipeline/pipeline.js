@@ -218,11 +218,6 @@
   function openDrawer(id) {
     var l = leads.find(function (x) { return x.id === id; });
     if (!l) return;
-    var campos = [
-      ["Empresa", l.empresa], ["Mail", l.email], ["Teléfono", l.telefono], ["Origen", l.origen],
-      ["Servicio", l.servicio], ["Valor", money(l.valor, l.moneda)],
-      ["Probabilidad", Math.round(STAGE[l.etapa].prob * 100) + "%"], ["Responsable", l.responsable],
-    ];
     var acts = (l.actividad || []).slice().sort(function (a, b) { return b.fecha.localeCompare(a.fecha); }).map(function (a) {
       return '<li class="act"><b>' + esc(a.tipo) + '</b><time>' + fechaCorta(a.fecha) + "</time>" + esc(a.detalle) + "</li>";
     }).join("") || '<li class="act">Sin actividad registrada.</li>';
@@ -230,7 +225,18 @@
     $drawerBody.innerHTML =
       '<span class="d-stage" style="background:' + (l.etapa === "ganado" ? "var(--ok)" : l.etapa === "perdido" ? "var(--stop)" : (SERVICIOS[l.servicio] || "#697082")) + '">' + esc(STAGE[l.etapa].label) + "</span>" +
       '<h2 id="dTitle">' + esc(l.contacto) + '</h2><p class="empresa">' + esc(l.empresa) + "</p>" +
-      '<dl class="d-grid">' + campos.map(function (c) { return '<div class="d-cell"><dt>' + c[0] + "</dt><dd>" + esc(c[1]) + "</dd></div>"; }).join("") + "</dl>" +
+      '<p class="d-meta">Probabilidad ' + Math.round(STAGE[l.etapa].prob * 100) + "% · Creado " + fechaCorta(l.creado) + "</p>" +
+      '<div class="d-sec"><h3>Datos del lead</h3><form id="datosForm"><div class="d-two">' +
+        '<div class="field"><span>Contacto <b>*</b></span><input name="contacto" value="' + esc(l.contacto) + '" required /></div>' +
+        '<div class="field"><span>Empresa <b>*</b></span><input name="empresa" value="' + esc(l.empresa) + '" required /></div>' +
+        '<div class="field"><span>Mail</span><input name="email" type="email" value="' + esc(l.email || "") + '" /></div>' +
+        '<div class="field"><span>Teléfono</span><input name="telefono" value="' + esc(l.telefono || "") + '" /></div>' +
+        '<div class="field"><span>Origen</span><select name="origen">' + opciones(ORIGENES, l.origen) + "</select></div>" +
+        '<div class="field"><span>Servicio</span><select name="servicio">' + opciones(Object.keys(SERVICIOS), l.servicio) + "</select></div>" +
+        '<div class="field"><span>Valor estimado</span><input name="valor" type="number" min="0" step="100" value="' + esc(l.valor || 0) + '" /></div>' +
+        '<div class="field"><span>Moneda</span><select name="moneda">' + opciones(MONEDAS, l.moneda) + "</select></div>" +
+        '<div class="field"><span>Responsable <b>*</b></span><input name="responsable" value="' + esc(l.responsable) + '" required /></div>' +
+      '</div><button class="btn" type="submit">Guardar datos</button></form></div>' +
       '<div class="d-sec"><h3>Etapa</h3>' +
         '<div class="field"><span>Mover a</span><select id="mv">' +
           STAGES.map(function (s) { return '<option value="' + s.id + '"' + (s.id === l.etapa ? " selected" : "") + ">" + esc(s.label) + "</option>"; }).join("") + "</select></div>" +
@@ -248,6 +254,27 @@
           '<button class="btn" id="aAdd" type="button">Registrar</button>' +
         "</div></div>" +
       '<div class="d-actions"><button class="d-del" id="delLead" type="button">Eliminar lead</button></div>';
+
+    document.getElementById("datosForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var f = e.target;
+      if (!f.contacto.value.trim() || !f.empresa.value.trim() || !f.responsable.value.trim()) {
+        toast("Contacto, empresa y responsable son obligatorios"); return;
+      }
+      if (f.email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.value.trim())) {
+        toast("El mail no tiene un formato válido"); return;
+      }
+      l.contacto = f.contacto.value.trim();
+      l.empresa = f.empresa.value.trim();
+      l.email = f.email.value.trim();
+      l.telefono = f.telefono.value.trim();
+      l.origen = f.origen.value;
+      l.servicio = f.servicio.value;
+      l.valor = Number(f.valor.value) || 0;
+      l.moneda = f.moneda.value;
+      l.responsable = f.responsable.value.trim();
+      toast("Datos del lead actualizados"); renderFiltro(); render(); openDrawer(id);
+    });
 
     document.getElementById("mv").addEventListener("change", function () {
       moverEtapa(l, this.value); render(); openDrawer(id);
