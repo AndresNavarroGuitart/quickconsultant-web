@@ -100,7 +100,7 @@ a { color: var(--link); }
   border-bottom: 1px solid var(--border);
 }
 .topbar__inner {
-  max-width: 1700px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 12px 24px;
   display: flex;
@@ -130,7 +130,7 @@ a { color: var(--link); }
 .theme-toggle:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
 
 /* ---------- Contenedor de página ---------- */
-.wrap { max-width: 1700px; margin: 0 auto; padding: 40px 24px 64px; }
+.wrap { max-width: 1500px; margin: 0 auto; padding: 40px 24px 64px; }
 
 /* ---------- Encabezado de página ---------- */
 .page-head { margin-bottom: 34px; max-width: 640px; }
@@ -166,7 +166,7 @@ a { color: var(--link); }
 /* ---------- Footer ---------- */
 .foot { border-top: 1px solid var(--border); background: var(--surface); }
 .foot__inner {
-  max-width: 1700px; margin: 0 auto; padding: 28px 24px;
+  max-width: 1500px; margin: 0 auto; padding: 28px 24px;
   display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
 }
 .foot img { filter: var(--logo-filter); }
