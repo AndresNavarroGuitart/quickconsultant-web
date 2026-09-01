@@ -12,8 +12,12 @@
  */
 
 window.TABLERO = {
-  // Fecha de la última actualización de estos datos.
+  // Fecha de referencia de estos datos (los KPIs toman la más reciente entre esta y
+  // la actividad de los módulos Nómina y Pipeline).
   actualizado: "2026-08-28T09:15:00-03:00",
+
+  // Proyectos activos — placeholder hasta que exista el módulo Proyectos.
+  proyectosActivos: 11,
 
   categorias: {
     rrhh: { label: "RRHH & Nómina", color: "#03524E" },

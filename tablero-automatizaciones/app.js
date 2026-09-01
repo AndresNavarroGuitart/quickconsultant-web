@@ -45,22 +45,38 @@
     });
   }
 
+  /* ---------- Datos de los módulos ---------- */
+  function leerLS(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+  function datosEmpleados() { return leerLS("nba-nomina-empleados") || window.NOMINA_DEMO || []; }
+  function datosLeads() { return leerLS("nba-pipeline-leads") || window.PIPELINE_DEMO || []; }
+  var CERRADAS_LEAD = { ganado: 1, perdido: 1 };
+
+  function ultimaActualizacionISO() {
+    var ts = [DATA.actualizado];
+    datosEmpleados().forEach(function (e) { ts.push(e.actualizado, e.creado); });
+    datosLeads().forEach(function (l) {
+      ts.push(l.actualizado, l.creado);
+      (l.actividad || []).forEach(function (a) { ts.push(a.fecha); });
+    });
+    var max = ts.filter(Boolean)
+      .map(function (s) { return new Date(s.length === 10 ? s + "T00:00:00" : s).getTime(); })
+      .filter(function (n) { return !isNaN(n); })
+      .reduce(function (a, b) { return Math.max(a, b); }, 0);
+    return max ? new Date(max).toISOString() : DATA.actualizado;
+  }
+
   /* ---------- KPIs ---------- */
   function renderKpis() {
-    var p = DATA.procesos;
-    var activos = p.filter(function (x) { return x.estado !== "detenido"; }).length;
-    var ejec = p.reduce(function (a, x) { return a + (x.ejecuciones7d || 0); }, 0);
-    var conExito = p.filter(function (x) { return x.estado !== "detenido"; });
-    var exitoProm = conExito.length
-      ? Math.round(conExito.reduce(function (a, x) { return a + (x.exito7d || 0); }, 0) / conExito.length)
-      : 0;
-    var incidencias = p.filter(function (x) { return x.estado === "atencion" || x.estado === "detenido"; }).length;
+    var empleados = datosEmpleados();
+    var leadsProceso = datosLeads().filter(function (l) { return !CERRADAS_LEAD[l.etapa]; }).length;
+    var proyectos = DATA.proyectosActivos != null ? DATA.proyectosActivos : "—";
+    var upd = ultimaActualizacionISO();
 
     var cards = [
-      { label: "Procesos activos", value: activos, hint: "de " + p.length + " en total", accent: true },
-      { label: "Ejecuciones (7 días)", value: ejec, hint: "todas las automatizaciones" },
-      { label: "Tasa de éxito (7 días)", value: exitoProm, unit: "%", hint: "promedio de procesos activos", accent: true },
-      { label: "Requieren atención", value: incidencias, hint: incidencias === 0 ? "todo en verde" : "revisar detalle" },
+      { label: "Total de empleados activos", value: empleados.length, hint: "en la nómina", accent: true },
+      { label: "Proyectos activos", value: proyectos, hint: "en curso" },
+      { label: "Leads en proceso", value: leadsProceso, hint: "en el pipeline", accent: true },
+      { label: "Última actualización", value: relativo(upd), hint: fechaLarga(upd) },
     ];
 
     $kpis.innerHTML = cards.map(function (c) {
@@ -237,9 +253,10 @@
 
   /* ---------- Init ---------- */
   initTheme();
-  if ($updated && DATA.actualizado) {
-    $updated.textContent = "Actualizado " + relativo(DATA.actualizado);
-    $updated.title = fechaLarga(DATA.actualizado);
+  if ($updated) {
+    var upd = ultimaActualizacionISO();
+    $updated.textContent = "Actualizado " + relativo(upd);
+    $updated.title = fechaLarga(upd);
   }
   renderKpis();
   render();
