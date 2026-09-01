@@ -52,9 +52,12 @@
   var CERRADAS_LEAD = { ganado: 1, perdido: 1 };
 
   function datosProyectos() { return (window.PROYECTOS_DATA && window.PROYECTOS_DATA.proyectos) || []; }
-  function proyectosActivos() {
+  function proyectosPorEstado(estado) {
+    return datosProyectos().filter(function (p) { return p.estado === estado; }).length;
+  }
+  function proyectosEnCurso() {
     var arr = datosProyectos();
-    if (arr.length) return arr.filter(function (p) { return p.estado === "En curso"; }).length;
+    if (arr.length) return proyectosPorEstado("En curso");
     return DATA.proyectosActivos != null ? DATA.proyectosActivos : "—";
   }
 
@@ -79,9 +82,10 @@
     var leadsProceso = datosLeads().filter(function (l) { return !CERRADAS_LEAD[l.etapa]; }).length;
     var upd = ultimaActualizacionISO();
 
+    var stdby = datosProyectos().length ? proyectosPorEstado("Std By") : 0;
     var cards = [
       { label: "Total de empleados activos", value: empleados.length, hint: "en la nómina", accent: true },
-      { label: "Proyectos activos", value: proyectosActivos(), hint: "en curso" },
+      { label: "Proyectos activos", value: proyectosEnCurso(), hint: "en curso" + (stdby ? " · " + stdby + " en Std By" : "") },
       { label: "Leads en proceso", value: leadsProceso, hint: "en el pipeline", accent: true },
       { label: "Última actualización", value: relativo(upd), hint: fechaLarga(upd) },
     ];

@@ -3,6 +3,14 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es/).
 Versionado: `tablero-vMAJOR.MINOR.PATCH` (tags de git + releases en GitHub).
 
+## [tablero-v1.0.2] — 2026-09-01
+
+### Cambiado
+
+- KPI **"Proyectos activos"** del tablero: el número grande sigue siendo los
+  proyectos **En curso**; abajo, en chico, se agrega la cantidad en **Std By**
+  (ej. "en curso · 2 en Std By").
+
 ## [tablero-v1.0.1] — 2026-09-01
 
 ### Corregido
@@ -41,5 +49,6 @@ Primera versión estable, publicada en GitHub Pages y compartible con clientes:
   hasta cargar el secret `NOTION_TOKEN` (ver `proyectos/SYNC.md`).
 - `assets/theme.css` compartido por todas las vistas.
 
+[tablero-v1.0.2]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.2
 [tablero-v1.0.1]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.1
 [tablero-v1.0.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.0
