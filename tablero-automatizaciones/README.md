@@ -1,8 +1,12 @@
 # Tablero de Operaciones — Not a Bot Agency
 
-Panel de control único para ver el estado y el rendimiento de los procesos
-automatizados de la agencia: qué está operativo, qué pide atención, cuándo fue la
-última corrida y con qué tasa de éxito.
+Panel de control de la operación de la agencia: empleados, proyectos y pipeline
+de clientes, más el estado de cada proceso de gestión.
+
+**Publicado:** <https://andresnavarroguitart.github.io/quickconsultant-web/tablero-automatizaciones/>
+· **Versiones:** ver [`CHANGELOG.md`](CHANGELOG.md) y los
+[releases](https://github.com/AndresNavarroGuitart/quickconsultant-web/releases)
+con tag `tablero-v*`.
 
 Front estático (HTML + CSS + JS, sin build) con la identidad visual de
 [notabotagency.es](https://notabotagency.es): tipografías **DM Serif Display** /
