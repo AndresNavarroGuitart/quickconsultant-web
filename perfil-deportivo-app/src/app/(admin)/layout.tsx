@@ -4,6 +4,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import LogoutButton from "@/components/LogoutButton";
 import Logo from "@/components/Logo";
+import NotificationBadge from "@/components/NotificationBadge";
 
 const ADMIN_NAV_LINKS = [
   { href: "/admin", label: "Resumen" },
@@ -11,7 +12,6 @@ const ADMIN_NAV_LINKS = [
   { href: "/admin/actividad", label: "Actividad" },
   { href: "/admin/pagos", label: "Pagos" },
   { href: "/admin/sugerencias", label: "Sugerencias" },
-  { href: "/admin/notificaciones", label: "Notificaciones" },
 ];
 
 export default async function AdminLayout({
@@ -33,6 +33,12 @@ export default async function AdminLayout({
   if (!dbUser.isAdmin) {
     redirect("/estadisticas");
   }
+
+  // El admin es un User como cualquier otro: si un broadcast "a todos" lo
+  // incluyo a el mismo, tambien tiene notificaciones propias sin leer.
+  const unreadNotifications = await prisma.notification.count({
+    where: { userId: user.id, isRead: false },
+  });
 
   return (
     <div className="min-h-screen bg-white">
@@ -66,6 +72,13 @@ export default async function AdminLayout({
                 {link.label}
               </Link>
             ))}
+            <Link
+              href="/admin/notificaciones"
+              className="relative text-sm font-bold text-slate-700 transition-colors hover:text-brand-700"
+            >
+              Notificaciones
+              <NotificationBadge count={unreadNotifications} />
+            </Link>
           </div>
         </div>
       </nav>

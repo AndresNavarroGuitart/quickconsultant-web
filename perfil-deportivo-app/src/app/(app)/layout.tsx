@@ -5,6 +5,7 @@ import { ensureUser } from "@/lib/auth/ensureUser";
 import { prisma } from "@/lib/prisma";
 import LogoutButton from "@/components/LogoutButton";
 import Logo from "@/components/Logo";
+import NotificationBadge from "@/components/NotificationBadge";
 
 const NAV_LINKS = [
   { href: "/estadisticas", label: "Estadísticas" },
@@ -61,14 +62,10 @@ export default async function AppLayout({
             ))}
             <Link
               href="/notificaciones"
-              className="text-sm font-bold text-slate-700 transition-colors hover:text-brand-700"
+              className="relative text-sm font-bold text-slate-700 transition-colors hover:text-brand-700"
             >
               Notificaciones
-              {unreadNotifications > 0 && (
-                <span className="ml-1 rounded-full bg-accent-500 px-1.5 py-0.5 text-xs font-semibold text-white">
-                  {unreadNotifications}
-                </span>
-              )}
+              <NotificationBadge count={unreadNotifications} />
             </Link>
             {dbUser.isAdmin && (
               <Link
