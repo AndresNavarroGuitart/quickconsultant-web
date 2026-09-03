@@ -22,7 +22,7 @@ export async function POST() {
   try {
     response = await preApproval.create({
       body: {
-        reason: "Perfil Deportivo - Suscripción mensual",
+        reason: "Potrero Deportivo - Suscripción mensual",
         external_reference: ctx.user.id,
         payer_email: ctx.user.email,
         back_url: `${appUrl}/suscripcion`,

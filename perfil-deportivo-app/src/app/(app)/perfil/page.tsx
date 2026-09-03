@@ -50,8 +50,6 @@ export default async function PerfilPage() {
             sport: profile.sport,
             location: profile.location,
             bio: profile.bio,
-            isPublic: profile.isPublic,
-            slug: profile.slug,
             birthDate: profile.birthDate
               ? profile.birthDate.toISOString().slice(0, 10)
               : null,

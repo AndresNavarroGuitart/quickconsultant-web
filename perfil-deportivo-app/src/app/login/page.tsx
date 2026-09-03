@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import Logo from "@/components/Logo";
+import WavyBanner from "@/components/WavyBanner";
+import TeamShieldIllustration from "@/components/TeamShieldIllustration";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -36,8 +38,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-white px-4">
-      <div className="w-full max-w-sm rounded-lg border border-slate-200 bg-white p-8 shadow-sm">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-4">
+      <WavyBanner className="absolute inset-0 h-full w-full" />
+      <TeamShieldIllustration className="pointer-events-none absolute right-[-60px] top-1/2 hidden w-80 -translate-y-1/2 opacity-25 sm:block" />
+
+      <div className="relative z-10 w-full max-w-sm rounded-lg border border-slate-200 bg-white p-8 shadow-lg">
         <div className="mb-6 flex justify-center">
           <Logo className="text-2xl" />
         </div>

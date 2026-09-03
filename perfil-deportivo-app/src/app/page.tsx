@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
-import SportSplashIllustration from "@/components/SportSplashIllustration";
+import TeamShieldIllustration from "@/components/TeamShieldIllustration";
+import WavyBanner from "@/components/WavyBanner";
 
 const FEATURES = [
   {
@@ -45,11 +46,13 @@ export default function Home() {
         </div>
       </header>
 
+      <WavyBanner className="h-6 w-full sm:h-8" />
+
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-20 px-4 py-12 sm:py-20">
         <section className="grid items-center gap-10 sm:grid-cols-2">
           <div className="flex flex-col gap-5">
             <h1 className="text-4xl font-semibold leading-tight text-slate-900 sm:text-5xl">
-              Tu carrera deportiva, en un perfil que se comparte.
+              Todos los partidos registrados en un solo lugar.
             </h1>
             <p className="max-w-md text-slate-600">
               Cargá tus clubes, partidos y puntos, sumá fotos, y armá un
@@ -74,7 +77,7 @@ export default function Home() {
             </p>
           </div>
 
-          <SportSplashIllustration className="mx-auto w-full max-w-xs sm:max-w-sm" />
+          <TeamShieldIllustration className="mx-auto w-full max-w-[220px] sm:max-w-[260px]" />
         </section>
 
         <section className="grid gap-6 sm:grid-cols-3">
@@ -99,7 +102,7 @@ export default function Home() {
       </main>
 
       <footer className="border-t border-slate-100 py-6 text-center text-xs text-slate-400">
-        Perfil Deportivo
+        Potrero Deportivo
       </footer>
     </div>
   );

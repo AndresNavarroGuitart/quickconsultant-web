@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPublicProfile } from "@/lib/athlete/getPublicProfile";
 import { computeMatchStats } from "@/lib/athlete/stats";
+import WavyBanner from "@/components/WavyBanner";
 
 function formatDate(value: Date) {
   return value.toLocaleDateString("es-AR");
@@ -59,18 +60,20 @@ export default async function PublicProfilePage({
 
   return (
     <div className="min-h-screen bg-white pb-12">
-      <div
-        className="h-40 w-full bg-gradient-to-r from-brand-600 to-brand-400 sm:h-56"
-        style={
-          profile.coverUrl
-            ? {
-                backgroundImage: `url(${profile.coverUrl})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }
-            : undefined
-        }
-      />
+      <div className="relative h-40 w-full overflow-hidden sm:h-56">
+        {profile.coverUrl ? (
+          <div
+            className="h-full w-full"
+            style={{
+              backgroundImage: `url(${profile.coverUrl})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
+        ) : (
+          <WavyBanner className="h-full w-full" />
+        )}
+      </div>
 
       <div className="mx-auto -mt-12 flex max-w-3xl flex-col gap-8 px-4">
         <div className="flex items-end gap-4">
@@ -169,7 +172,7 @@ export default async function PublicProfilePage({
         )}
 
         <footer className="mt-6 border-t border-slate-200 pt-4 text-center text-xs text-slate-400">
-          Perfil hecho con Perfil Deportivo —{" "}
+          Perfil hecho con Potrero Deportivo —{" "}
           <Link href="/signup" className="text-brand-600 hover:underline">
             creá el tuyo
           </Link>

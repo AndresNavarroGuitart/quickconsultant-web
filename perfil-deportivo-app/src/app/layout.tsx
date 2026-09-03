@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Perfil Deportivo",
+  title: "Potrero Deportivo",
   description:
     "Llevá el registro de tus clubes, partidos y puntos, y compartí tu perfil deportivo en redes sociales.",
 };

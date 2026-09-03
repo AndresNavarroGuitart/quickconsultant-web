@@ -3,7 +3,7 @@ export default function Logo({ className = "" }: { className?: string }) {
     <span
       className={`text-xl font-bold tracking-tight text-brand-700 ${className}`}
     >
-      Perfil<span className="text-accent-500">Deportivo</span>
+      Potrero<span className="text-accent-500">Deportivo</span>
     </span>
   );
 }

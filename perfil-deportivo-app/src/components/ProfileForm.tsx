@@ -9,8 +9,6 @@ type Profile = {
   sport: string;
   location: string | null;
   bio: string | null;
-  isPublic: boolean;
-  slug: string;
   birthDate: string | null;
   position: string | null;
   heightCm: number | null;
@@ -33,7 +31,6 @@ export default function ProfileForm({
   const [sport, setSport] = useState(profile.sport);
   const [location, setLocation] = useState(profile.location ?? "");
   const [bio, setBio] = useState(profile.bio ?? "");
-  const [isPublic, setIsPublic] = useState(profile.isPublic);
   const [birthDate, setBirthDate] = useState(profile.birthDate ?? "");
   const [position, setPosition] = useState(profile.position ?? "");
   const [heightCm, setHeightCm] = useState(
@@ -64,7 +61,6 @@ export default function ProfileForm({
         displayName,
         sport,
         location: location || null,
-        isPublic,
         birthDate: birthDate || null,
         position: position || null,
         heightCm: heightCm ? Number(heightCm) : null,
@@ -238,15 +234,6 @@ export default function ProfileForm({
           </div>
         </div>
       )}
-
-      <label className="flex items-center gap-2 text-sm text-slate-700">
-        <input
-          type="checkbox"
-          checked={isPublic}
-          onChange={(e) => setIsPublic(e.target.checked)}
-        />
-        Perfil público (visible en /perfil/{profile.slug})
-      </label>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
       {saved && <p className="text-sm text-brand-600">Guardado.</p>}
