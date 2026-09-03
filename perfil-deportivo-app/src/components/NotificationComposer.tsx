@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function NotificationComposer() {
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [targetEmail, setTargetEmail] = useState("");
@@ -40,6 +42,7 @@ export default function NotificationComposer() {
     setTitle("");
     setBody("");
     setTargetEmail("");
+    router.refresh();
   }
 
   return (
