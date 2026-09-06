@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import { getSessionContext } from "@/lib/auth/getSessionContext";
+import { cookies } from "next/headers";
+import { ACTIVE_PROFILE_COOKIE, getSessionContext } from "@/lib/auth/getSessionContext";
 import { generateUniqueSlug } from "@/lib/athlete/slug";
+import { MAX_PROFILES_PER_USER } from "@/lib/athlete/profileLimit";
 import {
   createProfileSchema,
   updateProfileSchema,
@@ -11,10 +13,12 @@ export async function GET() {
   const ctx = await getSessionContext();
   if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
 
-  const profile = await prisma.athleteProfile.findUnique({
-    where: { userId: ctx.user.id },
-    include: { photos: { orderBy: { createdAt: "desc" } } },
-  });
+  const profile = ctx.activeProfile
+    ? await prisma.athleteProfile.findUnique({
+        where: { id: ctx.activeProfile.id },
+        include: { photos: { orderBy: { createdAt: "desc" } } },
+      })
+    : null;
 
   return NextResponse.json({ profile, access: ctx.access });
 }
@@ -23,12 +27,9 @@ export async function POST(request: Request) {
   const ctx = await getSessionContext();
   if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
 
-  const existing = await prisma.athleteProfile.findUnique({
-    where: { userId: ctx.user.id },
-  });
-  if (existing) {
+  if (ctx.profiles.length >= MAX_PROFILES_PER_USER) {
     return NextResponse.json(
-      { error: "Ya existe un perfil para este usuario" },
+      { error: `Ya tenés el máximo de ${MAX_PROFILES_PER_USER} perfiles por cuenta` },
       { status: 409 }
     );
   }
@@ -55,6 +56,12 @@ export async function POST(request: Request) {
     },
   });
 
+  // El perfil recién creado pasa a ser el activo de la sesión (si es el
+  // primero, no había otro para comparar; si es el segundo, es el que el
+  // usuario recién pidió agregar).
+  const cookieStore = await cookies();
+  cookieStore.set(ACTIVE_PROFILE_COOKIE, profile.id, { sameSite: "lax", path: "/" });
+
   return NextResponse.json({ profile }, { status: 201 });
 }
 
@@ -62,10 +69,7 @@ export async function PATCH(request: Request) {
   const ctx = await getSessionContext();
   if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
 
-  const profile = await prisma.athleteProfile.findUnique({
-    where: { userId: ctx.user.id },
-  });
-  if (!profile) {
+  if (!ctx.activeProfile) {
     return NextResponse.json({ error: "Perfil no encontrado" }, { status: 404 });
   }
 
@@ -80,7 +84,7 @@ export async function PATCH(request: Request) {
   const isDependent = subjectType === "DEPENDENT";
 
   const updated = await prisma.athleteProfile.update({
-    where: { userId: ctx.user.id },
+    where: { id: ctx.activeProfile.id },
     data: {
       ...alwaysAllowed,
       ...(subjectType !== undefined

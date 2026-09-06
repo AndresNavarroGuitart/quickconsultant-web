@@ -18,7 +18,9 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  profile       AthleteProfile?
+  // Hasta 2 perfiles por cuenta (ej. el propio + el de un hijo/a). Cuál está
+  // activo en la sesión se guarda en una cookie, no acá (ver activeProfile.ts).
+  profiles      AthleteProfile[]
   subscriptions Subscription[]
   suggestions   Suggestion[]
   notifications Notification[]
@@ -31,7 +33,10 @@ enum ProfileSubjectType {
 
 model AthleteProfile {
   id          String   @id @default(uuid())
-  userId      String   @unique
+  // Sin @unique: un mismo usuario puede tener hasta 2 perfiles (self +
+  // dependiente, o 2 dependientes). El limite de 2 se aplica en la API,
+  // no en la base.
+  userId      String
   user        User     @relation(fields: [userId], references: [id])
   slug        String   @unique
   displayName String

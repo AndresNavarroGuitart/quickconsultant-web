@@ -25,7 +25,9 @@ export default async function AdminActividadPage() {
     prisma.user.findMany({
       orderBy: { createdAt: "desc" },
       include: {
-        profile: {
+        // Hasta 2 perfiles por cuenta (self + dependiente): se muestran
+        // agregados en una sola fila por usuario, no una fila por perfil.
+        profiles: {
           include: {
             _count: { select: { matches: true, athleteClubs: true } },
             matches: {
@@ -64,26 +66,41 @@ export default async function AdminActividadPage() {
           </thead>
           <tbody>
             {users.map((u) => {
-              const lastMatchDate = u.profile?.matches[0]?.matchDate ?? null;
+              const matchDates = u.profiles
+                .map((p) => p.matches[0]?.matchDate ?? null)
+                .filter((d): d is Date => d !== null);
+              const lastMatchDate =
+                matchDates.length > 0
+                  ? new Date(Math.max(...matchDates.map((d) => d.getTime())))
+                  : null;
+              const totalClubs = u.profiles.reduce(
+                (sum, p) => sum + p._count.athleteClubs,
+                0
+              );
+              const totalMatches = u.profiles.reduce(
+                (sum, p) => sum + p._count.matches,
+                0
+              );
               const lastSignInAt = lastSignInMap.get(u.id) ?? null;
               return (
                 <tr key={u.id} className="border-b border-slate-100 last:border-0">
                   <td className="px-4 py-2">{u.email}</td>
                   <td className="px-4 py-2">
-                    {u.profile ? (
+                    {u.profiles.length > 0 ? (
                       <span>
-                        {u.profile.displayName}
-                        <span className="text-slate-400"> · {u.profile.sport}</span>
+                        {u.profiles
+                          .map((p) => `${p.displayName} · ${p.sport}`)
+                          .join(", ")}
                       </span>
                     ) : (
                       <span className="text-slate-400">Sin perfil</span>
                     )}
                   </td>
-                  <td className="px-4 py-2">{u.profile?._count.athleteClubs ?? 0}</td>
-                  <td className="px-4 py-2">{u.profile?._count.matches ?? 0}</td>
+                  <td className="px-4 py-2">{totalClubs}</td>
+                  <td className="px-4 py-2">{totalMatches}</td>
                   <td className="px-4 py-2">
                     {lastMatchDate
-                      ? new Date(lastMatchDate).toLocaleDateString("es-AR")
+                      ? lastMatchDate.toLocaleDateString("es-AR")
                       : "-"}
                   </td>
                   <td className="px-4 py-2">

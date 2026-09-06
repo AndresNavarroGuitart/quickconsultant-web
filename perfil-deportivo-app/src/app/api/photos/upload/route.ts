@@ -18,9 +18,7 @@ export async function POST(request: Request) {
   const ctx = await getSessionContext();
   if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
 
-  const profile = await prisma.athleteProfile.findUnique({
-    where: { userId: ctx.user.id },
-  });
+  const profile = ctx.activeProfile;
   if (!profile) {
     return NextResponse.json({ error: "Perfil no encontrado" }, { status: 404 });
   }
@@ -77,7 +75,7 @@ export async function POST(request: Request) {
 
   if (slot === "avatar") {
     await prisma.athleteProfile.update({
-      where: { userId: ctx.user.id },
+      where: { id: profile.id },
       data: { avatarUrl: publicUrl },
     });
     return NextResponse.json({ url: publicUrl });

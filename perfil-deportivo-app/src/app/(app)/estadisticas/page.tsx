@@ -8,9 +8,7 @@ export default async function EstadisticasPage() {
   const ctx = await getSessionContext();
   if (!ctx) redirect("/login");
 
-  const profile = await prisma.athleteProfile.findUnique({
-    where: { userId: ctx.user.id },
-  });
+  const profile = ctx.activeProfile;
   if (!profile) redirect("/onboarding");
 
   const { hasAccess, trialActive } = ctx.access;

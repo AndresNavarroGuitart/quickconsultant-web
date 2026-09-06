@@ -3,18 +3,12 @@ import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { ensureUser } from "@/lib/auth/ensureUser";
 import { prisma } from "@/lib/prisma";
+import { MAX_PROFILES_PER_USER } from "@/lib/athlete/profileLimit";
 import LogoutButton from "@/components/LogoutButton";
 import Logo from "@/components/Logo";
 import NotificationBadge from "@/components/NotificationBadge";
-
-const NAV_LINKS = [
-  { href: "/estadisticas", label: "Estadísticas" },
-  { href: "/perfil", label: "Mi perfil" },
-  { href: "/clubes", label: "Clubes" },
-  { href: "/partidos", label: "Partidos" },
-  { href: "/sugerencias", label: "Sugerencias" },
-  { href: "/suscripcion", label: "Suscripción" },
-];
+import ProfileNavMenu from "@/components/ProfileNavMenu";
+import { MailboxIcon, EnvelopeIcon } from "@/components/icons";
 
 export default async function AppLayout({
   children,
@@ -31,9 +25,11 @@ export default async function AppLayout({
   }
 
   const dbUser = await ensureUser(user);
-  const unreadNotifications = await prisma.notification.count({
-    where: { userId: user.id, isRead: false },
-  });
+  const [unreadNotifications, profileCount] = await Promise.all([
+    prisma.notification.count({ where: { userId: user.id, isRead: false } }),
+    prisma.athleteProfile.count({ where: { userId: user.id } }),
+  ]);
+  const canAddProfile = profileCount < MAX_PROFILES_PER_USER;
 
   return (
     <div className="min-h-screen bg-white">
@@ -43,39 +39,60 @@ export default async function AppLayout({
             <Link href="/estadisticas" className="shrink-0">
               <Logo />
             </Link>
-            {user.email && (
-              <span className="hidden text-sm text-slate-500 sm:inline">
-                {user.email}
-              </span>
-            )}
+            <div className="flex items-center gap-4">
+              {user.email && (
+                <span className="hidden text-sm text-slate-500 sm:inline">
+                  {user.email}
+                </span>
+              )}
+              {dbUser.isAdmin && (
+                <Link
+                  href="/admin"
+                  className="text-sm font-bold text-accent-600 transition-colors hover:text-accent-500"
+                >
+                  Admin
+                </Link>
+              )}
+              <LogoutButton />
+            </div>
           </div>
 
           <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-2">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm font-bold text-slate-700 transition-colors hover:text-brand-700"
-              >
-                {link.label}
-              </Link>
-            ))}
+            <ProfileNavMenu />
+
             <Link
-              href="/notificaciones"
-              className="relative text-sm font-bold text-slate-700 transition-colors hover:text-brand-700"
+              href="/suscripcion"
+              className="text-sm font-bold text-slate-700 transition-colors hover:text-brand-700"
             >
-              Notificaciones
-              <NotificationBadge count={unreadNotifications} />
+              Mi suscripción
             </Link>
-            {dbUser.isAdmin && (
+
+            {canAddProfile && (
               <Link
-                href="/admin"
-                className="text-sm font-bold text-accent-600 transition-colors hover:text-accent-500"
+                href="/onboarding"
+                className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-bold text-white transition-colors hover:bg-brand-700"
               >
-                Admin
+                Agregar perfil
               </Link>
             )}
-            <LogoutButton />
+
+            <Link
+              href="/notificaciones"
+              className="relative text-slate-700 transition-colors hover:text-brand-700"
+              title="Notificaciones"
+              aria-label="Notificaciones"
+            >
+              <MailboxIcon className="h-6 w-6" />
+              <NotificationBadge count={unreadNotifications} />
+            </Link>
+
+            <Link
+              href="/sugerencias"
+              className="ml-auto flex items-center gap-1.5 text-sm font-bold text-slate-700 transition-colors hover:text-brand-700"
+            >
+              <EnvelopeIcon className="h-5 w-5" />
+              Sugerencias
+            </Link>
           </div>
         </div>
       </nav>

@@ -3,14 +3,13 @@ import { getSessionContext } from "@/lib/auth/getSessionContext";
 import { prisma } from "@/lib/prisma";
 import ProfileForm from "@/components/ProfileForm";
 import PlayerCard from "@/components/PlayerCard";
+import ProfileSwitcher from "@/components/ProfileSwitcher";
 
 export default async function PerfilPage() {
   const ctx = await getSessionContext();
   if (!ctx) redirect("/login");
 
-  const profile = await prisma.athleteProfile.findUnique({
-    where: { userId: ctx.user.id },
-  });
+  const profile = ctx.activeProfile;
 
   if (!profile) redirect("/onboarding");
 
@@ -31,6 +30,17 @@ export default async function PerfilPage() {
         </p>
       </div>
 
+      {ctx.profiles.length > 1 && (
+        <ProfileSwitcher
+          profiles={ctx.profiles.map((p) => ({
+            id: p.id,
+            displayName: p.displayName,
+            sport: p.sport,
+          }))}
+          activeProfileId={profile.id}
+        />
+      )}
+
       <div className="grid gap-8 sm:grid-cols-[280px_1fr]">
         <PlayerCard
           avatarUrl={profile.avatarUrl}
@@ -43,6 +53,7 @@ export default async function PerfilPage() {
         />
 
         <ProfileForm
+          key={profile.id}
           profile={{
             displayName: profile.displayName,
             sport: profile.sport,
