@@ -19,7 +19,7 @@ export default async function OnboardingPage() {
       </h1>
       <p className="text-sm text-slate-500">
         Con esto arrancás tu prueba gratuita de 7 días. Después vas a poder
-        sumar foto, bio, clubes y partidos.
+        sumar foto, clubes y partidos.
       </p>
       <OnboardingForm />
     </div>

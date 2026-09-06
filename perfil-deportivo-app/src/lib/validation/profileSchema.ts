@@ -43,7 +43,6 @@ export const updateProfileSchema = z
     displayName: z.string().trim().min(2).max(80).optional(),
     sport: z.string().trim().min(2).max(60).optional(),
     location: z.string().trim().max(120).optional().nullable(),
-    bio: z.string().trim().max(2000).optional().nullable(),
     isPublic: z.boolean().optional(),
     birthDate: z.coerce.date().optional().nullable(),
     position: z.string().trim().max(60).optional().nullable(),

@@ -21,8 +21,6 @@ export default async function PerfilPage() {
     take: 2,
   });
 
-  const { hasAccess } = ctx.access;
-
   return (
     <div className="flex flex-col gap-8">
       <div>
@@ -49,7 +47,6 @@ export default async function PerfilPage() {
             displayName: profile.displayName,
             sport: profile.sport,
             location: profile.location,
-            bio: profile.bio,
             birthDate: profile.birthDate
               ? profile.birthDate.toISOString().slice(0, 10)
               : null,
@@ -61,7 +58,6 @@ export default async function PerfilPage() {
             guardianName: profile.guardianName,
             guardianRelationship: profile.guardianRelationship,
           }}
-          hasAccess={hasAccess}
         />
       </div>
     </div>

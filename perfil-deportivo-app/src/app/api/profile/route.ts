@@ -52,9 +52,6 @@ export async function POST(request: Request) {
       guardianName: isDependent ? parsed.data.guardianName : null,
       guardianRelationship: isDependent ? (parsed.data.guardianRelationship ?? null) : null,
       guardianConsentAt: isDependent ? new Date() : null,
-      // La bio requiere acceso activo (trial o suscripción); en el alta
-      // inicial casi siempre hay trial fresco, pero igual respetamos la
-      // misma regla que en el PATCH en vez de duplicarla.
     },
   });
 
@@ -77,15 +74,8 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { bio, guardianConsent, subjectType, guardianName, guardianRelationship, ...alwaysAllowed } =
+  const { guardianConsent, subjectType, guardianName, guardianRelationship, ...alwaysAllowed } =
     parsed.data;
-
-  if (bio !== undefined && !ctx.access.hasAccess) {
-    return NextResponse.json(
-      { error: "La bio requiere una suscripción activa o trial vigente" },
-      { status: 403 }
-    );
-  }
 
   const isDependent = subjectType === "DEPENDENT";
 
@@ -93,7 +83,6 @@ export async function PATCH(request: Request) {
     where: { userId: ctx.user.id },
     data: {
       ...alwaysAllowed,
-      ...(bio !== undefined ? { bio } : {}),
       ...(subjectType !== undefined
         ? {
             subjectType,

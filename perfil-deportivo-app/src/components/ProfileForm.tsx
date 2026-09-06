@@ -8,7 +8,6 @@ type Profile = {
   displayName: string;
   sport: string;
   location: string | null;
-  bio: string | null;
   birthDate: string | null;
   position: string | null;
   heightCm: number | null;
@@ -19,18 +18,11 @@ type Profile = {
   guardianRelationship: string | null;
 };
 
-export default function ProfileForm({
-  profile,
-  hasAccess,
-}: {
-  profile: Profile;
-  hasAccess: boolean;
-}) {
+export default function ProfileForm({ profile }: { profile: Profile }) {
   const router = useRouter();
   const [displayName, setDisplayName] = useState(profile.displayName);
   const [sport, setSport] = useState(profile.sport);
   const [location, setLocation] = useState(profile.location ?? "");
-  const [bio, setBio] = useState(profile.bio ?? "");
   const [birthDate, setBirthDate] = useState(profile.birthDate ?? "");
   const [position, setPosition] = useState(profile.position ?? "");
   const [heightCm, setHeightCm] = useState(
@@ -66,7 +58,6 @@ export default function ProfileForm({
         heightCm: heightCm ? Number(heightCm) : null,
         country: country || null,
         jerseyNumber: jerseyNumber ? Number(jerseyNumber) : null,
-        ...(hasAccess ? { bio: bio || null } : {}),
         ...(profile.subjectType === "DEPENDENT"
           ? {
               subjectType: "DEPENDENT",
@@ -186,22 +177,6 @@ export default function ProfileForm({
             className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <label className="text-sm font-medium text-slate-700">Bio</label>
-        <textarea
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
-          disabled={!hasAccess}
-          rows={4}
-          placeholder={
-            hasAccess
-              ? "Contá tu trayectoria..."
-              : "Activá tu suscripción para agregar una bio"
-          }
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:bg-slate-100 disabled:text-slate-400"
-        />
       </div>
 
       {profile.subjectType === "DEPENDENT" && (
