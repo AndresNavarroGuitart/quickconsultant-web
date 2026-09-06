@@ -54,7 +54,6 @@ export default async function PublicProfilePage({
   if (!profile) notFound();
 
   const stats = computeMatchStats(profile.matches);
-  const highlightMatches = profile.matches.filter((m) => m.isHighlight);
   const recentMatches = profile.matches.slice(0, 5);
   const matchPhotos = profile.matches.flatMap((m) => m.photos);
 
@@ -134,15 +133,6 @@ export default async function PublicProfilePage({
                 </div>
               ))}
             </div>
-          </section>
-        )}
-
-        {highlightMatches.length > 0 && (
-          <section className="flex flex-col gap-2">
-            <h2 className="text-lg font-semibold text-slate-900">
-              Partidos destacados
-            </h2>
-            <MatchList matches={highlightMatches} />
           </section>
         )}
 

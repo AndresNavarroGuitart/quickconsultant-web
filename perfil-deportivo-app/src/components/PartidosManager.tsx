@@ -21,7 +21,6 @@ type Match = {
   condition: MatchCondition | null;
   pointsScored: number;
   notes: string | null;
-  isHighlight: boolean;
   position: string | null;
   minutesPlayed: number | null;
   club: { id: string; name: string } | null;
@@ -57,7 +56,6 @@ export default function PartidosManager({
   const [condition, setCondition] = useState<MatchCondition | "">("");
   const [pointsScored, setPointsScored] = useState("0");
   const [notes, setNotes] = useState("");
-  const [isHighlight, setIsHighlight] = useState(false);
   const [position, setPosition] = useState("");
   const [minutesPlayed, setMinutesPlayed] = useState("");
   const [statValues, setStatValues] = useState<Record<string, string>>({});
@@ -100,7 +98,6 @@ export default function PartidosManager({
         condition: condition || null,
         pointsScored: Number(pointsScored) || 0,
         notes: notes || null,
-        isHighlight,
         position: position || null,
         minutesPlayed: minutesPlayed === "" ? null : Number(minutesPlayed),
         ...statsPayload,
@@ -122,7 +119,6 @@ export default function PartidosManager({
     setCondition("");
     setPointsScored("0");
     setNotes("");
-    setIsHighlight(false);
     handlePositionChange("");
     setMinutesPlayed("");
     router.refresh();
@@ -325,15 +321,6 @@ export default function PartidosManager({
           />
         </div>
 
-        <label className="flex items-center gap-2 text-sm text-slate-700 sm:col-span-2">
-          <input
-            type="checkbox"
-            checked={isHighlight}
-            onChange={(e) => setIsHighlight(e.target.checked)}
-          />
-          Destacar en el perfil público
-        </label>
-
         {error && <p className="text-sm text-red-600 sm:col-span-2">{error}</p>}
 
         <button
@@ -379,11 +366,6 @@ export default function PartidosManager({
                     >
                       ({RESULT_LABEL[m.result]})
                     </span>
-                    {m.isHighlight && (
-                      <span className="ml-1 text-accent-500" title="Destacado">
-                        ★
-                      </span>
-                    )}
                   </p>
                   <p className="text-xs text-slate-500">
                     {formatDate(m.matchDate)}

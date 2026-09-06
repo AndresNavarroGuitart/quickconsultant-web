@@ -38,7 +38,6 @@ export default async function PartidosPage() {
           condition: m.condition,
           pointsScored: m.pointsScored,
           notes: m.notes,
-          isHighlight: m.isHighlight,
           position: m.position,
           minutesPlayed: m.minutesPlayed,
           cleanSheet: m.cleanSheet,

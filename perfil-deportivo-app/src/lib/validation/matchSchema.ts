@@ -8,7 +8,6 @@ export const matchSchema = z.object({
   condition: z.enum(["LOCAL", "VISITANTE"]).optional().nullable(),
   pointsScored: z.coerce.number().int().min(0).max(10000).default(0),
   notes: z.string().trim().max(2000).optional().nullable(),
-  isHighlight: z.boolean().optional(),
   position: z.string().trim().max(60).optional().nullable(),
   minutesPlayed: z.coerce.number().int().min(0).max(600).optional().nullable(),
   // Estadisticas de arquero: solo se completan cuando position es "Arquero",

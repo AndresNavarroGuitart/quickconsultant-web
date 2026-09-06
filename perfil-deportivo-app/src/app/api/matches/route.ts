@@ -36,7 +36,6 @@ export async function POST(request: Request) {
       condition: parsed.data.condition ?? null,
       pointsScored: parsed.data.pointsScored,
       notes: parsed.data.notes ?? null,
-      isHighlight: parsed.data.isHighlight ?? false,
       position: parsed.data.position ?? null,
       minutesPlayed: parsed.data.minutesPlayed ?? null,
       cleanSheet: parsed.data.cleanSheet ?? false,
