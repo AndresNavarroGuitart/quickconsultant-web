@@ -3,6 +3,42 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es/).
 Versionado: `tablero-vMAJOR.MINOR.PATCH` (tags de git + releases en GitHub).
 
+## [tablero-v1.2.0] — 2026-09-07
+
+### Cambiado
+
+- **Nómina · ficha del colaborador rediseñada como panel** (según mockup del
+  cliente). Se reemplazan las 5 solapas por una vista de una sola página con
+  tarjetas:
+  - **Encabezado**: avatar, nombre, estado, `rol · cliente / proyecto`, botón Editar.
+  - **Barra resumen**: dedicación · país · fecha de ingreso · estado del seguimiento.
+  - **Datos personales**: ID, mail, teléfono, dirección completa, contacto
+    alternativo (nombre · vínculo · teléfono).
+  - **Asignación operativa**: cliente, proyecto, punto de contacto del cliente,
+    responsable Not a Bot, rol, dedicación.
+  - **PTO**: días disponibles calculados (acordados − aprobados del año) +
+    movimientos de PTO (ex-Licencias).
+  - **Equipamiento** (nuevo): gestión, cliente responsable, entrega, equipo, N.º de
+    serie, estado + historial.
+  - **Seguimiento de la persona** (ex-Desempeño): tabla fecha/tipo/nota/responsable/
+    próximo + alta rápida.
+  - **Estado de la relación** (nuevo): semáforo Todo en orden / Requiere atención /
+    Riesgo de continuidad, con motivo, próxima acción y oportunidad.
+  - **Documentos** y **Administración** quedan como pestañas (Panel · Documentos ·
+    Administración).
+- **Edición** separada de la vista: `#/empleado/:id` muestra el panel, botón
+  **Editar** abre el formulario. Alta con "+ Nuevo colaborador".
+- **Campo `Cliente / Proyecto` dividido** en `cliente` + `proyecto`. En el listado
+  se muestra "Cliente / Proyecto" combinado.
+- Nuevos campos en la interna: `telefono`, `direccionCompleta`, `contactoAlt*`,
+  `puntoContactoCliente`, `responsableNotaBot`, `ptoAcordados`, `equipamiento{}`,
+  `seguimientos[]`, `relacion{}`. Retirados del alta: tipo de contrato y horas
+  semanales (siguen en datos viejos, no se muestran).
+- Columna **Seguimiento** del listado: muestra "Al día" / "Pendiente" derivado del
+  último seguimiento registrado.
+- Fechas del módulo en formato corto `dd/mm/aa`.
+- `?v=` de JS/CSS: **1.1.0 → 1.2.0**.
+
 ## [tablero-v1.1.0] — 2026-09-07
 
 ### Agregado
@@ -91,6 +127,7 @@ Primera versión estable, publicada en GitHub Pages y compartible con clientes:
   hasta cargar el secret `NOTION_TOKEN` (ver `proyectos/SYNC.md`).
 - `assets/theme.css` compartido por todas las vistas.
 
+[tablero-v1.2.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.2.0
 [tablero-v1.1.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.1.0
 [tablero-v1.0.5]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.5
 [tablero-v1.0.4]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.4
