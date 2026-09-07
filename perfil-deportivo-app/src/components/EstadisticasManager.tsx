@@ -9,23 +9,22 @@ type MatchRow = StatsMatchInput & {
   id: string;
   opponent: string;
   matchDate: string;
+  championship: string | null;
   club: { id: string; name: string } | null;
 };
 
-type Filter = "total" | "match" | "opponent" | "club";
-
-const FILTER_LABEL: Record<Filter, string> = {
-  total: "Total",
-  match: "Por partido",
-  opponent: "Por equipo",
-  club: "Por club",
-};
+// Los 4 filtros se combinan entre si (AND) y cada uno acepta elegir varios
+// valores a la vez (OR dentro del mismo filtro): ej. Club "A" u "B", Y
+// Campeonato "Liga 2026", da los partidos de A o B que fueron de esa liga.
+function toggle(list: string[], value: string): string[] {
+  return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
+}
 
 export default function EstadisticasManager({ matches }: { matches: MatchRow[] }) {
-  const [filter, setFilter] = useState<Filter>("total");
-  const [selectedMatchId, setSelectedMatchId] = useState("");
-  const [selectedOpponent, setSelectedOpponent] = useState("");
-  const [selectedClubId, setSelectedClubId] = useState("");
+  const [selectedMatchIds, setSelectedMatchIds] = useState<string[]>([]);
+  const [selectedOpponents, setSelectedOpponents] = useState<string[]>([]);
+  const [selectedClubIds, setSelectedClubIds] = useState<string[]>([]);
+  const [selectedChampionships, setSelectedChampionships] = useState<string[]>([]);
 
   const opponents = useMemo(
     () => Array.from(new Set(matches.map((m) => m.opponent))).sort(),
@@ -42,22 +41,42 @@ export default function EstadisticasManager({ matches }: { matches: MatchRow[] }
     );
   }, [matches]);
 
+  const championships = useMemo(
+    () =>
+      Array.from(new Set(matches.map((m) => m.championship).filter((c): c is string => !!c))).sort(),
+    [matches]
+  );
+
+  const hasFilters =
+    selectedMatchIds.length > 0 ||
+    selectedOpponents.length > 0 ||
+    selectedClubIds.length > 0 ||
+    selectedChampionships.length > 0;
+
+  function clearFilters() {
+    setSelectedMatchIds([]);
+    setSelectedOpponents([]);
+    setSelectedClubIds([]);
+    setSelectedChampionships([]);
+  }
+
   const filteredMatches = useMemo(() => {
-    if (filter === "match") {
-      return selectedMatchId ? matches.filter((m) => m.id === selectedMatchId) : [];
-    }
-    if (filter === "opponent") {
-      return selectedOpponent
-        ? matches.filter((m) => m.opponent === selectedOpponent)
-        : [];
-    }
-    if (filter === "club") {
-      return selectedClubId
-        ? matches.filter((m) => m.club?.id === selectedClubId)
-        : [];
-    }
-    return matches;
-  }, [filter, matches, selectedMatchId, selectedOpponent, selectedClubId]);
+    return matches.filter((m) => {
+      if (selectedMatchIds.length > 0 && !selectedMatchIds.includes(m.id)) return false;
+      if (selectedOpponents.length > 0 && !selectedOpponents.includes(m.opponent)) return false;
+      if (
+        selectedClubIds.length > 0 &&
+        (!m.club || !selectedClubIds.includes(m.club.id))
+      )
+        return false;
+      if (
+        selectedChampionships.length > 0 &&
+        (!m.championship || !selectedChampionships.includes(m.championship))
+      )
+        return false;
+      return true;
+    });
+  }, [matches, selectedMatchIds, selectedOpponents, selectedClubIds, selectedChampionships]);
 
   const stats = computeDetailedStats(filteredMatches);
   const statTiles = ALL_STAT_FIELDS.filter(
@@ -66,67 +85,73 @@ export default function EstadisticasManager({ matches }: { matches: MatchRow[] }
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap gap-2">
-        {(Object.keys(FILTER_LABEL) as Filter[]).map((key) => (
+      <div className="flex flex-col gap-3">
+        {clubs.length > 0 && (
+          <FilterGroup label="Por club">
+            {clubs.map((c) => (
+              <FilterChip
+                key={c.id}
+                active={selectedClubIds.includes(c.id)}
+                onClick={() => setSelectedClubIds((prev) => toggle(prev, c.id))}
+              >
+                {c.name}
+              </FilterChip>
+            ))}
+          </FilterGroup>
+        )}
+
+        {championships.length > 0 && (
+          <FilterGroup label="Por campeonato">
+            {championships.map((c) => (
+              <FilterChip
+                key={c}
+                active={selectedChampionships.includes(c)}
+                onClick={() => setSelectedChampionships((prev) => toggle(prev, c))}
+              >
+                {c}
+              </FilterChip>
+            ))}
+          </FilterGroup>
+        )}
+
+        {opponents.length > 0 && (
+          <FilterGroup label="Por equipo">
+            {opponents.map((o) => (
+              <FilterChip
+                key={o}
+                active={selectedOpponents.includes(o)}
+                onClick={() => setSelectedOpponents((prev) => toggle(prev, o))}
+              >
+                {o}
+              </FilterChip>
+            ))}
+          </FilterGroup>
+        )}
+
+        {matches.length > 0 && (
+          <FilterGroup label="Por partido">
+            {matches.map((m) => (
+              <FilterChip
+                key={m.id}
+                active={selectedMatchIds.includes(m.id)}
+                onClick={() => setSelectedMatchIds((prev) => toggle(prev, m.id))}
+              >
+                {formatDateOnly(m.matchDate)} · vs {m.opponent}
+              </FilterChip>
+            ))}
+          </FilterGroup>
+        )}
+
+        {hasFilters && (
           <button
-            key={key}
             type="button"
-            onClick={() => setFilter(key)}
-            className={`rounded-md px-3 py-1.5 text-sm font-medium ${
-              filter === key
-                ? "bg-brand-600 text-white"
-                : "border border-slate-300 text-slate-700 hover:border-brand-500 hover:text-brand-700"
-            }`}
+            onClick={clearFilters}
+            className="self-start text-xs font-medium text-slate-500 hover:text-red-600 hover:underline"
           >
-            {FILTER_LABEL[key]}
+            Limpiar filtros
           </button>
-        ))}
+        )}
       </div>
-
-      {filter === "match" && (
-        <select
-          value={selectedMatchId}
-          onChange={(e) => setSelectedMatchId(e.target.value)}
-          className="w-full max-w-sm rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 sm:w-auto"
-        >
-          <option value="">Elegí un partido</option>
-          {matches.map((m) => (
-            <option key={m.id} value={m.id}>
-              {formatDateOnly(m.matchDate)} · vs {m.opponent}
-            </option>
-          ))}
-        </select>
-      )}
-
-      {filter === "opponent" && (
-        <select
-          value={selectedOpponent}
-          onChange={(e) => setSelectedOpponent(e.target.value)}
-          className="w-full max-w-sm rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 sm:w-auto"
-        >
-          <option value="">Elegí un equipo rival</option>
-          {opponents.map((o) => (
-            <option key={o} value={o}>
-              {o}
-            </option>
-          ))}
-        </select>
-      )}
-
-      {filter === "club" && (
-        <select
-          value={selectedClubId}
-          onChange={(e) => setSelectedClubId(e.target.value)}
-          className="w-full max-w-sm rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 sm:w-auto"
-        >
-          <option value="">Elegí un club</option>
-          {clubs.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-      )}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatTile label="Partidos jugados" value={stats.matchesPlayed} />
@@ -153,6 +178,48 @@ export default function EstadisticasManager({ matches }: { matches: MatchRow[] }
         </div>
       )}
     </div>
+  );
+}
+
+function FilterGroup({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+        {label}
+      </p>
+      <div className="flex flex-wrap gap-2">{children}</div>
+    </div>
+  );
+}
+
+function FilterChip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+        active
+          ? "bg-brand-600 text-white"
+          : "border border-slate-300 text-slate-700 hover:border-brand-500 hover:text-brand-700"
+      }`}
+    >
+      {children}
+    </button>
   );
 }
 

@@ -55,6 +55,7 @@ export default async function EstadisticasPage() {
           matchDate: m.matchDate.toISOString(),
           result: m.result,
           pointsScored: m.pointsScored,
+          championship: m.championship,
           minutesPlayed: m.minutesPlayed,
           club: m.club ? { id: m.club.id, name: m.club.name } : null,
           cleanSheet: m.cleanSheet,
