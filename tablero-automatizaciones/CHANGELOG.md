@@ -3,6 +3,17 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es/).
 Versionado: `tablero-vMAJOR.MINOR.PATCH` (tags de git + releases en GitHub).
 
+## [tablero-v1.2.1] — 2026-09-07
+
+### Cambiado
+
+- **Nómina · datos de ejemplo completos**: los 10 colaboradores demo ahora traen
+  todos los campos cargados con info ficticia — Documentos (contrato, ID, CV,
+  constancia de CBU, títulos), Administración (legajo, centro de costo, banco,
+  cuenta, alias, moneda, remuneración, periodicidad, cobertura, notas),
+  historial de equipamiento, más movimientos de PTO y seguimientos.
+- `?v=` de JS/CSS: **1.2.0 → 1.2.1**.
+
 ## [tablero-v1.2.0] — 2026-09-07
 
 ### Cambiado
@@ -127,6 +138,7 @@ Primera versión estable, publicada en GitHub Pages y compartible con clientes:
   hasta cargar el secret `NOTION_TOKEN` (ver `proyectos/SYNC.md`).
 - `assets/theme.css` compartido por todas las vistas.
 
+[tablero-v1.2.1]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.2.1
 [tablero-v1.2.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.2.0
 [tablero-v1.1.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.1.0
 [tablero-v1.0.5]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.5
