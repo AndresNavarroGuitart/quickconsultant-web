@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { formatDateOnly } from "@/lib/format";
 
 type AthleteClub = {
   id: string;
@@ -23,10 +24,6 @@ const SPORT_OPTIONS = [
   "Vóley",
   "Otro",
 ];
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString("es-AR");
-}
 
 export default function ClubesManager({
   initialClubs,
@@ -309,8 +306,8 @@ export default function ClubesManager({
                 )}
               </p>
               <p className="text-xs text-slate-500">
-                {formatDate(ac.startDate)} —{" "}
-                {ac.endDate ? formatDate(ac.endDate) : "actualidad"}
+                {formatDateOnly(ac.startDate)} —{" "}
+                {ac.endDate ? formatDateOnly(ac.endDate) : "actualidad"}
                 {` · ${ac.sport}`}
                 {ac.league && ` · ${ac.league}`}
                 {ac.role && ` · ${ac.role}`}

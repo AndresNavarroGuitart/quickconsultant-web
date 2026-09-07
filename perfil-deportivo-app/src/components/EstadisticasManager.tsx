@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { computeDetailedStats, type StatsMatchInput } from "@/lib/athlete/stats";
 import { ALL_STAT_FIELDS } from "@/lib/athlete/positionStats";
+import { formatDateOnly } from "@/lib/format";
 
 type MatchRow = StatsMatchInput & {
   id: string;
@@ -19,10 +20,6 @@ const FILTER_LABEL: Record<Filter, string> = {
   opponent: "Por equipo",
   club: "Por club",
 };
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString("es-AR");
-}
 
 export default function EstadisticasManager({ matches }: { matches: MatchRow[] }) {
   const [filter, setFilter] = useState<Filter>("total");
@@ -95,7 +92,7 @@ export default function EstadisticasManager({ matches }: { matches: MatchRow[] }
           <option value="">Elegí un partido</option>
           {matches.map((m) => (
             <option key={m.id} value={m.id}>
-              {formatDate(m.matchDate)} · vs {m.opponent}
+              {formatDateOnly(m.matchDate)} · vs {m.opponent}
             </option>
           ))}
         </select>

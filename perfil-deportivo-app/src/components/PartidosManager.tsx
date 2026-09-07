@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { getPositionsForSport } from "@/lib/athlete/positions";
 import { getStatFieldsForPosition, type MatchStatKey } from "@/lib/athlete/positionStats";
 import MatchPhotos from "@/components/MatchPhotos";
+import { formatDateOnly } from "@/lib/format";
 
 type ClubOption = { id: string; name: string };
 
@@ -33,10 +34,6 @@ const RESULT_LABEL: Record<MatchResult, string> = {
   LOSS: "Perdido",
   DRAW: "Empate",
 };
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString("es-AR");
-}
 
 export default function PartidosManager({
   initialMatches,
@@ -446,7 +443,7 @@ export default function PartidosManager({
                     </span>
                   </p>
                   <p className="text-xs text-slate-500">
-                    {formatDate(m.matchDate)}
+                    {formatDateOnly(m.matchDate)}
                     {m.club && ` · ${m.club.name}`}
                     {m.championship && ` · ${m.championship}`}
                     {m.condition && ` · ${m.condition === "LOCAL" ? "Local" : "Visitante"}`}
