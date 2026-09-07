@@ -1,21 +1,10 @@
-// Iconos de línea simples (stroke, sin librería externa) para el nav.
+// Iconos simples para el nav, sin librería externa.
 
-export function MailboxIcon({ className }: { className?: string }) {
+export function BellIcon({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.75}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      aria-hidden="true"
-    >
-      <path d="M4 10a4 4 0 0 1 4-4h7a5 5 0 0 1 5 5v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-7Z" />
-      <path d="M4 10h6v3H4" />
-      <path d="M8 6v0a2 2 0 0 1 2-2h0" />
-      <path d="M4 20v-3M18 20v-3" />
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M12 2.25a1 1 0 0 1 1 1v.63a6.75 6.75 0 0 1 5.75 6.67v3.06c0 1.02.36 2.01 1.02 2.79l.5.6a1 1 0 0 1-.77 1.64H4.5a1 1 0 0 1-.77-1.64l.5-.6c.66-.78 1.02-1.77 1.02-2.79v-3.06A6.75 6.75 0 0 1 11 3.88v-.63a1 1 0 0 1 1-1Z" />
+      <path d="M9.75 19.5a2.25 2.25 0 0 0 4.5 0h-4.5Z" />
     </svg>
   );
 }

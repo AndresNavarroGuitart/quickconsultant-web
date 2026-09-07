@@ -8,7 +8,7 @@ import LogoutButton from "@/components/LogoutButton";
 import Logo from "@/components/Logo";
 import NotificationBadge from "@/components/NotificationBadge";
 import ProfileNavMenu from "@/components/ProfileNavMenu";
-import { MailboxIcon, EnvelopeIcon } from "@/components/icons";
+import { BellIcon, EnvelopeIcon } from "@/components/icons";
 
 export default async function AppLayout({
   children,
@@ -76,23 +76,26 @@ export default async function AppLayout({
               </Link>
             )}
 
-            <Link
-              href="/notificaciones"
-              className="relative text-slate-700 transition-colors hover:text-brand-700"
-              title="Notificaciones"
-              aria-label="Notificaciones"
-            >
-              <MailboxIcon className="h-6 w-6" />
-              <NotificationBadge count={unreadNotifications} />
-            </Link>
+            <div className="ml-auto flex items-center gap-4">
+              <Link
+                href="/notificaciones"
+                className="relative text-slate-700 transition-colors hover:text-brand-700"
+                title="Notificaciones"
+                aria-label="Notificaciones"
+              >
+                <BellIcon className="h-6 w-6" />
+                <NotificationBadge count={unreadNotifications} />
+              </Link>
 
-            <Link
-              href="/sugerencias"
-              className="ml-auto flex items-center gap-1.5 text-sm font-bold text-slate-700 transition-colors hover:text-brand-700"
-            >
-              <EnvelopeIcon className="h-5 w-5" />
-              Sugerencias
-            </Link>
+              <Link
+                href="/sugerencias"
+                className="text-slate-700 transition-colors hover:text-brand-700"
+                title="Sugerencias"
+                aria-label="Sugerencias"
+              >
+                <EnvelopeIcon className="h-6 w-6" />
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
