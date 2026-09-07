@@ -41,7 +41,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
-  min-width: 640px;
+  min-width: 900px;
 }
 .planilla thead th {
   text-align: left;
@@ -97,6 +97,15 @@
 }
 :root[data-theme="dark"] .badge,
 :root:not([data-theme="light"]) .badge { color: var(--ink); }
+
+/* Estado del colaborador */
+.badge--estado { border: 1px solid transparent; }
+.badge--activo   { background: color-mix(in srgb, var(--ok) 15%, transparent);    color: var(--ok); }
+.badge--inactivo { background: color-mix(in srgb, var(--muted) 18%, transparent); color: var(--muted); }
+.badge--proximo  { background: color-mix(in srgb, var(--warn) 18%, transparent);  color: var(--warn); }
+.badge--standby  { background: color-mix(in srgb, var(--pink) 15%, transparent);  color: var(--pink); }
+:root[data-theme="dark"] .badge--estado,
+:root:not([data-theme="light"]) .badge--estado { color: var(--ink); }
 
 .vacio {
   text-align: center; padding: 56px 20px;
@@ -271,12 +280,20 @@
   }
   .ficha__tab { white-space: nowrap; padding: 8px 12px; }
 }
+@media (max-width: 1120px) {
+  .planilla .col-seg { display: none; }
+}
+@media (max-width: 960px) {
+  .planilla .col-dedic { display: none; }
+}
 @media (max-width: 820px) {
-  .planilla .col-mail { display: none; }
+  .planilla .col-rol { display: none; }
+  .planilla { min-width: 560px; }
 }
 @media (max-width: 620px) {
   .campos { grid-template-columns: 1fr; }
   .sub-form { grid-template-columns: 1fr; }
+  .planilla .col-cliente,
   .planilla .col-pais { display: none; }
-  .planilla { min-width: 420px; }
+  .planilla { min-width: 340px; }
 }

@@ -54,8 +54,9 @@
     "nombre", "apellido", "documento", "pasaporte", "cuit",
     "direccionLegal", "barrio", "localidad", "provincia", "pais",
     "mail", "linkedin", "tipoContrato", "horas", "foto",
+    "estado", "clienteProyecto", "rol", "dedicacion", "inicio", "seguimiento",
   ];
-  var REQUERIDOS = ["nombre", "apellido", "documento", "pais", "mail", "tipoContrato", "horas"];
+  var REQUERIDOS = ["nombre", "apellido", "documento", "pais", "mail", "tipoContrato", "horas", "estado"];
 
   /* ---------- Helpers de DOM ---------- */
   function tpl(id) { return document.getElementById(id).content.cloneNode(true); }
@@ -66,6 +67,17 @@
   }
   function iniciales(emp) {
     return ((emp.nombre || "").charAt(0) + (emp.apellido || "").charAt(0)).toUpperCase() || "–";
+  }
+  var ESTADO_MOD = {
+    "Activo": "activo",
+    "Inactivo": "inactivo",
+    "Próximo Ingreso": "proximo",
+    "Std By": "standby",
+  };
+  function badgeEstado(txt) {
+    if (!txt) return "—";
+    var mod = ESTADO_MOD[txt];
+    return '<span class="badge badge--estado' + (mod ? " badge--" + mod : "") + '">' + esc(txt) + "</span>";
   }
   function toast(msg) {
     var t = document.createElement("div");
@@ -95,7 +107,8 @@
       var q = (filtro || "").trim().toLowerCase();
       var vis = list.filter(function (e) {
         if (!q) return true;
-        return [e.nombre, e.apellido, e.documento, e.mail, e.pais, e.tipoContrato]
+        return [e.nombre, e.apellido, e.documento, e.mail, e.pais, e.tipoContrato,
+          e.estado, e.clienteProyecto, e.rol, e.dedicacion, e.seguimiento]
           .join(" ").toLowerCase().indexOf(q) !== -1;
       });
 
@@ -114,11 +127,13 @@
           '<tr tabindex="0" data-id="' + esc(e.id) + '" aria-label="Abrir ficha de ' + nombre + '">' +
             '<th scope="row" class="col-emp"><span class="col-emp__wrap">' + avatar +
               '<a class="planilla__nombre" href="#/empleado/' + esc(e.id) + '">' + nombre + "</a></span></th>" +
-            "<td>" + esc(e.documento || "—") + "</td>" +
-            '<td class="col-mail">' + (e.mail ? esc(e.mail) : "—") + "</td>" +
-            "<td>" + (e.tipoContrato ? '<span class="badge">' + esc(e.tipoContrato) + "</span>" : "—") + "</td>" +
+            "<td>" + badgeEstado(e.estado) + "</td>" +
+            '<td class="col-cliente">' + esc(e.clienteProyecto || "—") + "</td>" +
+            '<td class="col-rol">' + esc(e.rol || "—") + "</td>" +
             '<td class="col-pais">' + esc(e.pais || "—") + "</td>" +
-            '<td class="col-num">' + (e.horas ? esc(e.horas) : "—") + "</td>" +
+            '<td class="col-dedic">' + esc(e.dedicacion || "—") + "</td>" +
+            '<td class="col-inicio">' + (e.inicio ? fechaCorta(e.inicio) : "—") + "</td>" +
+            '<td class="col-seg">' + esc(e.seguimiento || "—") + "</td>" +
             '<td class="col-chev" aria-hidden="true">›</td>' +
           "</tr>"
         );
@@ -534,6 +549,7 @@
     return {
       nombre: "Nombre", apellido: "Apellido", documento: "DNI / RUT / Cédula",
       pais: "País", mail: "Mail", tipoContrato: "Tipo de contrato", horas: "Cantidad de hs.",
+      estado: "Estado",
     }[k] || k;
   }
 

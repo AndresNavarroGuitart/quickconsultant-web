@@ -79,12 +79,13 @@
   /* ---------- KPIs ---------- */
   function renderKpis() {
     var empleados = datosEmpleados();
+    var empleadosActivos = empleados.filter(function (e) { return e.estado === "Activo"; }).length;
     var leadsProceso = datosLeads().filter(function (l) { return !CERRADAS_LEAD[l.etapa]; }).length;
     var upd = ultimaActualizacionISO();
 
     var stdby = datosProyectos().length ? proyectosPorEstado("Std By") : 0;
     var cards = [
-      { label: "Total de empleados activos", value: empleados.length, hint: "en la nómina", accent: true },
+      { label: "Total de empleados activos", value: empleadosActivos, hint: "de " + empleados.length + " en la nómina", accent: true },
       { label: "Proyectos activos", value: proyectosEnCurso(), hint: "en curso" + (stdby ? " · " + stdby + " en Std By" : "") },
       { label: "Leads en proceso", value: leadsProceso, hint: "en el pipeline", accent: true },
       { label: "Última actualización", value: relativo(upd), hint: fechaLarga(upd) },

@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Alegreya+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/theme.css?v=1.0.5" />
-  <link rel="stylesheet" href="nomina.css?v=1.0.5" />
+  <link rel="stylesheet" href="../assets/theme.css?v=1.1.0" />
+  <link rel="stylesheet" href="nomina.css?v=1.1.0" />
 </head>
 <body>
   <header class="topbar">
@@ -48,7 +48,7 @@
     <div class="lista-toolbar">
       <div class="search">
         <span class="search__icon" aria-hidden="true">⌕</span>
-        <input type="search" id="buscar" placeholder="Buscar por nombre, documento o mail…" aria-label="Buscar empleado" />
+        <input type="search" id="buscar" placeholder="Buscar por nombre, cliente, rol o estado…" aria-label="Buscar empleado" />
       </div>
       <span class="lista-count" id="listaCount"></span>
     </div>
@@ -57,12 +57,14 @@
       <table class="planilla">
         <thead>
           <tr>
-            <th scope="col">Empleado</th>
-            <th scope="col">DNI / RUT / Cédula</th>
-            <th scope="col" class="col-mail">Mail</th>
-            <th scope="col">Tipo de contrato</th>
+            <th scope="col">Colaborador</th>
+            <th scope="col">Estado</th>
+            <th scope="col" class="col-cliente">Cliente / Proyecto</th>
+            <th scope="col" class="col-rol">Rol</th>
             <th scope="col" class="col-pais">País</th>
-            <th scope="col" class="col-num">Hs.</th>
+            <th scope="col" class="col-dedic">Dedicación</th>
+            <th scope="col" class="col-inicio">Inicio</th>
+            <th scope="col" class="col-seg">Seguimiento</th>
             <th scope="col"><span class="sr-only">Abrir</span></th>
           </tr>
         </thead>
@@ -205,6 +207,42 @@
           </div>
         </fieldset>
 
+        <fieldset class="grupo">
+          <legend>Asignación</legend>
+          <div class="campos">
+            <label class="campo">
+              <span>Estado <b>*</b></span>
+              <select name="estado" required>
+                <option value="">Elegí…</option>
+                <option>Activo</option>
+                <option>Inactivo</option>
+                <option>Próximo Ingreso</option>
+                <option>Std By</option>
+              </select>
+            </label>
+            <label class="campo">
+              <span>Cliente / Proyecto</span>
+              <input type="text" name="clienteProyecto" placeholder="Cliente o proyecto asignado" />
+            </label>
+            <label class="campo">
+              <span>Rol</span>
+              <input type="text" name="rol" placeholder="Rol que ocupa" />
+            </label>
+            <label class="campo">
+              <span>Dedicación</span>
+              <input type="text" name="dedicacion" placeholder="Full-time, Part-time, 20 h/sem…" />
+            </label>
+            <label class="campo">
+              <span>Inicio</span>
+              <input type="date" name="inicio" />
+            </label>
+            <label class="campo">
+              <span>Seguimiento</span>
+              <input type="text" name="seguimiento" placeholder="Estado del acompañamiento o próximo check-in" />
+            </label>
+          </div>
+        </fieldset>
+
         <p class="form-error" id="formError" hidden></p>
 
         <div class="ficha__actions">
@@ -223,7 +261,7 @@
     </div>
   </template>
 
-  <script src="empleados-demo.js?v=1.0.5"></script>
-  <script src="nomina.js?v=1.0.5"></script>
+  <script src="empleados-demo.js?v=1.1.0"></script>
+  <script src="nomina.js?v=1.1.0"></script>
 </body>
 </html>

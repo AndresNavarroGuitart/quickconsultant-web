@@ -3,6 +3,29 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es/).
 Versionado: `tablero-vMAJOR.MINOR.PATCH` (tags de git + releases en GitHub).
 
+## [tablero-v1.1.0] — 2026-09-07
+
+### Agregado
+
+- **Nómina · ficha**: nueva sección **Asignación** en la solapa Datos personales
+  con los campos **Estado** (Activo · Inactivo · Próximo Ingreso · Std By),
+  **Cliente / Proyecto**, **Rol**, **Dedicación**, **Inicio** y **Seguimiento**.
+  Estado es obligatorio.
+
+### Cambiado
+
+- **Nómina · listado inicial**: las columnas ahora son **Colaborador · Estado ·
+  Cliente / Proyecto · Rol · País · Dedicación · Inicio · Seguimiento** (antes:
+  documento, mail, tipo de contrato, país, horas). El Estado se muestra como
+  chip de color. Toda la info sale de la interna de cada colaborador.
+- El buscador de Nómina también matchea por cliente, rol, dedicación,
+  seguimiento y estado.
+- **Portada · KPI "Total de empleados activos"**: ahora cuenta solo los de
+  estado **Activo** (subtítulo "de N en la nómina") en vez del total.
+- Datasets de ejemplo de Nómina: clientes/proyectos ficticios (Aurora Retail,
+  Nimbus Logística, Faro Educación, etc.).
+- `?v=` de JS/CSS: **1.0.5 → 1.1.0**.
+
 ## [tablero-v1.0.5] — 2026-09-01
 
 ### Cambiado
@@ -68,6 +91,7 @@ Primera versión estable, publicada en GitHub Pages y compartible con clientes:
   hasta cargar el secret `NOTION_TOKEN` (ver `proyectos/SYNC.md`).
 - `assets/theme.css` compartido por todas las vistas.
 
+[tablero-v1.1.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.1.0
 [tablero-v1.0.5]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.5
 [tablero-v1.0.4]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.4
 [tablero-v1.0.3]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.0.3

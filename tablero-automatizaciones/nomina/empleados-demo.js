@@ -1,6 +1,7 @@
 /* Nómina — dataset de ejemplo (10 empleados).
    Se siembra en localStorage la primera vez que se abre el módulo, y se puede
-   volver a cargar desde el estado vacío. Borralo cuando cargues datos reales. */
+   volver a cargar desde el estado vacío. Borralo cuando cargues datos reales.
+   Datos ficticios: clientes/proyectos y nombres son inventados (ISO 27001). */
 window.NOMINA_DEMO = [
   {
     id: "demo-01", nombre: "Martina", apellido: "Rossi",
@@ -9,6 +10,8 @@ window.NOMINA_DEMO = [
     localidad: "Ciudad Autónoma de Buenos Aires", provincia: "CABA", pais: "Argentina",
     mail: "martina.rossi@notabotagency.es", linkedin: "https://www.linkedin.com/in/martina-rossi",
     tipoContrato: "Relación de dependencia", horas: "40", foto: "",
+    estado: "Activo", clienteProyecto: "Aurora Retail", rol: "Project Manager",
+    dedicacion: "Full-time", inicio: "2026-05-12", seguimiento: "OKR Q3 al día",
     creado: "2026-05-12T10:00:00-03:00",
   },
   {
@@ -18,6 +21,8 @@ window.NOMINA_DEMO = [
     localidad: "Montevideo", provincia: "Montevideo", pais: "Uruguay",
     mail: "diego.ferreira@notabotagency.es", linkedin: "https://www.linkedin.com/in/diego-ferreira",
     tipoContrato: "Monotributo", horas: "30", foto: "",
+    estado: "Activo", clienteProyecto: "Nimbus Logística", rol: "Automation Engineer",
+    dedicacion: "30 h/sem", inicio: "2026-05-19", seguimiento: "Check-in mensual",
     creado: "2026-05-19T09:30:00-03:00",
   },
   {
@@ -27,6 +32,8 @@ window.NOMINA_DEMO = [
     localidad: "Asunción", provincia: "Asunción", pais: "Paraguay",
     mail: "camila.duarte@notabotagency.es", linkedin: "https://www.linkedin.com/in/camila-duarte",
     tipoContrato: "Contractor / Externalizado", horas: "40", foto: "",
+    estado: "Activo", clienteProyecto: "Faro Educación", rol: "Data Analyst",
+    dedicacion: "Full-time", inicio: "2026-06-02", seguimiento: "Revisión de performance en curso",
     creado: "2026-06-02T11:15:00-03:00",
   },
   {
@@ -36,6 +43,8 @@ window.NOMINA_DEMO = [
     localidad: "Santiago", provincia: "Región Metropolitana", pais: "Chile",
     mail: "sebastian.rojas@notabotagency.es", linkedin: "https://www.linkedin.com/in/sebastian-rojas",
     tipoContrato: "Autónomo", horas: "25", foto: "",
+    estado: "Std By", clienteProyecto: "Vento Media", rol: "Consultor SEO",
+    dedicacion: "Part-time", inicio: "2026-06-10", seguimiento: "A la espera de nuevo brief",
     creado: "2026-06-10T16:40:00-03:00",
   },
   {
@@ -45,6 +54,8 @@ window.NOMINA_DEMO = [
     localidad: "Bogotá", provincia: "Cundinamarca", pais: "Colombia",
     mail: "valentina.gomez@notabotagency.es", linkedin: "https://www.linkedin.com/in/valentina-gomez",
     tipoContrato: "Contractor / Externalizado", horas: "45", foto: "",
+    estado: "Activo", clienteProyecto: "Aurora Retail", rol: "Diseñadora UX",
+    dedicacion: "Full-time", inicio: "2026-06-18", seguimiento: "Onboarding completo",
     creado: "2026-06-18T08:50:00-03:00",
   },
   {
@@ -54,6 +65,8 @@ window.NOMINA_DEMO = [
     localidad: "Ciudad de México", provincia: "CDMX", pais: "México",
     mail: "mateo.herrera@notabotagency.es", linkedin: "https://www.linkedin.com/in/mateo-herrera",
     tipoContrato: "Relación de dependencia", horas: "40", foto: "",
+    estado: "Activo", clienteProyecto: "Delta Salud", rol: "Tech Lead",
+    dedicacion: "Full-time", inicio: "2026-06-25", seguimiento: "1:1 quincenal",
     creado: "2026-06-25T13:20:00-03:00",
   },
   {
@@ -63,6 +76,8 @@ window.NOMINA_DEMO = [
     localidad: "Córdoba", provincia: "Córdoba", pais: "Argentina",
     mail: "lucia.ferreyra@notabotagency.es", linkedin: "https://www.linkedin.com/in/lucia-ferreyra",
     tipoContrato: "Freelance por proyecto", horas: "20", foto: "",
+    estado: "Std By", clienteProyecto: "Nimbus Logística", rol: "Redactora",
+    dedicacion: "Part-time", inicio: "2026-07-01", seguimiento: "Proyecto en pausa",
     creado: "2026-07-01T10:05:00-03:00",
   },
   {
@@ -72,6 +87,8 @@ window.NOMINA_DEMO = [
     localidad: "Madrid", provincia: "Comunidad de Madrid", pais: "España",
     mail: "andres.molina@notabotagency.es", linkedin: "https://www.linkedin.com/in/andres-molina",
     tipoContrato: "Relación de dependencia", horas: "38", foto: "",
+    estado: "Activo", clienteProyecto: "Helio Fintech", rol: "Backend Developer",
+    dedicacion: "Full-time", inicio: "2026-07-09", seguimiento: "Sin novedades",
     creado: "2026-07-09T09:00:00-03:00",
   },
   {
@@ -81,6 +98,8 @@ window.NOMINA_DEMO = [
     localidad: "Rosario", provincia: "Santa Fe", pais: "Argentina",
     mail: "julieta.sosa@notabotagency.es", linkedin: "https://www.linkedin.com/in/julieta-sosa",
     tipoContrato: "Pasantía", horas: "24", foto: "",
+    estado: "Próximo Ingreso", clienteProyecto: "Faro Educación", rol: "QA Junior",
+    dedicacion: "Part-time", inicio: "2026-09-15", seguimiento: "Alta pendiente de firma",
     creado: "2026-07-21T15:30:00-03:00",
   },
   {
@@ -90,6 +109,8 @@ window.NOMINA_DEMO = [
     localidad: "Montevideo", provincia: "Montevideo", pais: "Uruguay",
     mail: "tomas.vega@notabotagency.es", linkedin: "https://www.linkedin.com/in/tomas-vega",
     tipoContrato: "Contractor / Externalizado", horas: "40", foto: "",
+    estado: "Inactivo", clienteProyecto: "Vento Media", rol: "Motion Designer",
+    dedicacion: "Full-time", inicio: "2026-03-03", seguimiento: "Baja al 2026-08-30",
     creado: "2026-08-04T12:10:00-03:00",
   },
 ];
