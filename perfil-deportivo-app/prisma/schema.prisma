@@ -149,6 +149,9 @@ model Match {
   result           MatchResult
   condition        MatchCondition?
   pointsScored     Int      @default(0)
+  // Torneo/campeonato en el que se jugo este partido puntual (puede diferir
+  // de AthleteClub.league, que es la liga general del paso por el club).
+  championship     String?
   notes            String?
   // Se muestra en la pagina publica compartible (fase 5).
   isHighlight      Boolean  @default(false)

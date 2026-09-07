@@ -7,6 +7,7 @@ export const matchSchema = z.object({
   result: z.enum(["WIN", "LOSS", "DRAW"]),
   condition: z.enum(["LOCAL", "VISITANTE"]).optional().nullable(),
   pointsScored: z.coerce.number().int().min(0).max(10000).default(0),
+  championship: z.string().trim().max(120).optional().nullable(),
   notes: z.string().trim().max(2000).optional().nullable(),
   position: z.string().trim().max(60).optional().nullable(),
   minutesPlayed: z.coerce.number().int().min(0).max(600).optional().nullable(),

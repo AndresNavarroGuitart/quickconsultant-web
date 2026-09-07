@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getPositionsForSport } from "@/lib/athlete/positions";
 import { getStatFieldsForPosition, type MatchStatKey } from "@/lib/athlete/positionStats";
@@ -20,6 +20,7 @@ type Match = {
   result: MatchResult;
   condition: MatchCondition | null;
   pointsScored: number;
+  championship: string | null;
   notes: string | null;
   position: string | null;
   minutesPlayed: number | null;
@@ -47,14 +48,17 @@ export default function PartidosManager({
   sport: string | null;
 }) {
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
   const positionOptions = getPositionsForSport(sport);
 
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [opponent, setOpponent] = useState("");
   const [clubId, setClubId] = useState("");
   const [matchDate, setMatchDate] = useState("");
   const [result, setResult] = useState<MatchResult>("WIN");
   const [condition, setCondition] = useState<MatchCondition | "">("");
   const [pointsScored, setPointsScored] = useState("0");
+  const [championship, setChampionship] = useState("");
   const [notes, setNotes] = useState("");
   const [position, setPosition] = useState("");
   const [minutesPlayed, setMinutesPlayed] = useState("");
@@ -72,6 +76,51 @@ export default function PartidosManager({
     setStatBooleans({});
   }
 
+  function resetForm() {
+    setEditingId(null);
+    setOpponent("");
+    setClubId("");
+    setMatchDate("");
+    setResult("WIN");
+    setCondition("");
+    setPointsScored("0");
+    setChampionship("");
+    setNotes("");
+    handlePositionChange("");
+    setMinutesPlayed("");
+  }
+
+  function handleEdit(m: Match) {
+    setError(null);
+    setEditingId(m.id);
+    setOpponent(m.opponent);
+    setClubId(m.club?.id ?? "");
+    setMatchDate(m.matchDate.slice(0, 10));
+    setResult(m.result);
+    setCondition(m.condition ?? "");
+    setPointsScored(String(m.pointsScored));
+    setChampionship(m.championship ?? "");
+    setNotes(m.notes ?? "");
+    setPosition(m.position ?? "");
+    setMinutesPlayed(m.minutesPlayed !== null ? String(m.minutesPlayed) : "");
+
+    const fields = getStatFieldsForPosition(m.position);
+    const values: Record<string, string> = {};
+    const booleans: Record<string, boolean> = {};
+    for (const field of fields) {
+      const value = m[field.key];
+      if (field.type === "boolean") {
+        booleans[field.key] = value === true;
+      } else if (typeof value === "number") {
+        values[field.key] = String(value);
+      }
+    }
+    setStatValues(values);
+    setStatBooleans(booleans);
+
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
@@ -87,22 +136,26 @@ export default function PartidosManager({
       }
     }
 
-    const res = await fetch("/api/matches", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        opponent,
-        clubId: clubId || null,
-        matchDate,
-        result,
-        condition: condition || null,
-        pointsScored: Number(pointsScored) || 0,
-        notes: notes || null,
-        position: position || null,
-        minutesPlayed: minutesPlayed === "" ? null : Number(minutesPlayed),
-        ...statsPayload,
-      }),
-    });
+    const res = await fetch(
+      editingId ? `/api/matches/${editingId}` : "/api/matches",
+      {
+        method: editingId ? "PATCH" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          opponent,
+          clubId: clubId || null,
+          matchDate,
+          result,
+          condition: condition || null,
+          pointsScored: Number(pointsScored) || 0,
+          championship: championship || null,
+          notes: notes || null,
+          position: position || null,
+          minutesPlayed: minutesPlayed === "" ? null : Number(minutesPlayed),
+          ...statsPayload,
+        }),
+      }
+    );
 
     setSaving(false);
 
@@ -112,15 +165,7 @@ export default function PartidosManager({
       return;
     }
 
-    setOpponent("");
-    setClubId("");
-    setMatchDate("");
-    setResult("WIN");
-    setCondition("");
-    setPointsScored("0");
-    setNotes("");
-    handlePositionChange("");
-    setMinutesPlayed("");
+    resetForm();
     router.refresh();
   }
 
@@ -138,15 +183,23 @@ export default function PartidosManager({
       return;
     }
 
+    if (editingId === id) resetForm();
     router.refresh();
   }
 
   return (
     <div className="flex flex-col gap-6">
       <form
+        ref={formRef}
         onSubmit={handleSubmit}
         className="grid gap-3 rounded-md border border-slate-200 bg-white p-4 sm:grid-cols-2"
       >
+        {editingId && (
+          <p className="text-sm font-medium text-brand-700 sm:col-span-2">
+            Editando partido
+          </p>
+        )}
+
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-slate-700">
             Contrincante
@@ -175,6 +228,18 @@ export default function PartidosManager({
               </option>
             ))}
           </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-sm font-medium text-slate-700">
+            Campeonato (opcional)
+          </label>
+          <input
+            value={championship}
+            onChange={(e) => setChampionship(e.target.value)}
+            placeholder="Torneo Apertura, Liga local..."
+            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          />
         </div>
 
         <div className="flex flex-col gap-1">
@@ -323,13 +388,24 @@ export default function PartidosManager({
 
         {error && <p className="text-sm text-red-600 sm:col-span-2">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={saving}
-          className="self-start rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60 sm:col-span-2"
-        >
-          {saving ? "Guardando..." : "Agregar partido"}
-        </button>
+        <div className="flex items-center gap-3 sm:col-span-2">
+          <button
+            type="submit"
+            disabled={saving}
+            className="self-start rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {saving ? "Guardando..." : editingId ? "Guardar cambios" : "Agregar partido"}
+          </button>
+          {editingId && (
+            <button
+              type="button"
+              onClick={resetForm}
+              className="text-sm font-medium text-slate-500 hover:text-slate-700"
+            >
+              Cancelar
+            </button>
+          )}
+        </div>
       </form>
 
       <div className="flex flex-col gap-2">
@@ -349,7 +425,9 @@ export default function PartidosManager({
           return (
             <div
               key={m.id}
-              className="rounded-md border border-slate-200 bg-white px-4 py-3"
+              className={`rounded-md border bg-white px-4 py-3 ${
+                editingId === m.id ? "border-brand-300" : "border-slate-200"
+              }`}
             >
               <div className="flex items-center justify-between">
                 <div>
@@ -370,6 +448,7 @@ export default function PartidosManager({
                   <p className="text-xs text-slate-500">
                     {formatDate(m.matchDate)}
                     {m.club && ` · ${m.club.name}`}
+                    {m.championship && ` · ${m.championship}`}
                     {m.condition && ` · ${m.condition === "LOCAL" ? "Local" : "Visitante"}`}
                     {m.position && ` · ${m.position}`}
                     {m.minutesPlayed !== null && ` · ${m.minutesPlayed}'`} ·{" "}
@@ -377,14 +456,23 @@ export default function PartidosManager({
                   </p>
                   {summary && <p className="text-xs text-slate-400">{summary}</p>}
                 </div>
-                <button
-                  type="button"
-                  disabled={busyId === m.id}
-                  onClick={() => handleDelete(m.id)}
-                  className="text-xs font-medium text-red-600 hover:underline disabled:opacity-60"
-                >
-                  Borrar
-                </button>
+                <div className="flex shrink-0 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => handleEdit(m)}
+                    className="text-xs font-medium text-brand-600 hover:underline"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busyId === m.id}
+                    onClick={() => handleDelete(m.id)}
+                    className="text-xs font-medium text-red-600 hover:underline disabled:opacity-60"
+                  >
+                    Borrar
+                  </button>
+                </div>
               </div>
 
               <MatchPhotos matchId={m.id} photos={m.photos} />
