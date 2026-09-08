@@ -48,6 +48,10 @@ export default function PartidosManager({
   const formRef = useRef<HTMLFormElement>(null);
   const positionOptions = getPositionsForSport(sport);
 
+  // El form de alta/edicion arranca oculto: solo se ve el boton "Agregar
+  // partido", que lo despliega. Al guardar, cancelar o borrar el partido en
+  // edicion se vuelve a ocultar (ver resetForm).
+  const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [opponent, setOpponent] = useState("");
   const [clubId, setClubId] = useState("");
@@ -74,6 +78,7 @@ export default function PartidosManager({
   }
 
   function resetForm() {
+    setShowForm(false);
     setEditingId(null);
     setOpponent("");
     setClubId("");
@@ -89,6 +94,7 @@ export default function PartidosManager({
 
   function handleEdit(m: Match) {
     setError(null);
+    setShowForm(true);
     setEditingId(m.id);
     setOpponent(m.opponent);
     setClubId(m.club?.id ?? "");
@@ -186,214 +192,224 @@ export default function PartidosManager({
 
   return (
     <div className="flex flex-col gap-6">
-      <form
-        ref={formRef}
-        onSubmit={handleSubmit}
-        className="grid gap-3 rounded-md border border-slate-200 bg-white p-4 sm:grid-cols-2"
-      >
-        {editingId && (
-          <p className="text-sm font-medium text-brand-700 sm:col-span-2">
-            Editando partido
-          </p>
-        )}
+      {!showForm && (
+        <button
+          type="button"
+          onClick={() => setShowForm(true)}
+          className="self-start rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+        >
+          Agregar partido
+        </button>
+      )}
 
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-slate-700">
-            Contrincante
-          </label>
-          <input
-            value={opponent}
-            onChange={(e) => setOpponent(e.target.value)}
-            required
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          />
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-slate-700">
-            Club (opcional)
-          </label>
-          <select
-            value={clubId}
-            onChange={(e) => setClubId(e.target.value)}
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          >
-            <option value="">Sin club</option>
-            {clubOptions.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-slate-700">
-            Campeonato (opcional)
-          </label>
-          <input
-            value={championship}
-            onChange={(e) => setChampionship(e.target.value)}
-            placeholder="Torneo Apertura, Liga local..."
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          />
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-slate-700">
-            Posición
-          </label>
-          <select
-            value={position}
-            onChange={(e) => handlePositionChange(e.target.value)}
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          >
-            <option value="">Sin especificar</option>
-            {positionOptions.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-slate-700">
-            Minutos jugados
-          </label>
-          <input
-            type="number"
-            min={0}
-            max={600}
-            value={minutesPlayed}
-            onChange={(e) => setMinutesPlayed(e.target.value)}
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          />
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-slate-700">Fecha</label>
-          <input
-            type="date"
-            value={matchDate}
-            onChange={(e) => setMatchDate(e.target.value)}
-            required
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          />
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-slate-700">
-            Resultado
-          </label>
-          <select
-            value={result}
-            onChange={(e) => setResult(e.target.value as MatchResult)}
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          >
-            <option value="WIN">Ganado</option>
-            <option value="LOSS">Perdido</option>
-            <option value="DRAW">Empate</option>
-          </select>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-slate-700">
-            Condición
-          </label>
-          <select
-            value={condition}
-            onChange={(e) => setCondition(e.target.value as MatchCondition | "")}
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          >
-            <option value="">Sin especificar</option>
-            <option value="LOCAL">Local</option>
-            <option value="VISITANTE">Visitante</option>
-          </select>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-slate-700">Puntos</label>
-          <input
-            type="number"
-            min={0}
-            value={pointsScored}
-            onChange={(e) => setPointsScored(e.target.value)}
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          />
-        </div>
-
-        {activeStatFields.length > 0 && (
-          <div className="flex flex-col gap-3 rounded-md border border-slate-200 border-l-4 border-l-brand-500 bg-white p-3 sm:col-span-2">
-            <p className="text-xs font-medium text-brand-700">
-              Estadísticas de {position.toLowerCase()}
+      {showForm && (
+        <form
+          ref={formRef}
+          onSubmit={handleSubmit}
+          className="grid gap-3 rounded-md border border-slate-200 bg-white p-4 sm:grid-cols-2"
+        >
+          {editingId && (
+            <p className="text-sm font-medium text-brand-700 sm:col-span-2">
+              Editando partido
             </p>
-            <div className="grid gap-3 sm:grid-cols-3">
-              {activeStatFields.map((field) =>
-                field.type === "boolean" ? (
-                  <label
-                    key={field.key}
-                    className="flex items-center gap-2 text-sm text-slate-700 sm:col-span-3"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={statBooleans[field.key] ?? false}
-                      onChange={(e) =>
-                        setStatBooleans((prev) => ({
-                          ...prev,
-                          [field.key]: e.target.checked,
-                        }))
-                      }
-                    />
-                    {field.label}
-                  </label>
-                ) : (
-                  <div key={field.key} className="flex flex-col gap-1">
-                    <label className="text-xs font-medium text-slate-500">
+          )}
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-slate-700">
+              Contrincante
+            </label>
+            <input
+              value={opponent}
+              onChange={(e) => setOpponent(e.target.value)}
+              required
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-slate-700">
+              Club (opcional)
+            </label>
+            <select
+              value={clubId}
+              onChange={(e) => setClubId(e.target.value)}
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            >
+              <option value="">Sin club</option>
+              {clubOptions.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-slate-700">
+              Campeonato (opcional)
+            </label>
+            <input
+              value={championship}
+              onChange={(e) => setChampionship(e.target.value)}
+              placeholder="Torneo Apertura, Liga local..."
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-slate-700">
+              Posición
+            </label>
+            <select
+              value={position}
+              onChange={(e) => handlePositionChange(e.target.value)}
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            >
+              <option value="">Sin especificar</option>
+              {positionOptions.map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-slate-700">
+              Minutos jugados
+            </label>
+            <input
+              type="number"
+              min={0}
+              max={600}
+              value={minutesPlayed}
+              onChange={(e) => setMinutesPlayed(e.target.value)}
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-slate-700">Fecha</label>
+            <input
+              type="date"
+              value={matchDate}
+              onChange={(e) => setMatchDate(e.target.value)}
+              required
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-slate-700">
+              Resultado
+            </label>
+            <select
+              value={result}
+              onChange={(e) => setResult(e.target.value as MatchResult)}
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            >
+              <option value="WIN">Ganado</option>
+              <option value="LOSS">Perdido</option>
+              <option value="DRAW">Empate</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-slate-700">
+              Condición
+            </label>
+            <select
+              value={condition}
+              onChange={(e) => setCondition(e.target.value as MatchCondition | "")}
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            >
+              <option value="">Sin especificar</option>
+              <option value="LOCAL">Local</option>
+              <option value="VISITANTE">Visitante</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-slate-700">Puntos</label>
+            <input
+              type="number"
+              min={0}
+              value={pointsScored}
+              onChange={(e) => setPointsScored(e.target.value)}
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            />
+          </div>
+
+          {activeStatFields.length > 0 && (
+            <div className="flex flex-col gap-3 rounded-md border border-slate-200 border-l-4 border-l-brand-500 bg-white p-3 sm:col-span-2">
+              <p className="text-xs font-medium text-brand-700">
+                Estadísticas de {position.toLowerCase()}
+              </p>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {activeStatFields.map((field) =>
+                  field.type === "boolean" ? (
+                    <label
+                      key={field.key}
+                      className="flex items-center gap-2 text-sm text-slate-700 sm:col-span-3"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={statBooleans[field.key] ?? false}
+                        onChange={(e) =>
+                          setStatBooleans((prev) => ({
+                            ...prev,
+                            [field.key]: e.target.checked,
+                          }))
+                        }
+                      />
                       {field.label}
                     </label>
-                    <input
-                      type="number"
-                      min={0}
-                      value={statValues[field.key] ?? ""}
-                      onChange={(e) =>
-                        setStatValues((prev) => ({
-                          ...prev,
-                          [field.key]: e.target.value,
-                        }))
-                      }
-                      className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                    />
-                  </div>
-                )
-              )}
+                  ) : (
+                    <div key={field.key} className="flex flex-col gap-1">
+                      <label className="text-xs font-medium text-slate-500">
+                        {field.label}
+                      </label>
+                      <input
+                        type="number"
+                        min={0}
+                        value={statValues[field.key] ?? ""}
+                        onChange={(e) =>
+                          setStatValues((prev) => ({
+                            ...prev,
+                            [field.key]: e.target.value,
+                          }))
+                        }
+                        className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                      />
+                    </div>
+                  )
+                )}
+              </div>
             </div>
+          )}
+
+          <div className="flex flex-col gap-1 sm:col-span-2">
+            <label className="text-sm font-medium text-slate-700">
+              Notas (opcional)
+            </label>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              rows={2}
+              className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            />
           </div>
-        )}
 
-        <div className="flex flex-col gap-1 sm:col-span-2">
-          <label className="text-sm font-medium text-slate-700">
-            Notas (opcional)
-          </label>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows={2}
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          />
-        </div>
+          {error && <p className="text-sm text-red-600 sm:col-span-2">{error}</p>}
 
-        {error && <p className="text-sm text-red-600 sm:col-span-2">{error}</p>}
-
-        <div className="flex items-center gap-3 sm:col-span-2">
-          <button
-            type="submit"
-            disabled={saving}
-            className="self-start rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {saving ? "Guardando..." : editingId ? "Guardar cambios" : "Agregar partido"}
-          </button>
-          {editingId && (
+          <div className="flex items-center gap-3 sm:col-span-2">
+            <button
+              type="submit"
+              disabled={saving}
+              className="self-start rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {saving ? "Guardando..." : editingId ? "Guardar cambios" : "Agregar partido"}
+            </button>
             <button
               type="button"
               onClick={resetForm}
@@ -401,9 +417,9 @@ export default function PartidosManager({
             >
               Cancelar
             </button>
-          )}
-        </div>
-      </form>
+          </div>
+        </form>
+      )}
 
       <div className="flex flex-col gap-2">
         {initialMatches.length === 0 && (
