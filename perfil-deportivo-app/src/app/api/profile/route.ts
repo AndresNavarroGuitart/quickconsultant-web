@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { ACTIVE_PROFILE_COOKIE, getSessionContext } from "@/lib/auth/getSessionContext";
+import {
+  ACTIVE_PROFILE_COOKIE,
+  ACTIVE_PROFILE_COOKIE_OPTIONS,
+  getSessionContext,
+} from "@/lib/auth/getSessionContext";
 import { generateUniqueSlug } from "@/lib/athlete/slug";
 import { MAX_PROFILES_PER_USER } from "@/lib/athlete/profileLimit";
 import {
@@ -60,7 +64,7 @@ export async function POST(request: Request) {
   // primero, no había otro para comparar; si es el segundo, es el que el
   // usuario recién pidió agregar).
   const cookieStore = await cookies();
-  cookieStore.set(ACTIVE_PROFILE_COOKIE, profile.id, { sameSite: "lax", path: "/" });
+  cookieStore.set(ACTIVE_PROFILE_COOKIE, profile.id, ACTIVE_PROFILE_COOKIE_OPTIONS);
 
   return NextResponse.json({ profile }, { status: 201 });
 }

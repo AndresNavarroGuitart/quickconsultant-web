@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { ACTIVE_PROFILE_COOKIE, getSessionContext } from "@/lib/auth/getSessionContext";
+import {
+  ACTIVE_PROFILE_COOKIE,
+  ACTIVE_PROFILE_COOKIE_OPTIONS,
+  getSessionContext,
+} from "@/lib/auth/getSessionContext";
 
 const bodySchema = z.object({ profileId: z.string().uuid() });
 
@@ -23,7 +27,7 @@ export async function POST(request: Request) {
   }
 
   const cookieStore = await cookies();
-  cookieStore.set(ACTIVE_PROFILE_COOKIE, profile.id, { sameSite: "lax", path: "/" });
+  cookieStore.set(ACTIVE_PROFILE_COOKIE, profile.id, ACTIVE_PROFILE_COOKIE_OPTIONS);
 
   return NextResponse.json({ profile });
 }
