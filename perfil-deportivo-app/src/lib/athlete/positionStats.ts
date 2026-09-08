@@ -25,6 +25,21 @@ export type StatField = {
   type: "number" | "boolean";
 };
 
+// Defensor, Lateral y Mediocampista comparten exactamente las mismas
+// estadisticas (son todas posiciones de marca/mitad de cancha).
+const DEFENSOR_STAT_FIELDS: StatField[] = [
+  { key: "duelsWon", label: "Duelos ganados", type: "number" },
+  { key: "aerialDuels", label: "Duelos aéreos", type: "number" },
+  { key: "recoveries", label: "Recuperaciones", type: "number" },
+  { key: "interceptions", label: "Intercepciones", type: "number" },
+  { key: "dribbles", label: "Gambetas", type: "number" },
+  { key: "assists", label: "Asistencias", type: "number" },
+  { key: "goals", label: "Goles", type: "number" },
+  { key: "fouls", label: "Faltas", type: "number" },
+  { key: "yellowCards", label: "Tarjetas amarillas", type: "number" },
+  { key: "redCards", label: "Tarjetas rojas", type: "number" },
+];
+
 // Estadisticas que se piden en el form de partidos según la posición
 // elegida. Varias posiciones comparten la misma columna para conceptos
 // equivalentes (goles, asistencias, gambetas, faltas, tarjetas).
@@ -38,18 +53,9 @@ export const POSITION_STAT_FIELDS: Record<string, StatField[]> = {
     { key: "penaltiesConceded", label: "Penales en contra", type: "number" },
     { key: "penaltiesSaved", label: "Penales atajados", type: "number" },
   ],
-  Defensor: [
-    { key: "duelsWon", label: "Duelos ganados", type: "number" },
-    { key: "aerialDuels", label: "Duelos aéreos", type: "number" },
-    { key: "recoveries", label: "Recuperaciones", type: "number" },
-    { key: "interceptions", label: "Intercepciones", type: "number" },
-    { key: "dribbles", label: "Gambetas", type: "number" },
-    { key: "assists", label: "Asistencias", type: "number" },
-    { key: "goals", label: "Goles", type: "number" },
-    { key: "fouls", label: "Faltas", type: "number" },
-    { key: "yellowCards", label: "Tarjetas amarillas", type: "number" },
-    { key: "redCards", label: "Tarjetas rojas", type: "number" },
-  ],
+  Defensor: DEFENSOR_STAT_FIELDS,
+  Lateral: DEFENSOR_STAT_FIELDS,
+  Mediocampista: DEFENSOR_STAT_FIELDS,
   Delantero: [
     { key: "goals", label: "Goles", type: "number" },
     { key: "headers", label: "Cabezazos", type: "number" },
