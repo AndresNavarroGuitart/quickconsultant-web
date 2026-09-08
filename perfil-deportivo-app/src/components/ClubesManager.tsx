@@ -241,19 +241,19 @@ export default function ClubesManager({
 
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-slate-700">
-            Posición (opcional)
+            Posición
           </label>
           <input
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            placeholder="Titular, suplente, capitán..."
+            placeholder="Arquero, defensor, delantero..."
             className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
         </div>
 
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-slate-700">
-            Camiseta
+            N° Camiseta
           </label>
           <input
             type="number"
