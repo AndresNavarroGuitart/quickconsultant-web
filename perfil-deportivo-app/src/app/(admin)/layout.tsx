@@ -34,6 +34,14 @@ export default async function AdminLayout({
     redirect("/estadisticas");
   }
 
+  // Resguardo extra: el borrado del usuario de Supabase Auth ya corta el
+  // acceso (ver deleteAccount.ts), esto cubre el caso de que esa llamada
+  // haya fallado y la sesión vieja siga siendo válida. La baja también
+  // saca isAdmin, así que en la práctica esto es cinturón y tiradores.
+  if (dbUser.deletedAt) {
+    redirect("/cuenta-eliminada");
+  }
+
   if (!dbUser.termsAcceptedAt) {
     redirect("/aceptar-terminos");
   }

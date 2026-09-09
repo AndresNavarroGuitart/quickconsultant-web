@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import ProfileForm from "@/components/ProfileForm";
 import PlayerCard from "@/components/PlayerCard";
 import ProfileSwitcher from "@/components/ProfileSwitcher";
+import DeleteAccountSection from "@/components/DeleteAccountSection";
 
 export default async function PerfilPage() {
   const ctx = await getSessionContext();
@@ -71,6 +72,8 @@ export default async function PerfilPage() {
           }}
         />
       </div>
+
+      <DeleteAccountSection />
     </div>
   );
 }

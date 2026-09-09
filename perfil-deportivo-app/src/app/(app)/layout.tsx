@@ -26,6 +26,13 @@ export default async function AppLayout({
 
   const dbUser = await ensureUser(user);
 
+  // Resguardo extra: el borrado del usuario de Supabase Auth ya corta el
+  // acceso (ver deleteAccount.ts), esto cubre el caso de que esa llamada
+  // haya fallado y la sesión vieja siga siendo válida.
+  if (dbUser.deletedAt) {
+    redirect("/cuenta-eliminada");
+  }
+
   if (!dbUser.termsAcceptedAt) {
     redirect("/aceptar-terminos");
   }

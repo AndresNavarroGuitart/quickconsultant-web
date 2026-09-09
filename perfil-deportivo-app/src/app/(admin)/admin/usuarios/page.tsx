@@ -14,11 +14,18 @@ export default async function AdminUsuariosPage() {
           isAdmin: u.isAdmin,
           trialEndsAt: u.trialEndsAt.toISOString(),
           createdAt: u.createdAt.toISOString(),
+          deletedAt: u.deletedAt ? u.deletedAt.toISOString() : null,
         }))}
       />
       <p className="text-xs text-slate-400">
         Cancelar una suscripción paga se hace directamente desde la cuenta de
         MercadoPago; estas acciones solo afectan el acceso por trial.
+      </p>
+      <p className="text-xs text-slate-400">
+        Las cuentas &quot;Dada de baja&quot; se autogestionaron desde Mi
+        Perfil: sus perfiles, fotos, estadísticas y sugerencias ya se
+        borraron y el email quedó anonimizado. Solo queda el registro para
+        historial administrativo/contable.
       </p>
     </div>
   );
