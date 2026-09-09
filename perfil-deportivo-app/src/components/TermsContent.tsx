@@ -1,8 +1,7 @@
 // Texto completo de Terminos y Condiciones. Se usa tanto en la pagina
 // publica (/terminos) como embebido en el gate de aceptacion
-// (/aceptar-terminos). OJO: contiene placeholders entre corchetes (razon
-// social, CUIT, domicilio, email de contacto) que hay que completar con los
-// datos reales antes de considerarlo definitivo.
+// (/aceptar-terminos). Titular: Quick Consultant, CUIT 20-29426860-0,
+// Cordoba, Argentina. Contacto/ARCO: quickconsultora@gmail.com.
 export default function TermsContent() {
   return (
     <div className="flex flex-col gap-6 text-sm leading-relaxed text-slate-700">
@@ -11,9 +10,9 @@ export default function TermsContent() {
           1.1. Los presentes Términos y Condiciones (en adelante, los
           &quot;Términos&quot;) regulan el acceso y uso de la aplicación
           Potrero Deportivo (en adelante, la &quot;Plataforma&quot;), operada
-          por [razón social / nombre del titular] (en adelante, &quot;Potrero
+          por Quick Consultant (en adelante, &quot;Potrero
           Deportivo&quot;, &quot;nosotros&quot; o &quot;la Empresa&quot;),
-          CUIT [completar], con domicilio en [completar, Córdoba, Argentina].
+          CUIT 20-29426860-0, con domicilio en Córdoba, Córdoba, Argentina.
         </P>
         <P>
           1.2. La Plataforma permite a sus Usuarios registrar, consultar y
@@ -222,7 +221,7 @@ export default function TermsContent() {
         </P>
         <P>
           7.2. Dichos derechos podrán ejercerse enviando una solicitud a
-          [correo electrónico de contacto / datos de contacto], acreditando
+          quickconsultora@gmail.com, acreditando
           identidad y, en su caso, representación legal. Potrero Deportivo
           responderá dentro de los plazos legales aplicables.
         </P>
