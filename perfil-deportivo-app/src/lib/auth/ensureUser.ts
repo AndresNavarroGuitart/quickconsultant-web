@@ -23,6 +23,13 @@ export const ensureUser = cache(async (supabaseUser: SupabaseUser) => {
         id: supabaseUser.id,
         email: supabaseUser.email!,
         trialEndsAt: new Date(Date.now() + TRIAL_DAYS * 24 * 60 * 60 * 1000),
+        // Si ya tildo el checkbox de Terminos en el signup, esa fecha viaja
+        // en el user_metadata de Supabase; asi no le repetimos el gate al
+        // primer ingreso. Si no vino (cuentas viejas, o si entro por otro
+        // flujo), queda null y /aceptar-terminos lo intercepta.
+        termsAcceptedAt: supabaseUser.user_metadata?.termsAcceptedAt
+          ? new Date(supabaseUser.user_metadata.termsAcceptedAt)
+          : null,
       },
     });
   } catch (err) {

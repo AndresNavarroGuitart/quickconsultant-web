@@ -34,6 +34,10 @@ export default async function AdminLayout({
     redirect("/estadisticas");
   }
 
+  if (!dbUser.termsAcceptedAt) {
+    redirect("/aceptar-terminos");
+  }
+
   // El admin es un User como cualquier otro: si un broadcast "a todos" lo
   // incluyo a el mismo, tambien tiene notificaciones propias sin leer.
   const unreadNotifications = await prisma.notification.count({

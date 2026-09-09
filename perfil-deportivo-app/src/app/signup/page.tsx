@@ -8,6 +8,7 @@ import Logo from "@/components/Logo";
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -23,6 +24,9 @@ export default function SignupPage() {
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
+        // Viaja en el user_metadata de Supabase; ensureUser.ts lo lee para
+        // no repetir el gate de /aceptar-terminos en el primer ingreso.
+        data: { termsAcceptedAt: new Date().toISOString() },
       },
     });
 
@@ -101,11 +105,30 @@ export default function SignupPage() {
             <p className="text-xs text-slate-400">Mínimo 6 caracteres.</p>
           </div>
 
+          <label className="flex items-start gap-2 text-sm text-slate-700">
+            <input
+              type="checkbox"
+              className="mt-1"
+              checked={acceptedTerms}
+              onChange={(e) => setAcceptedTerms(e.target.checked)}
+              required
+            />
+            He leído y acepto los{" "}
+            <Link
+              href="/terminos"
+              target="_blank"
+              className="font-medium text-brand-600 hover:underline"
+            >
+              Términos y Condiciones
+            </Link>
+            .
+          </label>
+
           {error && <p className="text-sm text-red-600">{error}</p>}
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !acceptedTerms}
             className="mt-2 rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? "Creando cuenta..." : "Crear cuenta"}

@@ -18,6 +18,12 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  // Null hasta que acepta los Terminos y Condiciones (gate obligatorio en
+  // (app)/(admin) layout). Se completa en el alta si ya lo acepto en el
+  // signup (ver ensureUser.ts), o en /aceptar-terminos para cuentas previas
+  // a esta feature.
+  termsAcceptedAt DateTime?
+
   // Hasta 2 perfiles por cuenta (ej. el propio + el de un hijo/a). Cuál está
   // activo en la sesión se guarda en una cookie, no acá (ver activeProfile.ts).
   profiles      AthleteProfile[]

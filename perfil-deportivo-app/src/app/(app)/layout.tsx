@@ -25,6 +25,11 @@ export default async function AppLayout({
   }
 
   const dbUser = await ensureUser(user);
+
+  if (!dbUser.termsAcceptedAt) {
+    redirect("/aceptar-terminos");
+  }
+
   const [unreadNotifications, profileCount] = await Promise.all([
     prisma.notification.count({ where: { userId: user.id, isRead: false } }),
     prisma.athleteProfile.count({ where: { userId: user.id } }),
