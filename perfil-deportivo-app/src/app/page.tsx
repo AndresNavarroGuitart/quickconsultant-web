@@ -100,10 +100,6 @@ export default function Home() {
           ))}
         </section>
       </main>
-
-      <footer className="border-t border-slate-100 py-6 text-center text-xs text-slate-400">
-        Potrero Deportivo
-      </footer>
     </div>
   );
 }
