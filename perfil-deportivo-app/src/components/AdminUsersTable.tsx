@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 type AdminUser = {
   id: string;
   email: string;
+  registrantName: string | null;
+  profileCount: number;
   isAdmin: boolean;
   trialEndsAt: string;
   createdAt: string;
@@ -52,10 +54,12 @@ export default function AdminUsersTable({ users }: { users: AdminUser[] }) {
           <thead className="border-b border-slate-200 text-slate-500">
             <tr>
               <th className="px-4 py-2">Email</th>
+              <th className="px-4 py-2">Nombre</th>
               <th className="px-4 py-2">Estado</th>
               <th className="px-4 py-2">Admin</th>
-              <th className="px-4 py-2">Prueba hasta</th>
+              <th className="px-4 py-2">Perfiles</th>
               <th className="px-4 py-2">Alta</th>
+              <th className="px-4 py-2">Prueba hasta</th>
               <th className="px-4 py-2">Acciones</th>
             </tr>
           </thead>
@@ -63,6 +67,11 @@ export default function AdminUsersTable({ users }: { users: AdminUser[] }) {
             {users.map((u) => (
               <tr key={u.id} className="border-b border-slate-100 last:border-0">
                 <td className="px-4 py-2">{u.email}</td>
+                <td className="px-4 py-2">
+                  {u.registrantName ?? (
+                    <span className="text-slate-400">—</span>
+                  )}
+                </td>
                 <td className="px-4 py-2">
                   {u.deletedAt ? (
                     <span
@@ -89,11 +98,12 @@ export default function AdminUsersTable({ users }: { users: AdminUser[] }) {
                   )}
                 </td>
                 <td className="px-4 py-2">{u.isAdmin ? "Sí" : "No"}</td>
-                <td className="px-4 py-2">
-                  {new Date(u.trialEndsAt).toLocaleDateString("es-AR")}
-                </td>
+                <td className="px-4 py-2">{u.profileCount}</td>
                 <td className="px-4 py-2">
                   {new Date(u.createdAt).toLocaleDateString("es-AR")}
+                </td>
+                <td className="px-4 py-2">
+                  {new Date(u.trialEndsAt).toLocaleDateString("es-AR")}
                 </td>
                 <td className="px-4 py-2">
                   {u.deletedAt ? (
@@ -163,7 +173,7 @@ export default function AdminUsersTable({ users }: { users: AdminUser[] }) {
             ))}
             {users.length === 0 && (
               <tr>
-                <td className="px-4 py-4 text-slate-400" colSpan={6}>
+                <td className="px-4 py-4 text-slate-400" colSpan={8}>
                   Todavía no hay usuarios registrados.
                 </td>
               </tr>
