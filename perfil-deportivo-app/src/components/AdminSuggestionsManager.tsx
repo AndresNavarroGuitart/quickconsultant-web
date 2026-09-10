@@ -37,10 +37,12 @@ function SuggestionRow({ suggestion }: { suggestion: Suggestion }) {
   const [adminNote, setAdminNote] = useState(suggestion.adminNote ?? "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
 
   async function handleSave() {
     setSaving(true);
     setError(null);
+    setSaved(false);
 
     const res = await fetch(`/api/admin/suggestions/${suggestion.id}`, {
       method: "PATCH",
@@ -56,6 +58,9 @@ function SuggestionRow({ suggestion }: { suggestion: Suggestion }) {
       return;
     }
 
+    // El guardado sí persiste sin esto (confirmado contra la base), pero sin
+    // feedback visible parecía que el botón no hacía nada.
+    setSaved(true);
     router.refresh();
   }
 
@@ -72,7 +77,10 @@ function SuggestionRow({ suggestion }: { suggestion: Suggestion }) {
           <label className="text-xs font-medium text-slate-500">Estado</label>
           <select
             value={status}
-            onChange={(e) => setStatus(e.target.value as SuggestionStatus)}
+            onChange={(e) => {
+              setStatus(e.target.value as SuggestionStatus);
+              setSaved(false);
+            }}
             className="rounded-md border border-slate-300 px-2 py-1 text-sm"
           >
             {STATUS_OPTIONS.map((s) => (
@@ -88,7 +96,10 @@ function SuggestionRow({ suggestion }: { suggestion: Suggestion }) {
           </label>
           <input
             value={adminNote}
-            onChange={(e) => setAdminNote(e.target.value)}
+            onChange={(e) => {
+              setAdminNote(e.target.value);
+              setSaved(false);
+            }}
             className="rounded-md border border-slate-300 px-2 py-1 text-sm"
           />
         </div>
@@ -102,6 +113,9 @@ function SuggestionRow({ suggestion }: { suggestion: Suggestion }) {
         </button>
       </div>
       {error && <p className="text-xs text-red-600">{error}</p>}
+      {saved && !error && (
+        <p className="text-xs text-brand-600">Guardado ✓</p>
+      )}
     </div>
   );
 }
