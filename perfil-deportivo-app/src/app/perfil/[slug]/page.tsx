@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPublicProfile } from "@/lib/athlete/getPublicProfile";
 import { computeMatchStats } from "@/lib/athlete/stats";
+import { sportLabel } from "@/lib/athlete/sportsCatalog";
 import WavyBanner from "@/components/WavyBanner";
 
 function formatDate(value: Date) {
@@ -19,10 +20,10 @@ export async function generateMetadata({
 
   if (!profile) return {};
 
-  const title = `${profile.displayName} — ${profile.sport}`;
+  const title = `${profile.displayName} — ${sportLabel(profile.sport)}`;
   const description =
     profile.bio?.slice(0, 160) ??
-    `Perfil deportivo de ${profile.displayName} (${profile.sport}). Clubes, partidos y estadísticas.`;
+    `Perfil deportivo de ${profile.displayName} (${sportLabel(profile.sport)}). Clubes, partidos y estadísticas.`;
   const images = profile.avatarUrl ? [profile.avatarUrl] : undefined;
 
   return {
@@ -92,7 +93,7 @@ export default async function PublicProfilePage({
               {profile.displayName}
             </h1>
             <p className="text-sm text-slate-500">
-              {profile.sport}
+              {sportLabel(profile.sport)}
               {profile.location && ` · ${profile.location}`}
             </p>
           </div>

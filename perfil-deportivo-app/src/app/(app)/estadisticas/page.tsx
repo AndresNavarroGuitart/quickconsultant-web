@@ -49,6 +49,7 @@ export default async function EstadisticasPage() {
       </div>
 
       <EstadisticasManager
+        sport={profile.sport}
         matches={matches.map((m) => ({
           id: m.id,
           opponent: m.opponent,
@@ -58,25 +59,7 @@ export default async function EstadisticasPage() {
           championship: m.championship,
           minutesPlayed: m.minutesPlayed,
           club: m.club ? { id: m.club.id, name: m.club.name } : null,
-          cleanSheet: m.cleanSheet,
-          saves: m.saves,
-          successfulPasses: m.successfulPasses,
-          oneOnOnes: m.oneOnOnes,
-          goalsConceded: m.goalsConceded,
-          penaltiesConceded: m.penaltiesConceded,
-          penaltiesSaved: m.penaltiesSaved,
-          duelsWon: m.duelsWon,
-          aerialDuels: m.aerialDuels,
-          recoveries: m.recoveries,
-          interceptions: m.interceptions,
-          dribbles: m.dribbles,
-          assists: m.assists,
-          goals: m.goals,
-          fouls: m.fouls,
-          yellowCards: m.yellowCards,
-          redCards: m.redCards,
-          headers: m.headers,
-          penaltiesTaken: m.penaltiesTaken,
+          stats: (m.stats ?? null) as Record<string, number | boolean> | null,
         }))}
       />
     </div>

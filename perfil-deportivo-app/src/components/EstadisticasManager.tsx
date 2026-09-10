@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import { computeDetailedStats, type StatsMatchInput } from "@/lib/athlete/stats";
-import { ALL_STAT_FIELDS } from "@/lib/athlete/positionStats";
 import { formatDateOnly } from "@/lib/format";
 
 type MatchRow = StatsMatchInput & {
@@ -20,7 +19,13 @@ function toggle(list: string[], value: string): string[] {
   return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
 }
 
-export default function EstadisticasManager({ matches }: { matches: MatchRow[] }) {
+export default function EstadisticasManager({
+  matches,
+  sport,
+}: {
+  matches: MatchRow[];
+  sport: string | null;
+}) {
   const [selectedMatchIds, setSelectedMatchIds] = useState<string[]>([]);
   const [selectedOpponents, setSelectedOpponents] = useState<string[]>([]);
   const [selectedClubIds, setSelectedClubIds] = useState<string[]>([]);
@@ -78,10 +83,7 @@ export default function EstadisticasManager({ matches }: { matches: MatchRow[] }
     });
   }, [matches, selectedMatchIds, selectedOpponents, selectedClubIds, selectedChampionships]);
 
-  const stats = computeDetailedStats(filteredMatches);
-  const statTiles = ALL_STAT_FIELDS.filter(
-    (f) => f.type === "number" && (stats.statSums[f.key] ?? 0) > 0
-  );
+  const stats = computeDetailedStats(filteredMatches, sport);
 
   return (
     <div className="flex flex-col gap-4">
@@ -160,19 +162,24 @@ export default function EstadisticasManager({ matches }: { matches: MatchRow[] }
         <StatTile label="Empatados" value={stats.draws} />
         <StatTile label="Perdidos" value={stats.losses} />
         <StatTile label="Minutos jugados" value={stats.minutesPlayed} />
-        {stats.cleanSheets > 0 && (
-          <StatTile label="Vallas invictas" value={stats.cleanSheets} />
-        )}
       </div>
 
-      {statTiles.length > 0 && (
+      {stats.aggregated.length > 0 && (
         <div className="flex flex-col gap-2">
           <p className="text-sm font-medium text-slate-700">
             Estadísticas detalladas
           </p>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {statTiles.map((f) => (
-              <StatTile key={f.key} label={f.label} value={stats.statSums[f.key] ?? 0} />
+            {stats.aggregated.map((a) => (
+              <StatTile
+                key={a.def.key}
+                label={
+                  a.def.type === "boolean"
+                    ? `${a.def.label} (veces)`
+                    : a.def.label
+                }
+                value={a.def.type === "percent" ? `${a.value}%` : a.value}
+              />
             ))}
           </div>
         </div>
@@ -223,7 +230,13 @@ function FilterChip({
   );
 }
 
-function StatTile({ label, value }: { label: string; value: number }) {
+function StatTile({
+  label,
+  value,
+}: {
+  label: string;
+  value: number | string;
+}) {
   return (
     <div className="rounded-md border border-slate-200 bg-white p-4">
       <p className="text-xs text-slate-500">{label}</p>

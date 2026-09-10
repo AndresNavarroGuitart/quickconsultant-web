@@ -1,5 +1,16 @@
 import { z } from "zod";
 
+// Las estadisticas del partido llegan como objeto { [statKey]: number|boolean }.
+// El route las vuelve a filtrar contra el catalogo del deporte + posicion
+// (sportsCatalog.ts) antes de guardar, asi que aca solo se valida la forma.
+const statsRecord = z
+  .record(
+    z.string().max(80),
+    z.union([z.number().finite().min(0).max(100000), z.boolean()])
+  )
+  .optional()
+  .nullable();
+
 export const matchSchema = z.object({
   opponent: z.string().trim().min(1).max(120),
   clubId: z.string().uuid().optional().nullable(),
@@ -11,29 +22,7 @@ export const matchSchema = z.object({
   notes: z.string().trim().max(2000).optional().nullable(),
   position: z.string().trim().max(60).optional().nullable(),
   minutesPlayed: z.coerce.number().int().min(0).max(600).optional().nullable(),
-  // Estadisticas de arquero: solo se completan cuando position es "Arquero",
-  // pero se validan igual sin esa restricción (el form solo las manda en ese caso).
-  cleanSheet: z.boolean().optional(),
-  saves: z.coerce.number().int().min(0).max(200).optional().nullable(),
-  successfulPasses: z.coerce.number().int().min(0).max(200).optional().nullable(),
-  oneOnOnes: z.coerce.number().int().min(0).max(50).optional().nullable(),
-  goalsConceded: z.coerce.number().int().min(0).max(50).optional().nullable(),
-  penaltiesConceded: z.coerce.number().int().min(0).max(20).optional().nullable(),
-  penaltiesSaved: z.coerce.number().int().min(0).max(20).optional().nullable(),
-  // Estadisticas de jugador de campo (defensor/delantero): mismas columnas
-  // para conceptos compartidos entre posiciones, ver positionStats.ts.
-  duelsWon: z.coerce.number().int().min(0).max(99).optional().nullable(),
-  aerialDuels: z.coerce.number().int().min(0).max(99).optional().nullable(),
-  recoveries: z.coerce.number().int().min(0).max(99).optional().nullable(),
-  interceptions: z.coerce.number().int().min(0).max(99).optional().nullable(),
-  dribbles: z.coerce.number().int().min(0).max(99).optional().nullable(),
-  assists: z.coerce.number().int().min(0).max(20).optional().nullable(),
-  goals: z.coerce.number().int().min(0).max(20).optional().nullable(),
-  fouls: z.coerce.number().int().min(0).max(20).optional().nullable(),
-  yellowCards: z.coerce.number().int().min(0).max(2).optional().nullable(),
-  redCards: z.coerce.number().int().min(0).max(1).optional().nullable(),
-  headers: z.coerce.number().int().min(0).max(20).optional().nullable(),
-  penaltiesTaken: z.coerce.number().int().min(0).max(10).optional().nullable(),
+  stats: statsRecord,
 });
 
 export const matchUpdateSchema = matchSchema.partial();

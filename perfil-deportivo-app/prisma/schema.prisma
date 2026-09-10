@@ -179,14 +179,23 @@ model Match {
   // Se muestra en la pagina publica compartible (fase 5).
   isHighlight      Boolean  @default(false)
 
-  // Posicion jugada en este partido: las opciones que ve el usuario dependen
-  // del deporte cargado en AthleteProfile.sport (ver src/lib/athlete/positions.ts).
+  // Posicion jugada en este partido (key del catalogo, ej. "arquero",
+  // "medio_scrum"). Las opciones dependen del deporte de AthleteProfile.sport
+  // (ver src/lib/athlete/sportsCatalog.ts).
   position      String?
   minutesPlayed Int?
 
-  // Estadisticas especificas de arquero, solo relevantes cuando position es
-  // "Arquero". Se guardan como columnas propias (no un modelo aparte) porque
-  // son pocas y siempre pertenecen 1 a 1 a este partido.
+  // Estadisticas del partido segun deporte + posicion. Objeto JSON
+  // { [statKey]: number | boolean } con las keys del catalogo
+  // (sportsCatalog.ts). Reemplaza a las columnas fijas de abajo (que eran
+  // solo de futbol): el set de estadisticas cambia por deporte y posicion
+  // (decenas de combinaciones), asi que se maneja como dato, no como schema.
+  stats Json?
+
+  // DEPRECADO: columnas de estadisticas de futbol previas al modelo por
+  // catalogo. Ya no se escriben ni se leen (todo pasa por `stats`). Se
+  // dejan para no forzar un db push destructivo; se pueden borrar en una
+  // migracion futura cuando se confirme que ninguna fila vieja las usa.
   cleanSheet         Boolean @default(false)
   saves              Int?
   successfulPasses   Int?
@@ -194,12 +203,6 @@ model Match {
   goalsConceded      Int?
   penaltiesConceded  Int?
   penaltiesSaved     Int?
-
-  // Estadisticas de jugador de campo (defensor/delantero). Se reutilizan las
-  // mismas columnas para conceptos compartidos entre posiciones (goles,
-  // asistencias, gambetas, faltas, tarjetas) en vez de duplicarlas por
-  // posicion — un gol es un gol independientemente de si lo metio un
-  // defensor o un delantero.
   duelsWon       Int?
   aerialDuels    Int?
   recoveries     Int?

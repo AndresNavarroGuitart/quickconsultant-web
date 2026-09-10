@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { sportLabel } from "@/lib/athlete/sportsCatalog";
 
 // Ultimo acceso: no vive en nuestra base (no logueamos sesiones), pero
 // Supabase Auth ya lo trackea por nosotros en auth.users.last_sign_in_at.
@@ -89,7 +90,7 @@ export default async function AdminActividadPage() {
                     {u.profiles.length > 0 ? (
                       <span>
                         {u.profiles
-                          .map((p) => `${p.displayName} · ${p.sport}`)
+                          .map((p) => `${p.displayName} · ${sportLabel(p.sport)}`)
                           .join(", ")}
                       </span>
                     ) : (

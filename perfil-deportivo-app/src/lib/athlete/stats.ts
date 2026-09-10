@@ -1,6 +1,8 @@
-import { ALL_STAT_FIELDS, type MatchStatKey } from "@/lib/athlete/positionStats";
+import { getAllStatsForSport, type StatDef } from "@/lib/athlete/sportsCatalog";
 
 type MatchResult = "WIN" | "LOSS" | "DRAW";
+
+export type MatchStatsValue = Record<string, number | boolean | null | undefined>;
 
 // Forma estructural minima que necesitan las funciones de este archivo — no
 // depende del tipo Match generado por Prisma para poder usarse tanto en
@@ -10,9 +12,12 @@ export type StatsMatchInput = {
   result: MatchResult;
   pointsScored: number;
   minutesPlayed: number | null;
-} & Partial<Record<MatchStatKey, number | boolean | null>>;
+  stats: MatchStatsValue | null;
+};
 
-export function computeMatchStats(matches: Pick<StatsMatchInput, "result" | "pointsScored">[]) {
+export function computeMatchStats(
+  matches: Pick<StatsMatchInput, "result" | "pointsScored">[]
+) {
   const stats = {
     matchesPlayed: matches.length,
     totalPoints: 0,
@@ -31,31 +36,56 @@ export function computeMatchStats(matches: Pick<StatsMatchInput, "result" | "poi
   return stats;
 }
 
+export type AggregatedStat = {
+  def: StatDef;
+  value: number; // suma (number), promedio (percent) o cantidad de veces (boolean)
+};
+
 // Estadisticas acumuladas para un conjunto de partidos (total, por club o
-// por equipo rival): suma todos los campos de jugador de campo/arquero sin
-// importar la posicion jugada en cada partido — asi un atleta que jugo de
-// defensor y de delantero en distintos partidos ve el acumulado combinado.
-export function computeDetailedStats(matches: StatsMatchInput[]) {
+// por equipo rival). Recorre el catalogo del deporte y acumula segun el tipo
+// de cada estadistica: number -> suma, percent -> promedio de los partidos
+// que la tienen cargada, boolean -> cantidad de partidos en true.
+export function computeDetailedStats(
+  matches: StatsMatchInput[],
+  sport: string | null | undefined
+) {
   const base = computeMatchStats(matches);
 
   let minutesPlayed = 0;
-  let cleanSheets = 0;
-  const statSums: Partial<Record<string, number>> = {};
-  for (const field of ALL_STAT_FIELDS) {
-    if (field.type === "number") statSums[field.key] = 0;
-  }
+  for (const match of matches) minutesPlayed += match.minutesPlayed ?? 0;
 
-  for (const match of matches) {
-    minutesPlayed += match.minutesPlayed ?? 0;
-    for (const field of ALL_STAT_FIELDS) {
-      if (field.type === "boolean") {
-        if (match[field.key]) cleanSheets += 1;
-      } else {
-        const value = match[field.key] as number | null | undefined;
-        statSums[field.key] = (statSums[field.key] ?? 0) + (value ?? 0);
-      }
+  const defs = getAllStatsForSport(sport);
+  const aggregated: AggregatedStat[] = [];
+
+  for (const def of defs) {
+    if (def.type === "boolean") {
+      let count = 0;
+      for (const m of matches) if (m.stats?.[def.key] === true) count += 1;
+      if (count > 0) aggregated.push({ def, value: count });
+      continue;
     }
+
+    if (def.type === "percent") {
+      const values: number[] = [];
+      for (const m of matches) {
+        const v = m.stats?.[def.key];
+        if (typeof v === "number") values.push(v);
+      }
+      if (values.length > 0) {
+        const avg = values.reduce((a, b) => a + b, 0) / values.length;
+        aggregated.push({ def, value: Math.round(avg * 10) / 10 });
+      }
+      continue;
+    }
+
+    // number
+    let sum = 0;
+    for (const m of matches) {
+      const v = m.stats?.[def.key];
+      if (typeof v === "number") sum += v;
+    }
+    if (sum > 0) aggregated.push({ def, value: sum });
   }
 
-  return { ...base, minutesPlayed, cleanSheets, statSums };
+  return { ...base, minutesPlayed, aggregated };
 }

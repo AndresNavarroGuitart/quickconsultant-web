@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/auth/getSessionContext";
 import { prisma } from "@/lib/prisma";
+import { positionLabel } from "@/lib/athlete/sportsCatalog";
 import ProfileForm from "@/components/ProfileForm";
 import PlayerCard from "@/components/PlayerCard";
 import ProfileSwitcher from "@/components/ProfileSwitcher";
@@ -48,7 +49,7 @@ export default async function PerfilPage() {
           avatarUrl={profile.avatarUrl}
           displayName={profile.displayName}
           birthYear={profile.birthDate ? profile.birthDate.getFullYear() : null}
-          position={profile.position}
+          position={positionLabel(profile.sport, profile.position)}
           clubNames={currentClubs.map((ac) => ac.club.name)}
           country={profile.country}
           jerseyNumber={profile.jerseyNumber}

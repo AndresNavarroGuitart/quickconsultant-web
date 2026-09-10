@@ -2,8 +2,11 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getPositionsForSport } from "@/lib/athlete/positions";
-import { getStatFieldsForPosition, type MatchStatKey } from "@/lib/athlete/positionStats";
+import {
+  getPositions,
+  getStatsForPosition,
+  positionLabel,
+} from "@/lib/athlete/sportsCatalog";
 import MatchPhotos from "@/components/MatchPhotos";
 import { formatDateOnly } from "@/lib/format";
 
@@ -12,7 +15,7 @@ type ClubOption = { id: string; name: string };
 type MatchResult = "WIN" | "LOSS" | "DRAW";
 type MatchCondition = "LOCAL" | "VISITANTE";
 
-type MatchStats = Partial<Record<MatchStatKey, number | boolean | null>>;
+type MatchStats = Record<string, number | boolean> | null;
 
 type Match = {
   id: string;
@@ -25,9 +28,10 @@ type Match = {
   notes: string | null;
   position: string | null;
   minutesPlayed: number | null;
+  stats: MatchStats;
   club: { id: string; name: string } | null;
   photos: { id: string; url: string }[];
-} & MatchStats;
+};
 
 const RESULT_LABEL: Record<MatchResult, string> = {
   WIN: "Ganado",
@@ -46,11 +50,8 @@ export default function PartidosManager({
 }) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
-  const positionOptions = getPositionsForSport(sport);
+  const positionOptions = getPositions(sport);
 
-  // El form de alta/edicion arranca oculto: solo se ve el boton "Agregar
-  // partido", que lo despliega. Al guardar, cancelar o borrar el partido en
-  // edicion se vuelve a ocultar (ver resetForm).
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [opponent, setOpponent] = useState("");
@@ -69,7 +70,7 @@ export default function PartidosManager({
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const activeStatFields = getStatFieldsForPosition(position);
+  const activeStatFields = getStatsForPosition(sport, position);
 
   function handlePositionChange(value: string) {
     setPosition(value);
@@ -107,11 +108,11 @@ export default function PartidosManager({
     setPosition(m.position ?? "");
     setMinutesPlayed(m.minutesPlayed !== null ? String(m.minutesPlayed) : "");
 
-    const fields = getStatFieldsForPosition(m.position);
+    const fields = getStatsForPosition(sport, m.position);
     const values: Record<string, string> = {};
     const booleans: Record<string, boolean> = {};
     for (const field of fields) {
-      const value = m[field.key];
+      const value = m.stats?.[field.key];
       if (field.type === "boolean") {
         booleans[field.key] = value === true;
       } else if (typeof value === "number") {
@@ -129,13 +130,15 @@ export default function PartidosManager({
     setError(null);
     setSaving(true);
 
-    const statsPayload: Record<string, number | boolean | null> = {};
+    const stats: Record<string, number | boolean> = {};
     for (const field of activeStatFields) {
       if (field.type === "boolean") {
-        statsPayload[field.key] = statBooleans[field.key] ?? false;
+        if (statBooleans[field.key]) stats[field.key] = true;
       } else {
         const raw = statValues[field.key] ?? "";
-        statsPayload[field.key] = raw === "" ? null : Number(raw);
+        if (raw !== "" && !Number.isNaN(Number(raw))) {
+          stats[field.key] = Number(raw);
+        }
       }
     }
 
@@ -155,7 +158,7 @@ export default function PartidosManager({
           notes: notes || null,
           position: position || null,
           minutesPlayed: minutesPlayed === "" ? null : Number(minutesPlayed),
-          ...statsPayload,
+          stats,
         }),
       }
     );
@@ -267,11 +270,16 @@ export default function PartidosManager({
             >
               <option value="">Sin especificar</option>
               {positionOptions.map((p) => (
-                <option key={p} value={p}>
-                  {p}
+                <option key={p.key} value={p.key}>
+                  {p.label}
                 </option>
               ))}
             </select>
+            {positionOptions.length === 0 && (
+              <p className="text-xs text-slate-400">
+                Cargá el deporte en Mi perfil para ver las posiciones.
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col gap-1">
@@ -343,7 +351,8 @@ export default function PartidosManager({
           {activeStatFields.length > 0 && (
             <div className="flex flex-col gap-3 rounded-md border border-slate-200 border-l-4 border-l-brand-500 bg-white p-3 sm:col-span-2">
               <p className="text-xs font-medium text-brand-700">
-                Estadísticas de {position.toLowerCase()}
+                Estadísticas de{" "}
+                {positionLabel(sport, position)?.toLowerCase() ?? "la posición"}
               </p>
               <div className="grid gap-3 sm:grid-cols-3">
                 {activeStatFields.map((field) =>
@@ -368,10 +377,13 @@ export default function PartidosManager({
                     <div key={field.key} className="flex flex-col gap-1">
                       <label className="text-xs font-medium text-slate-500">
                         {field.label}
+                        {field.type === "percent" ? " (%)" : ""}
                       </label>
                       <input
                         type="number"
                         min={0}
+                        max={field.type === "percent" ? 100 : undefined}
+                        step={field.type === "percent" ? "0.1" : "1"}
                         value={statValues[field.key] ?? ""}
                         onChange={(e) =>
                           setStatValues((prev) => ({
@@ -426,13 +438,19 @@ export default function PartidosManager({
           <p className="text-sm text-slate-400">Todavía no cargaste partidos.</p>
         )}
         {initialMatches.map((m) => {
-          const fields = getStatFieldsForPosition(m.position);
+          const fields = getStatsForPosition(sport, m.position);
           const summary = fields
             .filter((f) => {
-              const value = m[f.key];
-              return f.type === "boolean" ? value === true : value !== null && value !== undefined;
+              const value = m.stats?.[f.key];
+              return f.type === "boolean"
+                ? value === true
+                : typeof value === "number";
             })
-            .map((f) => (f.type === "boolean" ? f.label : `${f.label}: ${m[f.key]}`))
+            .map((f) =>
+              f.type === "boolean"
+                ? f.label
+                : `${f.label}: ${m.stats?.[f.key]}${f.type === "percent" ? "%" : ""}`
+            )
             .join(" · ");
 
           return (
@@ -463,7 +481,7 @@ export default function PartidosManager({
                     {m.club && ` · ${m.club.name}`}
                     {m.championship && ` · ${m.championship}`}
                     {m.condition && ` · ${m.condition === "LOCAL" ? "Local" : "Visitante"}`}
-                    {m.position && ` · ${m.position}`}
+                    {m.position && ` · ${positionLabel(sport, m.position)}`}
                     {m.minutesPlayed !== null && ` · ${m.minutesPlayed}'`} ·{" "}
                     {m.pointsScored} pts
                   </p>

@@ -3,6 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { COUNTRIES } from "@/lib/athlete/countries";
+import {
+  SPORTS,
+  getPositions,
+  getPosition,
+  getSport,
+} from "@/lib/athlete/sportsCatalog";
 
 type Profile = {
   displayName: string;
@@ -21,10 +27,25 @@ type Profile = {
 export default function ProfileForm({ profile }: { profile: Profile }) {
   const router = useRouter();
   const [displayName, setDisplayName] = useState(profile.displayName);
-  const [sport, setSport] = useState(profile.sport);
+  // Normalizamos al key del catalogo (ej. "Fútbol" o "futbol" -> "futbol");
+  // si el deporte cargado no esta en el catalogo se deja tal cual.
+  const [sport, setSport] = useState(
+    getSport(profile.sport)?.key ?? profile.sport
+  );
   const [location, setLocation] = useState(profile.location ?? "");
   const [birthDate, setBirthDate] = useState(profile.birthDate ?? "");
-  const [position, setPosition] = useState(profile.position ?? "");
+  const [position, setPosition] = useState(
+    getPosition(profile.sport, profile.position)?.key ?? profile.position ?? ""
+  );
+
+  const positionOptions = getPositions(sport);
+
+  function handleSportChange(value: string) {
+    setSport(value);
+    // Si la posicion cargada no pertenece al nuevo deporte, se limpia.
+    const valid = getPositions(value).some((p) => p.key === position);
+    if (!valid) setPosition("");
+  }
   const [heightCm, setHeightCm] = useState(
     profile.heightCm !== null ? String(profile.heightCm) : ""
   );
@@ -96,13 +117,22 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
 
       <div className="flex flex-col gap-1">
         <label className="text-sm font-medium text-slate-700">Deporte</label>
-        <input
+        <select
           value={sport}
-          onChange={(e) => setSport(e.target.value)}
+          onChange={(e) => handleSportChange(e.target.value)}
           required
-          minLength={2}
           className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-        />
+        >
+          <option value="">Elegí un deporte</option>
+          {SPORTS.map((s) => (
+            <option key={s.key} value={s.key}>
+              {s.label}
+            </option>
+          ))}
+          {sport && !getSport(sport) && (
+            <option value={sport}>{sport}</option>
+          )}
+        </select>
       </div>
 
       <div className="flex flex-col gap-1">
@@ -129,12 +159,23 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
         </div>
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-slate-700">Posición</label>
-          <input
+          <select
             value={position}
             onChange={(e) => setPosition(e.target.value)}
-            placeholder="Delantero, arquero..."
-            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          />
+            disabled={positionOptions.length === 0}
+            className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:bg-slate-50 disabled:text-slate-400"
+          >
+            <option value="">
+              {positionOptions.length === 0
+                ? "Elegí primero el deporte"
+                : "Sin especificar"}
+            </option>
+            {positionOptions.map((p) => (
+              <option key={p.key} value={p.key}>
+                {p.label}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-slate-700">

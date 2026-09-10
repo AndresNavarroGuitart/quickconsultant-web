@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { sportLabel } from "@/lib/athlete/sportsCatalog";
 
 type ProfileOption = { id: string; displayName: string; sport: string };
 
@@ -51,7 +52,7 @@ export default function ProfileSwitcher({
       >
         {profiles.map((p) => (
           <option key={p.id} value={p.id}>
-            {p.displayName} · {p.sport}
+            {p.displayName} · {sportLabel(p.sport)}
           </option>
         ))}
       </select>

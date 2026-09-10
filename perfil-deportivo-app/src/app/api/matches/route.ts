@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireGatedProfile } from "@/lib/auth/requireGatedProfile";
 import { matchSchema } from "@/lib/validation/matchSchema";
 import { computeMatchStats } from "@/lib/athlete/stats";
+import { cleanStatsForPosition } from "@/lib/athlete/sportsCatalog";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
@@ -26,6 +27,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
+  const position = parsed.data.position ?? null;
+  const stats = cleanStatsForPosition(
+    result.profile.sport,
+    position,
+    parsed.data.stats ?? null
+  );
+
   const match = await prisma.match.create({
     data: {
       athleteProfileId: result.profile.id,
@@ -37,27 +45,9 @@ export async function POST(request: Request) {
       pointsScored: parsed.data.pointsScored,
       championship: parsed.data.championship ?? null,
       notes: parsed.data.notes ?? null,
-      position: parsed.data.position ?? null,
+      position,
       minutesPlayed: parsed.data.minutesPlayed ?? null,
-      cleanSheet: parsed.data.cleanSheet ?? false,
-      saves: parsed.data.saves ?? null,
-      successfulPasses: parsed.data.successfulPasses ?? null,
-      oneOnOnes: parsed.data.oneOnOnes ?? null,
-      goalsConceded: parsed.data.goalsConceded ?? null,
-      penaltiesConceded: parsed.data.penaltiesConceded ?? null,
-      penaltiesSaved: parsed.data.penaltiesSaved ?? null,
-      duelsWon: parsed.data.duelsWon ?? null,
-      aerialDuels: parsed.data.aerialDuels ?? null,
-      recoveries: parsed.data.recoveries ?? null,
-      interceptions: parsed.data.interceptions ?? null,
-      dribbles: parsed.data.dribbles ?? null,
-      assists: parsed.data.assists ?? null,
-      goals: parsed.data.goals ?? null,
-      fouls: parsed.data.fouls ?? null,
-      yellowCards: parsed.data.yellowCards ?? null,
-      redCards: parsed.data.redCards ?? null,
-      headers: parsed.data.headers ?? null,
-      penaltiesTaken: parsed.data.penaltiesTaken ?? null,
+      stats,
     },
     include: { club: true },
   });
