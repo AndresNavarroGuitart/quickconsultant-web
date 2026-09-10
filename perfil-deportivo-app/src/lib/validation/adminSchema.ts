@@ -4,6 +4,10 @@ export const adminUserActionSchema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("extendTrial"), days: z.number().int().min(1).max(365) }),
   z.object({ action: z.literal("revokeAccess") }),
   z.object({ action: z.literal("setAdmin"), value: z.boolean() }),
+  z.object({ action: z.literal("block") }),
+  z.object({ action: z.literal("unblock") }),
+  z.object({ action: z.literal("grantFreeSubscription") }),
+  z.object({ action: z.literal("revokeFreeSubscription") }),
 ]);
 
 export const adminSuggestionUpdateSchema = z.object({

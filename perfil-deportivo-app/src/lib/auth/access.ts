@@ -2,6 +2,7 @@ type AccessInput = {
   isAdmin: boolean;
   trialEndsAt: Date;
   hasActiveSubscription: boolean;
+  isBlocked: boolean;
 };
 
 // Interruptor de desarrollo: con DISABLE_ACCESS_GATING=true en el .env, nadie
@@ -16,9 +17,14 @@ export function getAccessStatus({
   isAdmin,
   trialEndsAt,
   hasActiveSubscription,
+  isBlocked,
 }: AccessInput) {
   const trialActive = trialEndsAt.getTime() > Date.now();
-  const hasAccess = GATING_DISABLED || isAdmin || trialActive || hasActiveSubscription;
+  // Un bloqueo administrativo gana por sobre todo lo demás, incluso el
+  // interruptor de desarrollo y ser admin: bloquear a alguien que no debería
+  // tener que dejar de serlo para que el bloqueo funcione.
+  const hasAccess =
+    !isBlocked && (GATING_DISABLED || isAdmin || trialActive || hasActiveSubscription);
 
-  return { hasAccess, trialActive, isAdmin, hasActiveSubscription };
+  return { hasAccess, trialActive, isAdmin, hasActiveSubscription, isBlocked };
 }

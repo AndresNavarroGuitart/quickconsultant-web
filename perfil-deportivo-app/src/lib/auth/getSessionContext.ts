@@ -35,6 +35,7 @@ export async function getSessionContext() {
     isAdmin: dbUser.isAdmin,
     trialEndsAt: dbUser.trialEndsAt,
     hasActiveSubscription: !!activeSubscription,
+    isBlocked: !!dbUser.blockedAt,
   });
 
   // Hasta 2 perfiles por cuenta; el activo es el que marca la cookie de

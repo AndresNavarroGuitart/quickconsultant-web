@@ -10,6 +10,8 @@ type AdminUser = {
   trialEndsAt: string;
   createdAt: string;
   deletedAt: string | null;
+  blockedAt: string | null;
+  hasFreeSubscription: boolean;
 };
 
 export default function AdminUsersTable({ users }: { users: AdminUser[] }) {
@@ -70,8 +72,20 @@ export default function AdminUsersTable({ users }: { users: AdminUser[] }) {
                       Dada de baja el{" "}
                       {new Date(u.deletedAt).toLocaleDateString("es-AR")}
                     </span>
+                  ) : u.blockedAt ? (
+                    <span
+                      className="text-xs font-medium text-orange-600"
+                      title={new Date(u.blockedAt).toLocaleString("es-AR")}
+                    >
+                      Bloqueada el {new Date(u.blockedAt).toLocaleDateString("es-AR")}
+                    </span>
                   ) : (
                     <span className="text-xs font-medium text-emerald-600">Activa</span>
+                  )}
+                  {u.hasFreeSubscription && (
+                    <span className="ml-2 rounded bg-brand-50 px-1.5 py-0.5 text-xs font-medium text-brand-700">
+                      Suscripción gratis
+                    </span>
                   )}
                 </td>
                 <td className="px-4 py-2">{u.isAdmin ? "Sí" : "No"}</td>
@@ -103,6 +117,34 @@ export default function AdminUsersTable({ users }: { users: AdminUser[] }) {
                         className="text-xs font-medium text-red-600 hover:underline disabled:opacity-60"
                       >
                         Revocar acceso
+                      </button>
+                      <button
+                        type="button"
+                        disabled={busyId === u.id}
+                        onClick={() =>
+                          sendAction(u.id, {
+                            action: u.blockedAt ? "unblock" : "block",
+                          })
+                        }
+                        className="text-xs font-medium text-orange-600 hover:underline disabled:opacity-60"
+                      >
+                        {u.blockedAt ? "Desbloquear acceso" : "Bloquear acceso"}
+                      </button>
+                      <button
+                        type="button"
+                        disabled={busyId === u.id}
+                        onClick={() =>
+                          sendAction(u.id, {
+                            action: u.hasFreeSubscription
+                              ? "revokeFreeSubscription"
+                              : "grantFreeSubscription",
+                          })
+                        }
+                        className="text-xs font-medium text-emerald-600 hover:underline disabled:opacity-60"
+                      >
+                        {u.hasFreeSubscription
+                          ? "Quitar suscripción gratis"
+                          : "Dar suscripción gratis"}
                       </button>
                       <button
                         type="button"

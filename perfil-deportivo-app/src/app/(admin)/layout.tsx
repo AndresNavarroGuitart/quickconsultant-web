@@ -42,6 +42,10 @@ export default async function AdminLayout({
     redirect("/cuenta-eliminada");
   }
 
+  if (dbUser.blockedAt) {
+    redirect("/cuenta-bloqueada");
+  }
+
   if (!dbUser.termsAcceptedAt) {
     redirect("/aceptar-terminos");
   }

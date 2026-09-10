@@ -33,6 +33,10 @@ export default async function AppLayout({
     redirect("/cuenta-eliminada");
   }
 
+  if (dbUser.blockedAt) {
+    redirect("/cuenta-bloqueada");
+  }
+
   if (!dbUser.termsAcceptedAt) {
     redirect("/aceptar-terminos");
   }

@@ -33,6 +33,14 @@ model User {
   // cliente. El usuario de Supabase Auth tambien se elimina en el mismo paso.
   deletedAt DateTime?
 
+  // Bloqueo administrativo (herramienta de moderación: cuenta problemática,
+  // fraude, etc.). A diferencia de deletedAt, es reversible y no borra
+  // nada. Mientras esté seteado gana por sobre cualquier otra cosa -- ni el
+  // trial, ni una suscripción activa, ni ser admin devuelven el acceso (ver
+  // getAccessStatus en access.ts) -- y el (app)/(admin) layout redirige a
+  // /cuenta-bloqueada.
+  blockedAt DateTime?
+
   // Hasta 2 perfiles por cuenta (ej. el propio + el de un hijo/a). Cuál está
   // activo en la sesión se guarda en una cookie, no acá (ver activeProfile.ts).
   profiles      AthleteProfile[]
