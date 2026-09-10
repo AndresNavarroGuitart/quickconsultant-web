@@ -57,8 +57,8 @@ export default function PlayerCard({
   const flag = countryFlagEmoji(country);
 
   return (
-    <div className="w-full max-w-xs rounded-2xl bg-gradient-to-b from-brand-400 via-brand-600 to-brand-800 p-[3px] shadow-md">
-      <div className="flex flex-col items-center gap-3 rounded-[14px] bg-white px-5 pb-5 pt-4">
+    <div className="w-full max-w-xs self-start rounded-2xl bg-gradient-to-b from-brand-400 via-brand-600 to-brand-800 p-[3px] shadow-md">
+      <div className="flex flex-col items-center gap-3 rounded-[13px] bg-white px-5 pb-5 pt-4">
         <div className="flex w-full items-center justify-center gap-4">
           <div className="flex flex-col items-center gap-1">
             <span className="text-3xl leading-none" title={countryName(country) ?? undefined}>

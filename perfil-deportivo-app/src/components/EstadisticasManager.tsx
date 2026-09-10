@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { computeDetailedStats, type StatsMatchInput } from "@/lib/athlete/stats";
 import { formatDateOnly } from "@/lib/format";
 
@@ -48,7 +48,9 @@ export default function EstadisticasManager({
 
   const championships = useMemo(
     () =>
-      Array.from(new Set(matches.map((m) => m.championship).filter((c): c is string => !!c))).sort(),
+      Array.from(
+        new Set(matches.map((m) => m.championship).filter((c): c is string => !!c))
+      ).sort(),
     [matches]
   );
 
@@ -68,7 +70,8 @@ export default function EstadisticasManager({
   const filteredMatches = useMemo(() => {
     return matches.filter((m) => {
       if (selectedMatchIds.length > 0 && !selectedMatchIds.includes(m.id)) return false;
-      if (selectedOpponents.length > 0 && !selectedOpponents.includes(m.opponent)) return false;
+      if (selectedOpponents.length > 0 && !selectedOpponents.includes(m.opponent))
+        return false;
       if (
         selectedClubIds.length > 0 &&
         (!m.club || !selectedClubIds.includes(m.club.id))
@@ -87,73 +90,45 @@ export default function EstadisticasManager({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-3">
-        {clubs.length > 0 && (
-          <FilterGroup label="Por club">
-            {clubs.map((c) => (
-              <FilterChip
-                key={c.id}
-                active={selectedClubIds.includes(c.id)}
-                onClick={() => setSelectedClubIds((prev) => toggle(prev, c.id))}
-              >
-                {c.name}
-              </FilterChip>
-            ))}
-          </FilterGroup>
-        )}
-
-        {championships.length > 0 && (
-          <FilterGroup label="Por campeonato">
-            {championships.map((c) => (
-              <FilterChip
-                key={c}
-                active={selectedChampionships.includes(c)}
-                onClick={() => setSelectedChampionships((prev) => toggle(prev, c))}
-              >
-                {c}
-              </FilterChip>
-            ))}
-          </FilterGroup>
-        )}
-
-        {opponents.length > 0 && (
-          <FilterGroup label="Por equipo">
-            {opponents.map((o) => (
-              <FilterChip
-                key={o}
-                active={selectedOpponents.includes(o)}
-                onClick={() => setSelectedOpponents((prev) => toggle(prev, o))}
-              >
-                {o}
-              </FilterChip>
-            ))}
-          </FilterGroup>
-        )}
-
-        {matches.length > 0 && (
-          <FilterGroup label="Por partido">
-            {matches.map((m) => (
-              <FilterChip
-                key={m.id}
-                active={selectedMatchIds.includes(m.id)}
-                onClick={() => setSelectedMatchIds((prev) => toggle(prev, m.id))}
-              >
-                {formatDateOnly(m.matchDate)} · vs {m.opponent}
-              </FilterChip>
-            ))}
-          </FilterGroup>
-        )}
-
-        {hasFilters && (
-          <button
-            type="button"
-            onClick={clearFilters}
-            className="self-start text-xs font-medium text-slate-500 hover:text-red-600 hover:underline"
-          >
-            Limpiar filtros
-          </button>
-        )}
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        <MultiSelect
+          label="Club"
+          options={clubs.map((c) => ({ value: c.id, label: c.name }))}
+          selected={selectedClubIds}
+          onChange={setSelectedClubIds}
+        />
+        <MultiSelect
+          label="Campeonato"
+          options={championships.map((c) => ({ value: c, label: c }))}
+          selected={selectedChampionships}
+          onChange={setSelectedChampionships}
+        />
+        <MultiSelect
+          label="Equipo rival"
+          options={opponents.map((o) => ({ value: o, label: o }))}
+          selected={selectedOpponents}
+          onChange={setSelectedOpponents}
+        />
+        <MultiSelect
+          label="Partido"
+          options={matches.map((m) => ({
+            value: m.id,
+            label: `${formatDateOnly(m.matchDate)} · vs ${m.opponent}`,
+          }))}
+          selected={selectedMatchIds}
+          onChange={setSelectedMatchIds}
+        />
       </div>
+
+      {hasFilters && (
+        <button
+          type="button"
+          onClick={clearFilters}
+          className="self-start text-xs font-medium text-slate-500 hover:text-red-600 hover:underline"
+        >
+          Limpiar filtros
+        </button>
+      )}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatTile label="Partidos jugados" value={stats.matchesPlayed} />
@@ -188,45 +163,101 @@ export default function EstadisticasManager({
   );
 }
 
-function FilterGroup({
+type Option = { value: string; label: string };
+
+// Desplegable con checkboxes: reemplaza las filas de "chips" que había antes.
+// Cierra al clickear afuera o con Escape.
+function MultiSelect({
   label,
-  children,
+  options,
+  selected,
+  onChange,
 }: {
   label: string;
-  children: React.ReactNode;
+  options: Option[];
+  selected: string[];
+  onChange: (next: string[]) => void;
 }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-        {label}
-      </p>
-      <div className="flex flex-wrap gap-2">{children}</div>
-    </div>
-  );
-}
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-function FilterChip({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
+  useEffect(() => {
+    if (!open) return;
+    function onClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClickOutside);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  const count = selected.length;
+  const disabled = options.length === 0;
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-        active
-          ? "bg-brand-600 text-white"
-          : "border border-slate-300 text-slate-700 hover:border-brand-500 hover:text-brand-700"
-      }`}
-    >
-      {children}
-    </button>
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => setOpen((o) => !o)}
+        className="flex w-full items-center justify-between gap-2 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:border-brand-500 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+      >
+        <span className="flex items-center gap-1.5 truncate">
+          {label}
+          {count > 0 && (
+            <span className="rounded-full bg-brand-600 px-1.5 text-xs font-semibold text-white">
+              {count}
+            </span>
+          )}
+        </span>
+        <svg
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className={`h-4 w-4 shrink-0 text-slate-400 transition-transform ${
+            open ? "rotate-180" : ""
+          }`}
+        >
+          <path
+            fillRule="evenodd"
+            d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </button>
+
+      {open && !disabled && (
+        <div className="absolute z-20 mt-1 max-h-60 w-full min-w-[180px] overflow-auto rounded-md border border-slate-200 bg-white p-1 shadow-lg">
+          {selected.length > 0 && (
+            <button
+              type="button"
+              onClick={() => onChange([])}
+              className="mb-1 block w-full rounded px-3 py-1.5 text-left text-xs font-medium text-slate-500 hover:bg-slate-50"
+            >
+              Limpiar ({selected.length})
+            </button>
+          )}
+          {options.map((opt) => (
+            <label
+              key={opt.value}
+              className="flex cursor-pointer items-center gap-2 rounded px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              <input
+                type="checkbox"
+                checked={selected.includes(opt.value)}
+                onChange={() => onChange(toggle(selected, opt.value))}
+              />
+              <span className="truncate">{opt.label}</span>
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
