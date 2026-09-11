@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatDateOnly } from "@/lib/format";
+import { SPORTS } from "@/lib/athlete/sportsCatalog";
 
 type AthleteClub = {
   id: string;
@@ -15,15 +16,11 @@ type AthleteClub = {
   club: { id: string; name: string; city: string | null };
 };
 
-const SPORT_OPTIONS = [
-  "Fútbol",
-  "Hockey",
-  "Tenis",
-  "Rugby",
-  "Natación",
-  "Vóley",
-  "Otro",
-];
+// Mismo catalogo que Mi Perfil/Partidos (sportsCatalog.ts), para que el
+// deporte de un club sea uno de los que la app realmente sabe manejar en
+// otros lados. "Otro" queda aparte como via de escape a texto libre (ver
+// customSport) para el caso de un deporte que todavia no esta en el catalogo.
+const SPORT_OPTIONS = [...SPORTS.map((s) => s.label), "Otro"];
 
 export default function ClubesManager({
   initialClubs,
