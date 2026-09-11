@@ -7,6 +7,7 @@ import PlayerCard from "@/components/PlayerCard";
 import ProfileSwitcher from "@/components/ProfileSwitcher";
 import DeleteAccountSection from "@/components/DeleteAccountSection";
 import ChangePasswordButton from "@/components/ChangePasswordButton";
+import InstallAppButton from "@/components/InstallAppButton";
 
 export default async function PerfilPage() {
   const ctx = await getSessionContext();
@@ -74,6 +75,7 @@ export default async function PerfilPage() {
       <div className="flex flex-col gap-3 border-t border-slate-200 pt-6">
         <h2 className="text-sm font-semibold text-slate-900">Cuenta</h2>
         <div className="flex flex-wrap gap-3">
+          <InstallAppButton />
           <ChangePasswordButton email={ctx.user.email!} />
           <DeleteAccountSection />
         </div>
