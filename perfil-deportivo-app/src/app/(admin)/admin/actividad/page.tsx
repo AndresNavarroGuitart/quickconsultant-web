@@ -1,25 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { getLastSignInMap } from "@/lib/admin/lastSignIn";
 import { sportLabel } from "@/lib/athlete/sportsCatalog";
-
-// Ultimo acceso: no vive en nuestra base (no logueamos sesiones), pero
-// Supabase Auth ya lo trackea por nosotros en auth.users.last_sign_in_at.
-async function getLastSignInMap(): Promise<Map<string, string | null>> {
-  const map = new Map<string, string | null>();
-  try {
-    const { data, error } = await getSupabaseAdmin().auth.admin.listUsers({
-      perPage: 1000,
-    });
-    if (error) throw error;
-    for (const u of data.users) {
-      map.set(u.id, u.last_sign_in_at ?? null);
-    }
-  } catch {
-    // Si Supabase Auth no responde (o faltan credenciales), mostramos la
-    // tabla igual sin la columna de último acceso en vez de romper la página.
-  }
-  return map;
-}
 
 export default async function AdminActividadPage() {
   const [users, lastSignInMap] = await Promise.all([

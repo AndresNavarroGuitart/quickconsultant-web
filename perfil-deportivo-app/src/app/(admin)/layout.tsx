@@ -10,6 +10,7 @@ const ADMIN_NAV_LINKS = [
   { href: "/admin", label: "Resumen" },
   { href: "/admin/usuarios", label: "Usuarios" },
   { href: "/admin/actividad", label: "Actividad" },
+  { href: "/admin/metricas", label: "Métricas" },
   { href: "/admin/pagos", label: "Pagos" },
   { href: "/admin/sugerencias", label: "Sugerencias" },
 ];
