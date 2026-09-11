@@ -24,6 +24,8 @@ type Match = {
   result: MatchResult;
   condition: MatchCondition | null;
   pointsScored: number;
+  homeScore: number | null;
+  awayScore: number | null;
   championship: string | null;
   notes: string | null;
   position: string | null;
@@ -60,6 +62,8 @@ export default function PartidosManager({
   const [result, setResult] = useState<MatchResult>("WIN");
   const [condition, setCondition] = useState<MatchCondition | "">("");
   const [pointsScored, setPointsScored] = useState("0");
+  const [homeScore, setHomeScore] = useState("");
+  const [awayScore, setAwayScore] = useState("");
   const [championship, setChampionship] = useState("");
   const [notes, setNotes] = useState("");
   const [position, setPosition] = useState("");
@@ -87,6 +91,8 @@ export default function PartidosManager({
     setResult("WIN");
     setCondition("");
     setPointsScored("0");
+    setHomeScore("");
+    setAwayScore("");
     setChampionship("");
     setNotes("");
     handlePositionChange("");
@@ -103,6 +109,8 @@ export default function PartidosManager({
     setResult(m.result);
     setCondition(m.condition ?? "");
     setPointsScored(String(m.pointsScored));
+    setHomeScore(m.homeScore !== null ? String(m.homeScore) : "");
+    setAwayScore(m.awayScore !== null ? String(m.awayScore) : "");
     setChampionship(m.championship ?? "");
     setNotes(m.notes ?? "");
     setPosition(m.position ?? "");
@@ -154,6 +162,8 @@ export default function PartidosManager({
           result,
           condition: condition || null,
           pointsScored: Number(pointsScored) || 0,
+          homeScore: homeScore === "" ? null : Number(homeScore),
+          awayScore: awayScore === "" ? null : Number(awayScore),
           championship: championship || null,
           notes: notes || null,
           position: position || null,
@@ -337,6 +347,35 @@ export default function PartidosManager({
             </select>
           </div>
 
+          <div className="flex flex-col gap-1 sm:col-span-2">
+            <label className="text-sm font-medium text-slate-700">
+              Resultado del partido (Local - Visitante)
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                min={0}
+                max={1000}
+                value={homeScore}
+                onChange={(e) => setHomeScore(e.target.value)}
+                placeholder="Local"
+                aria-label="Goles/puntos del equipo local"
+                className="w-24 rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              />
+              <span className="text-slate-400">-</span>
+              <input
+                type="number"
+                min={0}
+                max={1000}
+                value={awayScore}
+                onChange={(e) => setAwayScore(e.target.value)}
+                placeholder="Visitante"
+                aria-label="Goles/puntos del equipo visitante"
+                className="w-24 rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              />
+            </div>
+          </div>
+
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-slate-700">Puntos</label>
             <input
@@ -463,7 +502,13 @@ export default function PartidosManager({
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-slate-900">
-                    vs {m.opponent}{" "}
+                    vs {m.opponent}
+                    {m.homeScore !== null && m.awayScore !== null && (
+                      <span className="text-slate-500">
+                        {" "}
+                        ({m.homeScore} - {m.awayScore})
+                      </span>
+                    )}{" "}
                     <span
                       className={
                         m.result === "WIN"

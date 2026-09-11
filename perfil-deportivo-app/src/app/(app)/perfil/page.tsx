@@ -27,10 +27,6 @@ export default async function PerfilPage() {
     <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-2xl font-semibold text-slate-900">Mi perfil</h1>
-        <p className="text-sm text-slate-500">
-          Perfil público:{" "}
-          <span className="font-mono">/perfil/{profile.slug}</span>
-        </p>
       </div>
 
       {ctx.profiles.length > 1 && (

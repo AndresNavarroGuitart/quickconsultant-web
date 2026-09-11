@@ -35,6 +35,8 @@ export default async function PartidosPage() {
           result: m.result,
           condition: m.condition,
           pointsScored: m.pointsScored,
+          homeScore: m.homeScore,
+          awayScore: m.awayScore,
           championship: m.championship,
           notes: m.notes,
           position: m.position,

@@ -172,6 +172,10 @@ model Match {
   result           MatchResult
   condition        MatchCondition?
   pointsScored     Int      @default(0)
+  // Resultado real del partido (Local - Visitante), independiente de si el
+  // deportista jugo de local o visitante (eso ya lo dice `condition`).
+  homeScore        Int?
+  awayScore        Int?
   // Torneo/campeonato en el que se jugo este partido puntual (puede diferir
   // de AthleteClub.league, que es la liga general del paso por el club).
   championship     String?

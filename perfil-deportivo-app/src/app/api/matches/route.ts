@@ -43,6 +43,8 @@ export async function POST(request: Request) {
       result: parsed.data.result,
       condition: parsed.data.condition ?? null,
       pointsScored: parsed.data.pointsScored,
+      homeScore: parsed.data.homeScore ?? null,
+      awayScore: parsed.data.awayScore ?? null,
       championship: parsed.data.championship ?? null,
       notes: parsed.data.notes ?? null,
       position,

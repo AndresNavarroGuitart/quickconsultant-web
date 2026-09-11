@@ -18,6 +18,8 @@ export const matchSchema = z.object({
   result: z.enum(["WIN", "LOSS", "DRAW"]),
   condition: z.enum(["LOCAL", "VISITANTE"]).optional().nullable(),
   pointsScored: z.coerce.number().int().min(0).max(10000).default(0),
+  homeScore: z.coerce.number().int().min(0).max(1000).optional().nullable(),
+  awayScore: z.coerce.number().int().min(0).max(1000).optional().nullable(),
   championship: z.string().trim().max(120).optional().nullable(),
   notes: z.string().trim().max(2000).optional().nullable(),
   position: z.string().trim().max(60).optional().nullable(),
