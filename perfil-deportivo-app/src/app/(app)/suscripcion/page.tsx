@@ -19,8 +19,7 @@ export default async function SuscripcionPage() {
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-semibold text-slate-900">Suscripción</h1>
       <p className="text-sm text-slate-600">
-        u$s10 por mes vía MercadoPago (el monto exacto en pesos se define en la
-        cuenta de MercadoPago del sitio).
+        Valor de la suscripción mensual $10.000 (Ar$).
       </p>
       <p className="text-sm text-slate-500">
         Estado actual:{" "}
