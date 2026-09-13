@@ -502,7 +502,19 @@ export default function PartidosManager({
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-slate-900">
-                    vs {m.opponent}
+                    {m.club ? (
+                      m.condition === "VISITANTE" ? (
+                        <>
+                          {m.opponent} vs <strong>{m.club.name}</strong>
+                        </>
+                      ) : (
+                        <>
+                          <strong>{m.club.name}</strong> vs {m.opponent}
+                        </>
+                      )
+                    ) : (
+                      <>vs {m.opponent}</>
+                    )}
                     {m.homeScore !== null && m.awayScore !== null && (
                       <span className="text-slate-500">
                         {" "}
