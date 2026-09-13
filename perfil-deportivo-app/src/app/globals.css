@@ -3,6 +3,12 @@
 :root {
   --background: #ffffff;
   --foreground: #0f172a;
+  /* La app no tiene tema oscuro propio (todo el diseño asume fondo blanco).
+     Sin esto, un celular con modo oscuro del sistema le pide al navegador
+     controles nativos oscuros -- el texto que escribís, los <select> y el
+     selector de fecha salen en gris clarito pensado para fondo negro, casi
+     invisibles sobre las cajas blancas. */
+  color-scheme: light;
 }
 
 @theme inline {
@@ -39,15 +45,16 @@
   --color-sport-lime: #7cb518;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Placeholders un poco más oscuros que el gris por defecto del navegador,
+   que en varios celulares queda demasiado tenue para leerse. */
+input::placeholder,
+textarea::placeholder {
+  color: #64748b; /* slate-500 */
+  opacity: 1;
 }
