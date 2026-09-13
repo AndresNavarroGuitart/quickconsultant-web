@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type MatchPhoto = { id: string; url: string };
@@ -17,6 +17,16 @@ export default function MatchPhotos({
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!previewUrl) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setPreviewUrl(null);
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [previewUrl]);
 
   async function handleFile(file: File | undefined) {
     if (!file) return;
@@ -67,11 +77,18 @@ export default function MatchPhotos({
         <div className="flex flex-wrap gap-2">
           {photos.map((photo) => (
             <div key={photo.id} className="relative">
-              <img
-                src={photo.url}
-                alt="Foto del partido"
-                className="h-14 w-14 rounded-md object-cover"
-              />
+              <button
+                type="button"
+                onClick={() => setPreviewUrl(photo.url)}
+                aria-label="Ver foto más grande"
+                className="block"
+              >
+                <img
+                  src={photo.url}
+                  alt="Foto del partido"
+                  className="h-14 w-14 cursor-pointer rounded-md object-cover"
+                />
+              </button>
               <button
                 type="button"
                 disabled={busy}
@@ -121,6 +138,28 @@ export default function MatchPhotos({
       </div>
 
       {error && <p className="text-xs text-red-600">{error}</p>}
+
+      {previewUrl && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          onClick={() => setPreviewUrl(null)}
+        >
+          <img
+            src={previewUrl}
+            alt="Foto del partido ampliada"
+            className="max-h-full max-w-full rounded-md object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button
+            type="button"
+            onClick={() => setPreviewUrl(null)}
+            aria-label="Cerrar"
+            className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-2xl leading-none text-white hover:bg-white/20"
+          >
+            ×
+          </button>
+        </div>
+      )}
     </div>
   );
 }
