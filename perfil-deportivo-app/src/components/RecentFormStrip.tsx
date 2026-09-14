@@ -1,16 +1,19 @@
+import { formatDateOnly } from "@/lib/format";
+
 type MatchResult = "WIN" | "LOSS" | "DRAW";
 
 type RecentMatch = {
   id: string;
   opponent: string;
+  matchDate: string;
   result: MatchResult;
   club: { name: string; logoUrl: string | null } | null;
 };
 
-const RESULT_CHIP: Record<MatchResult, { label: string; className: string }> = {
-  WIN: { label: "G", className: "bg-brand-600" },
-  LOSS: { label: "P", className: "bg-red-600" },
-  DRAW: { label: "E", className: "bg-slate-400" },
+const RESULT_BADGE: Record<MatchResult, { label: string; className: string }> = {
+  WIN: { label: "Ganado", className: "bg-green-600 text-white" },
+  LOSS: { label: "Perdido", className: "bg-red-600 text-white" },
+  DRAW: { label: "Empate", className: "bg-yellow-500 text-slate-900" },
 };
 
 function ClubBadge({ club }: { club: RecentMatch["club"] }) {
@@ -48,17 +51,20 @@ export default function RecentFormStrip({ matches }: { matches: RecentMatch[] })
   }
 
   return (
-    <div className="flex gap-4 rounded-md border border-slate-200 bg-white p-4">
+    <div className="flex flex-wrap gap-4 rounded-md border border-slate-200 bg-white p-4">
       {matches.map((m) => {
-        const chip = RESULT_CHIP[m.result];
+        const badge = RESULT_BADGE[m.result];
         return (
-          <div key={m.id} className="flex flex-col items-center gap-2">
+          <div key={m.id} className="flex flex-col items-center gap-1.5">
+            <span className="text-[11px] text-slate-400">
+              {formatDateOnly(m.matchDate)}
+            </span>
             <ClubBadge club={m.club} />
             <span
-              className={`flex h-7 w-7 items-center justify-center rounded-md text-sm font-bold text-white ${chip.className}`}
+              className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${badge.className}`}
               title={`vs ${m.opponent}`}
             >
-              {chip.label}
+              {badge.label}
             </span>
           </div>
         );

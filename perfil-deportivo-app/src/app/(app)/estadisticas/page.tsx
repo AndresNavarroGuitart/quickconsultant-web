@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/auth/getSessionContext";
 import { prisma } from "@/lib/prisma";
@@ -37,11 +38,20 @@ export default async function EstadisticasPage() {
       )}
 
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-medium text-slate-700">Últimos partidos</p>
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-medium text-slate-700">Últimos partidos</p>
+          <Link
+            href="/partidos"
+            className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:border-brand-500 hover:text-brand-700"
+          >
+            Ir a Partidos
+          </Link>
+        </div>
         <RecentFormStrip
           matches={matches.slice(0, 5).map((m) => ({
             id: m.id,
             opponent: m.opponent,
+            matchDate: m.matchDate.toISOString(),
             result: m.result,
             club: m.club ? { name: m.club.name, logoUrl: m.club.logoUrl } : null,
           }))}
