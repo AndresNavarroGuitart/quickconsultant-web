@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { countryFlagEmoji, countryName } from "@/lib/athlete/countries";
+import { compressImage } from "@/lib/compressImage";
 
 export default function PlayerCard({
   avatarUrl,
@@ -34,8 +35,10 @@ export default function PlayerCard({
     setError(null);
     setUploading(true);
 
+    const compressed = await compressImage(file);
+
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", compressed);
     formData.append("slot", "avatar");
 
     const res = await fetch("/api/photos/upload", {

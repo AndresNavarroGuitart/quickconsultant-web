@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { compressImage } from "@/lib/compressImage";
 
 type MatchPhoto = { id: string; url: string };
 
@@ -33,8 +34,10 @@ export default function MatchPhotos({
     setError(null);
     setBusy(true);
 
+    const compressed = await compressImage(file);
+
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", compressed);
     formData.append("slot", "match");
     formData.append("matchId", matchId);
 
