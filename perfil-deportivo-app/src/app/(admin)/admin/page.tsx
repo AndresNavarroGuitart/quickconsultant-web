@@ -1,22 +1,42 @@
 import { prisma } from "@/lib/prisma";
 import { getLastSignInMap } from "@/lib/admin/lastSignIn";
 import { isFreeSubscription } from "@/lib/admin/freeSubscription";
+import { sportLabel, positionLabel } from "@/lib/athlete/sportsCatalog";
+import { countryName } from "@/lib/athlete/countries";
 
 const RETENTION_WEEKS = [1, 2, 3, 4];
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
+const AGE_BUCKETS: { label: string; test: (age: number) => boolean }[] = [
+  { label: "Hasta 12 años", test: (a) => a <= 12 },
+  { label: "13 a 17 años", test: (a) => a >= 13 && a <= 17 },
+  { label: "18 a 25 años", test: (a) => a >= 18 && a <= 25 },
+  { label: "26 a 40 años", test: (a) => a >= 26 && a <= 40 },
+  { label: "Más de 40 años", test: (a) => a > 40 },
+];
+
 export default async function AdminOverviewPage() {
-  const [users, activeSubscriptions, pendingSuggestions, lastSignInMap] = await Promise.all([
-    prisma.user.findMany({
-      include: {
-        profiles: { include: { _count: { select: { matches: true } } } },
-        subscriptions: true,
-      },
-    }),
-    prisma.subscription.count({ where: { status: "AUTHORIZED" } }),
-    prisma.suggestion.count({ where: { status: "NEW" } }),
-    getLastSignInMap(),
-  ]);
+  const [users, activeSubscriptions, pendingSuggestions, lastSignInMap, profiles] =
+    await Promise.all([
+      prisma.user.findMany({
+        include: {
+          profiles: { include: { _count: { select: { matches: true } } } },
+          subscriptions: true,
+        },
+      }),
+      prisma.subscription.count({ where: { status: "AUTHORIZED" } }),
+      prisma.suggestion.count({ where: { status: "NEW" } }),
+      getLastSignInMap(),
+      prisma.athleteProfile.findMany({
+        select: {
+          sport: true,
+          position: true,
+          subjectType: true,
+          birthDate: true,
+          country: true,
+        },
+      }),
+    ]);
 
   const totalUsers = users.length;
 
@@ -80,6 +100,47 @@ export default async function AdminOverviewPage() {
     )
   );
   const conversionRate = pct(converted.length, payingEligible.length);
+
+  // --- Público: deportes, posiciones y datos generales -------------------
+  const totalProfiles = profiles.length;
+
+  const sportCounts = new Map<string, number>();
+  for (const p of profiles) sportCounts.set(p.sport, (sportCounts.get(p.sport) ?? 0) + 1);
+  const sportsBreakdown = [...sportCounts.entries()]
+    .map(([sport, count]) => ({ label: sportLabel(sport), count }))
+    .sort((a, b) => b.count - a.count);
+
+  const positionCounts = new Map<string, { label: string; count: number }>();
+  for (const p of profiles) {
+    const key = `${p.sport}::${p.position ?? ""}`;
+    const label = p.position
+      ? `${sportLabel(p.sport)} · ${positionLabel(p.sport, p.position) ?? p.position}`
+      : `${sportLabel(p.sport)} · sin posición`;
+    const current = positionCounts.get(key);
+    positionCounts.set(key, { label, count: (current?.count ?? 0) + 1 });
+  }
+  const positionsBreakdown = [...positionCounts.values()].sort((a, b) => b.count - a.count);
+
+  const selfProfiles = profiles.filter((p) => p.subjectType === "SELF").length;
+  const dependentProfiles = profiles.filter((p) => p.subjectType === "DEPENDENT").length;
+
+  const agesKnown = profiles
+    .map((p) => (p.birthDate ? ageFromBirthDate(p.birthDate) : null))
+    .filter((age): age is number => age !== null);
+  const ageBreakdown = AGE_BUCKETS.map((bucket) => ({
+    label: bucket.label,
+    count: agesKnown.filter(bucket.test).length,
+  }));
+  const withoutBirthDate = totalProfiles - agesKnown.length;
+
+  const countryCounts = new Map<string, number>();
+  for (const p of profiles) {
+    const label = p.country ? (countryName(p.country) ?? p.country) : "Sin especificar";
+    countryCounts.set(label, (countryCounts.get(label) ?? 0) + 1);
+  }
+  const countryBreakdown = [...countryCounts.entries()]
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => b.count - a.count);
 
   return (
     <div className="flex flex-col gap-8">
@@ -179,6 +240,55 @@ export default async function AdminOverviewPage() {
           </p>
         </div>
       </section>
+
+      <section className="flex flex-col gap-3 border-t border-slate-200 pt-8">
+        <h2 className="text-lg font-semibold text-slate-900">
+          Quiénes usan la app
+        </h2>
+        <p className="text-sm text-slate-500">
+          Deportes, posiciones y datos generales de los {totalProfiles}{" "}
+          perfil{totalProfiles === 1 ? "" : "es"} deportivo
+          {totalProfiles === 1 ? "" : "s"} cargados (no cuentas -- una cuenta
+          puede tener hasta 2).
+        </p>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <BreakdownCard
+            title="Deportes"
+            rows={sportsBreakdown}
+            total={totalProfiles}
+          />
+          <BreakdownCard
+            title="Posiciones"
+            rows={positionsBreakdown}
+            total={totalProfiles}
+          />
+          <BreakdownCard
+            title="Tipo de perfil"
+            rows={[
+              { label: "Propio (el usuario juega)", count: selfProfiles },
+              { label: "De un hijo/a a cargo", count: dependentProfiles },
+            ]}
+            total={totalProfiles}
+          />
+          <BreakdownCard
+            title="Edad"
+            rows={[
+              ...ageBreakdown,
+              ...(withoutBirthDate > 0
+                ? [{ label: "Sin fecha de nacimiento", count: withoutBirthDate }]
+                : []),
+            ]}
+            total={totalProfiles}
+          />
+          <BreakdownCard
+            title="País"
+            rows={countryBreakdown}
+            total={totalProfiles}
+            className="sm:col-span-2"
+          />
+        </div>
+      </section>
     </div>
   );
 }
@@ -195,4 +305,49 @@ function StatCard({ label, value }: { label: string; value: number }) {
 function pct(count: number, total: number): number {
   if (total === 0) return 0;
   return Math.round((count / total) * 100);
+}
+
+function ageFromBirthDate(birthDate: Date): number {
+  const now = new Date();
+  let age = now.getFullYear() - birthDate.getFullYear();
+  const hadBirthdayThisYear =
+    now.getMonth() > birthDate.getMonth() ||
+    (now.getMonth() === birthDate.getMonth() && now.getDate() >= birthDate.getDate());
+  if (!hadBirthdayThisYear) age--;
+  return age;
+}
+
+function BreakdownCard({
+  title,
+  rows,
+  total,
+  className = "",
+}: {
+  title: string;
+  rows: { label: string; count: number }[];
+  total: number;
+  className?: string;
+}) {
+  return (
+    <div className={`rounded-md border border-slate-200 bg-white p-4 ${className}`}>
+      <p className="mb-2 text-sm font-semibold text-slate-900">{title}</p>
+      {rows.length === 0 ? (
+        <p className="text-sm text-slate-400">Sin datos todavía.</p>
+      ) : (
+        <div className="flex flex-col gap-1.5">
+          {rows.map((row) => (
+            <div key={row.label} className="flex items-center justify-between gap-3">
+              <span className="text-sm text-slate-600">{row.label}</span>
+              <span className="shrink-0 text-sm font-medium text-brand-700">
+                {row.count}{" "}
+                <span className="font-normal text-slate-400">
+                  ({pct(row.count, total)}%)
+                </span>
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
