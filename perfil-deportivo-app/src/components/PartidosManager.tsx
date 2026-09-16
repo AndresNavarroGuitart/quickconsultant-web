@@ -136,6 +136,14 @@ export default function PartidosManager({
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
+
+    if (!clubId) {
+      setError(
+        "Para cargar un partido primero tenés que agregar un club en la sección Clubes."
+      );
+      return;
+    }
+
     setSaving(true);
 
     const stats: Record<string, number | boolean> = {};
@@ -240,9 +248,7 @@ export default function PartidosManager({
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-slate-700">
-              Club (opcional)
-            </label>
+            <label className="text-sm font-medium text-slate-700">Club</label>
             <select
               value={clubId}
               onChange={(e) => setClubId(e.target.value)}
@@ -255,11 +261,17 @@ export default function PartidosManager({
                 </option>
               ))}
             </select>
+            {clubOptions.length === 0 && (
+              <p className="text-xs text-slate-400">
+                Todavía no cargaste ningún club. Andá a la sección Clubes y
+                agregá uno primero.
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-slate-700">
-              Campeonato (opcional)
+              Campeonato
             </label>
             <input
               value={championship}
@@ -441,7 +453,7 @@ export default function PartidosManager({
 
           <div className="flex flex-col gap-1 sm:col-span-2">
             <label className="text-sm font-medium text-slate-700">
-              Notas (opcional)
+              Notas
             </label>
             <textarea
               value={notes}
