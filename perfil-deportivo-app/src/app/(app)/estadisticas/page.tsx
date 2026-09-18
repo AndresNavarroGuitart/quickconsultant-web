@@ -2,7 +2,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/auth/getSessionContext";
 import { prisma } from "@/lib/prisma";
-import RecentFormStrip from "@/components/RecentFormStrip";
+import ProfileSummaryCard from "@/components/ProfileSummaryCard";
+import MatchHistoryCarousel from "@/components/MatchHistoryCarousel";
+import MatchPhotoGallery from "@/components/MatchPhotoGallery";
 import EstadisticasManager from "@/components/EstadisticasManager";
 
 export default async function EstadisticasPage() {
@@ -14,11 +16,24 @@ export default async function EstadisticasPage() {
 
   const { hasAccess, trialActive } = ctx.access;
 
-  const matches = await prisma.match.findMany({
-    where: { athleteProfileId: profile.id },
-    include: { club: true },
-    orderBy: { matchDate: "desc" },
-  });
+  const [matches, currentClubs, photos] = await Promise.all([
+    prisma.match.findMany({
+      where: { athleteProfileId: profile.id },
+      include: { club: true },
+      orderBy: { matchDate: "desc" },
+    }),
+    prisma.athleteClub.findMany({
+      where: { athleteProfileId: profile.id, endDate: null },
+      include: { club: true },
+      orderBy: { startDate: "desc" },
+      take: 2,
+    }),
+    prisma.photo.findMany({
+      where: { athleteProfileId: profile.id },
+      orderBy: { createdAt: "desc" },
+      take: 12,
+    }),
+  ]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -37,9 +52,18 @@ export default async function EstadisticasPage() {
         </div>
       )}
 
+      <ProfileSummaryCard
+        avatarUrl={profile.avatarUrl}
+        displayName={profile.displayName}
+        sport={profile.sport}
+        position={profile.position}
+        clubNames={currentClubs.map((ac) => ac.club.name)}
+        jerseyNumber={profile.jerseyNumber}
+      />
+
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-slate-700">Últimos partidos</p>
+          <p className="text-sm font-medium text-slate-700">Historial de partidos</p>
           <Link
             href="/partidos"
             className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:border-brand-500 hover:text-brand-700"
@@ -47,13 +71,13 @@ export default async function EstadisticasPage() {
             Ir a Partidos
           </Link>
         </div>
-        <RecentFormStrip
+        <MatchHistoryCarousel
           matches={matches
             // La consulta trae los partidos del mas nuevo al mas viejo
             // (matchDate desc); acá se da vuelta para que la tira se lea de
             // fecha menor a mayor (el mas viejo a la izquierda, el mas
-            // reciente a la derecha). RecentFormStrip solo muestra los
-            // ultimos 5 de entrada y deja el resto scrolleable hacia la
+            // reciente a la derecha). MatchHistoryCarousel solo muestra los
+            // ultimos de entrada y deja el resto scrolleable hacia la
             // izquierda.
             .slice()
             .reverse()
@@ -62,8 +86,17 @@ export default async function EstadisticasPage() {
             opponent: m.opponent,
             matchDate: m.matchDate.toISOString(),
             result: m.result,
+            homeScore: m.homeScore,
+            awayScore: m.awayScore,
             club: m.club ? { name: m.club.name, logoUrl: m.club.logoUrl } : null,
           }))}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <p className="text-sm font-medium text-slate-700">Galería de fotos</p>
+        <MatchPhotoGallery
+          photos={photos.map((p) => ({ id: p.id, url: p.url, caption: p.caption }))}
         />
       </div>
 
