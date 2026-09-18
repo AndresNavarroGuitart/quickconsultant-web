@@ -5,7 +5,6 @@ import {
   ACTIVE_PROFILE_COOKIE_OPTIONS,
   getSessionContext,
 } from "@/lib/auth/getSessionContext";
-import { generateUniqueSlug } from "@/lib/athlete/slug";
 import { MAX_PROFILES_PER_USER } from "@/lib/athlete/profileLimit";
 import {
   createProfileSchema,
@@ -43,13 +42,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const slug = await generateUniqueSlug(parsed.data.displayName);
   const isDependent = parsed.data.subjectType === "DEPENDENT";
 
   const profile = await prisma.athleteProfile.create({
     data: {
       userId: ctx.user.id,
-      slug,
       displayName: parsed.data.displayName,
       sport: parsed.data.sport,
       location: parsed.data.location ?? null,

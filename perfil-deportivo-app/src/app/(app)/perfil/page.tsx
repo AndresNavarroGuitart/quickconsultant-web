@@ -68,8 +68,6 @@ export default async function PerfilPage() {
             subjectType: profile.subjectType,
             guardianName: profile.guardianName,
             guardianRelationship: profile.guardianRelationship,
-            isPublic: profile.isPublic,
-            slug: profile.slug,
           }}
         />
       </div>

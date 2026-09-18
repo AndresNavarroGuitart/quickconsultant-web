@@ -61,18 +61,10 @@ model AthleteProfile {
   // no en la base.
   userId      String
   user        User     @relation(fields: [userId], references: [id])
-  slug        String   @unique
   displayName String
   sport       String
-  bio         String?
   avatarUrl   String?
-  coverUrl    String?
   location    String?
-  // Off por default: la pagina publica de /perfil/[slug] expone nombre,
-  // fotos y partidos, y muchos perfiles son de menores (subjectType
-  // DEPENDENT) -- tiene que ser un opt-in explicito del responsable, no
-  // algo que quede prendido solo.
-  isPublic    Boolean  @default(false)
 
   birthDate    DateTime? // fecha de cumpleaños
   position     String? // posicion general del deportista (distinta del rol por club)
@@ -185,8 +177,6 @@ model Match {
   // de AthleteClub.league, que es la liga general del paso por el club).
   championship     String?
   notes            String?
-  // Se muestra en la pagina publica compartible (fase 5).
-  isHighlight      Boolean  @default(false)
 
   // Posicion jugada en este partido (key del catalogo, ej. "arquero",
   // "medio_scrum"). Las opciones dependen del deporte de AthleteProfile.sport
