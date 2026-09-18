@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/requireAdmin";
 import { adminUserActionSchema } from "@/lib/validation/adminSchema";
 import { freeSubscriptionId } from "@/lib/admin/freeSubscription";
+import { logAdminAction } from "@/lib/admin/logAdminAction";
 import { prisma } from "@/lib/prisma";
 
 export async function PATCH(
@@ -33,6 +34,11 @@ export async function PATCH(
       update: { status: "AUTHORIZED", cancelledAt: null },
     });
     const user = await prisma.user.findUniqueOrThrow({ where: { id } });
+    await logAdminAction({
+      adminUserId: result.ctx.user.id,
+      targetUserId: id,
+      action: parsed.data.action,
+    });
     return NextResponse.json({ user });
   }
 
@@ -42,6 +48,11 @@ export async function PATCH(
       data: { status: "CANCELLED", cancelledAt: new Date() },
     });
     const user = await prisma.user.findUniqueOrThrow({ where: { id } });
+    await logAdminAction({
+      adminUserId: result.ctx.user.id,
+      targetUserId: id,
+      action: parsed.data.action,
+    });
     return NextResponse.json({ user });
   }
 
@@ -57,5 +68,16 @@ export async function PATCH(
             : { blockedAt: null }; // unblock
 
   const user = await prisma.user.update({ where: { id }, data });
+  await logAdminAction({
+    adminUserId: result.ctx.user.id,
+    targetUserId: id,
+    action: parsed.data.action,
+    metadata:
+      parsed.data.action === "extendTrial"
+        ? { days: parsed.data.days }
+        : parsed.data.action === "setAdmin"
+          ? { value: parsed.data.value }
+          : undefined,
+  });
   return NextResponse.json({ user });
 }

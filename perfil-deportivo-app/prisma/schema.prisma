@@ -47,6 +47,9 @@ model User {
   subscriptions Subscription[]
   suggestions   Suggestion[]
   notifications Notification[]
+
+  adminActionLogsPerformed AdminActionLog[] @relation("AdminActionLogAdmin")
+  adminActionLogsReceived  AdminActionLog[] @relation("AdminActionLogTarget")
 }
 
 enum ProfileSubjectType {
@@ -313,4 +316,25 @@ model Notification {
   createdAt DateTime @default(now())
 
   @@index([userId])
+}
+
+// Auditoria de acciones de admin sobre cuentas de usuarios (bloquear, dar
+// admin, extender trial, suscripcion gratis, responder sugerencias, etc.).
+// targetUserId queda null en acciones sin un usuario puntual (ej. broadcast
+// de notificaciones a todos).
+model AdminActionLog {
+  id      String @id @default(uuid())
+  adminUserId String
+  adminUser   User   @relation("AdminActionLogAdmin", fields: [adminUserId], references: [id])
+  targetUserId String?
+  targetUser   User?  @relation("AdminActionLogTarget", fields: [targetUserId], references: [id])
+  action      String
+  // Detalle especifico de la accion (ej. { "days": 30 } en extendTrial,
+  // { "value": true } en setAdmin) -- forma libre, cada accion define la suya.
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  @@index([adminUserId])
+  @@index([targetUserId])
+  @@index([createdAt])
 }

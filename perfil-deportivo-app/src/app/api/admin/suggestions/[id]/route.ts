@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/requireAdmin";
 import { adminSuggestionUpdateSchema } from "@/lib/validation/adminSchema";
+import { logAdminAction } from "@/lib/admin/logAdminAction";
 import { prisma } from "@/lib/prisma";
 
 export async function PATCH(
@@ -29,6 +30,13 @@ export async function PATCH(
       status: parsed.data.status,
       adminNote: newAdminNote,
     },
+  });
+
+  await logAdminAction({
+    adminUserId: result.ctx.user.id,
+    targetUserId: suggestion.userId,
+    action: "updateSuggestion",
+    metadata: { suggestionId: id, status: parsed.data.status },
   });
 
   // Avisa al usuario solo cuando hay una respuesta nueva (nota no vacía y

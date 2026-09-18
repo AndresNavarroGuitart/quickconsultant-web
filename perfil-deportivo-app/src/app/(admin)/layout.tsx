@@ -12,6 +12,7 @@ const ADMIN_NAV_LINKS = [
   { href: "/admin/actividad", label: "Actividad" },
   { href: "/admin/pagos", label: "Pagos" },
   { href: "/admin/sugerencias", label: "Sugerencias" },
+  { href: "/admin/auditoria", label: "Auditoría" },
 ];
 
 export default async function AdminLayout({

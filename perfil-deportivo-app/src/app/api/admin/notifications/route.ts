@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/requireAdmin";
 import { composeNotificationSchema } from "@/lib/validation/adminSchema";
+import { logAdminAction } from "@/lib/admin/logAdminAction";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
@@ -23,12 +24,24 @@ export async function POST(request: Request) {
     const notification = await prisma.notification.create({
       data: { userId: targetUser.id, title, body },
     });
+    await logAdminAction({
+      adminUserId: result.ctx.user.id,
+      targetUserId: targetUser.id,
+      action: "sendNotification",
+      metadata: { title },
+    });
     return NextResponse.json({ notification, sentTo: 1 }, { status: 201 });
   }
 
   const users = await prisma.user.findMany({ select: { id: true } });
   await prisma.notification.createMany({
     data: users.map((u) => ({ userId: u.id, title, body })),
+  });
+
+  await logAdminAction({
+    adminUserId: result.ctx.user.id,
+    action: "sendNotification",
+    metadata: { title, broadcast: true, sentTo: users.length },
   });
 
   return NextResponse.json({ sentTo: users.length }, { status: 201 });
