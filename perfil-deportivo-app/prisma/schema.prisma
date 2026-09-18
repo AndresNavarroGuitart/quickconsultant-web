@@ -68,7 +68,11 @@ model AthleteProfile {
   avatarUrl   String?
   coverUrl    String?
   location    String?
-  isPublic    Boolean  @default(true)
+  // Off por default: la pagina publica de /perfil/[slug] expone nombre,
+  // fotos y partidos, y muchos perfiles son de menores (subjectType
+  // DEPENDENT) -- tiene que ser un opt-in explicito del responsable, no
+  // algo que quede prendido solo.
+  isPublic    Boolean  @default(false)
 
   birthDate    DateTime? // fecha de cumpleaños
   position     String? // posicion general del deportista (distinta del rol por club)

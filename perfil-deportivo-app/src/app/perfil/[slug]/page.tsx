@@ -29,6 +29,9 @@ export async function generateMetadata({
   return {
     title,
     description,
+    // Pensada para compartir el link directo (familia, entrenador), no para
+    // que buscadores la indexen -- varios perfiles son de menores.
+    robots: { index: false, follow: false },
     openGraph: {
       title,
       description,

@@ -22,6 +22,8 @@ type Profile = {
   subjectType: "SELF" | "DEPENDENT";
   guardianName: string | null;
   guardianRelationship: string | null;
+  isPublic: boolean;
+  slug: string;
 };
 
 export default function ProfileForm({ profile }: { profile: Profile }) {
@@ -57,6 +59,7 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
   const [guardianRelationship, setGuardianRelationship] = useState(
     profile.guardianRelationship ?? ""
   );
+  const [isPublic, setIsPublic] = useState(profile.isPublic);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
@@ -79,6 +82,7 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
         heightCm: heightCm ? Number(heightCm) : null,
         country: country || null,
         jerseyNumber: jerseyNumber ? Number(jerseyNumber) : null,
+        isPublic,
         ...(profile.subjectType === "DEPENDENT"
           ? {
               subjectType: "DEPENDENT",
@@ -250,6 +254,39 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
           </div>
         </div>
       )}
+
+      <div className="flex flex-col gap-3 rounded-md border border-slate-200 bg-white p-3">
+        <label className="flex items-start gap-3">
+          <input
+            type="checkbox"
+            checked={isPublic}
+            onChange={(e) => setIsPublic(e.target.checked)}
+            className="mt-0.5 h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+          />
+          <span className="text-sm font-medium text-slate-700">
+            Hacer público este perfil
+          </span>
+        </label>
+        <p className="text-xs text-slate-500">
+          Si lo activás, cualquier persona que tenga el link va a poder ver
+          el nombre, la foto, los clubes, los partidos y las fotos de
+          partidos de este perfil, sin necesidad de iniciar sesión. La
+          página no aparece en buscadores como Google, pero el link
+          funciona para quien lo tenga.
+        </p>
+        {profile.subjectType === "DEPENDENT" && (
+          <p className="text-xs font-medium text-accent-700">
+            Este es el perfil de un menor a tu cargo: activalo solo si
+            estás de acuerdo en que ese contenido quede disponible para
+            cualquiera que reciba el link.
+          </p>
+        )}
+        {isPublic && (
+          <p className="text-xs text-slate-500">
+            Link: <span className="font-mono">/perfil/{profile.slug}</span>
+          </p>
+        )}
+      </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
       {saved && <p className="text-sm text-brand-600">Guardado.</p>}
