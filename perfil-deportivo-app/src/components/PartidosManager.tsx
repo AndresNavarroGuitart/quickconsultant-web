@@ -12,7 +12,7 @@ import { formatDateOnly } from "@/lib/format";
 
 type ClubOption = { id: string; name: string };
 
-type MatchResult = "WIN" | "LOSS" | "DRAW";
+type MatchResult = "WIN" | "LOSS" | "DRAW" | "NOT_STARTED";
 type MatchCondition = "LOCAL" | "VISITANTE";
 
 type MatchStats = Record<string, number | boolean> | null;
@@ -39,6 +39,7 @@ const RESULT_LABEL: Record<MatchResult, string> = {
   WIN: "Ganado",
   LOSS: "Perdido",
   DRAW: "Empate",
+  NOT_STARTED: "Sin iniciar",
 };
 
 export default function PartidosManager({
@@ -341,6 +342,7 @@ export default function PartidosManager({
               <option value="WIN">Ganado</option>
               <option value="LOSS">Perdido</option>
               <option value="DRAW">Empate</option>
+              <option value="NOT_STARTED">Sin iniciar</option>
             </select>
           </div>
 
@@ -539,7 +541,9 @@ export default function PartidosManager({
                           ? "text-brand-600"
                           : m.result === "LOSS"
                             ? "text-red-600"
-                            : "text-slate-500"
+                            : m.result === "NOT_STARTED"
+                              ? "text-slate-400"
+                              : "text-slate-500"
                       }
                     >
                       ({RESULT_LABEL[m.result]})

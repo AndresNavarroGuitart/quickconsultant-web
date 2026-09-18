@@ -154,6 +154,7 @@ enum MatchResult {
   WIN
   LOSS
   DRAW
+  NOT_STARTED
 }
 
 enum MatchCondition {

@@ -189,12 +189,17 @@ function MatchList({
     id: string;
     opponent: string;
     matchDate: Date;
-    result: "WIN" | "LOSS" | "DRAW";
+    result: "WIN" | "LOSS" | "DRAW" | "NOT_STARTED";
     pointsScored: number;
     club: { name: string } | null;
   }[];
 }) {
-  const resultLabel = { WIN: "Ganado", LOSS: "Perdido", DRAW: "Empate" } as const;
+  const resultLabel = {
+    WIN: "Ganado",
+    LOSS: "Perdido",
+    DRAW: "Empate",
+    NOT_STARTED: "Sin iniciar",
+  } as const;
 
   return (
     <div className="flex flex-col gap-2">
@@ -211,7 +216,9 @@ function MatchList({
                   ? "text-brand-600"
                   : m.result === "LOSS"
                     ? "text-red-600"
-                    : "text-slate-500"
+                    : m.result === "NOT_STARTED"
+                      ? "text-slate-400"
+                      : "text-slate-500"
               }
             >
               ({resultLabel[m.result]})

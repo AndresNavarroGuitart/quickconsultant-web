@@ -49,11 +49,13 @@ export default async function EstadisticasPage() {
         </div>
         <RecentFormStrip
           matches={matches
-            .slice(0, 5)
             // La consulta trae los partidos del mas nuevo al mas viejo
-            // (matchDate desc); acá se da vuelta ese recorte de 5 para que
-            // la tira se lea de fecha menor a mayor (el mas viejo de los 5
-            // a la izquierda, el mas reciente a la derecha).
+            // (matchDate desc); acá se da vuelta para que la tira se lea de
+            // fecha menor a mayor (el mas viejo a la izquierda, el mas
+            // reciente a la derecha). RecentFormStrip solo muestra los
+            // ultimos 5 de entrada y deja el resto scrolleable hacia la
+            // izquierda.
+            .slice()
             .reverse()
             .map((m) => ({
             id: m.id,

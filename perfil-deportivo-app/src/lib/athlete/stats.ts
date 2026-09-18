@@ -1,6 +1,6 @@
 import { getAllStatsForSport, type StatDef } from "@/lib/athlete/sportsCatalog";
 
-type MatchResult = "WIN" | "LOSS" | "DRAW";
+type MatchResult = "WIN" | "LOSS" | "DRAW" | "NOT_STARTED";
 
 export type MatchStatsValue = Record<string, number | boolean | null | undefined>;
 
@@ -19,14 +19,18 @@ export function computeMatchStats(
   matches: Pick<StatsMatchInput, "result" | "pointsScored">[]
 ) {
   const stats = {
-    matchesPlayed: matches.length,
+    matchesPlayed: 0,
     totalPoints: 0,
     wins: 0,
     losses: 0,
     draws: 0,
   };
 
+  // Los partidos "Sin iniciar" todavia no se jugaron: no cuentan como
+  // jugados ni suman a ganados/perdidos/empatados/puntos.
   for (const match of matches) {
+    if (match.result === "NOT_STARTED") continue;
+    stats.matchesPlayed += 1;
     stats.totalPoints += match.pointsScored;
     if (match.result === "WIN") stats.wins += 1;
     else if (match.result === "LOSS") stats.losses += 1;
@@ -49,10 +53,12 @@ export function computeDetailedStats(
   matches: StatsMatchInput[],
   sport: string | null | undefined
 ) {
-  const base = computeMatchStats(matches);
+  // Los partidos "Sin iniciar" no aportan minutos ni estadisticas todavia.
+  const played = matches.filter((m) => m.result !== "NOT_STARTED");
+  const base = computeMatchStats(played);
 
   let minutesPlayed = 0;
-  for (const match of matches) minutesPlayed += match.minutesPlayed ?? 0;
+  for (const match of played) minutesPlayed += match.minutesPlayed ?? 0;
 
   const defs = getAllStatsForSport(sport);
   const aggregated: AggregatedStat[] = [];
@@ -60,14 +66,14 @@ export function computeDetailedStats(
   for (const def of defs) {
     if (def.type === "boolean") {
       let count = 0;
-      for (const m of matches) if (m.stats?.[def.key] === true) count += 1;
+      for (const m of played) if (m.stats?.[def.key] === true) count += 1;
       if (count > 0) aggregated.push({ def, value: count });
       continue;
     }
 
     if (def.type === "percent") {
       const values: number[] = [];
-      for (const m of matches) {
+      for (const m of played) {
         const v = m.stats?.[def.key];
         if (typeof v === "number") values.push(v);
       }
@@ -80,7 +86,7 @@ export function computeDetailedStats(
 
     // number
     let sum = 0;
-    for (const m of matches) {
+    for (const m of played) {
       const v = m.stats?.[def.key];
       if (typeof v === "number") sum += v;
     }

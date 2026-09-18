@@ -15,7 +15,7 @@ export const matchSchema = z.object({
   opponent: z.string().trim().min(1).max(120),
   clubId: z.string().uuid().optional().nullable(),
   matchDate: z.coerce.date(),
-  result: z.enum(["WIN", "LOSS", "DRAW"]),
+  result: z.enum(["WIN", "LOSS", "DRAW", "NOT_STARTED"]),
   condition: z.enum(["LOCAL", "VISITANTE"]).optional().nullable(),
   pointsScored: z.coerce.number().int().min(0).max(10000).default(0),
   homeScore: z.coerce.number().int().min(0).max(1000).optional().nullable(),
