@@ -8,7 +8,12 @@ const supabaseOrigin = process.env.NEXT_PUBLIC_SUPABASE_URL
   : "";
 const isDev = process.env.NODE_ENV === "development";
 
-// La app no usa scripts de terceros (sin GTM/analytics) ni
+// Google Analytics (gtag.js) solo se carga en producción (ver layout.tsx) y
+// solo si esta env var esta definida -- el script viene de googletagmanager
+// y los hits de medicion van a google-analytics.com/analytics.google.com.
+const hasGA = !!process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+
+// La app no usa mas scripts de terceros que Google Analytics, ni
 // dangerouslySetInnerHTML en ningun lado, pero el propio Next.js App Router
 // necesita 'unsafe-inline' en script-src para sus scripts inline de
 // streaming/hidratacion cuando no se usa el esquema de nonces (que exige
@@ -17,11 +22,11 @@ const isDev = process.env.NODE_ENV === "development";
 // falta en desarrollo, para el overlay de errores de React.
 const cspHeader = `
   default-src 'self';
-  script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""};
+  script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${hasGA ? " https://www.googletagmanager.com" : ""};
   style-src 'self' 'unsafe-inline';
   img-src 'self' blob: data:${supabaseOrigin ? ` ${supabaseOrigin}` : ""};
   font-src 'self';
-  connect-src 'self'${supabaseOrigin ? ` ${supabaseOrigin}` : ""};
+  connect-src 'self'${supabaseOrigin ? ` ${supabaseOrigin}` : ""}${hasGA ? " https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com" : ""};
   object-src 'none';
   base-uri 'self';
   form-action 'self';
