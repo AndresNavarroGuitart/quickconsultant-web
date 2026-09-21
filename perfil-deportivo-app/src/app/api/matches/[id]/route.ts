@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { requireGatedProfile } from "@/lib/auth/requireGatedProfile";
 import { matchUpdateSchema } from "@/lib/validation/matchSchema";
-import { cleanStatsForPosition } from "@/lib/athlete/sportsCatalog";
+import {
+  cleanStatsForPosition,
+  validateStatConsistency,
+} from "@/lib/athlete/sportsCatalog";
 import { prisma } from "@/lib/prisma";
 
 async function loadOwned(id: string, athleteProfileId: string) {
@@ -34,19 +37,23 @@ export async function PATCH(
   const position =
     rest.position !== undefined ? rest.position : existing.position;
 
+  const cleanedStats =
+    stats !== undefined
+      ? cleanStatsForPosition(result.profile.sport, position, stats ?? null)
+      : undefined;
+
+  if (cleanedStats) {
+    const statsError = validateStatConsistency(result.profile.sport, position, cleanedStats);
+    if (statsError) {
+      return NextResponse.json({ error: statsError }, { status: 400 });
+    }
+  }
+
   const match = await prisma.match.update({
     where: { id },
     data: {
       ...rest,
-      ...(stats !== undefined
-        ? {
-            stats: cleanStatsForPosition(
-              result.profile.sport,
-              position,
-              stats ?? null
-            ),
-          }
-        : {}),
+      ...(cleanedStats !== undefined ? { stats: cleanedStats } : {}),
     },
     include: { club: true },
   });

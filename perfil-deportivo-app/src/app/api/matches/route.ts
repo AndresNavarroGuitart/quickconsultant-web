@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import { requireGatedProfile } from "@/lib/auth/requireGatedProfile";
 import { matchSchema } from "@/lib/validation/matchSchema";
 import { computeMatchStats } from "@/lib/athlete/stats";
-import { cleanStatsForPosition } from "@/lib/athlete/sportsCatalog";
+import {
+  cleanStatsForPosition,
+  validateStatConsistency,
+} from "@/lib/athlete/sportsCatalog";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
@@ -33,6 +36,11 @@ export async function POST(request: Request) {
     position,
     parsed.data.stats ?? null
   );
+
+  const statsError = validateStatConsistency(result.profile.sport, position, stats);
+  if (statsError) {
+    return NextResponse.json({ error: statsError }, { status: 400 });
+  }
 
   const match = await prisma.match.create({
     data: {

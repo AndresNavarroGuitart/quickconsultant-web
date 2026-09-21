@@ -3,9 +3,11 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  computedStatValue,
   getPositions,
   getStatsForPosition,
   positionLabel,
+  validateStatConsistency,
 } from "@/lib/athlete/sportsCatalog";
 import MatchPhotos from "@/components/MatchPhotos";
 import { formatDateOnly } from "@/lib/format";
@@ -77,6 +79,25 @@ export default function PartidosManager({
 
   const activeStatFields = getStatsForPosition(sport, position);
 
+  // Valores numericos ya tipeados en el form, para mostrar en vivo las
+  // estadisticas calculadas (ej. % de pases correctos).
+  const liveStats: Record<string, number> = {};
+  for (const [key, raw] of Object.entries(statValues)) {
+    if (raw !== "" && !Number.isNaN(Number(raw))) liveStats[key] = Number(raw);
+  }
+
+  // Campeonatos ya cargados en partidos anteriores de este perfil (los
+  // partidos vienen del mas nuevo al mas viejo, asi que el orden queda por
+  // uso mas reciente). Se ofrecen como sugerencia en el campo Campeonato.
+  const championshipSuggestions: string[] = [];
+  const seenChampionships = new Set<string>();
+  for (const m of initialMatches) {
+    const name = m.championship?.trim();
+    if (!name || seenChampionships.has(name.toLowerCase())) continue;
+    seenChampionships.add(name.toLowerCase());
+    championshipSuggestions.push(name);
+  }
+
   function handlePositionChange(value: string) {
     setPosition(value);
     setStatValues({});
@@ -121,6 +142,7 @@ export default function PartidosManager({
     const values: Record<string, string> = {};
     const booleans: Record<string, boolean> = {};
     for (const field of fields) {
+      if (field.formula) continue;
       const value = m.stats?.[field.key];
       if (field.type === "boolean") {
         booleans[field.key] = value === true;
@@ -145,10 +167,9 @@ export default function PartidosManager({
       return;
     }
 
-    setSaving(true);
-
     const stats: Record<string, number | boolean> = {};
     for (const field of activeStatFields) {
+      if (field.formula) continue;
       if (field.type === "boolean") {
         if (statBooleans[field.key]) stats[field.key] = true;
       } else {
@@ -158,6 +179,14 @@ export default function PartidosManager({
         }
       }
     }
+
+    const consistencyError = validateStatConsistency(sport, position, stats);
+    if (consistencyError) {
+      setError(consistencyError);
+      return;
+    }
+
+    setSaving(true);
 
     const res = await fetch(
       editingId ? `/api/matches/${editingId}` : "/api/matches",
@@ -277,9 +306,16 @@ export default function PartidosManager({
             <input
               value={championship}
               onChange={(e) => setChampionship(e.target.value)}
+              list="championship-suggestions"
+              autoComplete="off"
               placeholder="Torneo Apertura, Liga local..."
               className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
+            <datalist id="championship-suggestions">
+              {championshipSuggestions.map((name) => (
+                <option key={name} value={name} />
+              ))}
+            </datalist>
           </div>
 
           <div className="flex flex-col gap-1">
@@ -409,7 +445,23 @@ export default function PartidosManager({
               </p>
               <div className="grid gap-3 sm:grid-cols-3">
                 {activeStatFields.map((field) =>
-                  field.type === "boolean" ? (
+                  field.formula ? (
+                    <div key={field.key} className="flex flex-col gap-1">
+                      <span className="text-xs font-medium text-slate-500">
+                        {field.label}
+                      </span>
+                      <div className="rounded-md border border-dashed border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-600">
+                        {(() => {
+                          const value = computedStatValue(field, liveStats);
+                          if (value === null) return "—";
+                          return field.type === "percent" ? `${value}%` : value;
+                        })()}
+                      </div>
+                      <span className="text-[10px] text-slate-400">
+                        Se calcula solo
+                      </span>
+                    </div>
+                  ) : field.type === "boolean" ? (
                     <label
                       key={field.key}
                       className="flex items-center gap-2 text-sm text-slate-700 sm:col-span-3"
@@ -493,17 +545,20 @@ export default function PartidosManager({
         {initialMatches.map((m) => {
           const fields = getStatsForPosition(sport, m.position);
           const summary = fields
-            .filter((f) => {
+            .map((f) => {
+              if (f.formula) {
+                const value = computedStatValue(f, m.stats);
+                return value === null
+                  ? null
+                  : `${f.label}: ${value}${f.type === "percent" ? "%" : ""}`;
+              }
               const value = m.stats?.[f.key];
-              return f.type === "boolean"
-                ? value === true
-                : typeof value === "number";
+              if (f.type === "boolean") return value === true ? f.label : null;
+              return typeof value === "number"
+                ? `${f.label}: ${value}${f.type === "percent" ? "%" : ""}`
+                : null;
             })
-            .map((f) =>
-              f.type === "boolean"
-                ? f.label
-                : `${f.label}: ${m.stats?.[f.key]}${f.type === "percent" ? "%" : ""}`
-            )
+            .filter((s): s is string => s !== null)
             .join(" · ");
 
           return (

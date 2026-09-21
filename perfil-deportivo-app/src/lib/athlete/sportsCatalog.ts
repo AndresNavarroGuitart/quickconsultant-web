@@ -8,7 +8,23 @@
 
 export type StatType = "number" | "boolean" | "percent";
 
-export type StatDef = { key: string; label: string; type: StatType };
+// Formula de una estadistica calculada: no se carga a mano ni se guarda en
+// Match.stats, se deriva de otras stats de la misma posicion.
+//  - sum: suma de las stats indicadas.
+//  - percent: (suma de `part` / suma de `whole`) * 100.
+export type StatFormula =
+  | { kind: "sum"; of: string[] }
+  | { kind: "percent"; part: string[]; whole: string[] };
+
+export type StatDef = {
+  key: string;
+  label: string;
+  type: StatType;
+  formula?: StatFormula;
+  // Key de otra stat de la misma posicion que este valor no puede superar
+  // (ej. "ganados" <= "disputados").
+  atMost?: string;
+};
 export type PositionDef = { key: string; label: string; stats: StatDef[] };
 export type SportDef = { key: string; label: string; positions: PositionDef[] };
 
@@ -78,6 +94,68 @@ export const SPORTS: SportDef[] = [
         "label": "Defensor Central",
         "stats": [
           {
+            "key": "pases_intentados",
+            "label": "Pases intentados",
+            "type": "number"
+          },
+          {
+            "key": "pases_correctos",
+            "label": "Pases correctos",
+            "type": "number",
+            "atMost": "pases_intentados"
+          },
+          {
+            "key": "de_pases_correctos",
+            "label": "% de pases correctos",
+            "type": "percent",
+            "formula": {
+              "kind": "percent",
+              "part": ["pases_correctos"],
+              "whole": ["pases_intentados"]
+            }
+          },
+          {
+            "key": "duelos_terrestres_disputados",
+            "label": "Duelos terrestres disputados",
+            "type": "number"
+          },
+          {
+            "key": "duelos_terrestres_ganados",
+            "label": "Duelos terrestres ganados",
+            "type": "number",
+            "atMost": "duelos_terrestres_disputados"
+          },
+          {
+            "key": "duelos_aereos_disputados",
+            "label": "Duelos aéreos disputados",
+            "type": "number"
+          },
+          {
+            "key": "duelos_aereos_ganados",
+            "label": "Duelos aéreos ganados",
+            "type": "number",
+            "atMost": "duelos_aereos_disputados"
+          },
+          {
+            "key": "duelos_totales_ganados_calc",
+            "label": "Duelos totales ganados",
+            "type": "number",
+            "formula": {
+              "kind": "sum",
+              "of": ["duelos_terrestres_ganados", "duelos_aereos_ganados"]
+            }
+          },
+          {
+            "key": "de_duelos_ganados",
+            "label": "% de duelos ganados",
+            "type": "percent",
+            "formula": {
+              "kind": "percent",
+              "part": ["duelos_terrestres_ganados", "duelos_aereos_ganados"],
+              "whole": ["duelos_terrestres_disputados", "duelos_aereos_disputados"]
+            }
+          },
+          {
             "key": "intercepciones",
             "label": "Intercepciones",
             "type": "number"
@@ -85,16 +163,6 @@ export const SPORTS: SportDef[] = [
           {
             "key": "despejes",
             "label": "Despejes",
-            "type": "number"
-          },
-          {
-            "key": "duelos_aereos_ganados",
-            "label": "Duelos aéreos ganados",
-            "type": "number"
-          },
-          {
-            "key": "duelos_totales_ganados",
-            "label": "Duelos totales ganados",
             "type": "number"
           },
           {
@@ -1397,6 +1465,8 @@ export function cleanStatsForPosition(
   const out: Record<string, number | boolean> = {};
   if (!raw) return out;
   for (const def of getStatsForPosition(sport, position)) {
+    // Las calculadas nunca se guardan: se derivan al mostrarlas.
+    if (def.formula) continue;
     const v = raw[def.key];
     if (def.type === "boolean") {
       if (v === true) out[def.key] = true;
@@ -1405,4 +1475,55 @@ export function cleanStatsForPosition(
     }
   }
   return out;
+}
+
+type StatsRecord = Record<string, number | boolean | null | undefined>;
+
+function numberOf(stats: StatsRecord | null | undefined, key: string): number | undefined {
+  const v = stats?.[key];
+  return typeof v === "number" ? v : undefined;
+}
+
+// Valor de una estadistica calculada para UN partido. Devuelve null si no
+// hay datos suficientes (ej. no se cargaron los intentos, o son 0).
+export function computedStatValue(
+  def: StatDef,
+  stats: StatsRecord | null | undefined
+): number | null {
+  const f = def.formula;
+  if (!f) return null;
+
+  if (f.kind === "sum") {
+    const parts = f.of.map((k) => numberOf(stats, k)).filter((v): v is number => v !== undefined);
+    return parts.length > 0 ? parts.reduce((a, b) => a + b, 0) : null;
+  }
+
+  const wholeParts = f.whole.map((k) => numberOf(stats, k)).filter((v): v is number => v !== undefined);
+  if (wholeParts.length === 0) return null;
+  const whole = wholeParts.reduce((a, b) => a + b, 0);
+  if (whole <= 0) return null;
+  const part = f.part.reduce((sum, k) => sum + (numberOf(stats, k) ?? 0), 0);
+  return Math.round(Math.min((part / whole) * 100, 100) * 10) / 10;
+}
+
+// Valida que ninguna stat supere a la que la limita (atMost), ej. pases
+// correctos <= pases intentados. Devuelve el mensaje de error, o null si
+// esta todo bien. Se usa en el form (feedback inmediato) y en la API.
+export function validateStatConsistency(
+  sport: string | null | undefined,
+  position: string | null | undefined,
+  stats: Record<string, unknown> | null | undefined
+): string | null {
+  if (!stats) return null;
+  const defs = getStatsForPosition(sport, position);
+  for (const def of defs) {
+    if (!def.atMost) continue;
+    const value = stats[def.key];
+    const limit = stats[def.atMost];
+    if (typeof value === "number" && typeof limit === "number" && value > limit) {
+      const limitLabel = defs.find((d) => d.key === def.atMost)?.label ?? def.atMost;
+      return `${def.label} no puede ser mayor que ${limitLabel.toLowerCase()}.`;
+    }
+  }
+  return null;
 }

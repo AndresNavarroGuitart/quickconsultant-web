@@ -64,6 +64,51 @@ export function computeDetailedStats(
   const aggregated: AggregatedStat[] = [];
 
   for (const def of defs) {
+    // Estadisticas calculadas: se derivan de los componentes acumulados (ej.
+    // % de pases = total correctos / total intentados), no de promediar los
+    // porcentajes de cada partido, que le daria el mismo peso a un partido
+    // de 10 pases que a uno de 60.
+    const formula = def.formula;
+    if (formula) {
+      if (formula.kind === "sum") {
+        let sum = 0;
+        for (const m of played) {
+          for (const k of formula.of) {
+            const v = m.stats?.[k];
+            if (typeof v === "number") sum += v;
+          }
+        }
+        if (sum > 0) aggregated.push({ def, value: sum });
+      } else {
+        let part = 0;
+        let whole = 0;
+        for (const m of played) {
+          let matchWhole = 0;
+          let hasWhole = false;
+          for (const k of formula.whole) {
+            const v = m.stats?.[k];
+            if (typeof v === "number") {
+              matchWhole += v;
+              hasWhole = true;
+            }
+          }
+          if (!hasWhole) continue;
+          whole += matchWhole;
+          for (const k of formula.part) {
+            const v = m.stats?.[k];
+            if (typeof v === "number") part += v;
+          }
+        }
+        if (whole > 0) {
+          aggregated.push({
+            def,
+            value: Math.round(Math.min((part / whole) * 100, 100) * 10) / 10,
+          });
+        }
+      }
+      continue;
+    }
+
     if (def.type === "boolean") {
       let count = 0;
       for (const m of played) if (m.stats?.[def.key] === true) count += 1;
