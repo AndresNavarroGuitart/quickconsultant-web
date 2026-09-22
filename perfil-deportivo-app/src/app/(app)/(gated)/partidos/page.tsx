@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/auth/getSessionContext";
 import { prisma } from "@/lib/prisma";
 import PartidosManager from "@/components/PartidosManager";
+import { canUseLive } from "@/lib/athlete/liveActions";
 
 export default async function PartidosPage() {
   const ctx = await getSessionContext();
@@ -28,6 +29,7 @@ export default async function PartidosPage() {
       <h1 className="text-2xl font-semibold text-slate-900">Partidos</h1>
       <PartidosManager
         sport={profile.sport}
+        liveEnabled={canUseLive(profile.sport, profile.position)}
         initialMatches={matches.map((m) => ({
           id: m.id,
           opponent: m.opponent,

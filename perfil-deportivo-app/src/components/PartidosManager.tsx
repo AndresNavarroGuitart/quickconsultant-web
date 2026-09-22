@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   computedStatValue,
@@ -48,10 +49,12 @@ export default function PartidosManager({
   initialMatches,
   clubOptions,
   sport,
+  liveEnabled = false,
 }: {
   initialMatches: Match[];
   clubOptions: ClubOption[];
   sport: string | null;
+  liveEnabled?: boolean;
 }) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
@@ -244,13 +247,23 @@ export default function PartidosManager({
   return (
     <div className="flex flex-col gap-6">
       {!showForm && (
-        <button
-          type="button"
-          onClick={() => setShowForm(true)}
-          className="self-start rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
-        >
-          Agregar partido
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setShowForm(true)}
+            className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+          >
+            Agregar partido
+          </button>
+          {liveEnabled && (
+            <Link
+              href="/partidos/en-vivo"
+              className="rounded-md border border-brand-600 px-4 py-2 text-sm font-medium text-brand-700 hover:bg-brand-50"
+            >
+              Registrar en vivo
+            </Link>
+          )}
+        </div>
       )}
 
       {showForm && (
