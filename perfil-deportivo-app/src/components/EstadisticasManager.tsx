@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { computeDetailedStats, type StatsMatchInput } from "@/lib/athlete/stats";
 import { formatDateOnly } from "@/lib/format";
+import MatchResultDonut from "@/components/MatchResultDonut";
 
 type MatchRow = StatsMatchInput & {
   id: string;
@@ -130,35 +131,28 @@ export default function EstadisticasManager({
         </button>
       )}
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatTile label="Partidos jugados" value={stats.matchesPlayed} />
-        <StatTile label="Puntos totales" value={stats.totalPoints} />
-        <StatTile label="Ganados" value={stats.wins} />
-        <StatTile label="Empatados" value={stats.draws} />
-        <StatTile label="Perdidos" value={stats.losses} />
-        <StatTile label="Minutos jugados" value={stats.minutesPlayed} />
-      </div>
+      <MatchResultDonut wins={stats.wins} draws={stats.draws} losses={stats.losses} />
 
-      {stats.aggregated.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium text-slate-700">
-            Estadísticas detalladas
-          </p>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {stats.aggregated.map((a) => (
-              <StatTile
-                key={a.def.key}
-                label={
-                  a.def.type === "boolean"
-                    ? `${a.def.label} (veces)`
-                    : a.def.label
-                }
-                value={a.def.type === "percent" ? `${a.value}%` : a.value}
-              />
-            ))}
-          </div>
+      <div className="flex flex-col gap-2">
+        <p className="text-sm font-medium text-slate-700">
+          Estadísticas detalladas
+        </p>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <StatTile label="Puntos totales" value={stats.totalPoints} />
+          <StatTile label="Minutos jugados" value={stats.minutesPlayed} />
+          {stats.aggregated.map((a) => (
+            <StatTile
+              key={a.def.key}
+              label={
+                a.def.type === "boolean"
+                  ? `${a.def.label} (veces)`
+                  : a.def.label
+              }
+              value={a.def.type === "percent" ? `${a.value}%` : a.value}
+            />
+          ))}
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -269,9 +263,9 @@ function StatTile({
   value: number | string;
 }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-4">
-      <p className="text-xs text-slate-500">{label}</p>
-      <p className="text-2xl font-semibold text-brand-700">{value}</p>
+    <div className="rounded-md border border-slate-200 bg-white p-2.5">
+      <p className="text-[11px] leading-tight text-slate-500">{label}</p>
+      <p className="text-xl font-semibold text-brand-700">{value}</p>
     </div>
   );
 }
