@@ -14,7 +14,10 @@ export type StatType = "number" | "boolean" | "percent";
 //  - percent: (suma de `part` / suma de `whole`) * 100.
 export type StatFormula =
   | { kind: "sum"; of: string[] }
-  | { kind: "percent"; part: string[]; whole: string[] };
+  | { kind: "percent"; part: string[]; whole: string[] }
+  // true si esa stat vale 0 en el partido (ej. valla invicta = 0 goles
+  // recibidos). null si esa stat no se cargo en el partido.
+  | { kind: "zero"; of: string };
 
 export type StatDef = {
   key: string;
@@ -28,6 +31,111 @@ export type StatDef = {
 export type PositionDef = { key: string; label: string; stats: StatDef[] };
 export type SportDef = { key: string; label: string; positions: PositionDef[] };
 
+// Estadisticas de jugador de campo (Futbol): mismo set para Defensor
+// Central, Lateral, Mediocampista, Enganche y Delantero (antes tenian
+// estadisticas distintas por posicion; se unifico a pedido para que el
+// registro en vivo y el form manual se comporten igual en cualquier
+// posicion de campo).
+const FUTBOL_JUGADOR_DE_CAMPO_STATS: StatDef[] = [
+  {
+    "key": "pases_intentados",
+    "label": "Pases intentados",
+    "type": "number"
+  },
+  {
+    "key": "pases_correctos",
+    "label": "Pases correctos",
+    "type": "number",
+    "atMost": "pases_intentados"
+  },
+  {
+    "key": "de_pases_correctos",
+    "label": "% de pases correctos",
+    "type": "percent",
+    "formula": {
+      "kind": "percent",
+      "part": ["pases_correctos"],
+      "whole": ["pases_intentados"]
+    }
+  },
+  {
+    "key": "duelos_terrestres_disputados",
+    "label": "Duelos terrestres disputados",
+    "type": "number"
+  },
+  {
+    "key": "duelos_terrestres_ganados",
+    "label": "Duelos terrestres ganados",
+    "type": "number",
+    "atMost": "duelos_terrestres_disputados"
+  },
+  {
+    "key": "duelos_aereos_disputados",
+    "label": "Duelos aéreos disputados",
+    "type": "number"
+  },
+  {
+    "key": "duelos_aereos_ganados",
+    "label": "Duelos aéreos ganados",
+    "type": "number",
+    "atMost": "duelos_aereos_disputados"
+  },
+  {
+    "key": "duelos_totales_ganados_calc",
+    "label": "Duelos totales ganados",
+    "type": "number",
+    "formula": {
+      "kind": "sum",
+      "of": ["duelos_terrestres_ganados", "duelos_aereos_ganados"]
+    }
+  },
+  {
+    "key": "de_duelos_ganados",
+    "label": "% de duelos ganados",
+    "type": "percent",
+    "formula": {
+      "kind": "percent",
+      "part": ["duelos_terrestres_ganados", "duelos_aereos_ganados"],
+      "whole": ["duelos_terrestres_disputados", "duelos_aereos_disputados"]
+    }
+  },
+  {
+    "key": "intercepciones",
+    "label": "Intercepciones",
+    "type": "number"
+  },
+  {
+    "key": "despejes",
+    "label": "Despejes",
+    "type": "number"
+  },
+  {
+    "key": "goles",
+    "label": "Goles",
+    "type": "number"
+  },
+  {
+    "key": "asistencias",
+    "label": "Asistencias",
+    "type": "number"
+  },
+  {
+    "key": "gambetas",
+    "label": "Gambetas",
+    "type": "number"
+  },
+  {
+    "key": "tarjetas_amarillas",
+    "label": "Tarjetas amarillas",
+    "type": "number"
+  },
+  {
+    "key": "tarjetas_rojas",
+    "label": "Tarjetas rojas",
+    "type": "number"
+  }
+];
+
 export const SPORTS: SportDef[] = [
   {
     "key": "futbol",
@@ -38,14 +146,25 @@ export const SPORTS: SportDef[] = [
         "label": "Arquero",
         "stats": [
           {
-            "key": "arco_en_cero",
-            "label": "Arco en cero",
-            "type": "boolean"
+            "key": "llegadas",
+            "label": "Llegadas",
+            "type": "number"
           },
           {
             "key": "atajadas",
             "label": "Atajadas",
-            "type": "number"
+            "type": "number",
+            "atMost": "llegadas"
+          },
+          {
+            "key": "de_atajadas",
+            "label": "% de atajadas",
+            "type": "percent",
+            "formula": {
+              "kind": "percent",
+              "part": ["atajadas"],
+              "whole": ["llegadas"]
+            }
           },
           {
             "key": "mano_a_mano",
@@ -65,261 +184,64 @@ export const SPORTS: SportDef[] = [
           {
             "key": "penales_atajados",
             "label": "Penales atajados",
-            "type": "number"
+            "type": "number",
+            "atMost": "penales_recibidos"
           },
           {
-            "key": "vallas_invictas",
-            "label": "Vallas invictas",
-            "type": "number"
-          },
-          {
-            "key": "de_atajadas",
-            "label": "% de atajadas",
-            "type": "percent"
+            "key": "de_penales",
+            "label": "% de penales atajados",
+            "type": "percent",
+            "formula": {
+              "kind": "percent",
+              "part": ["penales_atajados"],
+              "whole": ["penales_recibidos"]
+            }
           },
           {
             "key": "salidas_aereas",
-            "label": "Salidas aéreas",
+            "label": "Despejes aéreos",
             "type": "number"
           },
           {
             "key": "pases_completados",
             "label": "Pases completados",
             "type": "number"
+          },
+          {
+            "key": "valla_invicta",
+            "label": "Valla invicta",
+            "type": "boolean",
+            "formula": {
+              "kind": "zero",
+              "of": "goles_recibidos"
+            }
           }
         ]
       },
       {
         "key": "defensor_central",
         "label": "Defensor Central",
-        "stats": [
-          {
-            "key": "pases_intentados",
-            "label": "Pases intentados",
-            "type": "number"
-          },
-          {
-            "key": "pases_correctos",
-            "label": "Pases correctos",
-            "type": "number",
-            "atMost": "pases_intentados"
-          },
-          {
-            "key": "de_pases_correctos",
-            "label": "% de pases correctos",
-            "type": "percent",
-            "formula": {
-              "kind": "percent",
-              "part": ["pases_correctos"],
-              "whole": ["pases_intentados"]
-            }
-          },
-          {
-            "key": "duelos_terrestres_disputados",
-            "label": "Duelos terrestres disputados",
-            "type": "number"
-          },
-          {
-            "key": "duelos_terrestres_ganados",
-            "label": "Duelos terrestres ganados",
-            "type": "number",
-            "atMost": "duelos_terrestres_disputados"
-          },
-          {
-            "key": "duelos_aereos_disputados",
-            "label": "Duelos aéreos disputados",
-            "type": "number"
-          },
-          {
-            "key": "duelos_aereos_ganados",
-            "label": "Duelos aéreos ganados",
-            "type": "number",
-            "atMost": "duelos_aereos_disputados"
-          },
-          {
-            "key": "duelos_totales_ganados_calc",
-            "label": "Duelos totales ganados",
-            "type": "number",
-            "formula": {
-              "kind": "sum",
-              "of": ["duelos_terrestres_ganados", "duelos_aereos_ganados"]
-            }
-          },
-          {
-            "key": "de_duelos_ganados",
-            "label": "% de duelos ganados",
-            "type": "percent",
-            "formula": {
-              "kind": "percent",
-              "part": ["duelos_terrestres_ganados", "duelos_aereos_ganados"],
-              "whole": ["duelos_terrestres_disputados", "duelos_aereos_disputados"]
-            }
-          },
-          {
-            "key": "intercepciones",
-            "label": "Intercepciones",
-            "type": "number"
-          },
-          {
-            "key": "despejes",
-            "label": "Despejes",
-            "type": "number"
-          },
-          {
-            "key": "goles",
-            "label": "Goles",
-            "type": "number"
-          },
-          {
-            "key": "asistencias",
-            "label": "Asistencias",
-            "type": "number"
-          }
-        ]
+        "stats": FUTBOL_JUGADOR_DE_CAMPO_STATS
       },
       {
         "key": "lateral",
         "label": "Lateral",
-        "stats": [
-          {
-            "key": "centros",
-            "label": "Centros",
-            "type": "number"
-          },
-          {
-            "key": "asistencias",
-            "label": "Asistencias",
-            "type": "number"
-          },
-          {
-            "key": "recuperaciones",
-            "label": "Recuperaciones",
-            "type": "number"
-          },
-          {
-            "key": "duelos_ganados",
-            "label": "Duelos ganados",
-            "type": "number"
-          },
-          {
-            "key": "pases_completados",
-            "label": "Pases completados",
-            "type": "number"
-          },
-          {
-            "key": "goles",
-            "label": "Goles",
-            "type": "number"
-          }
-        ]
+        "stats": FUTBOL_JUGADOR_DE_CAMPO_STATS
       },
       {
         "key": "mediocampista",
         "label": "Mediocampista",
-        "stats": [
-          {
-            "key": "pases_completados",
-            "label": "Pases completados",
-            "type": "number"
-          },
-          {
-            "key": "recuperaciones",
-            "label": "Recuperaciones",
-            "type": "number"
-          },
-          {
-            "key": "asistencias",
-            "label": "Asistencias",
-            "type": "number"
-          },
-          {
-            "key": "goles",
-            "label": "Goles",
-            "type": "number"
-          },
-          {
-            "key": "faltas_cometidas",
-            "label": "Faltas cometidas",
-            "type": "number"
-          },
-          {
-            "key": "faltas_recibidas",
-            "label": "Faltas recibidas",
-            "type": "number"
-          }
-        ]
+        "stats": FUTBOL_JUGADOR_DE_CAMPO_STATS
       },
       {
         "key": "enganche",
         "label": "Enganche",
-        "stats": [
-          {
-            "key": "asistencias",
-            "label": "Asistencias",
-            "type": "number"
-          },
-          {
-            "key": "pases_clave",
-            "label": "Pases clave",
-            "type": "number"
-          },
-          {
-            "key": "goles",
-            "label": "Goles",
-            "type": "number"
-          },
-          {
-            "key": "gambetas_exitosos",
-            "label": "Gambetas exitosos",
-            "type": "number"
-          },
-          {
-            "key": "ocasiones_creadas",
-            "label": "Ocasiones creadas",
-            "type": "number"
-          }
-        ]
+        "stats": FUTBOL_JUGADOR_DE_CAMPO_STATS
       },
       {
         "key": "delantero",
         "label": "Delantero",
-        "stats": [
-          {
-            "key": "goles",
-            "label": "Goles",
-            "type": "number"
-          },
-          {
-            "key": "asistencias",
-            "label": "Asistencias",
-            "type": "number"
-          },
-          {
-            "key": "tiros_al_arco",
-            "label": "Tiros al arco",
-            "type": "number"
-          },
-          {
-            "key": "de_conversion",
-            "label": "% de conversión",
-            "type": "percent"
-          },
-          {
-            "key": "gambetas_exitosas",
-            "label": "Gambetas exitosas",
-            "type": "number"
-          },
-          {
-            "key": "offsides",
-            "label": "Offsides",
-            "type": "number"
-          },
-          {
-            "key": "cabezasos",
-            "label": "Cabezasos",
-            "type": "number"
-          }
-        ]
+        "stats": FUTBOL_JUGADOR_DE_CAMPO_STATS
       }
     ]
   },
@@ -1489,13 +1411,18 @@ function numberOf(stats: StatsRecord | null | undefined, key: string): number | 
 export function computedStatValue(
   def: StatDef,
   stats: StatsRecord | null | undefined
-): number | null {
+): number | boolean | null {
   const f = def.formula;
   if (!f) return null;
 
   if (f.kind === "sum") {
     const parts = f.of.map((k) => numberOf(stats, k)).filter((v): v is number => v !== undefined);
     return parts.length > 0 ? parts.reduce((a, b) => a + b, 0) : null;
+  }
+
+  if (f.kind === "zero") {
+    const v = numberOf(stats, f.of);
+    return v === undefined ? null : v === 0;
   }
 
   const wholeParts = f.whole.map((k) => numberOf(stats, k)).filter((v): v is number => v !== undefined);

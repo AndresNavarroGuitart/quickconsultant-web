@@ -467,6 +467,7 @@ export default function PartidosManager({
                         {(() => {
                           const value = computedStatValue(field, liveStats);
                           if (value === null) return "—";
+                          if (field.type === "boolean") return value ? "Sí" : "No";
                           return field.type === "percent" ? `${value}%` : value;
                         })()}
                       </div>
@@ -561,9 +562,9 @@ export default function PartidosManager({
             .map((f) => {
               if (f.formula) {
                 const value = computedStatValue(f, m.stats);
-                return value === null
-                  ? null
-                  : `${f.label}: ${value}${f.type === "percent" ? "%" : ""}`;
+                if (value === null) return null;
+                if (f.type === "boolean") return value ? f.label : null;
+                return `${f.label}: ${value}${f.type === "percent" ? "%" : ""}`;
               }
               const value = m.stats?.[f.key];
               if (f.type === "boolean") return value === true ? f.label : null;

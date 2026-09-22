@@ -144,6 +144,38 @@ function ActionIcon({ name }: { name: LiveIcon }) {
       {name === "star" && (
         <path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5l-5.4 3 1.2-6L3.3 9.3l6.1-.7L12 3z" />
       )}
+      {name === "dribble" && (
+        <>
+          <path d="M3.5 18c3.5-1 3.5-4.5 0-5.5s-3.5-4.5 0-5.5c3.2-.9 5.7 1 8.8.3" />
+          <circle cx="18.5" cy="6.3" r="2.1" className="fill-current" stroke="none" />
+        </>
+      )}
+      {name === "card_yellow" && (
+        <rect
+          x="7"
+          y="3"
+          width="10"
+          height="14"
+          rx="1.6"
+          transform="rotate(-8 12 10)"
+          fill="#eab308"
+          stroke="#854d0e"
+          strokeWidth={1.2}
+        />
+      )}
+      {name === "card_red" && (
+        <rect
+          x="7"
+          y="3"
+          width="10"
+          height="14"
+          rx="1.6"
+          transform="rotate(-8 12 10)"
+          fill="#dc2626"
+          stroke="#7f1d1d"
+          strokeWidth={1.2}
+        />
+      )}
     </svg>
   );
 }
@@ -287,7 +319,15 @@ function StatRows({
       {defs.map((def) => {
         const value = def.formula ? computedStatValue(def, totals) : (totals[def.key] ?? 0);
         const shown =
-          value === null ? "—" : def.type === "percent" ? `${value}%` : String(value);
+          value === null
+            ? "—"
+            : def.type === "boolean"
+              ? value
+                ? "Sí"
+                : "No"
+              : def.type === "percent"
+                ? `${value}%`
+                : String(value);
         return (
           <div
             key={def.key}
@@ -486,7 +526,6 @@ export default function LiveMatchTracker({
   }
 
   const actions = getLiveActions(sport, draft.position) ?? [];
-  const actionById = new Map(actions.map((a) => [a.id, a]));
   const counts: Record<string, number> = {};
   for (const id of draft.events) counts[id] = (counts[id] ?? 0) + 1;
   const totals = liveTotals(sport, draft.position, draft.events);
@@ -551,13 +590,6 @@ export default function LiveMatchTracker({
       return { ...d, events };
     });
     flash(`−1 ${action.label}`);
-  }
-
-  function undo() {
-    const last = draft.events[draft.events.length - 1];
-    if (!last) return;
-    setDraft((d) => ({ ...d, events: d.events.slice(0, -1) }));
-    flash(`Se deshizo: ${actionById.get(last)?.label ?? "última acción"}`);
   }
 
   function goalDelta(side: "home" | "away", delta: number) {
@@ -959,7 +991,10 @@ export default function LiveMatchTracker({
           />
         ))}
       </div>
-      <div className="grid grid-cols-4 gap-1.5 pt-1">
+      <div
+        className="grid gap-1.5 pt-1"
+        style={{ gridTemplateColumns: `repeat(${smallActions.length}, minmax(0, 1fr))` }}
+      >
         {smallActions.map((a) => (
           <ActionTile
             key={a.id}
@@ -970,15 +1005,6 @@ export default function LiveMatchTracker({
           />
         ))}
       </div>
-
-      <button
-        type="button"
-        onClick={undo}
-        disabled={draft.events.length === 0}
-        className="touch-manipulation rounded-2xl border border-slate-200 bg-white py-3 text-[13.5px] font-bold text-slate-900 disabled:opacity-45"
-      >
-        ↶ Deshacer última acción
-      </button>
 
       <details open className="rounded-2xl border border-slate-200 bg-white">
         <summary className="cursor-pointer list-none px-3.5 py-3 text-sm font-extrabold">

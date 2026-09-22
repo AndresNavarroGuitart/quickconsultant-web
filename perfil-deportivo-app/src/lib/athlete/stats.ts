@@ -79,6 +79,13 @@ export function computeDetailedStats(
           }
         }
         if (sum > 0) aggregated.push({ def, value: sum });
+      } else if (formula.kind === "zero") {
+        let count = 0;
+        for (const m of played) {
+          const v = m.stats?.[formula.of];
+          if (typeof v === "number" && v === 0) count += 1;
+        }
+        if (count > 0) aggregated.push({ def, value: count });
       } else {
         let part = 0;
         let whole = 0;
