@@ -258,7 +258,7 @@ export default function PartidosManager({
           {liveEnabled && (
             <Link
               href="/partidos/en-vivo"
-              className="rounded-md border border-brand-600 px-4 py-2 text-sm font-medium text-brand-700 hover:bg-brand-50"
+              className="rounded-md bg-accent-500 px-4 py-2 text-sm font-bold text-white hover:bg-accent-600"
             >
               Registrar en vivo
             </Link>
