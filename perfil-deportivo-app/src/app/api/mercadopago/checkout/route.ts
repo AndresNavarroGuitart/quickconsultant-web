@@ -2,14 +2,9 @@ import { NextResponse } from "next/server";
 import { PreApproval } from "mercadopago";
 import { getSessionContext } from "@/lib/auth/getSessionContext";
 import { getMercadoPagoConfig } from "@/lib/mercadopago/client";
+import { SUBSCRIPTION_AMOUNT as AMOUNT, SUBSCRIPTION_CURRENCY as CURRENCY } from "@/lib/mercadopago/pricing";
 import { mapSubscriptionStatus } from "@/lib/mercadopago/statusMaps";
 import { prisma } from "@/lib/prisma";
-
-// El monto/moneda son configurables por env porque MercadoPago liquida
-// naturalmente en ARS: el usuario define acá el equivalente real a u$s10
-// según cómo termine resolviendo esto con su cuenta de MercadoPago.
-const AMOUNT = Number(process.env.MERCADOPAGO_SUBSCRIPTION_AMOUNT ?? "10");
-const CURRENCY = process.env.MERCADOPAGO_SUBSCRIPTION_CURRENCY ?? "ARS";
 
 export async function POST() {
   const ctx = await getSessionContext();

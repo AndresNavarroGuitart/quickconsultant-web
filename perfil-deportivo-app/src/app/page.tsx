@@ -2,6 +2,7 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import TeamShieldIllustration from "@/components/TeamShieldIllustration";
 import WavyBanner from "@/components/WavyBanner";
+import { SUBSCRIPTION_PRICE_LABEL } from "@/lib/mercadopago/pricing";
 
 const STEPS = [
   {
@@ -82,7 +83,7 @@ export default function Home() {
               </Link>
             </div>
             <p className="text-xs text-slate-400">
-              7 días de prueba gratis. Después, $10.000 (Ar$) por mes.
+              7 días de prueba gratis. Después, {SUBSCRIPTION_PRICE_LABEL} por mes.
             </p>
           </div>
 

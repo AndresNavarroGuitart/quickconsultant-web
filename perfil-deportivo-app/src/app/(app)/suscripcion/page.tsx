@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/auth/getSessionContext";
 import { prisma } from "@/lib/prisma";
+import { SUBSCRIPTION_PRICE_LABEL } from "@/lib/mercadopago/pricing";
 import SubscribeButton from "@/components/SubscribeButton";
 
 export default async function SuscripcionPage() {
@@ -19,7 +20,7 @@ export default async function SuscripcionPage() {
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-semibold text-slate-900">Suscripción</h1>
       <p className="text-sm text-slate-600">
-        Valor de la suscripción mensual $10.000 (Ar$).
+        Valor de la suscripción mensual {SUBSCRIPTION_PRICE_LABEL}.
       </p>
       <p className="text-sm text-slate-500">
         Estado actual:{" "}
