@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { getLastSignInMap } from "@/lib/admin/lastSignIn";
 import { sportLabel } from "@/lib/athlete/sportsCatalog";
+import UserActivityTable, {
+  type UserActivityRow,
+} from "@/components/UserActivityTable";
 
 export default async function AdminActividadPage() {
   const [users, lastSignInMap] = await Promise.all([
@@ -24,6 +27,43 @@ export default async function AdminActividadPage() {
     getLastSignInMap(),
   ]);
 
+  // Mas cerca a mas lejos: el acceso mas reciente primero, y quien nunca
+  // entro (sin registro de Supabase Auth) al final.
+  const sortedUsers = [...users].sort((a, b) => {
+    const aTime = lastSignInMap.get(a.id);
+    const bTime = lastSignInMap.get(b.id);
+    return (bTime ? new Date(bTime).getTime() : -Infinity) -
+      (aTime ? new Date(aTime).getTime() : -Infinity);
+  });
+
+  const tableRows: UserActivityRow[] = sortedUsers.map((u) => {
+    const matchDates = u.profiles
+      .map((p) => p.matches[0]?.matchDate ?? null)
+      .filter((d): d is Date => d !== null);
+    const lastMatchDate =
+      matchDates.length > 0
+        ? new Date(Math.max(...matchDates.map((d) => d.getTime())))
+        : null;
+    const totalClubs = u.profiles.reduce((sum, p) => sum + p._count.athleteClubs, 0);
+    const totalMatches = u.profiles.reduce((sum, p) => sum + p._count.matches, 0);
+    const lastSignInAt = lastSignInMap.get(u.id) ?? null;
+
+    return {
+      id: u.id,
+      email: u.email,
+      profileSummary: u.profiles
+        .map((p) => `${p.displayName} · ${sportLabel(p.sport)}`)
+        .join(", "),
+      totalClubs,
+      totalMatches,
+      lastMatchLabel: lastMatchDate ? lastMatchDate.toLocaleDateString("es-AR") : "-",
+      lastSignInLabel: lastSignInAt
+        ? new Date(lastSignInAt).toLocaleString("es-AR")
+        : "-",
+      createdAtLabel: u.createdAt.toLocaleDateString("es-AR"),
+    };
+  });
+
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-semibold text-slate-900">
@@ -33,79 +73,7 @@ export default async function AdminActividadPage() {
         Uso real de la app por usuario: perfil cargado, clubes, partidos y
         último acceso.
       </p>
-      <div className="overflow-x-auto rounded-md border border-slate-200 bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-slate-200 text-slate-500">
-            <tr>
-              <th className="px-4 py-2">Usuario</th>
-              <th className="px-4 py-2">Perfil</th>
-              <th className="px-4 py-2">Clubes</th>
-              <th className="px-4 py-2">Partidos</th>
-              <th className="px-4 py-2">Último partido</th>
-              <th className="px-4 py-2">Último acceso</th>
-              <th className="px-4 py-2">Alta</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((u) => {
-              const matchDates = u.profiles
-                .map((p) => p.matches[0]?.matchDate ?? null)
-                .filter((d): d is Date => d !== null);
-              const lastMatchDate =
-                matchDates.length > 0
-                  ? new Date(Math.max(...matchDates.map((d) => d.getTime())))
-                  : null;
-              const totalClubs = u.profiles.reduce(
-                (sum, p) => sum + p._count.athleteClubs,
-                0
-              );
-              const totalMatches = u.profiles.reduce(
-                (sum, p) => sum + p._count.matches,
-                0
-              );
-              const lastSignInAt = lastSignInMap.get(u.id) ?? null;
-              return (
-                <tr key={u.id} className="border-b border-slate-100 last:border-0">
-                  <td className="px-4 py-2">{u.email}</td>
-                  <td className="px-4 py-2">
-                    {u.profiles.length > 0 ? (
-                      <span>
-                        {u.profiles
-                          .map((p) => `${p.displayName} · ${sportLabel(p.sport)}`)
-                          .join(", ")}
-                      </span>
-                    ) : (
-                      <span className="text-slate-400">Sin perfil</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-2">{totalClubs}</td>
-                  <td className="px-4 py-2">{totalMatches}</td>
-                  <td className="px-4 py-2">
-                    {lastMatchDate
-                      ? lastMatchDate.toLocaleDateString("es-AR")
-                      : "-"}
-                  </td>
-                  <td className="px-4 py-2">
-                    {lastSignInAt
-                      ? new Date(lastSignInAt).toLocaleString("es-AR")
-                      : "-"}
-                  </td>
-                  <td className="px-4 py-2">
-                    {u.createdAt.toLocaleDateString("es-AR")}
-                  </td>
-                </tr>
-              );
-            })}
-            {users.length === 0 && (
-              <tr>
-                <td className="px-4 py-4 text-slate-400" colSpan={7}>
-                  Todavía no hay usuarios registrados.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <UserActivityTable rows={tableRows} />
     </div>
   );
 }
