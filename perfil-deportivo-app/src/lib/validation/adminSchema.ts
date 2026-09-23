@@ -21,3 +21,16 @@ export const composeNotificationSchema = z.object({
   // Si se omite, se envía a todos los usuarios.
   targetEmail: z.string().trim().email().optional().nullable(),
 });
+
+// Un envio (broadcast) es un grupo de filas Notification, una por
+// destinatario. Editar/borrar un envio actua sobre todas esas filas a la vez
+// (ver getNotificationBroadcasts en la pagina de admin).
+export const adminNotificationBroadcastUpdateSchema = z.object({
+  ids: z.array(z.string().min(1)).min(1),
+  title: z.string().trim().min(2).max(120),
+  body: z.string().trim().min(2).max(2000),
+});
+
+export const adminNotificationBroadcastDeleteSchema = z.object({
+  ids: z.array(z.string().min(1)).min(1),
+});
