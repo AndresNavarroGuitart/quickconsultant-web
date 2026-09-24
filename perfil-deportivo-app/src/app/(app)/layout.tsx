@@ -8,6 +8,7 @@ import LogoutButton from "@/components/LogoutButton";
 import Logo from "@/components/Logo";
 import NotificationBadge from "@/components/NotificationBadge";
 import ProfileNavMenu from "@/components/ProfileNavMenu";
+import OnboardingTour from "@/components/OnboardingTour";
 import { BellIcon, EnvelopeIcon } from "@/components/icons";
 
 export default async function AppLayout({
@@ -111,6 +112,8 @@ export default async function AppLayout({
               >
                 <EnvelopeIcon className="h-6 w-6" />
               </Link>
+
+              <OnboardingTour userId={user.id} />
             </div>
           </div>
         </div>
