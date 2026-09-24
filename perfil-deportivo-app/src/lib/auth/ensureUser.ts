@@ -30,6 +30,9 @@ export const ensureUser = cache(async (supabaseUser: SupabaseUser) => {
         termsAcceptedAt: supabaseUser.user_metadata?.termsAcceptedAt
           ? new Date(supabaseUser.user_metadata.termsAcceptedAt)
           : null,
+        ageConfirmedAt: supabaseUser.user_metadata?.ageConfirmedAt
+          ? new Date(supabaseUser.user_metadata.ageConfirmedAt)
+          : null,
       },
     });
   } catch (err) {

@@ -9,6 +9,7 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [confirmedAdult, setConfirmedAdult] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -26,7 +27,10 @@ export default function SignupPage() {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
         // Viaja en el user_metadata de Supabase; ensureUser.ts lo lee para
         // no repetir el gate de /aceptar-terminos en el primer ingreso.
-        data: { termsAcceptedAt: new Date().toISOString() },
+        data: {
+          termsAcceptedAt: new Date().toISOString(),
+          ageConfirmedAt: new Date().toISOString(),
+        },
       },
     });
 
@@ -102,7 +106,7 @@ export default function SignupPage() {
               onChange={(e) => setPassword(e.target.value)}
               className="rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
-            <p className="text-xs text-slate-400">Mínimo 6 caracteres.</p>
+            <p className="text-xs text-slate-500">Mínimo 6 caracteres.</p>
           </div>
 
           <label className="flex items-start gap-2 text-sm text-slate-700">
@@ -124,11 +128,24 @@ export default function SignupPage() {
             .
           </label>
 
+          <label className="flex items-start gap-2 text-sm text-slate-700">
+            <input
+              type="checkbox"
+              className="mt-1"
+              checked={confirmedAdult}
+              onChange={(e) => setConfirmedAdult(e.target.checked)}
+              required
+            />
+            Declaro ser mayor de 18 años. Si vas a cargar el perfil de un
+            hijo/a a cargo, la cuenta la tenés que crear vos como
+            responsable.
+          </label>
+
           {error && <p className="text-sm text-red-600">{error}</p>}
 
           <button
             type="submit"
-            disabled={loading || !acceptedTerms}
+            disabled={loading || !acceptedTerms || !confirmedAdult}
             className="mt-2 rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? "Creando cuenta..." : "Crear cuenta"}
