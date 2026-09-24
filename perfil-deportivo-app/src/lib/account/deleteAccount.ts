@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { cancelMercadoPagoSubscriptions } from "@/lib/mercadopago/cancelSubscriptions";
 
 const PHOTOS_BUCKET = "athlete-photos";
 
@@ -15,6 +16,13 @@ const PHOTOS_BUCKET = "athlete-photos";
 // facturación/contables (no son "información confidencial del cliente" en
 // el sentido deportivo/personal que motiva este borrado).
 export async function deleteAccount(userId: string) {
+  // 0) MercadoPago: si el usuario tiene una suscripción vigente, cancelarla
+  // ANTES de tocar cualquier otra cosa. A diferencia de los pasos de abajo,
+  // si esto falla se aborta toda la baja (deja la excepción propagarse) --
+  // no tiene sentido borrar los datos de alguien a quien le vamos a seguir
+  // cobrando todos los meses sin que tenga forma de entrar a cancelarla.
+  await cancelMercadoPagoSubscriptions(userId);
+
   // 1) Storage: mejor esfuerzo. Si el bucket falla no bloqueamos la baja --
   // la base de datos es la fuente de verdad de qué hay que borrar, y un
   // archivo huérfano en Storage no expone datos de contacto ni permite

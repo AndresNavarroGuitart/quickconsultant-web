@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getSessionContext } from "@/lib/auth/getSessionContext";
+import sharp from "sharp";
+import { requireSession } from "@/lib/auth/requireSession";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { prisma } from "@/lib/prisma";
 
@@ -9,14 +10,17 @@ const BUCKET = "athlete-photos";
 const MAX_SIZE_BYTES = 10 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const SLOTS = new Set(["avatar", "match"]);
+const MAX_DIMENSION = 1600;
+const JPEG_QUALITY = 82;
 
 function sanitizeFileName(name: string) {
   return name.replace(/[^a-zA-Z0-9.\-_]/g, "_").slice(-100);
 }
 
 export async function POST(request: Request) {
-  const ctx = await getSessionContext();
-  if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  const result = await requireSession();
+  if ("error" in result) return result.error;
+  const { ctx } = result;
 
   const profile = ctx.activeProfile;
   if (!profile) {
@@ -57,13 +61,45 @@ export async function POST(request: Request) {
     );
   }
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const path = `${ctx.user.id}/${slot}/${crypto.randomUUID()}-${sanitizeFileName(file.name)}`;
+  const rawBuffer = Buffer.from(await file.arrayBuffer());
+
+  // Recodifica siempre del lado del servidor, sin confiar en el
+  // Content-Type que declaró el cliente ni en que compressImage.ts (que
+  // corre en el navegador y se saltea archivos livianos) haya hecho algo.
+  // Dos efectos importantes de este paso:
+  //  - Si el archivo no es en realidad una imagen decodificable, sharp tira
+  //    y lo rechazamos acá -- antes solo se validaba el campo `type` que
+  //    manda el cliente, que no prueba nada del contenido real.
+  //  - .rotate() sin argumentos aplica la orientación EXIF y `.toBuffer()`
+  //    no copia metadatos salvo que se pida explícitamente con
+  //    `.withMetadata()`: los datos EXIF/GPS de la foto original (que para
+  //    un perfil de un menor pueden revelar dónde vive, en qué colegio o
+  //    club juega) nunca llegan al archivo que queda public en Storage.
+  let buffer: Buffer;
+  try {
+    buffer = await sharp(rawBuffer, { failOn: "error" })
+      .rotate()
+      .resize({
+        width: MAX_DIMENSION,
+        height: MAX_DIMENSION,
+        fit: "inside",
+        withoutEnlargement: true,
+      })
+      .jpeg({ quality: JPEG_QUALITY })
+      .toBuffer();
+  } catch (err) {
+    console.error(`[photos/upload] no se pudo procesar la imagen de ${ctx.user.id}`, err);
+    return NextResponse.json({ error: "El archivo no es una imagen válida" }, { status: 400 });
+  }
+
+  const contentType = "image/jpeg";
+  const baseName = sanitizeFileName(file.name).replace(/\.\w+$/, "");
+  const path = `${ctx.user.id}/${slot}/${crypto.randomUUID()}-${baseName}.jpg`;
 
   const supabaseAdmin = getSupabaseAdmin();
   const { error: uploadError } = await supabaseAdmin.storage
     .from(BUCKET)
-    .upload(path, buffer, { contentType: file.type });
+    .upload(path, buffer, { contentType });
 
   if (uploadError) {
     return NextResponse.json({ error: uploadError.message }, { status: 500 });
