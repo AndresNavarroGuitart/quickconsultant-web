@@ -24,6 +24,13 @@ model User {
   // a esta feature.
   termsAcceptedAt DateTime?
 
+  // Declaracion de mayoria de edad del titular de la cuenta (no del
+  // deportista: un perfil DEPENDENT ya asume que quien lo carga es un
+  // adulto responsable). Mismo mecanismo que termsAcceptedAt: se completa
+  // en el alta si el signup mando la fecha en el user_metadata de Supabase
+  // (ver ensureUser.ts); null para cuentas de antes de este campo.
+  ageConfirmedAt DateTime?
+
   // Baja de cuenta autogestionada desde Mi Perfil (ver
   // src/lib/account/deleteAccount.ts). No se borra la fila para que el admin
   // conserve el registro de que la cuenta existio (y las Subscription/Payment
@@ -253,6 +260,10 @@ model Subscription {
   status                   SubscriptionStatus @default(PENDING)
   amount                   Decimal            @db.Decimal(10, 2)
   currency                 String
+  // URL de checkout que devolvió MercadoPago al crear la preapproval. Se
+  // reutiliza si el usuario vuelve a tocar "Suscribirme" mientras esta
+  // sigue PENDING (evita crear una preapproval nueva por cada intento).
+  initPoint                String?
   startedAt                DateTime?
   nextPaymentDate          DateTime?
   cancelledAt              DateTime?
