@@ -25,7 +25,7 @@ const RESULT_BADGE: Record<MatchResult, { label: string; className: string }> = 
 function ClubBadge({ club }: { club: HistoryMatch["club"] }) {
   if (!club) {
     return (
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-xs text-slate-400">
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-xs text-slate-500">
         –
       </div>
     );
@@ -64,7 +64,7 @@ export default function MatchHistoryCarousel({ matches }: { matches: HistoryMatc
   }, [matches]);
 
   if (matches.length === 0) {
-    return <p className="text-sm text-slate-400">Todavía no cargaste partidos.</p>;
+    return <p className="text-sm text-slate-500">Todavía no cargaste partidos.</p>;
   }
 
   return (
@@ -92,7 +92,7 @@ export default function MatchHistoryCarousel({ matches }: { matches: HistoryMatc
             <span className="w-full truncate text-xs font-semibold text-slate-900" title={m.opponent}>
               vs {m.opponent}
             </span>
-            <span className="text-[10px] text-slate-400">{formatDateOnly(m.matchDate)}</span>
+            <span className="text-[10px] text-slate-500">{formatDateOnly(m.matchDate)}</span>
           </div>
         );
       })}

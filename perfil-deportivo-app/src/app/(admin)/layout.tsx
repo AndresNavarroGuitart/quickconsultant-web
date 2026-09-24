@@ -64,7 +64,7 @@ export default async function AdminLayout({
           <div className="flex items-center justify-between">
             <Link href="/admin" className="shrink-0">
               <Logo />
-              <span className="ml-2 text-xs font-semibold uppercase tracking-wide text-accent-600">
+              <span className="ml-2 text-xs font-semibold uppercase tracking-wide text-accent-700">
                 Admin
               </span>
             </Link>

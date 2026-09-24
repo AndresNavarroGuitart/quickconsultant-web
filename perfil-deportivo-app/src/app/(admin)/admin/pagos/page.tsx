@@ -44,7 +44,7 @@ export default async function AdminPagosPage() {
             ))}
             {subscriptions.length === 0 && (
               <tr>
-                <td className="px-4 py-4 text-slate-400" colSpan={5}>
+                <td className="px-4 py-4 text-slate-500" colSpan={5}>
                   Todavía no hay suscripciones.
                 </td>
               </tr>

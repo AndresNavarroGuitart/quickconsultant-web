@@ -82,7 +82,7 @@ export default function Home() {
                 Iniciar sesión
               </Link>
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               7 días de prueba gratis. Después, {SUBSCRIPTION_PRICE_LABEL} por mes.
             </p>
           </div>

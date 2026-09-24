@@ -286,7 +286,7 @@ export default function ClubesManager({
 
       <div className="flex flex-col gap-2">
         {initialClubs.length === 0 && (
-          <p className="text-sm text-slate-400">Todavía no cargaste clubes.</p>
+          <p className="text-sm text-slate-500">Todavía no cargaste clubes.</p>
         )}
         {initialClubs.map((ac) => (
           <div
@@ -299,7 +299,7 @@ export default function ClubesManager({
               <p className="text-sm font-medium text-slate-900">
                 {ac.club.name}
                 {ac.club.city && (
-                  <span className="text-slate-400"> · {ac.club.city}</span>
+                  <span className="text-slate-500"> · {ac.club.city}</span>
                 )}
               </p>
               <p className="text-xs text-slate-500">

@@ -305,7 +305,7 @@ export default function PartidosManager({
               ))}
             </select>
             {clubOptions.length === 0 && (
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500">
                 Todavía no cargaste ningún club. Andá a la sección Clubes y
                 agregá uno primero.
               </p>
@@ -348,7 +348,7 @@ export default function PartidosManager({
               ))}
             </select>
             {positionOptions.length === 0 && (
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500">
                 Cargá el deporte en Mi perfil para ver las posiciones.
               </p>
             )}
@@ -425,7 +425,7 @@ export default function PartidosManager({
                 aria-label="Goles/puntos del equipo local"
                 className="w-24 rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               />
-              <span className="text-slate-400">-</span>
+              <span className="text-slate-500">-</span>
               <input
                 type="number"
                 min={0}
@@ -471,7 +471,7 @@ export default function PartidosManager({
                           return field.type === "percent" ? `${value}%` : value;
                         })()}
                       </div>
-                      <span className="text-[10px] text-slate-400">
+                      <span className="text-[10px] text-slate-500">
                         Se calcula solo
                       </span>
                     </div>
@@ -554,7 +554,7 @@ export default function PartidosManager({
 
       <div className="flex flex-col gap-2">
         {initialMatches.length === 0 && (
-          <p className="text-sm text-slate-400">Todavía no cargaste partidos.</p>
+          <p className="text-sm text-slate-500">Todavía no cargaste partidos.</p>
         )}
         {initialMatches.map((m) => {
           const fields = getStatsForPosition(sport, m.position);
@@ -611,7 +611,7 @@ export default function PartidosManager({
                           : m.result === "LOSS"
                             ? "text-red-600"
                             : m.result === "NOT_STARTED"
-                              ? "text-slate-400"
+                              ? "text-slate-500"
                               : "text-slate-500"
                       }
                     >
@@ -627,7 +627,7 @@ export default function PartidosManager({
                     {m.minutesPlayed !== null && ` · ${m.minutesPlayed}'`} ·{" "}
                     {m.pointsScored} pts
                   </p>
-                  {summary && <p className="text-xs text-slate-400">{summary}</p>}
+                  {summary && <p className="text-xs text-slate-500">{summary}</p>}
                 </div>
                 <div className="flex shrink-0 gap-3">
                   <button

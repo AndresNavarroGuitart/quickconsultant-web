@@ -68,7 +68,7 @@ function SuggestionRow({ suggestion }: { suggestion: Suggestion }) {
     <div className="flex flex-col gap-2 rounded-md border border-slate-200 bg-white px-4 py-3">
       <div className="flex items-center justify-between">
         <p className="text-sm font-medium text-slate-900">{suggestion.title}</p>
-        <span className="text-xs text-slate-400">{suggestion.userEmail}</span>
+        <span className="text-xs text-slate-500">{suggestion.userEmail}</span>
       </div>
       <p className="text-sm text-slate-600">{suggestion.description}</p>
 
@@ -128,7 +128,7 @@ export default function AdminSuggestionsManager({
   return (
     <div className="flex flex-col gap-3">
       {suggestions.length === 0 && (
-        <p className="text-sm text-slate-400">No hay sugerencias todavía.</p>
+        <p className="text-sm text-slate-500">No hay sugerencias todavía.</p>
       )}
       {suggestions.map((s) => (
         <SuggestionRow key={s.id} suggestion={s} />

@@ -213,7 +213,7 @@ function MultiSelect({
         <svg
           viewBox="0 0 20 20"
           fill="currentColor"
-          className={`h-4 w-4 shrink-0 text-slate-400 transition-transform ${
+          className={`h-4 w-4 shrink-0 text-slate-500 transition-transform ${
             open ? "rotate-180" : ""
           }`}
         >

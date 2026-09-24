@@ -522,7 +522,7 @@ export default function LiveMatchTracker({
   );
 
   if (!ready) {
-    return <p className="text-sm text-slate-400">Cargando…</p>;
+    return <p className="text-sm text-slate-500">Cargando…</p>;
   }
 
   const actions = getLiveActions(sport, draft.position) ?? [];
@@ -875,7 +875,7 @@ export default function LiveMatchTracker({
                 <div
                   key={r.key}
                   className={`rounded-xl border-2 px-1 py-2.5 text-center text-[13px] font-bold ${
-                    result === r.key ? r.on : "border-slate-200 bg-white text-slate-400"
+                    result === r.key ? r.on : "border-slate-200 bg-white text-slate-500"
                   }`}
                 >
                   {r.label}

@@ -69,7 +69,7 @@ export default function AdminUsersTable({ users }: { users: AdminUser[] }) {
                 <td className="px-4 py-2">{u.email}</td>
                 <td className="px-4 py-2">
                   {u.registrantName ?? (
-                    <span className="text-slate-400">—</span>
+                    <span className="text-slate-500">—</span>
                   )}
                 </td>
                 <td className="px-4 py-2">
@@ -107,7 +107,7 @@ export default function AdminUsersTable({ users }: { users: AdminUser[] }) {
                 </td>
                 <td className="px-4 py-2">
                   {u.deletedAt ? (
-                    <span className="text-xs text-slate-400">—</span>
+                    <span className="text-xs text-slate-500">—</span>
                   ) : (
                     <div className="flex flex-wrap gap-2">
                       <button
@@ -162,7 +162,7 @@ export default function AdminUsersTable({ users }: { users: AdminUser[] }) {
                         onClick={() =>
                           sendAction(u.id, { action: "setAdmin", value: !u.isAdmin })
                         }
-                        className="text-xs font-medium text-accent-600 hover:underline disabled:opacity-60"
+                        className="text-xs font-medium text-accent-700 hover:underline disabled:opacity-60"
                       >
                         {u.isAdmin ? "Quitar admin" : "Hacer admin"}
                       </button>
@@ -173,7 +173,7 @@ export default function AdminUsersTable({ users }: { users: AdminUser[] }) {
             ))}
             {users.length === 0 && (
               <tr>
-                <td className="px-4 py-4 text-slate-400" colSpan={8}>
+                <td className="px-4 py-4 text-slate-500" colSpan={8}>
                   Todavía no hay usuarios registrados.
                 </td>
               </tr>

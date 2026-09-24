@@ -5,7 +5,7 @@ import Link from "next/link";
 // perfil publico) sin repetirlo pagina por pagina.
 export default function Footer() {
   return (
-    <footer className="flex flex-col items-center gap-1 border-t border-slate-200 bg-white px-4 py-4 text-center text-xs text-slate-400">
+    <footer className="flex flex-col items-center gap-1 border-t border-slate-200 bg-white px-4 py-4 text-center text-xs text-slate-500">
       <p>
         © {new Date().getFullYear()} Potrero Deportivo. Todos los derechos
         reservados. Desarrollado por{" "}

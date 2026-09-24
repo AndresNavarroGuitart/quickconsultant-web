@@ -25,7 +25,7 @@ const STATUS_LABEL: Record<SuggestionStatus, string> = {
 const STATUS_COLOR: Record<SuggestionStatus, string> = {
   NEW: "text-slate-500",
   PLANNED: "text-brand-600",
-  IN_PROGRESS: "text-accent-600",
+  IN_PROGRESS: "text-accent-700",
   DONE: "text-brand-700",
   REJECTED: "text-red-500",
 };
@@ -109,7 +109,7 @@ export default function SuggestionsManager({
 
       <div className="flex flex-col gap-2">
         {initialSuggestions.length === 0 && (
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-500">
             Todavía no enviaste sugerencias.
           </p>
         )}

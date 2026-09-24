@@ -22,7 +22,7 @@ export default function MatchPhotoGallery({ photos }: { photos: GalleryPhoto[] }
 
   if (photos.length === 0) {
     return (
-      <p className="text-sm text-slate-400">
+      <p className="text-sm text-slate-500">
         Todavía no subiste fotos de partidos.
       </p>
     );

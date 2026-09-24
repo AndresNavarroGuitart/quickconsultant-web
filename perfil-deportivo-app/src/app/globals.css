@@ -34,6 +34,10 @@
   --color-accent-400: #fb923c;
   --color-accent-500: #f97316;
   --color-accent-600: #ea580c;
+  /* Para texto naranja chico sobre blanco: accent-500/600 no llegan al
+     contraste minimo de WCAG AA (2.80:1 y 3.56:1) salvo en texto grande y
+     en negrita. accent-700 (5.2:1) si cumple para texto normal. */
+  --color-accent-700: #c2410c;
 
   /* Paleta "sport": pinceladas de color al estilo del splash de referencia,
      pensada para usarse en dosis chicas (íconos, chips, bordes finos) sobre

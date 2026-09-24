@@ -60,7 +60,7 @@ export default function UserActivityTable({ rows }: { rows: UserActivityRow[] })
               <tr key={r.id} className="border-b border-slate-100 last:border-0">
                 <td className="px-4 py-2">{r.email}</td>
                 <td className="px-4 py-2">
-                  {r.profileSummary || <span className="text-slate-400">Sin perfil</span>}
+                  {r.profileSummary || <span className="text-slate-500">Sin perfil</span>}
                 </td>
                 <td className="px-4 py-2">{r.totalClubs}</td>
                 <td className="px-4 py-2">{r.totalMatches}</td>
@@ -71,7 +71,7 @@ export default function UserActivityTable({ rows }: { rows: UserActivityRow[] })
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td className="px-4 py-4 text-slate-400" colSpan={7}>
+                <td className="px-4 py-4 text-slate-500" colSpan={7}>
                   {rows.length === 0
                     ? "Todavía no hay usuarios registrados."
                     : "Ningún usuario coincide con la búsqueda."}

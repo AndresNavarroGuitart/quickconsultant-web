@@ -31,7 +31,7 @@ export default function NotificationsFeed({
   }
 
   if (notifications.length === 0) {
-    return <p className="text-sm text-slate-400">No tenés notificaciones.</p>;
+    return <p className="text-sm text-slate-500">No tenés notificaciones.</p>;
   }
 
   return (
@@ -47,7 +47,7 @@ export default function NotificationsFeed({
         >
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium text-slate-900">{n.title}</p>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-500">
               {new Date(n.createdAt).toLocaleDateString("es-AR")}
             </span>
           </div>

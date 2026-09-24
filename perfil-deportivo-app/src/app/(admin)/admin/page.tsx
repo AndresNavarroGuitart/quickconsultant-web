@@ -179,7 +179,7 @@ export default async function AdminOverviewPage() {
               <span className="text-sm text-slate-700">{step.label}</span>
               <span className="text-sm font-semibold text-brand-700">
                 {step.count}{" "}
-                <span className="font-normal text-slate-400">
+                <span className="font-normal text-slate-500">
                   ({step.pct}%)
                 </span>
               </span>
@@ -332,7 +332,7 @@ function BreakdownCard({
     <div className={`rounded-md border border-slate-200 bg-white p-4 ${className}`}>
       <p className="mb-2 text-sm font-semibold text-slate-900">{title}</p>
       {rows.length === 0 ? (
-        <p className="text-sm text-slate-400">Sin datos todavía.</p>
+        <p className="text-sm text-slate-500">Sin datos todavía.</p>
       ) : (
         <div className="flex flex-col gap-1.5">
           {rows.map((row) => (
@@ -340,7 +340,7 @@ function BreakdownCard({
               <span className="text-sm text-slate-600">{row.label}</span>
               <span className="shrink-0 text-sm font-medium text-brand-700">
                 {row.count}{" "}
-                <span className="font-normal text-slate-400">
+                <span className="font-normal text-slate-500">
                   ({pct(row.count, total)}%)
                 </span>
               </span>

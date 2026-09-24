@@ -53,17 +53,17 @@ export default async function AdminAuditoriaPage() {
                 </td>
                 <td className="px-4 py-2">
                   {log.targetUser?.email ?? (
-                    <span className="text-slate-400">Todos los usuarios</span>
+                    <span className="text-slate-500">Todos los usuarios</span>
                   )}
                 </td>
-                <td className="px-4 py-2 text-xs text-slate-400">
+                <td className="px-4 py-2 text-xs text-slate-500">
                   {log.metadata ? JSON.stringify(log.metadata) : ""}
                 </td>
               </tr>
             ))}
             {logs.length === 0 && (
               <tr>
-                <td className="px-4 py-4 text-slate-400" colSpan={5}>
+                <td className="px-4 py-4 text-slate-500" colSpan={5}>
                   Todavía no hay acciones registradas.
                 </td>
               </tr>

@@ -42,15 +42,15 @@ export default async function AdminUsuariosPage() {
           };
         })}
       />
-      <p className="text-xs text-slate-400">
+      <p className="text-xs text-slate-500">
         Cancelar una suscripción paga se hace directamente desde la cuenta de
         MercadoPago; estas acciones solo afectan el acceso por trial.
       </p>
-      <p className="text-xs text-slate-400">
+      <p className="text-xs text-slate-500">
         Bloquear acceso corta todo (incluso con trial o suscripción activa) y
         es reversible; dar de baja borra los datos y no lo es.
       </p>
-      <p className="text-xs text-slate-400">
+      <p className="text-xs text-slate-500">
         Las cuentas &quot;Dada de baja&quot; se autogestionaron desde Mi
         Perfil: sus perfiles, fotos, estadísticas y sugerencias ya se
         borraron y el email quedó anonimizado. Solo queda el registro para

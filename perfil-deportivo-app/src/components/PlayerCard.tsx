@@ -145,7 +145,7 @@ export default function PlayerCard({
           </div>
         </div>
 
-        {uploading && <p className="text-xs text-slate-400">Subiendo...</p>}
+        {uploading && <p className="text-xs text-slate-500">Subiendo...</p>}
         {error && <p className="text-xs text-red-600">{error}</p>}
 
         <p className="text-lg font-bold uppercase tracking-wide text-slate-900">
@@ -162,7 +162,7 @@ export default function PlayerCard({
               </p>
             ))
           ) : (
-            <p className="text-sm text-slate-400">Sin club actual</p>
+            <p className="text-sm text-slate-500">Sin club actual</p>
           )}
         </div>
 
@@ -171,7 +171,7 @@ export default function PlayerCard({
             <p className="text-xl font-bold leading-none text-brand-700">
               {birthYear ?? "—"}
             </p>
-            <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">
+            <p className="text-[10px] font-medium uppercase tracking-wide text-slate-500">
               Categoría
             </p>
           </div>
@@ -179,7 +179,7 @@ export default function PlayerCard({
             <p className="text-xl font-bold leading-none text-accent-600">
               {position ?? "—"}
             </p>
-            <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">
+            <p className="text-[10px] font-medium uppercase tracking-wide text-slate-500">
               Posición
             </p>
           </div>

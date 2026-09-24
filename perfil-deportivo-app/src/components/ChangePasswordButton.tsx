@@ -122,7 +122,7 @@ export default function ChangePasswordButton({ email }: { email: string }) {
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               />
-              <p className="text-xs text-slate-400">Mínimo 6 caracteres.</p>
+              <p className="text-xs text-slate-500">Mínimo 6 caracteres.</p>
             </div>
             <div className="flex flex-col gap-1">
               <label className="text-sm font-medium text-slate-700">

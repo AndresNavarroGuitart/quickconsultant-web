@@ -77,7 +77,7 @@ export default function NotificationBroadcastList({
   }
 
   if (broadcasts.length === 0) {
-    return <p className="text-sm text-slate-400">Todavía no se envió ninguna.</p>;
+    return <p className="text-sm text-slate-500">Todavía no se envió ninguna.</p>;
   }
 
   return (
@@ -136,7 +136,7 @@ export default function NotificationBroadcastList({
                     className="flex min-w-0 flex-1 items-center gap-2 text-left"
                   >
                     <span
-                      className={`shrink-0 text-slate-400 transition-transform ${
+                      className={`shrink-0 text-slate-500 transition-transform ${
                         isOpen ? "rotate-90" : ""
                       }`}
                     >
@@ -147,7 +147,7 @@ export default function NotificationBroadcastList({
                       <span className="ml-2 text-slate-500">{b.body}</span>
                     </span>
                   </button>
-                  <span className="flex shrink-0 items-center gap-3 text-xs text-slate-400">
+                  <span className="flex shrink-0 items-center gap-3 text-xs text-slate-500">
                     <span>{b.createdAtLabel}</span>
                     <span className="font-medium text-brand-600">
                       {readCount}/{b.recipients.length} leídas
@@ -176,7 +176,7 @@ export default function NotificationBroadcastList({
                         <span className="text-slate-600">{r.email}</span>
                         <span
                           className={
-                            r.isRead ? "font-medium text-brand-600" : "text-slate-400"
+                            r.isRead ? "font-medium text-brand-600" : "text-slate-500"
                           }
                         >
                           {r.isRead ? "Leída" : "Sin leer"}

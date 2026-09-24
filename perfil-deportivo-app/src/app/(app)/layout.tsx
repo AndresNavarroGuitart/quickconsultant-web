@@ -65,7 +65,7 @@ export default async function AppLayout({
               {dbUser.isAdmin && (
                 <Link
                   href="/admin"
-                  className="text-sm font-bold text-accent-600 transition-colors hover:text-accent-500"
+                  className="text-sm font-bold text-accent-700 transition-colors hover:text-accent-600"
                 >
                   Admin
                 </Link>
