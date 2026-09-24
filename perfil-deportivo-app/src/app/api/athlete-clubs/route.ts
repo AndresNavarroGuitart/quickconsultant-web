@@ -3,6 +3,7 @@ import { requireGatedProfile } from "@/lib/auth/requireGatedProfile";
 import { athleteClubSchema } from "@/lib/validation/clubSchema";
 import { findOrCreateClub } from "@/lib/clubs/findOrCreateClub";
 import { CLUB_ORDER_BY } from "@/lib/athlete/clubOrder";
+import { readJson } from "@/lib/http/readJson";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
@@ -22,7 +23,11 @@ export async function POST(request: Request) {
   const result = await requireGatedProfile();
   if ("error" in result) return result.error;
 
-  const parsed = athleteClubSchema.safeParse(await request.json());
+  const json = await readJson(request);
+  if (json === undefined) {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+  const parsed = athleteClubSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }

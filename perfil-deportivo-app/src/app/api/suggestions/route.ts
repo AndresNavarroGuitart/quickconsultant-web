@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
-import { getSessionContext } from "@/lib/auth/getSessionContext";
+import { requireSession } from "@/lib/auth/requireSession";
 import { createSuggestionSchema } from "@/lib/validation/suggestionSchema";
+import { readJson } from "@/lib/http/readJson";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
-  const ctx = await getSessionContext();
-  if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  const result = await requireSession();
+  if ("error" in result) return result.error;
+  const { ctx } = result;
 
   const suggestions = await prisma.suggestion.findMany({
     where: { userId: ctx.user.id },
@@ -16,10 +18,15 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const ctx = await getSessionContext();
-  if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  const result = await requireSession();
+  if ("error" in result) return result.error;
+  const { ctx } = result;
 
-  const parsed = createSuggestionSchema.safeParse(await request.json());
+  const json = await readJson(request);
+  if (json === undefined) {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+  const parsed = createSuggestionSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }

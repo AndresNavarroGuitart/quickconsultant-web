@@ -16,6 +16,11 @@ export const ACTIVE_PROFILE_COOKIE_OPTIONS = {
   path: "/",
 };
 
+// Motivo por el que una cuenta autenticada no puede operar la API, aunque
+// nunca haya visitado un layout de página que la redirija (ver
+// requireSession, que es quien realmente lo hace cumplir).
+export type SessionDenial = "blocked" | "deleted" | "terms";
+
 // Punto único usado por route handlers (que no están envueltos por el
 // layout de (app)) para resolver sesión + fila de negocio + estado de acceso.
 export async function getSessionContext() {
@@ -50,5 +55,23 @@ export async function getSessionContext() {
   const activeProfile =
     profiles.find((p) => p.id === requestedProfileId) ?? profiles[0] ?? null;
 
-  return { user, dbUser, access, profiles, activeProfile };
+  // Mismo orden de prioridad que usan los layouts de (app)/(admin) para
+  // decidir a que pantalla redirigir: baja gana sobre bloqueo, que gana
+  // sobre terminos sin aceptar.
+  const denial: SessionDenial | null = dbUser.deletedAt
+    ? "deleted"
+    : dbUser.blockedAt
+      ? "blocked"
+      : !dbUser.termsAcceptedAt
+        ? "terms"
+        : null;
+
+  return { user, dbUser, access, profiles, activeProfile, denial };
 }
+
+// Tipo del contexto ya resuelto (sesión válida), para anotar el retorno de
+// requireSession/requireGatedProfile/requireAdmin explícitamente -- sin
+// esto, TypeScript infiere una unión demasiado ancha entre sus distintos
+// `return` y las rutas que los llaman pierden el narrowing de `"error" in
+// result`.
+export type SessionContext = NonNullable<Awaited<ReturnType<typeof getSessionContext>>>;

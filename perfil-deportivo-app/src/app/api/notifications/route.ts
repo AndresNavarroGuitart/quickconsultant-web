@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
-import { getSessionContext } from "@/lib/auth/getSessionContext";
+import { requireSession } from "@/lib/auth/requireSession";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
-  const ctx = await getSessionContext();
-  if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  const result = await requireSession();
+  if ("error" in result) return result.error;
+  const { ctx } = result;
 
   const notifications = await prisma.notification.findMany({
     where: { userId: ctx.user.id },
@@ -15,8 +16,9 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
-  const ctx = await getSessionContext();
-  if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  const result = await requireSession();
+  if ("error" in result) return result.error;
+  const { ctx } = result;
 
   const body = await request.json().catch(() => ({}));
   const id = typeof body.id === "string" ? body.id : null;

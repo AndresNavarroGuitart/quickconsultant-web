@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/requireAdmin";
 import { adminSuggestionUpdateSchema } from "@/lib/validation/adminSchema";
 import { logAdminAction } from "@/lib/admin/logAdminAction";
+import { readJson } from "@/lib/http/readJson";
 import { prisma } from "@/lib/prisma";
 
 export async function PATCH(
@@ -12,7 +13,11 @@ export async function PATCH(
   if ("error" in result) return result.error;
 
   const { id } = await params;
-  const parsed = adminSuggestionUpdateSchema.safeParse(await request.json());
+  const json = await readJson(request);
+  if (json === undefined) {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+  const parsed = adminSuggestionUpdateSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSessionContext } from "@/lib/auth/getSessionContext";
+import { requireSession } from "@/lib/auth/requireSession";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { prisma } from "@/lib/prisma";
 
@@ -9,8 +9,9 @@ export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const ctx = await getSessionContext();
-  if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  const result = await requireSession();
+  if ("error" in result) return result.error;
+  const { ctx } = result;
 
   const { id } = await params;
 

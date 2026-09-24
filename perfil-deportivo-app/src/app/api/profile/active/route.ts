@@ -4,8 +4,9 @@ import { z } from "zod";
 import {
   ACTIVE_PROFILE_COOKIE,
   ACTIVE_PROFILE_COOKIE_OPTIONS,
-  getSessionContext,
 } from "@/lib/auth/getSessionContext";
+import { requireSession } from "@/lib/auth/requireSession";
+import { readJson } from "@/lib/http/readJson";
 
 const bodySchema = z.object({ profileId: z.string().uuid() });
 
@@ -13,10 +14,15 @@ const bodySchema = z.object({ profileId: z.string().uuid() });
 // navegador (cookie, no un campo de la cuenta: cada dispositivo puede estar
 // viendo un perfil distinto).
 export async function POST(request: Request) {
-  const ctx = await getSessionContext();
-  if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  const result = await requireSession();
+  if ("error" in result) return result.error;
+  const { ctx } = result;
 
-  const parsed = bodySchema.safeParse(await request.json());
+  const json = await readJson(request);
+  if (json === undefined) {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+  const parsed = bodySchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }

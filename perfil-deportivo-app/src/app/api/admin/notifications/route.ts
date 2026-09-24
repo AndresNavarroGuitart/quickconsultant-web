@@ -2,13 +2,18 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/requireAdmin";
 import { composeNotificationSchema } from "@/lib/validation/adminSchema";
 import { logAdminAction } from "@/lib/admin/logAdminAction";
+import { readJson } from "@/lib/http/readJson";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
   const result = await requireAdmin();
   if ("error" in result) return result.error;
 
-  const parsed = composeNotificationSchema.safeParse(await request.json());
+  const json = await readJson(request);
+  if (json === undefined) {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+  const parsed = composeNotificationSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
@@ -33,7 +38,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ notification, sentTo: 1 }, { status: 201 });
   }
 
-  const users = await prisma.user.findMany({ select: { id: true } });
+  // No a las cuentas dadas de baja: el email quedó anonimizado y no hay
+  // nadie del otro lado que la vaya a leer.
+  const users = await prisma.user.findMany({
+    where: { deletedAt: null },
+    select: { id: true },
+  });
   await prisma.notification.createMany({
     data: users.map((u) => ({ userId: u.id, title, body })),
   });

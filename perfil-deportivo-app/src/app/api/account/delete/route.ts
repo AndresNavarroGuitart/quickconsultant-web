@@ -12,6 +12,12 @@ export const runtime = "nodejs";
 
 // Baja de cuenta autogestionada desde Mi Perfil. Irreversible: ver
 // deleteAccount.ts para el detalle de qué se borra y qué se conserva.
+//
+// A proposito NO usa requireSession: una cuenta bloqueada por el admin
+// (ej. mientras se investiga un abuso) tiene que poder seguir pidiendo su
+// propia baja igual -- bloquear el acceso a la app no es motivo para
+// impedirle borrar sus datos. El chequeo de deletedAt de aca abajo es el
+// unico que hace falta (evita procesar una baja dos veces).
 export async function POST(request: Request) {
   const ctx = await getSessionContext();
   if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
@@ -31,7 +37,18 @@ export async function POST(request: Request) {
     );
   }
 
-  await deleteAccount(ctx.user.id);
+  try {
+    await deleteAccount(ctx.user.id);
+  } catch (err) {
+    console.error(`[account/delete] no se pudo completar la baja de ${ctx.user.id}`, err);
+    return NextResponse.json(
+      {
+        error:
+          "No pudimos cancelar tu suscripción en MercadoPago, así que no se procesó la baja. Probá de nuevo en unos minutos o escribinos si el problema sigue.",
+      },
+      { status: 502 }
+    );
+  }
 
   // Corta la sesión actual ya mismo (el borrado del usuario en Supabase Auth
   // ya la invalida, pero esto evita depender de que el próximo getUser() lo

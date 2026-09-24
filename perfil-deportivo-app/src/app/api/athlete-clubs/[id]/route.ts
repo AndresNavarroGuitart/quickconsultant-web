@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireGatedProfile } from "@/lib/auth/requireGatedProfile";
 import { athleteClubUpdateSchema } from "@/lib/validation/clubSchema";
 import { findOrCreateClub } from "@/lib/clubs/findOrCreateClub";
+import { readJson } from "@/lib/http/readJson";
 import { prisma } from "@/lib/prisma";
 
 async function loadOwned(id: string, athleteProfileId: string) {
@@ -23,7 +24,11 @@ export async function PATCH(
     return NextResponse.json({ error: "No encontrado" }, { status: 404 });
   }
 
-  const parsed = athleteClubUpdateSchema.safeParse(await request.json());
+  const json = await readJson(request);
+  if (json === undefined) {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+  const parsed = athleteClubUpdateSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }

@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/auth/requireAdmin";
 import { adminUserActionSchema } from "@/lib/validation/adminSchema";
 import { freeSubscriptionId } from "@/lib/admin/freeSubscription";
 import { logAdminAction } from "@/lib/admin/logAdminAction";
+import { readJson } from "@/lib/http/readJson";
 import { prisma } from "@/lib/prisma";
 
 export async function PATCH(
@@ -13,9 +14,23 @@ export async function PATCH(
   if ("error" in result) return result.error;
 
   const { id } = await params;
-  const parsed = adminUserActionSchema.safeParse(await request.json());
+  const json = await readJson(request);
+  if (json === undefined) {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+  const parsed = adminUserActionSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+  }
+
+  // Chequeo de existencia único, antes de cualquier accion: un id
+  // inexistente (o mal copiado) tiraba distintos errores sin capturar mas
+  // abajo -- violacion de FK en el upsert de suscripcion gratis, o
+  // "Record not found" en el update/findUniqueOrThrow -- y ambos volvian
+  // como 500 en vez de un 404 claro.
+  const targetExists = await prisma.user.findUnique({ where: { id }, select: { id: true } });
+  if (!targetExists) {
+    return NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 });
   }
 
   // Las dos acciones de suscripción gratis tocan el modelo Subscription, no

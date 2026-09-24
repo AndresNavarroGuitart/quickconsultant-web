@@ -3,18 +3,20 @@ import { cookies } from "next/headers";
 import {
   ACTIVE_PROFILE_COOKIE,
   ACTIVE_PROFILE_COOKIE_OPTIONS,
-  getSessionContext,
 } from "@/lib/auth/getSessionContext";
+import { requireSession } from "@/lib/auth/requireSession";
 import { MAX_PROFILES_PER_USER } from "@/lib/athlete/profileLimit";
 import {
   createProfileSchema,
   updateProfileSchema,
 } from "@/lib/validation/profileSchema";
+import { readJson } from "@/lib/http/readJson";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
-  const ctx = await getSessionContext();
-  if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  const result = await requireSession();
+  if ("error" in result) return result.error;
+  const { ctx } = result;
 
   const profile = ctx.activeProfile
     ? await prisma.athleteProfile.findUnique({
@@ -27,8 +29,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const ctx = await getSessionContext();
-  if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  const result = await requireSession();
+  if ("error" in result) return result.error;
+  const { ctx } = result;
 
   if (ctx.profiles.length >= MAX_PROFILES_PER_USER) {
     return NextResponse.json(
@@ -37,7 +40,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const parsed = createProfileSchema.safeParse(await request.json());
+  const json = await readJson(request);
+  if (json === undefined) {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+  const parsed = createProfileSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
@@ -67,14 +74,19 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const ctx = await getSessionContext();
-  if (!ctx) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  const result = await requireSession();
+  if ("error" in result) return result.error;
+  const { ctx } = result;
 
   if (!ctx.activeProfile) {
     return NextResponse.json({ error: "Perfil no encontrado" }, { status: 404 });
   }
 
-  const parsed = updateProfileSchema.safeParse(await request.json());
+  const json = await readJson(request);
+  if (json === undefined) {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+  const parsed = updateProfileSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }

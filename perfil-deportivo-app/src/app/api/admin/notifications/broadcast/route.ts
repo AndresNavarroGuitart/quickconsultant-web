@@ -5,6 +5,7 @@ import {
   adminNotificationBroadcastUpdateSchema,
 } from "@/lib/validation/adminSchema";
 import { logAdminAction } from "@/lib/admin/logAdminAction";
+import { readJson } from "@/lib/http/readJson";
 import { prisma } from "@/lib/prisma";
 
 // Un envio (broadcast) son varias filas Notification (una por destinatario)
@@ -15,7 +16,11 @@ export async function PATCH(request: Request) {
   const result = await requireAdmin();
   if ("error" in result) return result.error;
 
-  const parsed = adminNotificationBroadcastUpdateSchema.safeParse(await request.json());
+  const json = await readJson(request);
+  if (json === undefined) {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+  const parsed = adminNotificationBroadcastUpdateSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
@@ -44,7 +49,11 @@ export async function DELETE(request: Request) {
   const result = await requireAdmin();
   if ("error" in result) return result.error;
 
-  const parsed = adminNotificationBroadcastDeleteSchema.safeParse(await request.json());
+  const json = await readJson(request);
+  if (json === undefined) {
+    return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
+  }
+  const parsed = adminNotificationBroadcastDeleteSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
