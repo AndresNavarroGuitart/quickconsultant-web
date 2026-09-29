@@ -78,11 +78,13 @@ const FUTBOL_JUGADOR_DE_CAMPO: LiveAction[] = [
 const FUTBOL_ARQUERO: LiveAction[] = [
   { id: "atajada", label: "Atajada", tone: "g1", icon: "shield", mark: "ok", adds: { llegadas: 1, atajadas: 1 } },
   { id: "gol_recibido", label: "Gol recibido", tone: "r1", icon: "shield", mark: "no", adds: { llegadas: 1, goles_recibidos: 1 } },
+  { id: "pase_ok", label: "Pase correcto", tone: "g3", icon: "ball", mark: "ok", adds: { pases_intentados: 1, pases_correctos: 1 } },
+  { id: "pase_mal", label: "Pase incorrecto", tone: "r3", icon: "ball", mark: "no", adds: { pases_intentados: 1 } },
   { id: "penal_atajado", label: "Penal atajado", tone: "g2", icon: "goal", mark: "ok", adds: { penales_recibidos: 1, penales_atajados: 1 } },
   { id: "penal_convertido", label: "Penal convertido", tone: "r2", icon: "goal", mark: "no", adds: { penales_recibidos: 1, goles_recibidos: 1 } },
   { id: "mano_a_mano", label: "Mano a mano", tone: "blue", icon: "boot", small: true, adds: { mano_a_mano: 1 } },
   { id: "despeje_aereo", label: "Despeje aéreo", tone: "blue", icon: "clear", small: true, adds: { salidas_aereas: 1 } },
-  { id: "pase_completado", label: "Pase completado", tone: "blue", icon: "ball", small: true, adds: { pases_completados: 1 } },
+  { id: "llegada", label: "Llegada", tone: "blue", icon: "goal", small: true, adds: { llegadas: 1 } },
 ];
 
 const LIVE_ACTIONS: Record<string, LiveAction[]> = {

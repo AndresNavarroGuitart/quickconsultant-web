@@ -203,9 +203,25 @@ export const SPORTS: SportDef[] = [
             "type": "number"
           },
           {
-            "key": "pases_completados",
-            "label": "Pases completados",
+            "key": "pases_intentados",
+            "label": "Pases intentados",
             "type": "number"
+          },
+          {
+            "key": "pases_correctos",
+            "label": "Pases correctos",
+            "type": "number",
+            "atMost": "pases_intentados"
+          },
+          {
+            "key": "de_pases_correctos",
+            "label": "% de pases correctos",
+            "type": "percent",
+            "formula": {
+              "kind": "percent",
+              "part": ["pases_correctos"],
+              "whole": ["pases_intentados"]
+            }
           },
           {
             "key": "valla_invicta",
