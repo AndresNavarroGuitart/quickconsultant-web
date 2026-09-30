@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Alegreya+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/theme.css?v=1.4.0" />
-  <link rel="stylesheet" href="time-summary.css?v=1.4.0" />
+  <link rel="stylesheet" href="../assets/theme.css?v=1.5.0" />
+  <link rel="stylesheet" href="time-summary.css?v=1.5.0" />
 </head>
 <body>
   <header class="topbar">
@@ -45,24 +45,28 @@
       </div>
     </section>
 
-    <div class="ts-toolbar">
+    <nav class="ts-tabs ts-tabs--primary" id="tsTabsPrimary">
+      <a class="ts-tab" data-primary="colaborador" href="#/colaborador/carga-hs">Colaborador</a>
+      <a class="ts-tab" data-primary="admin" href="#/admin">Administración</a>
+    </nav>
+
+    <div class="ts-toolbar" id="tsColabToolbar">
       <label class="campo">
         <span>Colaborador</span>
         <select id="tsColaborador"></select>
       </label>
     </div>
 
-    <nav class="ts-tabs" id="tsTabs">
-      <a class="ts-tab" data-view="rastreador" href="#/rastreador">Rastreador</a>
-      <a class="ts-tab" data-view="planilla" href="#/planilla">Planilla</a>
-      <a class="ts-tab" data-view="resumen" href="#/resumen">Resumen mensual</a>
-      <a class="ts-tab" data-view="admin" href="#/admin">Administración</a>
+    <nav class="ts-tabs ts-tabs--secondary" id="tsTabsSecondary">
+      <a class="ts-tab" data-view="carga-hs" href="#/colaborador/carga-hs">Carga de hs</a>
+      <a class="ts-tab" data-view="carga-online" href="#/colaborador/carga-online">Carga on line</a>
+      <a class="ts-tab" data-view="resumen" href="#/colaborador/resumen">Resumen</a>
     </nav>
 
     <div id="tsView"></div>
   </template>
 
-  <template id="tpl-rastreador">
+  <template id="tpl-carga-online">
     <div class="ts-tracker">
       <input type="text" class="ts-tracker__desc" id="trkDesc" placeholder="¿En qué estás trabajando?" />
       <select id="trkProyecto"></select>
@@ -71,10 +75,14 @@
       <button type="button" class="ts-tracker__start" id="trkStart">Inicio</button>
       <button type="button" class="ts-manual-btn" id="trkManual">+ Manual</button>
     </div>
+  </template>
+
+  <template id="tpl-resumen-historial">
+    <p class="ts-resumen-nota">Todo el historial de horas cargadas por este colaborador (Carga on line y Carga de hs).</p>
     <div id="trkList"></div>
   </template>
 
-  <template id="tpl-planilla">
+  <template id="tpl-carga-hs">
     <div class="ts-plan-head">
       <div class="ts-weeknav">
         <button type="button" id="planPrev" aria-label="Semana anterior">‹</button>
@@ -93,29 +101,6 @@
       <button type="button" class="btn btn--ghost" id="planAddRow">+ Añadir nueva fila</button>
       <button type="button" class="btn btn--ghost" id="planCopyPrev">Copiar la semana pasada</button>
       <button type="button" class="btn btn--ghost" id="planSaveTemplate">Guardar como plantilla</button>
-    </div>
-  </template>
-
-  <template id="tpl-resumen">
-    <p class="ts-resumen-nota">
-      Total de horas cargadas por colaborador en el mes elegido (suma del Rastreador y la
-      Planilla). Al enviar, este resumen se manda a la planilla de RRHH para liquidar el pago —
-      no queda guardado en este sitio.
-    </p>
-    <div class="ts-resumen-toolbar">
-      <label class="campo">
-        <span>Mes</span>
-        <input type="month" id="resMes" />
-      </label>
-    </div>
-    <div class="ts-grid-wrap">
-      <table class="ts-grid">
-        <thead><tr><th>Colaborador</th><th>Horas cargadas</th></tr></thead>
-        <tbody id="resBody"></tbody>
-      </table>
-    </div>
-    <div class="ts-plan-actions">
-      <button type="button" class="btn" id="resEnviar">Enviar resumen del mes →</button>
     </div>
   </template>
 
@@ -145,6 +130,30 @@
         <thead><tr><th>Colaborador</th><th>Horas cargadas</th><th>Estado</th></tr></thead>
         <tbody id="adminBody"></tbody>
       </table>
+    </div>
+
+    <hr class="ts-admin-sep" />
+
+    <h2 class="ts-admin-subhead">Enviar resumen a RRHH</h2>
+    <p class="ts-resumen-nota">
+      Total de horas cargadas por colaborador en el mes elegido (suma de Carga on line y Carga
+      de hs). Al enviar, este resumen se manda a la planilla de RRHH para liquidar el pago — no
+      queda guardado en este sitio.
+    </p>
+    <div class="ts-resumen-toolbar">
+      <label class="campo">
+        <span>Mes</span>
+        <input type="month" id="resMes" />
+      </label>
+    </div>
+    <div class="ts-grid-wrap">
+      <table class="ts-grid">
+        <thead><tr><th>Colaborador</th><th>Horas cargadas</th></tr></thead>
+        <tbody id="resBody"></tbody>
+      </table>
+    </div>
+    <div class="ts-plan-actions">
+      <button type="button" class="btn" id="resEnviar">Enviar resumen del mes →</button>
     </div>
   </template>
 
@@ -189,8 +198,8 @@
     </div>
   </div>
 
-  <script src="../nomina/empleados-demo.js?v=1.4.0"></script>
-  <script src="time-entries-demo.js?v=1.4.0"></script>
-  <script src="time-summary.js?v=1.4.0"></script>
+  <script src="../nomina/empleados-demo.js?v=1.5.0"></script>
+  <script src="time-entries-demo.js?v=1.5.0"></script>
+  <script src="time-summary.js?v=1.5.0"></script>
 </body>
 </html>

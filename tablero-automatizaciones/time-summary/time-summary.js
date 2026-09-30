@@ -1,8 +1,9 @@
-/* Time Summary — carga de horas trabajadas por colaborador (Rastreador +
-   Planilla + Resumen mensual). Persistencia en localStorage, sin backend.
-   El envío del resumen mensual va a un Google Form/Sheet privado de RRHH
-   (config pendiente, ver SETUP.md) — no se guarda ningún dato de terceros
-   en este repo. */
+/* Time Summary — carga de horas trabajadas por colaborador. Dos solapas:
+   Colaborador (Carga de hs + Carga on line + Resumen con todo su historial)
+   y Administración (vista RRHH de quién cargó + envío del resumen mensual).
+   Persistencia en localStorage, sin backend. El envío del resumen mensual va
+   a un Google Form/Sheet privado de RRHH (config pendiente, ver SETUP.md) —
+   no se guarda ningún dato de terceros en este repo. */
 (function () {
   "use strict";
 
@@ -173,38 +174,45 @@
     if (savedId && COLABORADORES.some(function (c) { return c.id === savedId; })) $colab.value = savedId;
     $colab.addEventListener("change", function () {
       saveJSON(COLAB_KEY, $colab.value);
-      renderView(currentView());
-    });
-
-    document.getElementById("tsTabs").addEventListener("click", function (ev) {
-      var a = ev.target.closest(".ts-tab");
-      if (!a) return;
+      renderView(currentRoute());
     });
 
     router();
   }
 
-  function currentView() {
+  function currentRoute() {
     var h = location.hash.replace(/^#\//, "");
-    if (h === "planilla") return "planilla";
-    if (h === "resumen") return "resumen";
-    if (h === "admin") return "admin";
-    return "rastreador";
+    var parts = h.split("/");
+    if (parts[0] === "admin") return { primary: "admin", sub: null };
+    var sub = parts[1];
+    if (sub !== "carga-hs" && sub !== "carga-online" && sub !== "resumen") sub = "carga-hs";
+    return { primary: "colaborador", sub: sub };
   }
 
-  function router() { renderView(currentView()); }
+  function router() { renderView(currentRoute()); }
 
-  function renderView(view) {
-    var tabs = [].slice.call(document.querySelectorAll(".ts-tab"));
-    tabs.forEach(function (t) { t.classList.toggle("is-on", t.dataset.view === view); });
+  function renderView(route) {
+    var primaryTabs = [].slice.call(document.querySelectorAll("#tsTabsPrimary .ts-tab"));
+    primaryTabs.forEach(function (t) { t.classList.toggle("is-on", t.dataset.primary === route.primary); });
+
+    var $colabToolbar = document.getElementById("tsColabToolbar");
+    var $secondaryTabs = document.getElementById("tsTabsSecondary");
+    var esColaborador = route.primary === "colaborador";
+    $colabToolbar.hidden = !esColaborador;
+    $secondaryTabs.hidden = !esColaborador;
+    if (esColaborador) {
+      [].slice.call($secondaryTabs.querySelectorAll(".ts-tab")).forEach(function (t) {
+        t.classList.toggle("is-on", t.dataset.view === route.sub);
+      });
+    }
 
     stopTrackerTicker();
     var $view = document.getElementById("tsView");
     $view.innerHTML = "";
-    if (view === "planilla") { $view.appendChild(tpl("tpl-planilla")); wirePlanilla(); }
-    else if (view === "resumen") { $view.appendChild(tpl("tpl-resumen")); wireResumen(); }
-    else if (view === "admin") { $view.appendChild(tpl("tpl-admin")); wireAdmin(); }
-    else { $view.appendChild(tpl("tpl-rastreador")); wireRastreador(); }
+    if (route.primary === "admin") { $view.appendChild(tpl("tpl-admin")); wireAdmin(); }
+    else if (route.sub === "carga-online") { $view.appendChild(tpl("tpl-carga-online")); wireCargaOnline(); }
+    else if (route.sub === "resumen") { $view.appendChild(tpl("tpl-resumen-historial")); wireHistorial(); }
+    else { $view.appendChild(tpl("tpl-carga-hs")); wireCargaHs(); }
   }
 
   /* ---------- Helper de fechas compartido (semana Mon-Sun) ---------- */
@@ -216,8 +224,8 @@
 
   window.addEventListener("hashchange", router);
 
-  /* ================= Rastreador ================= */
-  function wireRastreador() {
+  /* ================= Carga on line (cronómetro + manual) ================= */
+  function wireCargaOnline() {
     var colab = colaboradorActual();
     var $proj = document.getElementById("trkProyecto");
     populateSelect($proj, proyectosDe(colab ? colab.id : null), null);
@@ -242,8 +250,6 @@
     });
 
     document.getElementById("trkManual").addEventListener("click", function () { abrirManual(); });
-
-    pintarLista();
 
     function iniciarTracker() {
       if (!colab) { toast("No hay colaboradores activos cargados en Nómina."); return; }
@@ -283,7 +289,6 @@
       localStorage.removeItem(RUNNING_KEY);
       stopTrackerTicker();
       resetTrackerUI();
-      pintarLista();
       toast("Registro guardado");
     }
     function resetTrackerUI() {
@@ -292,13 +297,19 @@
       $time.textContent = "00:00:00";
       $desc.value = ""; $tags.value = "";
     }
+  }
+
+  /* ================= Resumen (historial completo del colaborador) ================= */
+  function wireHistorial() {
+    var colab = colaboradorActual();
+    pintarLista();
 
     function pintarLista() {
       var $list = document.getElementById("trkList");
       var mias = ENTRIES.filter(function (e) { return colab && e.colaboradorId === colab.id; })
         .slice().sort(function (a, b) { return (b.fecha + (b.inicio || "")) < (a.fecha + (a.inicio || "")) ? -1 : 1; });
       if (!mias.length) {
-        $list.innerHTML = '<p class="ts-vacio">Todavía no cargaste horas. Usá el rastreador de arriba o "+ Manual".</p>';
+        $list.innerHTML = '<p class="ts-vacio">Todavía no cargaste horas. Usá Carga on line o Carga de hs.</p>';
         return;
       }
       var semanas = {};
@@ -328,7 +339,6 @@
               '<span class="ts-entry__range">' + rango + "</span>" +
               '<span class="ts-entry__dur">' + horasFmt(e.horas) + " hs</span>" +
               '<span class="ts-entry__actions">' +
-                '<button type="button" data-reanudar="' + esc(e.id) + '" title="Reanudar">▶</button>' +
                 '<button type="button" class="ts-del" data-del="' + esc(e.id) + '" title="Eliminar">✕</button>' +
               "</span></div>";
           }).join("");
@@ -338,24 +348,12 @@
       }).join("");
     }
 
-    $app.querySelector("#trkList") && document.getElementById("trkList").addEventListener("click", function (ev) {
+    document.getElementById("trkList").addEventListener("click", function (ev) {
       var del = ev.target.closest("[data-del]");
-      if (del) {
-        ENTRIES = ENTRIES.filter(function (e) { return e.id !== del.getAttribute("data-del"); });
-        saveEntries(ENTRIES);
-        pintarLista();
-        return;
-      }
-      var res = ev.target.closest("[data-reanudar]");
-      if (res) {
-        var e = ENTRIES.filter(function (x) { return x.id === res.getAttribute("data-reanudar"); })[0];
-        if (!e) return;
-        $desc.value = e.descripcion || "";
-        $tags.value = (e.etiquetas || []).join(", ");
-        if ([].slice.call($proj.options).some(function (o) { return o.value === e.proyecto; })) $proj.value = e.proyecto;
-        else { var opt = document.createElement("option"); opt.text = e.proyecto; $proj.add(opt); $proj.value = e.proyecto; }
-        if (!loadJSON(RUNNING_KEY, null)) $start.click();
-      }
+      if (!del) return;
+      ENTRIES = ENTRIES.filter(function (e) { return e.id !== del.getAttribute("data-del"); });
+      saveEntries(ENTRIES);
+      pintarLista();
     });
   }
 
@@ -413,11 +411,12 @@
     saveEntries(ENTRIES);
     $manualModal.hidden = true;
     toast("Horas cargadas");
-    if (currentView() === "rastreador") renderView("rastreador");
+    var route = currentRoute();
+    if (route.primary === "colaborador" && route.sub === "resumen") renderView(route);
   });
 
-  /* ================= Planilla ================= */
-  function wirePlanilla() {
+  /* ================= Carga de hs (planilla semanal) ================= */
+  function wireCargaHs() {
     var colab = colaboradorActual();
 
     document.getElementById("planPrev").addEventListener("click", function () { planWeekStart = addDays(planWeekStart, -7); pintarPlanilla(); });
@@ -546,61 +545,6 @@
   }
 
   /* ================= Resumen mensual ================= */
-  function wireResumen() {
-    var $mes = document.getElementById("resMes");
-    var hoy = new Date();
-    $mes.value = hoy.getFullYear() + "-" + String(hoy.getMonth() + 1).padStart(2, "0");
-    $mes.addEventListener("change", pintarResumen);
-    document.getElementById("resEnviar").addEventListener("click", enviarResumen);
-    pintarResumen();
-
-    function totalesDelMes(mes) {
-      return COLABORADORES.map(function (c) {
-        var total = ENTRIES.filter(function (e) { return e.colaboradorId === c.id && (e.fecha || "").indexOf(mes) === 0; })
-          .reduce(function (s, e) { return s + (Number(e.horas) || 0); }, 0);
-        return { colaborador: c, total: total };
-      });
-    }
-    function pintarResumen() {
-      var filas = totalesDelMes($mes.value);
-      document.getElementById("resBody").innerHTML = filas.map(function (f) {
-        return "<tr><td>" + esc(f.colaborador.nombre) + "</td><td>" + horasFmt(f.total) + " hs</td></tr>";
-      }).join("") || '<tr><td colspan="2" class="ts-vacio">Sin colaboradores activos.</td></tr>';
-    }
-    function enviarResumen() {
-      if (isPlaceholder(CONFIG.formActionUrl)) {
-        toast("Este resumen todavía no está conectado a un destino real (falta configurar time-summary.js según SETUP.md).");
-        return;
-      }
-      var filas = totalesDelMes($mes.value).filter(function (f) { return f.total > 0; });
-      if (!filas.length) { toast("No hay horas cargadas en ese mes."); return; }
-      var i = 0;
-      function enviarSiguiente() {
-        if (i >= filas.length) { toast("Resumen enviado (" + filas.length + " colaboradores)"); return; }
-        var f = filas[i]; i++;
-        var iframeName = "ts-submit-" + i;
-        var $iframe = document.createElement("iframe");
-        $iframe.name = iframeName; $iframe.style.display = "none";
-        document.body.appendChild($iframe);
-        var $form = document.createElement("form");
-        $form.action = CONFIG.formActionUrl; $form.method = "POST"; $form.target = iframeName; $form.style.display = "none";
-        function addHidden(entryId, value) {
-          if (!entryId || isPlaceholder(entryId)) return;
-          var input = document.createElement("input");
-          input.type = "hidden"; input.name = entryId; input.value = value;
-          $form.appendChild(input);
-        }
-        addHidden(CONFIG.entryIds.mes, $mes.value);
-        addHidden(CONFIG.entryIds.colaborador, f.colaborador.nombre);
-        addHidden(CONFIG.entryIds.horas, String(f.total));
-        document.body.appendChild($form);
-        $form.submit();
-        setTimeout(function () { $form.remove(); $iframe.remove(); enviarSiguiente(); }, 700);
-      }
-      enviarSiguiente();
-    }
-  }
-
   /* ================= Administración (panel para RRHH) ================= */
   function nombreMes(mesISO) {
     var p = mesISO.split("-");
@@ -688,6 +632,60 @@
     }
 
     pintarAdmin();
+
+    /* --- Enviar resumen a RRHH (totales mensuales por colaborador) --- */
+    var $mes = document.getElementById("resMes");
+    var hoy = new Date();
+    $mes.value = hoy.getFullYear() + "-" + String(hoy.getMonth() + 1).padStart(2, "0");
+    $mes.addEventListener("change", pintarResumen);
+    document.getElementById("resEnviar").addEventListener("click", enviarResumen);
+    pintarResumen();
+
+    function totalesDelMes(mes) {
+      return COLABORADORES.map(function (c) {
+        var total = ENTRIES.filter(function (e) { return e.colaboradorId === c.id && (e.fecha || "").indexOf(mes) === 0; })
+          .reduce(function (s, e) { return s + (Number(e.horas) || 0); }, 0);
+        return { colaborador: c, total: total };
+      });
+    }
+    function pintarResumen() {
+      var filas = totalesDelMes($mes.value);
+      document.getElementById("resBody").innerHTML = filas.map(function (f) {
+        return "<tr><td>" + esc(f.colaborador.nombre) + "</td><td>" + horasFmt(f.total) + " hs</td></tr>";
+      }).join("") || '<tr><td colspan="2" class="ts-vacio">Sin colaboradores activos.</td></tr>';
+    }
+    function enviarResumen() {
+      if (isPlaceholder(CONFIG.formActionUrl)) {
+        toast("Este resumen todavía no está conectado a un destino real (falta configurar time-summary.js según SETUP.md).");
+        return;
+      }
+      var filas = totalesDelMes($mes.value).filter(function (f) { return f.total > 0; });
+      if (!filas.length) { toast("No hay horas cargadas en ese mes."); return; }
+      var i = 0;
+      function enviarSiguiente() {
+        if (i >= filas.length) { toast("Resumen enviado (" + filas.length + " colaboradores)"); return; }
+        var f = filas[i]; i++;
+        var iframeName = "ts-submit-" + i;
+        var $iframe = document.createElement("iframe");
+        $iframe.name = iframeName; $iframe.style.display = "none";
+        document.body.appendChild($iframe);
+        var $form = document.createElement("form");
+        $form.action = CONFIG.formActionUrl; $form.method = "POST"; $form.target = iframeName; $form.style.display = "none";
+        function addHidden(entryId, value) {
+          if (!entryId || isPlaceholder(entryId)) return;
+          var input = document.createElement("input");
+          input.type = "hidden"; input.name = entryId; input.value = value;
+          $form.appendChild(input);
+        }
+        addHidden(CONFIG.entryIds.mes, $mes.value);
+        addHidden(CONFIG.entryIds.colaborador, f.colaborador.nombre);
+        addHidden(CONFIG.entryIds.horas, String(f.total));
+        document.body.appendChild($form);
+        $form.submit();
+        setTimeout(function () { $form.remove(); $iframe.remove(); enviarSiguiente(); }, 700);
+      }
+      enviarSiguiente();
+    }
   }
 
   renderShell();

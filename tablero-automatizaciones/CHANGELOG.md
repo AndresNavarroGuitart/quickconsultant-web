@@ -3,6 +3,26 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es/).
 Versionado: `tablero-vMAJOR.MINOR.PATCH` (tags de git + releases en GitHub).
 
+## [tablero-v1.5.0] — 2026-09-30
+
+### Cambiado
+
+- **Time Summary · reestructuración en 2 solapas** — antes eran 4 solapas
+  sueltas (Rastreador, Planilla, Resumen mensual, Administración); ahora son
+  2: **Colaborador** (autoservicio) y **Administración** (RRHH).
+  - **Colaborador** agrupa 3 sub-vistas, en este orden: **Carga de hs**
+    (ex-Planilla), **Carga on line** (ex-Rastreador, ahora solo el cronómetro
+    + carga manual) y **Resumen** (nuevo: todo el historial de horas
+    cargadas por el colaborador elegido — reemplaza al listado que antes
+    vivía debajo del Rastreador).
+  - **Administración** conserva la vista de quién cargó/no cargó y suma
+    debajo la sección **"Enviar resumen a RRHH"** (el envío mensual a
+    Google Form/Sheet que antes era la solapa "Resumen mensual").
+  - Se retira el botón "Reanudar" (▶) de las entradas del historial: al vivir
+    ahora en una solapa separada del cronómetro, reanudar una entrada pasada
+    ya no tenía dónde volcarse.
+- `?v=` de JS/CSS: **1.4.0 → 1.5.0**.
+
 ## [tablero-v1.4.0] — 2026-09-30
 
 ### Agregado
@@ -186,6 +206,7 @@ Primera versión estable, publicada en GitHub Pages y compartible con clientes:
   hasta cargar el secret `NOTION_TOKEN` (ver `proyectos/SYNC.md`).
 - `assets/theme.css` compartido por todas las vistas.
 
+[tablero-v1.5.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.5.0
 [tablero-v1.4.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.4.0
 [tablero-v1.3.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.3.0
 [tablero-v1.2.1]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.2.1

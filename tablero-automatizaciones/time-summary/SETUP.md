@@ -1,10 +1,11 @@
 # Time Summary — cómo conectar el envío del resumen mensual
 
-El **Rastreador** y la **Planilla** funcionan hoy sin ninguna configuración
-extra: guardan todo en `localStorage`, igual que el resto del tablero. Lo
-único que falta conectar es el botón **"Enviar resumen del mes →"** de la
-pestaña **Resumen mensual**, que hoy avisa "no está conectado" en vez de
-enviar nada.
+**Carga de hs**, **Carga on line** y **Resumen** (dentro de la solapa
+Colaborador) funcionan hoy sin ninguna configuración extra: guardan todo en
+`localStorage`, igual que el resto del tablero. Lo único que falta conectar es
+el botón **"Enviar resumen del mes →"**, dentro de la solapa
+**Administración** → "Enviar resumen a RRHH", que hoy avisa "no está
+conectado" en vez de enviar nada.
 
 ## Por qué
 

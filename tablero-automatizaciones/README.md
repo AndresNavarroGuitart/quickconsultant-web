@@ -124,24 +124,25 @@ módulo.
 ## Módulo: Time Summary (`time-summary/`)
 
 Carga de horas trabajadas por colaborador durante el mes, para liquidar el pago.
-Inspirado en Clockify. Cuatro vistas:
+Inspirado en Clockify. Dos solapas:
 
-- **Rastreador** — barra superior con descripción, proyecto, etiquetas y un
-  cronómetro (Inicio/Detener); también se puede cargar una entrada manual
-  (fecha + inicio/fin, o directamente la cantidad de horas). El listado agrupa
-  las entradas por semana y por día, con el total de cada una.
-- **Planilla** — grilla semanal (filas = proyecto, columnas = días) con celdas
-  editables. Botones para agregar una fila de proyecto, copiar las horas de la
-  semana pasada, o guardar la lista de proyectos como plantilla para las
-  próximas semanas.
-- **Resumen mensual** — total de horas por colaborador en el mes elegido
-  (suma del Rastreador + la Planilla), con un botón para enviarlo a una
-  planilla de RRHH (no queda guardado en este sitio).
+- **Colaborador** — autoservicio, con 3 sub-vistas:
+  - **Carga de hs** (ex "Planilla") — grilla semanal (filas = proyecto,
+    columnas = días) con celdas editables. Botones para agregar una fila de
+    proyecto, copiar las horas de la semana pasada, o guardar la lista de
+    proyectos como plantilla para las próximas semanas.
+  - **Carga on line** (ex "Rastreador") — barra con descripción, proyecto,
+    etiquetas y un cronómetro (Inicio/Detener); también se puede cargar una
+    entrada manual (fecha + inicio/fin, o directamente la cantidad de horas).
+  - **Resumen** — todo el historial de horas cargadas por el colaborador
+    elegido (Carga on line + Carga de hs), agrupado por semana y por día, con
+    el total de cada una.
 - **Administración** — vista para RRHH: todos los colaboradores **Activos**,
   con las horas cargadas en el período (semana o mes, con navegación) y un
   estado "✓ Cargó" / "⚠ Sin cargar" — con un filtro para ver solo a quienes
-  falta. Usa la misma info que ya ve cualquiera en "Resumen mensual"; no agrega
-  una categoría de dato más sensible.
+  falta. Debajo, "Enviar resumen a RRHH": total de horas por colaborador en el
+  mes elegido, con un botón para enviarlo a una planilla de RRHH (no queda
+  guardado en este sitio).
 
 El colaborador se elige de un desplegable poblado con los empleados **Activos**
 de Nómina; el proyecto por defecto sale del `cliente`/`proyecto` de su ficha.
@@ -161,9 +162,9 @@ se resuelve con el login real de `PLAN-PRODUCCION.md`.
 
 | Archivo | Rol |
 |---|---|
-| `time-summary/index.html` | Estructura + plantillas de las 4 vistas |
+| `time-summary/index.html` | Estructura + plantillas de las 2 solapas (Colaborador/Administración) |
 | `time-summary/time-summary.css` | Estilos propios |
-| `time-summary/time-summary.js` | Router, cronómetro, planilla, resumen mensual y envío (config pendiente) |
+| `time-summary/time-summary.js` | Router, cronómetro, planilla, historial, admin y envío (config pendiente) |
 | `time-summary/time-entries-demo.js` | Dataset de ejemplo (ficticio) |
 | `time-summary/SETUP.md` | Cómo conectar el envío del resumen mensual |
 
