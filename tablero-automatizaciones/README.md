@@ -124,7 +124,7 @@ módulo.
 ## Módulo: Time Summary (`time-summary/`)
 
 Carga de horas trabajadas por colaborador durante el mes, para liquidar el pago.
-Inspirado en Clockify. Tres vistas:
+Inspirado en Clockify. Cuatro vistas:
 
 - **Rastreador** — barra superior con descripción, proyecto, etiquetas y un
   cronómetro (Inicio/Detener); también se puede cargar una entrada manual
@@ -137,6 +137,11 @@ Inspirado en Clockify. Tres vistas:
 - **Resumen mensual** — total de horas por colaborador en el mes elegido
   (suma del Rastreador + la Planilla), con un botón para enviarlo a una
   planilla de RRHH (no queda guardado en este sitio).
+- **Administración** — vista para RRHH: todos los colaboradores **Activos**,
+  con las horas cargadas en el período (semana o mes, con navegación) y un
+  estado "✓ Cargó" / "⚠ Sin cargar" — con un filtro para ver solo a quienes
+  falta. Usa la misma info que ya ve cualquiera en "Resumen mensual"; no agrega
+  una categoría de dato más sensible.
 
 El colaborador se elige de un desplegable poblado con los empleados **Activos**
 de Nómina; el proyecto por defecto sale del `cliente`/`proyecto` de su ficha.
@@ -156,7 +161,7 @@ se resuelve con el login real de `PLAN-PRODUCCION.md`.
 
 | Archivo | Rol |
 |---|---|
-| `time-summary/index.html` | Estructura + plantillas de las 3 vistas |
+| `time-summary/index.html` | Estructura + plantillas de las 4 vistas |
 | `time-summary/time-summary.css` | Estilos propios |
 | `time-summary/time-summary.js` | Router, cronómetro, planilla, resumen mensual y envío (config pendiente) |
 | `time-summary/time-entries-demo.js` | Dataset de ejemplo (ficticio) |

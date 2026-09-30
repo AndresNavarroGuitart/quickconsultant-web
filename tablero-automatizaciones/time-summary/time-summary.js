@@ -148,6 +148,10 @@
   var ENTRIES = [];
   var planWeekStart = mondayOf(new Date());
   var trkTimerHandle = null;
+  var adminPeriodo = "semana"; // "semana" | "mes"
+  var adminWeekStart = mondayOf(new Date());
+  var adminMonth = (function () { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"); })();
+  var adminSoloFaltan = false;
 
   function colaboradorActual() {
     var id = document.getElementById("tsColaborador").value;
@@ -184,6 +188,7 @@
     var h = location.hash.replace(/^#\//, "");
     if (h === "planilla") return "planilla";
     if (h === "resumen") return "resumen";
+    if (h === "admin") return "admin";
     return "rastreador";
   }
 
@@ -198,7 +203,15 @@
     $view.innerHTML = "";
     if (view === "planilla") { $view.appendChild(tpl("tpl-planilla")); wirePlanilla(); }
     else if (view === "resumen") { $view.appendChild(tpl("tpl-resumen")); wireResumen(); }
+    else if (view === "admin") { $view.appendChild(tpl("tpl-admin")); wireAdmin(); }
     else { $view.appendChild(tpl("tpl-rastreador")); wireRastreador(); }
+  }
+
+  /* ---------- Helper de fechas compartido (semana Mon-Sun) ---------- */
+  function diasDeLaSemana(semana) {
+    var arr = [];
+    for (var i = 0; i < 7; i++) arr.push(isoDate(addDays(semana, i)));
+    return arr;
   }
 
   window.addEventListener("hashchange", router);
@@ -434,11 +447,6 @@
       });
       return Object.keys(set);
     }
-    function diasDeLaSemana(semana) {
-      var arr = [];
-      for (var i = 0; i < 7; i++) arr.push(isoDate(addDays(semana, i)));
-      return arr;
-    }
     function horasCelda(colabId, proyecto, fecha) {
       var e = ENTRIES.filter(function (x) { return x.colaboradorId === colabId && x.fuente === "planilla" && x.proyecto === proyecto && x.fecha === fecha; })[0];
       return e ? Number(e.horas) || 0 : 0;
@@ -591,6 +599,95 @@
       }
       enviarSiguiente();
     }
+  }
+
+  /* ================= Administración (panel para RRHH) ================= */
+  function nombreMes(mesISO) {
+    var p = mesISO.split("-");
+    var d = new Date(+p[0], +p[1] - 1, 1);
+    var s = d.toLocaleDateString("es-AR", { month: "long", year: "numeric" });
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  function wireAdmin() {
+    var $segs = [].slice.call(document.querySelectorAll("[data-periodo]"));
+    var $weekLabel = document.getElementById("adminWeekLabel");
+    var $monthLabel = document.getElementById("adminMonthLabel");
+    var $soloFaltan = document.getElementById("adminSoloFaltan");
+
+    $segs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        adminPeriodo = b.getAttribute("data-periodo");
+        pintarAdmin();
+      });
+    });
+    document.getElementById("adminPrev").addEventListener("click", function () {
+      if (adminPeriodo === "semana") adminWeekStart = addDays(adminWeekStart, -7);
+      else adminMonth = mesAdyacente(adminMonth, -1);
+      pintarAdmin();
+    });
+    document.getElementById("adminNext").addEventListener("click", function () {
+      if (adminPeriodo === "semana") adminWeekStart = addDays(adminWeekStart, 7);
+      else adminMonth = mesAdyacente(adminMonth, 1);
+      pintarAdmin();
+    });
+    $soloFaltan.checked = adminSoloFaltan;
+    $soloFaltan.addEventListener("change", function () { adminSoloFaltan = $soloFaltan.checked; pintarAdmin(); });
+
+    function mesAdyacente(mesISO, delta) {
+      var p = mesISO.split("-");
+      var d = new Date(+p[0], +p[1] - 1 + delta, 1);
+      return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+    }
+
+    function horasDelColaborador(colabId) {
+      if (adminPeriodo === "semana") {
+        var dias = diasDeLaSemana(adminWeekStart);
+        return ENTRIES.filter(function (e) { return e.colaboradorId === colabId && dias.indexOf(e.fecha) !== -1; })
+          .reduce(function (s, e) { return s + (Number(e.horas) || 0); }, 0);
+      }
+      return ENTRIES.filter(function (e) { return e.colaboradorId === colabId && (e.fecha || "").indexOf(adminMonth) === 0; })
+        .reduce(function (s, e) { return s + (Number(e.horas) || 0); }, 0);
+    }
+
+    function pintarAdmin() {
+      $segs.forEach(function (b) { b.classList.toggle("is-on", b.getAttribute("data-periodo") === adminPeriodo); });
+      $weekLabel.hidden = adminPeriodo !== "semana";
+      $monthLabel.hidden = adminPeriodo !== "mes";
+
+      if (adminPeriodo === "semana") {
+        var dias = diasDeLaSemana(adminWeekStart).map(parseISO);
+        $weekLabel.textContent = fechaCorta(dias[0]) + " – " + fechaCorta(dias[6]);
+      } else {
+        $monthLabel.textContent = nombreMes(adminMonth);
+      }
+
+      var filas = COLABORADORES.map(function (c) {
+        var horas = horasDelColaborador(c.id);
+        return { colaborador: c, horas: horas, cargo: horas > 0 };
+      }).sort(function (a, b) {
+        if (a.cargo !== b.cargo) return a.cargo ? 1 : -1; // los que faltan, primero
+        return a.colaborador.nombre.localeCompare(b.colaborador.nombre, "es");
+      });
+
+      var cargaron = filas.filter(function (f) { return f.cargo; }).length;
+      var periodoTxt = adminPeriodo === "semana" ? "esta semana" : "este mes";
+      document.getElementById("adminResumenTxt").textContent =
+        cargaron + " de " + filas.length + " colaboradores cargaron horas " + periodoTxt + ".";
+
+      var visibles = adminSoloFaltan ? filas.filter(function (f) { return !f.cargo; }) : filas;
+      document.getElementById("adminBody").innerHTML = visibles.length
+        ? visibles.map(function (f) {
+            return "<tr><td>" + esc(f.colaborador.nombre) + "</td><td>" + horasFmt(f.horas) + " hs</td><td>" +
+              (f.cargo
+                ? '<span class="ts-badge ts-badge--ok">✓ Cargó</span>'
+                : '<span class="ts-badge ts-badge--warn">⚠ Sin cargar</span>') +
+              "</td></tr>";
+          }).join("")
+        : '<tr><td colspan="3" class="ts-vacio">Todos cargaron horas en este período.</td></tr>';
+    }
+
+    pintarAdmin();
   }
 
   renderShell();

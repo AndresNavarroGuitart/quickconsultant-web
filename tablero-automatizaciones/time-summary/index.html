@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Alegreya+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/theme.css?v=1.3.0" />
-  <link rel="stylesheet" href="time-summary.css?v=1.3.0" />
+  <link rel="stylesheet" href="../assets/theme.css?v=1.4.0" />
+  <link rel="stylesheet" href="time-summary.css?v=1.4.0" />
 </head>
 <body>
   <header class="topbar">
@@ -56,6 +56,7 @@
       <a class="ts-tab" data-view="rastreador" href="#/rastreador">Rastreador</a>
       <a class="ts-tab" data-view="planilla" href="#/planilla">Planilla</a>
       <a class="ts-tab" data-view="resumen" href="#/resumen">Resumen mensual</a>
+      <a class="ts-tab" data-view="admin" href="#/admin">Administración</a>
     </nav>
 
     <div id="tsView"></div>
@@ -118,6 +119,35 @@
     </div>
   </template>
 
+  <template id="tpl-admin">
+    <p class="ts-resumen-nota">
+      Vista para RRHH: quiénes cargaron horas en el período elegido y quiénes todavía no.
+    </p>
+    <div class="ts-admin-head">
+      <div class="ts-seg-group">
+        <button type="button" class="ts-seg is-on" data-periodo="semana">Semana</button>
+        <button type="button" class="ts-seg" data-periodo="mes">Mes</button>
+      </div>
+      <div class="ts-weeknav">
+        <button type="button" id="adminPrev" aria-label="Período anterior">‹</button>
+        <span class="ts-weeknav__label" id="adminWeekLabel"></span>
+        <span class="ts-weeknav__label" id="adminMonthLabel" hidden></span>
+        <button type="button" id="adminNext" aria-label="Período siguiente">›</button>
+      </div>
+    </div>
+    <p class="ts-resumen-nota" id="adminResumenTxt"></p>
+    <label class="ts-admin-filtro">
+      <input type="checkbox" id="adminSoloFaltan" />
+      <span>Mostrar solo quienes no cargaron</span>
+    </label>
+    <div class="ts-grid-wrap">
+      <table class="ts-grid">
+        <thead><tr><th>Colaborador</th><th>Horas cargadas</th><th>Estado</th></tr></thead>
+        <tbody id="adminBody"></tbody>
+      </table>
+    </div>
+  </template>
+
   <!-- Popup de carga manual -->
   <div class="ts-modal" id="manualModal" hidden>
     <div class="ts-modal__backdrop" data-close></div>
@@ -159,8 +189,8 @@
     </div>
   </div>
 
-  <script src="../nomina/empleados-demo.js?v=1.3.0"></script>
-  <script src="time-entries-demo.js?v=1.3.0"></script>
-  <script src="time-summary.js?v=1.3.0"></script>
+  <script src="../nomina/empleados-demo.js?v=1.4.0"></script>
+  <script src="time-entries-demo.js?v=1.4.0"></script>
+  <script src="time-summary.js?v=1.4.0"></script>
 </body>
 </html>

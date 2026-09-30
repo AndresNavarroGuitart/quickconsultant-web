@@ -3,6 +3,16 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es/).
 Versionado: `tablero-vMAJOR.MINOR.PATCH` (tags de git + releases en GitHub).
 
+## [tablero-v1.4.0] — 2026-09-30
+
+### Agregado
+
+- **Time Summary · vista Administración** — nueva pestaña para RRHH: lista de
+  todos los colaboradores Activos con las horas cargadas en el período
+  (semana o mes, con navegación) y un estado **"✓ Cargó" / "⚠ Sin cargar"**,
+  con un filtro para ver solo a quienes falta.
+- `?v=` de JS/CSS: **1.3.0 → 1.4.0**.
+
 ## [tablero-v1.3.0] — 2026-09-30
 
 Actualización grande — trae al día este repo con el trabajo hecho en paralelo
@@ -176,6 +186,7 @@ Primera versión estable, publicada en GitHub Pages y compartible con clientes:
   hasta cargar el secret `NOTION_TOKEN` (ver `proyectos/SYNC.md`).
 - `assets/theme.css` compartido por todas las vistas.
 
+[tablero-v1.4.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.4.0
 [tablero-v1.3.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.3.0
 [tablero-v1.2.1]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.2.1
 [tablero-v1.2.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.2.0
