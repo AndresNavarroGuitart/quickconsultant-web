@@ -1070,14 +1070,21 @@
         headers: { 'Accept': 'application/json' },
         body: new FormData(form)
       })
-      .then(function(res) { return res.json(); })
-      .then(function(data) {
+      .then(function(res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.text();
+      })
+      .then(function(text) {
+        try { JSON.parse(text); } catch(e) {
+          console.warn('FormSubmit response (not JSON):', text.substring(0, 300));
+        }
         btn.textContent = '\u2713 Mensaje enviado!';
         btn.style.background = '#22c55e';
         btn.disabled = false;
         setTimeout(function() { btn.textContent = 'Enviar mensaje \u2192'; btn.style.background = ''; form.reset(); }, 3500);
       })
-      .catch(function() {
+      .catch(function(err) {
+        console.error('FormSubmit error:', err);
         btn.textContent = 'Error. Intent&#225; de nuevo.';
         btn.style.background = '#ef4444';
         btn.disabled = false;
