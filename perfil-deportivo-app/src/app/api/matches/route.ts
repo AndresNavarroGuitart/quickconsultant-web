@@ -63,6 +63,7 @@ export async function POST(request: Request) {
       position,
       minutesPlayed: parsed.data.minutesPlayed ?? null,
       stats,
+      source: parsed.data.source,
     },
     include: { club: true },
   });

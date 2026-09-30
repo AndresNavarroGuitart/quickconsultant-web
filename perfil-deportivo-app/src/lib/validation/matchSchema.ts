@@ -25,6 +25,7 @@ export const matchSchema = z.object({
   position: z.string().trim().max(60).optional().nullable(),
   minutesPlayed: z.coerce.number().int().min(0).max(600).optional().nullable(),
   stats: statsRecord,
+  source: z.enum(["MANUAL", "LIVE"]).optional().default("MANUAL"),
 });
 
 export const matchUpdateSchema = matchSchema.partial();

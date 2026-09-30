@@ -163,6 +163,14 @@ enum MatchResult {
   NOT_STARTED
 }
 
+// Como se cargo el partido: a mano (formulario de Partidos) o con el
+// registro en vivo (LiveMatchTracker). Distingue el peso en puntos de
+// gamificacion (ver src/lib/gamification/points.ts); no afecta nada mas.
+enum MatchSource {
+  MANUAL
+  LIVE
+}
+
 enum MatchCondition {
   LOCAL
   VISITANTE
@@ -193,6 +201,7 @@ model Match {
   // (ver src/lib/athlete/sportsCatalog.ts).
   position      String?
   minutesPlayed Int?
+  source        MatchSource @default(MANUAL)
 
   // Estadisticas del partido segun deporte + posicion. Objeto JSON
   // { [statKey]: number | boolean } con las keys del catalogo

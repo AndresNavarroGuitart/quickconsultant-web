@@ -659,6 +659,7 @@ export default function LiveMatchTracker({
         position: draft.position,
         minutesPlayed: minutes,
         stats: totals,
+        source: "LIVE",
       }),
     }).catch(() => null);
 
