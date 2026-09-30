@@ -415,10 +415,9 @@
       <div class="productos-contact-wrap fade-up">
         <h3>&#191;Te interesa alguno de nuestros productos?</h3>
         <p>Cont&#225;nos tu caso y te asesoramos sin compromiso.</p>
-        <form class="contact-form" id="formProductos" action="https://formsubmit.co/quickconsultora@gmail.com" method="POST" onsubmit="handleFormProductos(event)" novalidate>
-          <input type="hidden" name="_captcha" value="false" />
-          <input type="hidden" name="_subject" value="Nuevo contacto desde Quick Consultant - Productos" />
-          <input type="hidden" name="_next" id="form-next" value="" />
+        <form class="contact-form" id="formProductos" name="contacto-productos" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/productos.html?enviado=1" onsubmit="handleFormProductos(event)" novalidate>
+          <input type="hidden" name="form-name" value="contacto-productos" />
+          <input name="bot-field" style="display:none" />
           <div class="form-row">
             <div class="field-wrap">
               <input class="form-input" type="text" name="name" placeholder="Tu nombre" required />
@@ -545,28 +544,16 @@
         }
       });
       if (!valid) { e.preventDefault(); return; }
-      // Set redirect back to this page with ?enviado=1
-      document.getElementById('form-next').value = window.location.origin + window.location.pathname + '?enviado=1';
       form.querySelector('.btn-submit').textContent = 'Enviando...';
     }
 
-    // Show success message if redirected back after submission
-    window.addEventListener('DOMContentLoaded', function() {
-      if (window.location.search.indexOf('enviado=1') !== -1) {
-        var btn = document.querySelector('.btn-submit');
-        var form = document.getElementById('formProductos');
-        if (btn) { btn.textContent = '&#10003; Mensaje enviado!'; btn.style.background = '#22c55e'; }
-        if (form) form.style.display = 'none';
+    if (window.location.search.indexOf('enviado=1') !== -1) {
+      window.addEventListener('DOMContentLoaded', function() {
         var wrap = document.querySelector('.productos-contact-wrap');
-        if (wrap) {
-          var ok = document.createElement('p');
-          ok.style.cssText = 'color:#22c55e;font-weight:700;font-size:1.1rem;margin-top:24px;text-align:center;';
-          ok.textContent = '&#10003; ¡Gracias! Te contactamos a la brevedad.';
-          wrap.appendChild(ok);
-        }
+        if (wrap) wrap.innerHTML = '<p style="color:#22c55e;font-weight:700;font-size:1.2rem;text-align:center;padding:40px 0;">&#10003; &#161;Gracias! Te contactamos a la brevedad.</p>';
         history.replaceState(null, '', window.location.pathname);
-      }
-    });
+      });
+    }
   </script>
 </body>
 </html>
