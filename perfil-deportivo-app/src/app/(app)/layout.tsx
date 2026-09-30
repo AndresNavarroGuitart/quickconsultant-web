@@ -78,6 +78,13 @@ export default async function AppLayout({
             <ProfileNavMenu />
 
             <Link
+              href="/racha"
+              className="text-sm font-bold text-slate-700 transition-colors hover:text-brand-700"
+            >
+              Mi racha
+            </Link>
+
+            <Link
               href="/suscripcion"
               className="text-sm font-bold text-slate-700 transition-colors hover:text-brand-700"
             >
