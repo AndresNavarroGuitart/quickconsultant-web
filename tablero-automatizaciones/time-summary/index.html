@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Time Summary — Not a Bot Agency</title>
+  <meta name="description" content="Carga de horas trabajadas por colaborador, para liquidar el pago mensual." />
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Alegreya+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/theme.css?v=1.3.0" />
+  <link rel="stylesheet" href="time-summary.css?v=1.3.0" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="../index.html">
+        <img src="../assets/logo.svg" alt="Not a Bot Agency" height="40" />
+        <span class="brand__back">‹ Tablero</span>
+      </a>
+      <div class="topbar__actions">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar tema">
+          <span aria-hidden="true">◐</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" id="app"></main>
+
+  <footer class="foot">
+    <div class="foot__inner">
+      <img src="../assets/logo.svg" alt="" height="34" />
+      <p>Not a Bot Agency · Los datos se guardan en este navegador (localStorage).</p>
+    </div>
+  </footer>
+
+  <template id="tpl-shell">
+    <section class="page-head page-head--row">
+      <div>
+        <p class="eyebrow">RRHH &amp; Pagos</p>
+        <h1>Time Summary</h1>
+        <p class="lede">Cargá las horas que trabajaste este mes — se usan para liquidar el pago.</p>
+      </div>
+    </section>
+
+    <div class="ts-toolbar">
+      <label class="campo">
+        <span>Colaborador</span>
+        <select id="tsColaborador"></select>
+      </label>
+    </div>
+
+    <nav class="ts-tabs" id="tsTabs">
+      <a class="ts-tab" data-view="rastreador" href="#/rastreador">Rastreador</a>
+      <a class="ts-tab" data-view="planilla" href="#/planilla">Planilla</a>
+      <a class="ts-tab" data-view="resumen" href="#/resumen">Resumen mensual</a>
+    </nav>
+
+    <div id="tsView"></div>
+  </template>
+
+  <template id="tpl-rastreador">
+    <div class="ts-tracker">
+      <input type="text" class="ts-tracker__desc" id="trkDesc" placeholder="¿En qué estás trabajando?" />
+      <select id="trkProyecto"></select>
+      <input type="text" class="ts-tracker__tags" id="trkTags" placeholder="Etiquetas (opcional)" />
+      <span class="ts-tracker__time" id="trkTime">00:00:00</span>
+      <button type="button" class="ts-tracker__start" id="trkStart">Inicio</button>
+      <button type="button" class="ts-manual-btn" id="trkManual">+ Manual</button>
+    </div>
+    <div id="trkList"></div>
+  </template>
+
+  <template id="tpl-planilla">
+    <div class="ts-plan-head">
+      <div class="ts-weeknav">
+        <button type="button" id="planPrev" aria-label="Semana anterior">‹</button>
+        <span class="ts-weeknav__label" id="planLabel"></span>
+        <button type="button" id="planNext" aria-label="Semana siguiente">›</button>
+      </div>
+    </div>
+    <div class="ts-grid-wrap">
+      <table class="ts-grid">
+        <thead><tr id="planHeadRow"><th>Proyecto</th></tr></thead>
+        <tbody id="planBody"></tbody>
+        <tfoot><tr id="planFootRow"><td>Total</td></tr></tfoot>
+      </table>
+    </div>
+    <div class="ts-plan-actions">
+      <button type="button" class="btn btn--ghost" id="planAddRow">+ Añadir nueva fila</button>
+      <button type="button" class="btn btn--ghost" id="planCopyPrev">Copiar la semana pasada</button>
+      <button type="button" class="btn btn--ghost" id="planSaveTemplate">Guardar como plantilla</button>
+    </div>
+  </template>
+
+  <template id="tpl-resumen">
+    <p class="ts-resumen-nota">
+      Total de horas cargadas por colaborador en el mes elegido (suma del Rastreador y la
+      Planilla). Al enviar, este resumen se manda a la planilla de RRHH para liquidar el pago —
+      no queda guardado en este sitio.
+    </p>
+    <div class="ts-resumen-toolbar">
+      <label class="campo">
+        <span>Mes</span>
+        <input type="month" id="resMes" />
+      </label>
+    </div>
+    <div class="ts-grid-wrap">
+      <table class="ts-grid">
+        <thead><tr><th>Colaborador</th><th>Horas cargadas</th></tr></thead>
+        <tbody id="resBody"></tbody>
+      </table>
+    </div>
+    <div class="ts-plan-actions">
+      <button type="button" class="btn" id="resEnviar">Enviar resumen del mes →</button>
+    </div>
+  </template>
+
+  <!-- Popup de carga manual -->
+  <div class="ts-modal" id="manualModal" hidden>
+    <div class="ts-modal__backdrop" data-close></div>
+    <div class="ts-modal__panel" role="dialog" aria-modal="true" aria-labelledby="manualTitle">
+      <h2 id="manualTitle">Cargar horas manualmente</h2>
+      <p class="ts-form-error" id="manualError" hidden></p>
+      <form id="manualForm">
+        <div class="ts-modal__grid">
+          <label class="campo campo--wide">
+            <span>Descripción</span>
+            <input type="text" name="descripcion" placeholder="¿Qué hiciste?" />
+          </label>
+          <label class="campo">
+            <span>Proyecto</span>
+            <select name="proyecto" id="manualProyecto"></select>
+          </label>
+          <label class="campo">
+            <span>Fecha</span>
+            <input type="date" name="fecha" required />
+          </label>
+          <label class="campo">
+            <span>Inicio</span>
+            <input type="time" name="inicio" />
+          </label>
+          <label class="campo">
+            <span>Fin</span>
+            <input type="time" name="fin" />
+          </label>
+          <label class="campo campo--wide">
+            <span>o directamente horas (si no cargás inicio/fin)</span>
+            <input type="text" name="horas" placeholder="Ej: 2.5" />
+          </label>
+        </div>
+        <div class="ts-modal__actions">
+          <button type="button" class="btn btn--ghost" id="manualCancel">Cancelar</button>
+          <button type="submit" class="btn">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../nomina/empleados-demo.js?v=1.3.0"></script>
+  <script src="time-entries-demo.js?v=1.3.0"></script>
+  <script src="time-summary.js?v=1.3.0"></script>
+</body>
+</html>

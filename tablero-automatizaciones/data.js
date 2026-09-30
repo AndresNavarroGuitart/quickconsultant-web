@@ -50,6 +50,25 @@ window.TABLERO = {
       ],
     },
     {
+      id: "time-summary",
+      nombre: "Time Summary",
+      categoria: "rrhh",
+      estado: "operativo",
+      descripcion:
+        "Cada colaborador carga las horas que trabajó durante el mes (rastreador o planilla), agrupadas por proyecto. El resumen mensual se usa para liquidar el pago.",
+      frecuencia: "Continuo (carga del colaborador)",
+      ultimaEjecucion: "2026-09-29T12:00:00-03:00",
+      duracionMedia: "—",
+      exito7d: 100,
+      ejecuciones7d: 24,
+      responsable: "Equipo RRHH",
+      enlace: "time-summary/index.html",
+      corridas: [
+        { fecha: "2026-09-29T12:00:00-03:00", estado: "ok", detalle: "5 colaboradores con horas cargadas esta semana" },
+        { fecha: "2026-09-22T12:00:00-03:00", estado: "ok", detalle: "Semana cerrada sin observaciones" },
+      ],
+    },
+    {
       id: "pipeline-clientes",
       nombre: "Pipeline de clientes",
       categoria: "comercial",

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alta de colaborador — Not a Bot Agency</title>
+  <meta name="description" content="Formulario de alta para nuevos colaboradores y contractors de Not a Bot Agency." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="../assets/logo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Alegreya+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/theme.css?v=1.3.0" />
+  <link rel="stylesheet" href="alta-colaborador.css?v=1.3.0" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="https://notabotagency.es" target="_blank" rel="noopener">
+        <img src="../assets/logo.svg" alt="Not a Bot Agency" height="40" />
+      </a>
+      <div class="topbar__actions">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar tema">
+          <span aria-hidden="true">◐</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="ac-wrap">
+    <section class="ac-head">
+      <p class="eyebrow">Not a Bot Agency</p>
+      <h1>Alta de colaborador / Onboarding form</h1>
+      <p class="ac-lede">
+        Completá tus datos para la confección del contrato y el acuerdo de confidencialidad.
+        <br />Complete your details for the preparation of the contract and non-disclosure agreement.
+      </p>
+    </section>
+
+    <p class="ac-banner">
+      <b>Página independiente del Tablero de Operaciones interno.</b> Lo que completes acá
+      no se guarda en este sitio: se envía directo a un formulario privado de Not a Bot en
+      Google Workspace. No se publica ni queda visible para terceros.
+    </p>
+
+    <form class="ac-form" id="altaForm" novalidate>
+
+      <fieldset class="ac-fs">
+        <legend>Datos personales / Personal details</legend>
+        <div class="ac-grid">
+          <label class="ac-field">
+            <span>Nombres <b>*</b></span>
+            <input type="text" name="nombre" autocomplete="given-name" required />
+            <p class="ac-error">Completá tu nombre tal como figura en el DNI.</p>
+          </label>
+          <label class="ac-field">
+            <span>Apellidos <b>*</b></span>
+            <input type="text" name="apellido" autocomplete="family-name" required />
+            <p class="ac-error">Completá tu apellido.</p>
+          </label>
+
+          <label class="ac-field">
+            <span>DNI <b>*</b></span>
+            <input type="text" name="documento" required />
+            <p class="ac-error">Completá tu número de documento.</p>
+          </label>
+          <label class="ac-field">
+            <span>CUIT / CUIL (Argentina) o Nº de identificación fiscal (otros países) <b>*</b></span>
+            <input type="text" name="cuit" required />
+            <p class="ac-error">Completá tu identificación fiscal.</p>
+          </label>
+
+          <label class="ac-field">
+            <span>Número de pasaporte</span>
+            <input type="text" name="pasaporte" />
+          </label>
+          <label class="ac-field">
+            <span>Nacionalidad <b>*</b></span>
+            <input type="text" name="nacionalidad" required />
+            <p class="ac-error">Completá tu nacionalidad.</p>
+          </label>
+
+          <label class="ac-field ac-field--wide">
+            <span>Domicilio <b>*</b></span>
+            <input type="text" name="domicilio" autocomplete="street-address" required />
+            <p class="ac-error">Completá tu domicilio.</p>
+          </label>
+
+          <label class="ac-field">
+            <span>Código postal <b>*</b></span>
+            <input type="text" name="codigoPostal" autocomplete="postal-code" required />
+            <p class="ac-error">Completá tu código postal.</p>
+          </label>
+          <label class="ac-field">
+            <span>Ciudad <b>*</b></span>
+            <input type="text" name="ciudad" autocomplete="address-level2" required />
+            <p class="ac-error">Completá tu ciudad.</p>
+          </label>
+          <label class="ac-field">
+            <span>Provincia / Estado <b>*</b></span>
+            <input type="text" name="provincia" autocomplete="address-level1" required />
+            <p class="ac-error">Completá tu provincia o estado.</p>
+          </label>
+          <label class="ac-field">
+            <span>País <b>*</b></span>
+            <select name="pais" required>
+              <option value="">Elegí un país…</option>
+              <option>Argentina</option>
+              <option>Uruguay</option>
+              <option>Chile</option>
+              <option>Paraguay</option>
+              <option>Bolivia</option>
+              <option>Perú</option>
+              <option>Colombia</option>
+              <option>Ecuador</option>
+              <option>Venezuela</option>
+              <option>México</option>
+              <option>Brasil</option>
+              <option>España</option>
+              <option>Estados Unidos</option>
+              <option>Otro</option>
+            </select>
+            <p class="ac-error">Elegí tu país.</p>
+          </label>
+
+          <label class="ac-field ac-field--wide">
+            <span>Profesión <b>*</b></span>
+            <input type="text" name="profesion" required />
+            <p class="ac-error">Completá tu profesión.</p>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="ac-fs">
+        <legend>Contacto / Contact</legend>
+        <div class="ac-grid">
+          <label class="ac-field">
+            <span>Correo electrónico <b>*</b></span>
+            <input type="email" name="mail" autocomplete="email" required />
+            <p class="ac-error">Ingresá un mail válido.</p>
+          </label>
+          <label class="ac-field">
+            <span>Repetir correo electrónico <b>*</b></span>
+            <input type="email" name="mailRepetir" required />
+            <p class="ac-error">Los mails no coinciden.</p>
+          </label>
+
+          <label class="ac-field">
+            <span>Número de teléfono móvil <b>*</b></span>
+            <input type="tel" name="telefono" autocomplete="tel" required />
+            <p class="ac-error">Completá tu teléfono móvil.</p>
+          </label>
+          <label class="ac-field">
+            <span>Perfil de LinkedIn</span>
+            <input type="url" name="linkedin" placeholder="https://www.linkedin.com/in/…" />
+          </label>
+
+          <label class="ac-field">
+            <span>¿Whatsapp? <b>*</b></span>
+            <select name="whatsapp" required>
+              <option value="">Elegí…</option>
+              <option>Si</option>
+              <option>No</option>
+            </select>
+            <p class="ac-error">Elegí una opción.</p>
+          </label>
+          <label class="ac-field">
+            <span>¿Telegram? <b>*</b></span>
+            <select name="telegram" required>
+              <option value="">Elegí…</option>
+              <option>Si</option>
+              <option>No</option>
+            </select>
+            <p class="ac-error">Elegí una opción.</p>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="ac-fs">
+        <legend>Datos de pago · Wallet USDC</legend>
+        <p class="ac-fs__hint">Para el pago de honorarios en USDC.</p>
+        <div class="ac-grid">
+          <label class="ac-field">
+            <span>Red / plataforma de la wallet <b>*</b></span>
+            <select name="walletRed" required>
+              <option value="">Elegí…</option>
+              <option>Red BNB Smart Chain - BEP20</option>
+              <option>Red ARBITRUM ONE</option>
+              <option>Red POLYGON</option>
+            </select>
+            <p class="ac-error">Elegí la red de tu wallet.</p>
+          </label>
+          <label class="ac-field">
+            <span>Dirección de wallet (USDC) <b>*</b></span>
+            <input type="text" name="walletDireccion" required />
+            <p class="ac-error">Completá la dirección de tu wallet.</p>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="ac-fs">
+        <legend>Documentación / Documents</legend>
+        <p class="ac-fs__hint">
+          Subí una foto o archivo desde tu galería. Formatos de imagen (JPG/PNG) para el DNI y
+          el pasaporte; PDF para el CV.
+        </p>
+        <div class="ac-grid">
+          <div class="ac-field ac-field--wide">
+            <span>Frente de DNI <b>*</b></span>
+            <div class="ac-file" data-file-field="docFrenteDni">
+              <input type="file" name="docFrenteDni" accept="image/*" capture="environment" required />
+              <span class="ac-file__note">Podés sacar una foto o elegir un archivo de la galería.</span>
+              <span class="ac-file__status"></span>
+            </div>
+            <p class="ac-error">Adjuntá el frente de tu DNI.</p>
+          </div>
+          <div class="ac-field ac-field--wide">
+            <span>Dorso de DNI <b>*</b></span>
+            <div class="ac-file" data-file-field="docDorsoDni">
+              <input type="file" name="docDorsoDni" accept="image/*" capture="environment" required />
+              <span class="ac-file__note">Podés sacar una foto o elegir un archivo de la galería.</span>
+              <span class="ac-file__status"></span>
+            </div>
+            <p class="ac-error">Adjuntá el dorso de tu DNI.</p>
+          </div>
+          <div class="ac-field ac-field--wide">
+            <span>Pasaporte</span>
+            <div class="ac-file" data-file-field="docPasaporte">
+              <input type="file" name="docPasaporte" accept="image/*" />
+              <span class="ac-file__note">Opcional — solo si tenés pasaporte vigente.</span>
+              <span class="ac-file__status"></span>
+            </div>
+          </div>
+          <div class="ac-field ac-field--wide">
+            <span>Adjuntar CV en PDF <b>*</b></span>
+            <div class="ac-file" data-file-field="docCV">
+              <input type="file" name="docCV" accept="application/pdf" required />
+              <span class="ac-file__note">Solo formato PDF.</span>
+              <span class="ac-file__status"></span>
+            </div>
+            <p class="ac-error">Adjuntá tu CV en PDF.</p>
+          </div>
+        </div>
+      </fieldset>
+
+      <p class="ac-form-error" id="formError" hidden></p>
+
+      <div class="ac-actions">
+        <button type="submit" class="btn" id="btnContinuar">Continuar →</button>
+        <span class="ac-progress" id="progresoTexto"></span>
+      </div>
+    </form>
+  </main>
+
+  <footer class="foot">
+    <div class="foot__inner">
+      <img src="../assets/logo.svg" alt="" height="34" />
+      <p>Not a Bot Agency · Tus datos se envían de forma privada, no se publican en este sitio.</p>
+    </div>
+  </footer>
+
+  <!-- Popup de consentimiento -->
+  <div class="ac-modal" id="consentModal" hidden>
+    <div class="ac-modal__backdrop" data-close></div>
+    <div class="ac-modal__panel" role="dialog" aria-modal="true" aria-labelledby="consentTitle">
+      <h2 id="consentTitle">Consentimiento para el tratamiento de datos personales</h2>
+      <div class="ac-modal__pending" id="consentPending">
+        ⚠ Texto legal pendiente de revisión: este aviso debe reemplazarse por el texto oficial
+        de Not a Bot Agency antes de usar este formulario con colaboradores reales.
+      </div>
+      <div class="ac-modal__legal" id="consentText"></div>
+      <label class="ac-modal__accept">
+        <input type="checkbox" id="consentCheckbox" />
+        <span>He leído y acepto el tratamiento de mis datos personales conforme a lo detallado arriba.</span>
+      </label>
+      <div class="ac-modal__actions">
+        <button type="button" class="btn btn--ghost" id="btnCancelarConsent">Cancelar</button>
+        <button type="button" class="btn" id="btnConfirmarConsent" disabled>Confirmar y enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paso final: subir documentación (Google Forms nativo, requiere login Google) -->
+  <div class="ac-modal" id="docsModal" hidden>
+    <div class="ac-modal__backdrop" data-close></div>
+    <div class="ac-modal__panel" role="dialog" aria-modal="true" aria-labelledby="docsTitle">
+      <div class="ac-docstep">
+        <div class="ac-docstep__ok" aria-hidden="true">✓</div>
+        <h2 id="docsTitle">¡Tus datos se enviaron correctamente!</h2>
+        <p>
+          Para terminar el alta, nos falta que subas tu documentación (DNI, pasaporte si
+          corresponde, y tu CV). Se hace en un formulario aparte de Google porque necesita que
+          inicies sesión con tu cuenta de Google para poder guardar los archivos de forma segura.
+        </p>
+        <a class="btn" id="btnIrDocs" href="#" target="_blank" rel="noopener">Subir mi documentación →</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="alta-colaborador.js?v=1.3.0"></script>
+</body>
+</html>

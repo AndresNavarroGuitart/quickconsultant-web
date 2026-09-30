@@ -3,6 +3,44 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es/).
 Versionado: `tablero-vMAJOR.MINOR.PATCH` (tags de git + releases en GitHub).
 
+## [tablero-v1.3.0] — 2026-09-30
+
+Actualización grande — trae al día este repo con el trabajo hecho en paralelo
+en `notabot-tablero-operaciones` (repo propio del tablero, ver ese repo para
+el detalle incremental versión por versión).
+
+### Agregado
+
+- **Módulo Time Summary** (`time-summary/`) — carga de horas trabajadas por
+  colaborador para liquidar el pago mensual, inspirado en Clockify: Rastreador
+  (cronómetro + carga manual), Planilla (grilla semanal editable) y Resumen
+  mensual (con envío a un Google Form/Sheet de RRHH, todavía sin conectar —
+  ver `time-summary/SETUP.md`). Forma parte del tablero (listado en `data.js`).
+- **Formulario de alta de colaborador** (`alta-colaborador/`) — página
+  independiente del tablero (sin nav hacia/desde el resto), con los campos
+  del contrato/NDA (datos personales, wallet USDC, documentación) y popup de
+  consentimiento. Envío todavía sin conectar — ver `alta-colaborador/SETUP.md`.
+- `PLAN-PRODUCCION.md` — roadmap para pasar a producción con datos reales
+  (login con Google, base de datos, roles, cifrado, logging de accesos).
+- `nomina/EMPLEADOS-SYNC.md` — plan para conectar el alta de empleados a un
+  Google Form/Sheet de RRHH (no implementado; requiere destino privado).
+
+### Cambiado
+
+- **Nómina · ficha del colaborador rediseñada como panel** de una sola página
+  (reemplaza las 5 solapas anteriores): Datos personales, Asignación operativa,
+  PTO, Equipamiento, Seguimiento de la persona, Estado de la relación.
+  Documentos y Administración quedan como pestañas. Vista y edición separadas.
+- **Nómina · listado inicial**: columnas Colaborador · Estado · Cliente/Proyecto
+  · Rol · País · Dedicación · Inicio · Seguimiento, todo desde la interna de
+  cada colaborador.
+- **Portada · KPI "Total de empleados activos"**: cuenta solo estado `Activo`.
+- **Proyectos**: se removieron del snapshot los nombres de contacto
+  (`stakeholder`) de clientes reales — dato personal de terceros que no
+  corresponde tener en un repo público. Los nombres de empresas cliente y la
+  estructura de proyectos se mantienen.
+- `?v=` de JS/CSS: **1.2.1 → 1.3.0**.
+
 ## [tablero-v1.2.1] — 2026-09-07
 
 ### Cambiado
@@ -138,6 +176,7 @@ Primera versión estable, publicada en GitHub Pages y compartible con clientes:
   hasta cargar el secret `NOTION_TOKEN` (ver `proyectos/SYNC.md`).
 - `assets/theme.css` compartido por todas las vistas.
 
+[tablero-v1.3.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.3.0
 [tablero-v1.2.1]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.2.1
 [tablero-v1.2.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.2.0
 [tablero-v1.1.0]: https://github.com/AndresNavarroGuitart/quickconsultant-web/releases/tag/tablero-v1.1.0

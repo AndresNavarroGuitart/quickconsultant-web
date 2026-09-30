@@ -26,39 +26,43 @@ terracota `#C84E1E`. Soporta tema claro/oscuro.
 | `nomina/` | **Módulo Nómina de empleados** (ver abajo) |
 | `pipeline/` | **Módulo Pipeline de Clientes** (ver abajo) |
 | `proyectos/` | **Módulo Proyectos** — espejo del tablero de Notion (ver abajo) |
+| `time-summary/` | **Módulo Time Summary** — carga de horas para liquidar el pago (ver abajo) |
+| `alta-colaborador/` | **Formulario de alta de colaborador** — independiente del tablero (ver abajo) |
+| `PLAN-PRODUCCION.md` | Roadmap para pasar a producción (login, base de datos, roles, cifrado, logging) |
 
 ## Módulo: Nómina de empleados (`nomina/`)
 
-Alta y ficha de empleados. La lista es una planilla; cada fila abre la ficha del
-empleado, que tiene **5 solapas**:
+Listado de colaboradores (planilla) + ficha en **formato panel** de una sola página.
 
-1. **Datos personales** — foto, nombre, apellido, DNI/RUT/Cédula, pasaporte,
-   CUIT/CUIL, dirección legal, barrio, localidad, provincia, país, mail, LinkedIn,
-   tipo de contrato y cantidad de horas.
-2. **Licencias** — tabla de licencias (tipo, fechas, días calculados, estado) con
-   alta y baja; resumen de días tomados y pendientes.
-3. **Desempeño** — evaluaciones por período (evaluador, calificación, resumen).
-4. **Documentos** — documentos del legajo (nombre, tipo, fecha y archivo opcional
-   guardado en el navegador).
-5. **Administración** — legajo, fecha de ingreso, centro de costo, datos bancarios,
-   moneda, remuneración, periodicidad y cobertura.
+**Listado** — columnas: Colaborador · Estado (Activo / Inactivo / Próximo Ingreso /
+Std By) · Cliente / Proyecto · Rol · País · Dedicación · Inicio · Seguimiento
+(derivado). Buscador por nombre, cliente, rol, estado.
 
-En un empleado nuevo, las solapas 2–5 se habilitan recién al guardar los datos
-personales.
+**Ficha** (`#/empleado/:id`) — panel con encabezado (avatar, estado, `rol · cliente /
+proyecto`, botón Editar), barra resumen (dedicación · país · ingreso · seguimiento) y
+tarjetas: **Datos personales**, **Asignación operativa**, **PTO** (días disponibles
+calculados + movimientos), **Equipamiento** (+ historial), **Seguimiento de la
+persona**, **Estado de la relación** (semáforo Todo en orden / Requiere atención /
+Riesgo de continuidad). **Documentos** y **Administración** son pestañas.
 
-Los datos se guardan en `localStorage` del navegador (clave `nba-nomina-empleados`),
-sin backend. Router por hash: `#/` lista · `#/nuevo` alta · `#/empleado/:id` edición.
+**Edición** (`#/empleado/:id/editar`) separada de la vista; alta en `#/nuevo`.
 
-La primera vez que se abre el módulo se cargan **10 empleados de ejemplo**
-(`empleados-demo.js`). Desde el estado vacío hay un botón para volver a cargarlos.
-Al conectar datos reales, borrar `empleados-demo.js` y su `<script>` en `index.html`.
+Persistencia en `localStorage` (clave `nba-nomina-empleados`), sin backend. Router por
+hash: `#/` · `#/nuevo` · `#/empleado/:id` · `#/empleado/:id/{doc,adm,editar}`.
+
+La primera vez se cargan **10 colaboradores de ejemplo** (`empleados-demo.js`, datos
+ficticios). Desde el estado vacío hay un botón para recargarlos. Al conectar datos
+reales, borrar `empleados-demo.js` y su `<script>` en `index.html`.
+
+> Hay un Google Form/Sheet de RRHH que podría alimentar esto automáticamente, pero
+> **no está conectado a propósito** — ver [`nomina/EMPLEADOS-SYNC.md`](nomina/EMPLEADOS-SYNC.md).
 
 | Archivo | Rol |
 |---|---|
-| `nomina/index.html` | Estructura + plantillas de lista y formulario |
-| `nomina/nomina.css` | Estilos de la lista y la ficha |
-| `nomina/nomina.js` | Router, CRUD sobre localStorage, validación del formulario |
-| `nomina/empleados-demo.js` | Dataset de ejemplo (10 empleados) |
+| `nomina/index.html` | Estructura + plantilla del listado (`tpl-lista`) |
+| `nomina/nomina.css` | Estilos del listado y del panel |
+| `nomina/nomina.js` | Router, vistas (listado / ficha / edición), CRUD sobre localStorage |
+| `nomina/empleados-demo.js` | Dataset de ejemplo (10 colaboradores) |
 
 ## Módulo: Pipeline de Clientes (`pipeline/`)
 
@@ -112,8 +116,79 @@ módulo.
 | `proyectos/proyectos.js` | Render, filtros y ficha (solo lectura) |
 | `proyectos/proyectos-data.js` | Datos (snapshot de Notion o generado por el sync) |
 | `proyectos/sync-proyectos.mjs` | Script que baja el tablero de Notion y regenera el `.js` |
-| `proyectos/SYNC.md` | Cómo activar el sync automático |
-| `../.github/workflows/sync-proyectos.yml` | Workflow que corre el sync cada hora |
+| `proyectos/SYNC.md` | Cómo activar el sync automático (workflow de GitHub Actions) |
+
+> El workflow de sync **no** corre hoy (falta el secret `NOTION_TOKEN`): mientras el
+> repo sea público, no debe activarse (publicaría datos de Notion). Ver `proyectos/SYNC.md`.
+
+## Módulo: Time Summary (`time-summary/`)
+
+Carga de horas trabajadas por colaborador durante el mes, para liquidar el pago.
+Inspirado en Clockify. Tres vistas:
+
+- **Rastreador** — barra superior con descripción, proyecto, etiquetas y un
+  cronómetro (Inicio/Detener); también se puede cargar una entrada manual
+  (fecha + inicio/fin, o directamente la cantidad de horas). El listado agrupa
+  las entradas por semana y por día, con el total de cada una.
+- **Planilla** — grilla semanal (filas = proyecto, columnas = días) con celdas
+  editables. Botones para agregar una fila de proyecto, copiar las horas de la
+  semana pasada, o guardar la lista de proyectos como plantilla para las
+  próximas semanas.
+- **Resumen mensual** — total de horas por colaborador en el mes elegido
+  (suma del Rastreador + la Planilla), con un botón para enviarlo a una
+  planilla de RRHH (no queda guardado en este sitio).
+
+El colaborador se elige de un desplegable poblado con los empleados **Activos**
+de Nómina; el proyecto por defecto sale del `cliente`/`proyecto` de su ficha.
+
+Persistencia en `localStorage` (`nba-timesummary-*`), sin backend. A diferencia
+de `alta-colaborador/`, **sí** forma parte del tablero (está listado en
+`data.js` y tiene el link "‹ Tablero").
+
+**Estado:** el envío del resumen mensual todavía no está conectado a un Google
+Form real — ver [`time-summary/SETUP.md`](time-summary/SETUP.md). Mientras
+tanto, avisa explícitamente que no está conectado en vez de simular un envío.
+
+Como no hay login, cualquiera puede cargarle horas a cualquier colaborador del
+desplegable — no es un problema de datos personales (acá no hay DNI ni datos
+bancarios) pero sí de control de integridad para un proceso que define un pago;
+se resuelve con el login real de `PLAN-PRODUCCION.md`.
+
+| Archivo | Rol |
+|---|---|
+| `time-summary/index.html` | Estructura + plantillas de las 3 vistas |
+| `time-summary/time-summary.css` | Estilos propios |
+| `time-summary/time-summary.js` | Router, cronómetro, planilla, resumen mensual y envío (config pendiente) |
+| `time-summary/time-entries-demo.js` | Dataset de ejemplo (ficticio) |
+| `time-summary/SETUP.md` | Cómo conectar el envío del resumen mensual |
+
+## Formulario: Alta de colaborador (`alta-colaborador/`)
+
+Formulario para que un colaborador/contractor nuevo cargue sus datos (personales,
+contacto, wallet USDC) y documentación (DNI frente/dorso, pasaporte, CV en PDF) para el
+contrato y el NDA. **Es una página aparte, no forma parte del Tablero de
+Operaciones** — no tiene navegación hacia el tablero ni viceversa, y no aparece
+listada como proceso en `data.js`. Comparte solo la identidad visual
+(`assets/theme.css`, tipografías, logo).
+
+No usa `localStorage` ni escribe nada en este repo: los campos de texto se
+envían a un Google Form/Sheet privado de Not a Bot, y la documentación se sube
+aparte en un Google Form nativo (los adjuntos de Google Forms exigen login con
+Google, no se pueden recibir desde una página externa). El popup de
+consentimiento de datos personales se muestra recién cuando están completos
+todos los campos obligatorios.
+
+**Estado:** el diseño y la validación están completos, pero **el envío real
+todavía no está conectado** (faltan la URL del Google Form y el texto legal
+definitivo de Not a Bot) — ver [`alta-colaborador/SETUP.md`](alta-colaborador/SETUP.md)
+para dejarlo operativo.
+
+| Archivo | Rol |
+|---|---|
+| `alta-colaborador/index.html` | Estructura del formulario + popups de consentimiento y de documentación |
+| `alta-colaborador/alta-colaborador.css` | Estilos propios |
+| `alta-colaborador/alta-colaborador.js` | Validación, popup de consentimiento, envío (config pendiente) |
+| `alta-colaborador/SETUP.md` | Cómo conectarlo a un Google Form real |
 
 ## Cómo agregar o editar un proceso
 
