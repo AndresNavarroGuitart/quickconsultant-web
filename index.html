@@ -993,7 +993,7 @@
       <h2 class="section-title fade-up fade-up-delay-1">&#191;Listo para transformar<br><span class="grad-text">tu negocio?</span></h2>
       <p class="section-sub fade-up fade-up-delay-2">Cont&#225;nos sobre tu empresa y te ayudamos a dise&#241;ar el camino hacia la transformaci&#243;n digital.</p>
       <div class="contact-form-wrap fade-up fade-up-delay-3">
-        <form class="contact-form" id="formIndex" name="contacto-home" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/?enviado=1" onsubmit="handleForm(event)" novalidate>
+        <form class="contact-form" id="formIndex" name="contacto-home" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleForm(event)" novalidate>
           <input type="hidden" name="form-name" value="contacto-home" />
           <input name="bot-field" style="display:none" />
           <div class="form-row">
@@ -1047,6 +1047,7 @@
     }, { threshold: 0.12 });
     document.querySelectorAll('.fade-up').forEach(function(el) { observer.observe(el); });
     function handleForm(e) {
+      e.preventDefault();
       var form = e.target;
       var fields = form.querySelectorAll('[required]');
       var valid = true;
@@ -1061,14 +1062,21 @@
           if (err) err.classList.remove('show');
         }, { once: true });
       });
-      if (!valid) { e.preventDefault(); return; }
-      form.querySelector('.btn-submit').textContent = 'Enviando...';
-    }
-    if (window.location.search.indexOf('enviado=1') !== -1) {
-      window.addEventListener('DOMContentLoaded', function() {
+      if (!valid) return;
+      var btn = form.querySelector('.btn-submit');
+      btn.textContent = 'Enviando...';
+      btn.disabled = true;
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(form)).toString()
+      }).then(function() {
         var wrap = document.querySelector('.contact-form-wrap');
         if (wrap) wrap.innerHTML = '<p style="color:#22c55e;font-weight:700;font-size:1.2rem;text-align:center;padding:40px 0;">&#10003; &#161;Gracias! Te contactamos a la brevedad.</p>';
-        history.replaceState(null, '', window.location.pathname);
+      }).catch(function() {
+        btn.textContent = 'Enviar';
+        btn.disabled = false;
+        alert('Hubo un error. Por favor intentá de nuevo.');
       });
     }
   // Acordeon servicios mobile

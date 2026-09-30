@@ -415,7 +415,7 @@
       <div class="productos-contact-wrap fade-up">
         <h3>&#191;Te interesa alguno de nuestros productos?</h3>
         <p>Cont&#225;nos tu caso y te asesoramos sin compromiso.</p>
-        <form class="contact-form" id="formProductos" name="contacto-productos" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/productos.html?enviado=1" onsubmit="handleFormProductos(event)" novalidate>
+        <form class="contact-form" id="formProductos" name="contacto-productos" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleFormProductos(event)" novalidate>
           <input type="hidden" name="form-name" value="contacto-productos" />
           <input name="bot-field" style="display:none" />
           <div class="form-row">
@@ -529,6 +529,7 @@
 
     // Form handler
     function handleFormProductos(e) {
+      e.preventDefault();
       var form = e.target;
       var valid = true;
       form.querySelectorAll('[required]').forEach(function(field) {
@@ -543,15 +544,21 @@
           if (err) err.classList.remove('show');
         }
       });
-      if (!valid) { e.preventDefault(); return; }
-      form.querySelector('.btn-submit').textContent = 'Enviando...';
-    }
-
-    if (window.location.search.indexOf('enviado=1') !== -1) {
-      window.addEventListener('DOMContentLoaded', function() {
+      if (!valid) return;
+      var btn = form.querySelector('.btn-submit');
+      btn.textContent = 'Enviando...';
+      btn.disabled = true;
+      fetch('/productos.html', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(form)).toString()
+      }).then(function() {
         var wrap = document.querySelector('.productos-contact-wrap');
         if (wrap) wrap.innerHTML = '<p style="color:#22c55e;font-weight:700;font-size:1.2rem;text-align:center;padding:40px 0;">&#10003; &#161;Gracias! Te contactamos a la brevedad.</p>';
-        history.replaceState(null, '', window.location.pathname);
+      }).catch(function() {
+        btn.textContent = 'Enviar';
+        btn.disabled = false;
+        alert('Hubo un error. Por favor intentá de nuevo.');
       });
     }
   </script>
