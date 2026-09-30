@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -993,7 +993,10 @@
       <h2 class="section-title fade-up fade-up-delay-1">&#191;Listo para transformar<br><span class="grad-text">tu negocio?</span></h2>
       <p class="section-sub fade-up fade-up-delay-2">Cont&#225;nos sobre tu empresa y te ayudamos a dise&#241;ar el camino hacia la transformaci&#243;n digital.</p>
       <div class="contact-form-wrap fade-up fade-up-delay-3">
-        <form class="contact-form" onsubmit="handleForm(event)" novalidate>
+        <form class="contact-form" id="formIndex" action="https://formsubmit.co/quickconsultora@gmail.com" method="POST" onsubmit="handleForm(event)" novalidate>
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_subject" value="Nuevo contacto desde Quick Consultant" />
+          <input type="hidden" name="_next" id="form-next-index" value="" />
           <div class="form-row">
             <div class="field-wrap"><input class="form-input" type="text" name="name" placeholder="Tu nombre" required /><span class="field-error">😉 Campo obligatorio</span></div>
             <div class="field-wrap"><input class="form-input" type="email" name="email" placeholder="Tu email" required /><span class="field-error">😉 Campo obligatorio</span></div>
@@ -1045,9 +1048,7 @@
     }, { threshold: 0.12 });
     document.querySelectorAll('.fade-up').forEach(function(el) { observer.observe(el); });
     function handleForm(e) {
-      e.preventDefault();
       var form = e.target;
-      // Validación personalizada
       var fields = form.querySelectorAll('[required]');
       var valid = true;
       fields.forEach(function(f) {
@@ -1061,34 +1062,17 @@
           if (err) err.classList.remove('show');
         }, { once: true });
       });
-      if (!valid) return;
-      var btn = form.querySelector('.btn-submit');
-      btn.textContent = 'Enviando...';
-      btn.disabled = true;
-      fetch('https://formsubmit.co/ajax/quickconsultora@gmail.com', {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: new FormData(form)
-      })
-      .then(function(res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.text();
-      })
-      .then(function(text) {
-        try { JSON.parse(text); } catch(e) {
-          console.warn('FormSubmit response (not JSON):', text.substring(0, 300));
+      if (!valid) { e.preventDefault(); return; }
+      document.getElementById('form-next-index').value = window.location.origin + window.location.pathname + '?enviado=1';
+      form.querySelector('.btn-submit').textContent = 'Enviando...';
+    }
+    if (window.location.search.indexOf('enviado=1') !== -1) {
+      window.addEventListener('DOMContentLoaded', function() {
+        var wrap = document.querySelector('.contact-form-wrap');
+        if (wrap) {
+          wrap.innerHTML = '<p style="color:#22c55e;font-weight:700;font-size:1.2rem;text-align:center;padding:40px 0;">&#10003; &#161;Gracias! Te contactamos a la brevedad.</p>';
         }
-        btn.textContent = '\u2713 Mensaje enviado!';
-        btn.style.background = '#22c55e';
-        btn.disabled = false;
-        setTimeout(function() { btn.textContent = 'Enviar mensaje \u2192'; btn.style.background = ''; form.reset(); }, 3500);
-      })
-      .catch(function(err) {
-        console.error('FormSubmit error:', err);
-        btn.textContent = 'Error. Intent&#225; de nuevo.';
-        btn.style.background = '#ef4444';
-        btn.disabled = false;
-        setTimeout(function() { btn.textContent = 'Enviar mensaje \u2192'; btn.style.background = ''; }, 3000);
+        history.replaceState(null, '', window.location.pathname);
       });
     }
   // Acordeon servicios mobile
