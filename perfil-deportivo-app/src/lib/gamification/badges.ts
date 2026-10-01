@@ -9,7 +9,8 @@ export type BadgeId =
 export type Badge = {
   id: BadgeId;
   label: string;
-  description: string;
+  // Texto corto para la tarjeta del logro (no la descripcion larga).
+  sub: string;
   unlocked: boolean;
 };
 
@@ -27,37 +28,37 @@ export function computeBadges(i: BadgeInputs): Badge[] {
     {
       id: "primer_paso",
       label: "Primer paso",
-      description: "Registraste tu primera accion en la app.",
+      sub: "Tu primera acción registrada",
       unlocked: i.totalPoints > 0,
     },
     {
       id: "constante",
       label: "Constante",
-      description: "3 semanas seguidas con actividad.",
+      sub: "3 semanas de racha",
       unlocked: i.streakWeeks >= 3,
     },
     {
       id: "fotografo",
       label: "Fotógrafo",
-      description: "Subiste al menos una foto.",
+      sub: "Subiste una foto",
       unlocked: i.photos >= 1,
     },
     {
       id: "trotamundos",
       label: "Trotamundos",
-      description: "Pasaste por 2 o más clubes.",
+      sub: "2 clubes distintos",
       unlocked: i.clubs >= 2,
     },
     {
       id: "perfil_completo",
       label: "Perfil 100%",
-      description: "Completaste todos los datos de tu perfil.",
+      sub: "Todos los datos cargados",
       unlocked: i.profileComplete,
     },
     {
       id: "cronista",
       label: "Cronista",
-      description: "Cargaste 10 o más partidos.",
+      sub: "10 partidos cargados",
       unlocked: i.matchesTotal >= 10,
     },
   ];

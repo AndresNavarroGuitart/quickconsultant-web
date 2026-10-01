@@ -104,11 +104,12 @@ export type LeaderboardRow = {
 
 export type Leaderboard = {
   total: number;
-  podium: LeaderboardRow[];
-  // Filas alrededor de la posicion del perfil (o las primeras si esta en el
-  // podio), mas la propia fila si no entra en ese recorte.
-  around: LeaderboardRow[];
+  podium: LeaderboardRow[]; // puestos 1-3 (o menos si hay menos de 3 en total)
+  nextRows: LeaderboardRow[]; // puestos 4-6
   me: LeaderboardRow;
+  // Si el perfil ya aparece en podium/nextRows (puesto <= 6) no hace falta
+  // mostrar su fila aparte con el "···" antes.
+  meInList: boolean;
 };
 
 // Ranking anonimo de TODOS los perfiles activos (cuentas no borradas ni
@@ -172,22 +173,20 @@ export async function getLeaderboard(profileId: string): Promise<Leaderboard> {
     ? { rank: ranked[meIndex].rank, points: ranked[meIndex].points, isMe: true }
     : { rank: ranked.length + 1, points: 0, isMe: true };
 
-  const podium = ranked.slice(0, 3).map((r) => ({
+  const toRow = (r: (typeof ranked)[number]): LeaderboardRow => ({
     rank: r.rank,
     points: r.points,
     isMe: r.id === profileId,
-  }));
+  });
 
-  // 3 filas alrededor del perfil (una arriba, el resto abajo), sin repetir
-  // lo que ya se ve en el podio.
-  const aroundStart = Math.max(3, meIndex - 1);
-  const around = meIndex >= 0
-    ? ranked.slice(aroundStart, aroundStart + 3).map((r) => ({
-        rank: r.rank,
-        points: r.points,
-        isMe: r.id === profileId,
-      }))
-    : [];
+  const podium = ranked.slice(0, 3).map(toRow);
+  const nextRows = ranked.slice(3, 6).map(toRow);
 
-  return { total: ranked.length, podium, around, me };
+  return {
+    total: ranked.length,
+    podium,
+    nextRows,
+    me,
+    meInList: me.rank <= 6,
+  };
 }

@@ -81,7 +81,7 @@ export default async function AppLayout({
               href="/racha"
               className="text-sm font-bold text-slate-700 transition-colors hover:text-brand-700"
             >
-              Mi racha
+              Racha Potrero
             </Link>
 
             <Link
