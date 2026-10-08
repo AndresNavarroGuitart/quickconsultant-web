@@ -119,6 +119,24 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .stepper input { width: 46px; text-align: center; border: 0; background: none; font-family: var(--display); font-size: 22px; font-weight: 800; padding: 0; -moz-appearance: textfield; }
 .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; }
 
+/* Carrito al final de la lista */
+.cart { margin-top: 18px; border: 2px solid var(--ink); border-radius: var(--r); overflow: hidden; }
+.cart-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 12px 16px; background: var(--sunk); }
+.cart-head h3 { font-family: var(--display); font-weight: 800; font-size: 22px; text-transform: uppercase; margin: 0; }
+.cart-lines { list-style: none; margin: 0; padding: 4px 16px; }
+.cart-lines li { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 10px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
+.cart-lines li:last-child { border-bottom: 0; }
+.cart-lines .calc { color: var(--muted); font-size: 13px; }
+.cart-lines .amt { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; grid-row: span 2; align-self: center; }
+.cart-sub { display: flex; justify-content: space-between; gap: 10px; padding: 8px 16px; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); }
+.cart-sub b { color: var(--gold); font-variant-numeric: tabular-nums; }
+.cart-total { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 16px; background: var(--pitch); color: var(--on-pitch); flex-wrap: wrap; }
+.cart-total span { font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: 13px; }
+.cart-total strong { font-family: var(--display); font-weight: 900; font-size: 38px; line-height: 1; font-variant-numeric: tabular-nums; }
+.cart-pay { padding: 12px 16px; font-size: 13.5px; color: var(--muted); display: grid; gap: 10px; }
+.cart-pay .btn { width: 100%; }
+.cart-empty { padding: 18px 16px; color: var(--muted); text-align: center; }
+
 /* Marcador fijo abajo: lo que transfiere y lo que gana */
 .scorebar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bar); color: #F2F5F0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 20; }
 .scorebar-in { max-width: 760px; margin: 0 auto; display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
@@ -415,8 +433,22 @@ function step2() {
         <div class="prices num"><span>Costo <b>${money(p.cost)}</b></span><span>Venta <b>${money(p.price)}</b></span><span class="gain">Ganás <b>${money(p.price - p.cost)}</b> c/u</span><span class="sub-line">${q ? `Subtotal costo <b>${money(q * p.cost)}</b>` : ""}</span></div>
       </div>`;
     }).join("")}</div>
+    <div class="cart" id="cart" aria-live="polite">${cartHTML()}</div>
     <div class="actions"><button class="btn ghost" type="button" id="back1">← Volver a tus datos</button></div>
   </section>`;
+}
+
+function cartHTML() {
+  const items = cartItems(); const t = totals(items);
+  if (!items.length) return `<div class="cart-head"><h3>Tu pedido</h3><span class="muted">0 productos</span></div>
+    <div class="cart-empty">Todavía no agregaste productos. Usá los botones + de la lista.</div>`;
+  return `<div class="cart-head"><h3>Tu pedido</h3><span class="muted num">${t.units} ${t.units === 1 ? "unidad" : "unidades"}</span></div>
+    <ul class="cart-lines">${items.map((it) => `<li><span><b>${esc(it.name)}</b></span><span class="amt">${money(it.qty * it.cost)}</span>
+      <span class="calc num">${it.qty} × ${money(it.cost)}</span></li>`).join("")}</ul>
+    <div class="cart-sub"><span>Si vendés todo, ganás</span><b>${money(t.profit)}</b></div>
+    <div class="cart-total"><span>Total a transferir</span><strong>${money(t.cost)}</strong></div>
+    <div class="cart-pay">${CONFIG.alias ? `<span>Vas a transferir a <b style="color:var(--ink)">${esc(CONFIG.alias)}</b>${CONFIG.holder ? ` (${esc(CONFIG.holder)})` : ""}. Te lo mostramos de nuevo al cerrar el pedido.</span>` : ""}
+      <button class="btn" type="button" data-review>Revisar y cerrar pedido</button></div>`;
 }
 
 function scorebar() {
@@ -497,7 +529,9 @@ function bindParent() {
       row.querySelector(".sub-line").innerHTML = q ? `Subtotal costo <b>${money(q * p.cost)}</b>` : "";
       const t = totals(cartItems());
       $("#sbCost").textContent = money(t.cost); $("#sbGain").textContent = money(t.profit); $("#review").disabled = !t.units;
+      $("#cart").innerHTML = cartHTML();
     };
+    $("#cart").addEventListener("click", (e) => { if (e.target.closest("[data-review]")) openConfirm(); });
     grid.addEventListener("click", (e) => { const b = e.target.closest("button[data-d]"); if (!b) return; const row = b.closest(".prod"); update(row, (S.qty[row.dataset.id] || 0) + Number(b.dataset.d)); });
     grid.addEventListener("change", (e) => { if (e.target.matches("input")) update(e.target.closest(".prod"), e.target.value); });
     $("#back1").onclick = () => { S.step = 1; renderParent(); };
