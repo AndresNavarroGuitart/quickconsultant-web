@@ -13,8 +13,9 @@ import { getStore } from "@netlify/blobs";
 const DEFAULT_CONFIG = {
   team: "",
   campaign: "Campeonato 2026",
-  alias: "",
-  holder: "",
+  alias: "negro.navarro.82",
+  cvu: "0000003100088974020013",
+  holder: "Osvaldo Andres Navarro Guitart",
   deadline: "",
   note: "Los productos de esta lista son de ejemplo. Editalos desde el panel de administración.",
   products: [
@@ -51,6 +52,7 @@ function sanitizeConfig(c) {
     team: clip(c.team, 80),
     campaign: clip(c.campaign, 80),
     alias: clip(c.alias, 80),
+    cvu: clip(c.cvu, 40),
     holder: clip(c.holder, 80),
     deadline: clip(c.deadline, 40),
     note: clip(c.note, 400),

@@ -173,7 +173,12 @@ dialog::backdrop { background: rgba(8, 20, 12, .55); }
 .code { font-family: var(--display); font-weight: 900; font-size: 44px; letter-spacing: .06em; line-height: 1; }
 .success-mark { width: 54px; height: 54px; border-radius: 50%; background: var(--ok-soft); color: var(--ok); display: grid; place-items: center; font-size: 28px; font-weight: 800; }
 .transfer { display: grid; gap: 4px; background: var(--sunk); border-radius: 8px; padding: 12px; font-size: 14px; }
-.transfer .alias { font-family: var(--display); font-size: 24px; font-weight: 800; letter-spacing: .02em; word-break: break-all; }
+.transfer .alias { font-family: var(--display); font-size: 24px; font-weight: 800; letter-spacing: .02em; word-break: break-all; line-height: 1.1; }
+.transfer .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 6px 0; border-top: 1px solid var(--line); }
+.transfer .row:first-of-type { border-top: 0; }
+.transfer .row > div { min-width: 0; display: grid; }
+.transfer .row small { font-size: 11.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; }
+.transfer .cvu { font-size: 18px; letter-spacing: .04em; font-variant-numeric: tabular-nums; }
 .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-weight: 600; z-index: 50; }
 
 footer.foot { text-align: center; color: var(--muted); font-size: 12.5px; padding: 8px 16px 30px; }
@@ -281,7 +286,7 @@ function totals(items) {
 
 /* ================= datos: servidor Netlify o modo demo ================= */
 const DEMO_CONFIG = {
-  team: "", campaign: "Campeonato 2026", alias: "equipo.futbol.mp", holder: "Nombre del organizador", deadline: "",
+  team: "", campaign: "Campeonato 2026", alias: "negro.navarro.82", cvu: "0000003100088974020013", holder: "Osvaldo Andres Navarro Guitart", deadline: "",
   note: "Los productos de esta lista son de ejemplo. Editalos desde el panel de administración.",
   products: [
     { id: "alf", name: "Alfajores de maicena", detail: "Caja x 12", cost: 4500, price: 7000, active: true },
@@ -316,10 +321,10 @@ const api = {
       if (r.ok && (r.headers.get("content-type") || "").includes("json")) { this.mode = "live"; return await r.json(); }
     } catch {}
     this.mode = "demo";
-    this.demo = store.get("demo-state-v2", null) || { config: DEMO_CONFIG, orders: demoOrders() };
+    this.demo = store.get("demo-state-v3", null) || { config: DEMO_CONFIG, orders: demoOrders() };
     return this.demo.config;
   },
-  saveDemo() { store.set("demo-state-v2", this.demo); },
+  saveDemo() { store.set("demo-state-v3", this.demo); },
   async call(method, path, body) {
     const r = await fetch("api/" + path, { method, headers: { "content-type": "application/json", "x-admin-pin": this.pin }, body: body ? JSON.stringify(body) : undefined });
     const data = await r.json().catch(() => ({}));
@@ -446,7 +451,7 @@ function cartHTML() {
       <span class="calc num">${it.qty} × ${money(it.cost)}</span></li>`).join("")}</ul>
     <div class="cart-sub"><span>Si vendés todo, ganás</span><b>${money(t.profit)}</b></div>
     <div class="cart-total"><span>Total a transferir</span><strong>${money(t.cost)}</strong></div>
-    <div class="cart-pay">${CONFIG.alias ? `<span>Vas a transferir a <b style="color:var(--ink)">${esc(CONFIG.alias)}</b>${CONFIG.holder ? ` (${esc(CONFIG.holder)})` : ""}. Te lo mostramos de nuevo al cerrar el pedido.</span>` : ""}
+    <div class="cart-pay">${CONFIG.alias || CONFIG.cvu ? `<span>Vas a transferir a <b style="color:var(--ink)">${esc(CONFIG.alias || CONFIG.cvu)}</b>${CONFIG.holder ? ` (${esc(CONFIG.holder)})` : ""}. Al cerrar el pedido te mostramos el alias y el CVU para copiarlos.</span>` : ""}
       <button class="btn" type="button" data-review>Revisar y cerrar pedido</button></div>`;
 }
 
@@ -479,10 +484,12 @@ function ticketHTML(o) {
 }
 
 function transferHTML(amount) {
-  if (!CONFIG.alias) return "";
-  return `<div class="transfer"><span class="muted">Transferí <b style="color:var(--ink)">${money(amount)}</b> a este alias:</span>
-    <span class="alias" id="aliasTxt">${esc(CONFIG.alias)}</span>${CONFIG.holder ? `<span class="muted">Titular: ${esc(CONFIG.holder)}</span>` : ""}
-    <div><button class="btn ghost sm" type="button" id="copyAlias">Copiar alias</button></div></div>`;
+  if (!CONFIG.alias && !CONFIG.cvu) return "";
+  const row = (label, val, id, cls) => `<div class="row"><div><small>${label}</small><span class="alias ${cls}" id="${id}">${esc(val)}</span></div>
+    <button class="btn ghost sm" type="button" data-copy="${id}">Copiar ${label.toLowerCase()}</button></div>`;
+  return `<div class="transfer"><span class="muted">Transferí <b style="color:var(--ink)">${money(amount)}</b> a:</span>
+    ${CONFIG.alias ? row("Alias", CONFIG.alias, "aliasTxt", "") : ""}${CONFIG.cvu ? row("CVU", CONFIG.cvu, "cvuTxt", "cvu") : ""}
+    ${CONFIG.holder ? `<span class="muted">A nombre de: <b style="color:var(--ink)">${esc(CONFIG.holder)}</b></span>` : ""}</div>`;
 }
 
 function doneView() {
@@ -541,7 +548,7 @@ function bindParent() {
     $("#copySum").onclick = (e) => copyText(summaryText(S.done), e.currentTarget);
     $("#again").onclick = () => { S.done = null; S.step = 1; S.qty = {}; saveDraft(); renderParent(); };
   }
-  if ($("#copyAlias")) $("#copyAlias").onclick = (e) => copyText(CONFIG.alias, e.currentTarget, $("#aliasTxt"));
+  document.querySelectorAll("[data-copy]").forEach((b) => (b.onclick = () => { const el = $("#" + b.dataset.copy); copyText(el.textContent, b, el); }));
 }
 
 function openConfirm() {
@@ -570,7 +577,7 @@ $("#confirmGo").onclick = async (e) => {
 function summaryText(o) {
   return [`Pedido #${o.id}` + ([CONFIG.team, CONFIG.campaign].filter(Boolean).length ? " · " + [CONFIG.team, CONFIG.campaign].filter(Boolean).join(" – ") : ""), `${o.parent} (jugador: ${o.player})`, "",
     ...o.items.map((it) => `${it.qty} x ${it.name} – ${money(it.qty * it.cost)}`), "",
-    `A transferir: ${money(o.totalCost)}`, `Ganancia vendiendo todo: ${money(o.profit)}`, CONFIG.alias ? `Alias: ${CONFIG.alias}` : ""].filter((l, i, a) => l !== "" || a[i - 1] !== "").join("\n");
+    `A transferir: ${money(o.totalCost)}`, `Ganancia vendiendo todo: ${money(o.profit)}`, CONFIG.alias ? `Alias: ${CONFIG.alias}` : "", CONFIG.cvu ? `CVU: ${CONFIG.cvu}` : "", CONFIG.holder ? `A nombre de: ${CONFIG.holder}` : ""].filter((l, i, a) => l !== "" || a[i - 1] !== "").join("\n");
 }
 async function copyText(text, btn, selectEl) {
   const old = btn.textContent;
@@ -586,7 +593,7 @@ async function copyText(text, btn, selectEl) {
 function downloadReceipt(o) {
   const css = getComputedStyle(document.documentElement);
   const W = 900, pad = 48, rowH = 52;
-  const H = 420 + o.items.length * rowH + (o.notes ? 40 : 0) + (CONFIG.alias ? 70 : 0);
+  const H = 420 + o.items.length * rowH + (o.notes ? 40 : 0) + (CONFIG.alias || CONFIG.cvu ? 110 : 0);
   const c = document.createElement("canvas"); c.width = W * 2; c.height = H * 2;
   const g = c.getContext("2d"); g.scale(2, 2);
   const disp = '"Big Shoulders Display", "Arial Narrow", sans-serif', body = 'Figtree, system-ui, sans-serif';
@@ -621,7 +628,12 @@ function downloadReceipt(o) {
     g.fillStyle = fg; g.font = `600 12px ${body}`; g.fillText(lbl, x + 16, y + 26); g.font = `800 34px ${disp}`; g.fillText(money(val), x + 16, y + 66);
   });
   y += 84;
-  if (CONFIG.alias) { y += 44; g.fillStyle = "#15241B"; g.font = `600 16px ${body}`; g.fillText(`Transferí a: ${CONFIG.alias}${CONFIG.holder ? "  ·  Titular: " + CONFIG.holder : ""}`, pad, y); }
+  if (CONFIG.alias || CONFIG.cvu) {
+    g.fillStyle = "#15241B"; g.font = `600 16px ${body}`;
+    const tl = [CONFIG.alias ? "Alias: " + CONFIG.alias : "", CONFIG.cvu ? "CVU: " + CONFIG.cvu : ""].filter(Boolean).join("   ·   ");
+    y += 44; g.fillText("Transferí a  " + tl, pad, y);
+    if (CONFIG.holder) { y += 26; g.fillStyle = "#5B6C60"; g.fillText("A nombre de: " + CONFIG.holder, pad, y); }
+  }
   c.toBlob((blob) => {
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -756,7 +768,8 @@ function tabProductos() {
       <div class="grid2">
         <div class="field"><label for="c-team">Nombre del equipo <span class="muted">(opcional)</span></label><input class="input" id="c-team" data-k="team" value="${esc(c.team)}"></div>
         <div class="field"><label for="c-campaign">Campaña</label><input class="input" id="c-campaign" data-k="campaign" value="${esc(c.campaign)}"></div>
-        <div class="field"><label for="c-alias">Alias o CBU para transferir</label><input class="input" id="c-alias" data-k="alias" value="${esc(c.alias)}"></div>
+        <div class="field"><label for="c-alias">Alias</label><input class="input" id="c-alias" data-k="alias" value="${esc(c.alias)}"></div>
+        <div class="field"><label for="c-cvu">CVU / CBU</label><input class="input" id="c-cvu" data-k="cvu" inputmode="numeric" value="${esc(c.cvu || "")}"></div>
         <div class="field"><label for="c-holder">Titular de la cuenta</label><input class="input" id="c-holder" data-k="holder" value="${esc(c.holder)}"></div>
       </div>
       <div class="field"><label for="c-note">Aviso para los padres</label><textarea class="input" id="c-note" data-k="note" rows="2">${esc(c.note)}</textarea><small>Aparece arriba de la lista de productos. Dejalo vacío para no mostrar nada.</small></div>
