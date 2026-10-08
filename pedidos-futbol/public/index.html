@@ -183,6 +183,9 @@ dialog::backdrop { background: rgba(8, 20, 12, .55); }
 
 footer.foot { text-align: center; color: var(--muted); font-size: 12.5px; padding: 8px 16px 30px; }
 footer.foot a { color: var(--muted); }
+footer.foot { display: grid; gap: 6px; }
+footer.foot .legal { font-size: 12px; }
+footer.foot.over-bar { padding-bottom: 150px; }
 
 /* ---------- Admin ---------- */
 .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 18px; overflow-x: auto; }
@@ -395,6 +398,7 @@ const saveDraft = () => { store.set("draft", S.form); store.set("draft-qty", S.q
 const cartItems = () => CONFIG.products.filter((p) => p.active && (S.qty[p.id] || 0) > 0).map((p) => ({ productId: p.id, name: p.name, detail: p.detail, qty: S.qty[p.id], cost: p.cost, price: p.price }));
 
 /* ================= vista: padres ================= */
+const LEGAL = `<span class="legal">Todos los derechos reservados - <a href="https://quickconsultant.com.ar/productos" target="_blank" rel="noopener">Quick Consultant</a></span>`;
 function header(wide, title, sub) {
   return `<header class="band"><div class="band-in">
     <div><div class="eyebrow">${CONFIG.team ? esc(CONFIG.team) + " · " : ""}Recaudación</div>
@@ -419,8 +423,9 @@ function renderParent() {
     if (S.step === 1) html += step1();
     else html += step2();
   }
-  html += `</main><footer class="foot">¿Sos el organizador? <a href="#admin">Entrar al panel</a></footer>`;
-  if (!S.done && S.step === 2) html += scorebar();
+  const bar = !S.done && S.step === 2;
+  html += `</main><footer class="foot ${bar ? "over-bar" : ""}"><span>¿Sos el organizador? <a href="#admin">Entrar al panel</a></span>${LEGAL}</footer>`;
+  if (bar) html += scorebar();
   $("#app").innerHTML = html;
   bindParent();
 }
@@ -721,7 +726,7 @@ function drawAdmin() {
   else if (A.tab === "pedidos") html += tabPedidos();
   else if (A.tab === "entregas") html += tabEntregas();
   else html += tabProductos();
-  html += `</div></main><footer class="foot"><a href="#">Ver el formulario que ven los padres</a></footer>`;
+  html += `</div></main><footer class="foot"><span><a href="#">Ver el formulario que ven los padres</a></span>${LEGAL}</footer>`;
   $("#app").innerHTML = html;
   bindAdmin();
 }
