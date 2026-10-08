@@ -4,7 +4,7 @@
 //   PUT    /api/config               guardar catálogo (admin)
 //   POST   /api/orders               crear pedido (público)
 //   GET    /api/orders               listar pedidos (admin)
-//   PATCH  /api/orders/:id           { paid?: bool, delivered?: bool } (admin)
+//   PATCH  /api/orders/:id           { productId?, paid?: bool, delivered?: bool } (admin)
 //   DELETE /api/orders/:id           borrar pedido (admin)
 //   POST   /api/login                validar PIN (admin)
 // El PIN de admin se configura en Netlify como variable de entorno ADMIN_PIN.
@@ -55,6 +55,19 @@ function sanitizeConfig(c) {
     note: clip(c.note, 400),
     products,
   };
+}
+
+// Cada producto del pedido tiene su propio pago y entrega (son proveedores distintos).
+// Los pedidos viejos guardaban el estado a nivel pedido: se copia a cada producto.
+function normalize(order) {
+  for (const it of order.items) {
+    if (!("paidAt" in it)) it.paidAt = order.paidAt ?? null;
+    if (!("deliveredAt" in it)) it.deliveredAt = order.deliveredAt ?? null;
+  }
+  const latest = (field) => order.items.every((it) => it[field]) ? order.items.map((it) => it[field]).sort().at(-1) : null;
+  order.paidAt = latest("paidAt");
+  order.deliveredAt = latest("deliveredAt");
+  return order;
 }
 
 export default async (req) => {
@@ -109,7 +122,8 @@ export default async (req) => {
           parent, player,
           phone: clip(body.phone, 40),
           notes: clip(body.notes, 300),
-          items, totalCost, totalSale, profit: totalSale - totalCost,
+          items: items.map((it) => ({ ...it, paidAt: null, deliveredAt: null })),
+          totalCost, totalSale, profit: totalSale - totalCost,
           paidAt: null, deliveredAt: null,
         };
         await store.setJSON(`order/${code}`, order);
@@ -120,7 +134,7 @@ export default async (req) => {
 
       if (method === "GET" && !id) {
         const { blobs } = await store.list({ prefix: "order/" });
-        const orders = (await Promise.all(blobs.map((b) => store.get(b.key, { type: "json" })))).filter(Boolean);
+        const orders = (await Promise.all(blobs.map((b) => store.get(b.key, { type: "json" })))).filter(Boolean).map(normalize);
         orders.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
         return json(orders);
       }
@@ -129,12 +143,19 @@ export default async (req) => {
         const key = `order/${clip(id, 10)}`;
         const order = await store.get(key, { type: "json" });
         if (!order) return json({ error: "Pedido no encontrado." }, 404);
+        normalize(order);
         if (method === "DELETE") { await store.delete(key); return json({ ok: true }); }
         if (method === "PATCH") {
+          // { productId?, paid?, delivered? } — sin productId aplica a todos los productos del pedido.
           const body = await readBody();
           const now = new Date().toISOString();
-          if ("paid" in body) order.paidAt = body.paid ? (order.paidAt ?? now) : null;
-          if ("delivered" in body) order.deliveredAt = body.delivered ? (order.deliveredAt ?? now) : null;
+          const targets = body.productId ? order.items.filter((it) => it.productId === body.productId) : order.items;
+          if (!targets.length) return json({ error: "Ese producto no está en el pedido." }, 404);
+          for (const it of targets) {
+            if ("paid" in body) it.paidAt = body.paid ? (it.paidAt ?? now) : null;
+            if ("delivered" in body) it.deliveredAt = body.delivered ? (it.deliveredAt ?? now) : null;
+          }
+          normalize(order);
           await store.setJSON(key, order);
           return json(order);
         }

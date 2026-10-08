@@ -219,18 +219,27 @@ table.data tfoot td { font-weight: 800; background: var(--sunk); }
 
 /* Planilla de entregas */
 .deliv { display: grid; gap: 8px; }
-.drow { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; }
-.drow.done { background: var(--sunk); }
-.drow.done .who { text-decoration: line-through; text-decoration-color: var(--muted); }
-.check { appearance: none; -webkit-appearance: none; width: 34px; height: 34px; border: 2.5px solid var(--line); border-radius: 8px; cursor: pointer; display: grid; place-items: center; background: var(--surface); margin: 0; }
-.check:checked { background: var(--ok); border-color: var(--ok); }
-.check:checked::after { content: ""; width: 9px; height: 17px; border: solid var(--surface); border-width: 0 3.5px 3.5px 0; transform: translateY(-2px) rotate(45deg); }
+.dcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.dcard.done { background: var(--sunk); }
+.dhead { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px 16px; flex-wrap: wrap; padding: 12px 14px; }
 .who { font-weight: 700; font-size: 16px; }
-.items-inline { font-size: 13.5px; color: var(--muted); margin-top: 2px; }
-.items-inline b { color: var(--ink); }
-.stamp { font-size: 12.5px; color: var(--ok); font-weight: 700; margin-top: 4px; }
-.drow .side { text-align: right; display: grid; gap: 6px; justify-items: end; }
-@media (max-width: 520px) { .drow { grid-template-columns: auto 1fr; } .drow .side { grid-column: 2; justify-items: start; text-align: left; } }
+.who-sub { color: var(--muted); font-size: 13.5px; }
+.dsum { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.ditem { display: grid; grid-template-columns: 1fr auto auto; gap: 8px 10px; align-items: center; padding: 10px 14px; border-top: 1px solid var(--line); }
+.iname { min-width: 0; font-size: 14.5px; }
+.iname b { font-family: var(--display); font-size: 19px; font-weight: 800; margin-right: 2px; }
+.iname .muted { font-size: 13px; }
+.tog { display: inline-grid; grid-template-columns: auto auto; column-gap: 8px; align-items: center; text-align: left; border: 1.5px solid var(--line); background: var(--surface); border-radius: 8px; padding: 6px 10px 6px 8px; cursor: pointer; min-width: 132px; min-height: 44px; }
+.tog .box { width: 22px; height: 22px; border: 2px solid var(--line); border-radius: 6px; display: grid; place-items: center; grid-row: span 2; background: var(--surface); }
+.tog .lbl { font-weight: 700; font-size: 13.5px; line-height: 1.15; }
+.tog .t { font-size: 11.5px; color: var(--muted); line-height: 1.15; }
+.tog.on { border-color: var(--ok); background: var(--ok-soft); }
+.tog.on .box { background: var(--ok); border-color: var(--ok); }
+.tog.on .box::after { content: ""; width: 6px; height: 11px; border: solid var(--surface); border-width: 0 2.5px 2.5px 0; transform: translateY(-1px) rotate(45deg); }
+.tog.on .lbl, .tog.on .t { color: var(--ok); }
+.dfoot { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; padding: 8px 14px 12px; border-top: 1px solid var(--line); }
+.toolbar select.input { max-width: 240px; }
+@media (max-width: 560px) { .ditem { grid-template-columns: 1fr 1fr; } .iname { grid-column: 1 / -1; } .tog { min-width: 0; } }
 
 .pedit td { padding: 6px 8px; }
 .pedit .input { min-height: 38px; padding: 6px 8px; }
@@ -318,10 +327,10 @@ const api = {
       if (r.ok && (r.headers.get("content-type") || "").includes("json")) { this.mode = "live"; return await r.json(); }
     } catch {}
     this.mode = "demo";
-    this.demo = store.get("demo-state-v4", null) || { config: DEMO_CONFIG, orders: demoOrders() };
+    this.demo = store.get("demo-state-v5", null) || { config: DEMO_CONFIG, orders: demoOrders() };
     return this.demo.config;
   },
-  saveDemo() { store.set("demo-state-v4", this.demo); },
+  saveDemo() { store.set("demo-state-v5", this.demo); },
   async call(method, path, body) {
     const r = await fetch("api/" + path, { method, headers: { "content-type": "application/json", "x-admin-pin": this.pin }, body: body ? JSON.stringify(body) : undefined });
     const data = await r.json().catch(() => ({}));
@@ -341,13 +350,15 @@ const api = {
       items, totalCost: t.cost, totalSale: t.sale, profit: t.profit, paidAt: null, deliveredAt: null };
     this.demo.orders.push(order); this.saveDemo(); return order;
   },
-  async orders() { return this.mode === "live" ? this.call("GET", "orders") : structuredClone(this.demo.orders); },
+  async orders() { return (this.mode === "live" ? await this.call("GET", "orders") : structuredClone(this.demo.orders)).map(norm); },
   async patch(id, body) {
-    if (this.mode === "live") return this.call("PATCH", "orders/" + id, body);
-    const o = this.demo.orders.find((x) => x.id === id); const now = new Date().toISOString();
-    if ("paid" in body) o.paidAt = body.paid ? (o.paidAt || now) : null;
-    if ("delivered" in body) o.deliveredAt = body.delivered ? (o.deliveredAt || now) : null;
-    this.saveDemo(); return structuredClone(o);
+    if (this.mode === "live") return norm(await this.call("PATCH", "orders/" + id, body));
+    const o = norm(this.demo.orders.find((x) => x.id === id)); const now = new Date().toISOString();
+    o.items.filter((it) => !body.productId || it.productId === body.productId).forEach((it) => {
+      if ("paid" in body) it.paidAt = body.paid ? (it.paidAt || now) : null;
+      if ("delivered" in body) it.deliveredAt = body.delivered ? (it.deliveredAt || now) : null;
+    });
+    norm(o); this.saveDemo(); return structuredClone(o);
   },
   async remove(id) {
     if (this.mode === "live") return this.call("DELETE", "orders/" + id);
@@ -359,6 +370,18 @@ const api = {
   },
 };
 
+/* Cada producto del pedido tiene su propio pago y entrega; el pedido queda pagado/entregado cuando lo están todos. */
+function norm(o) {
+  o.items.forEach((it) => {
+    if (!("paidAt" in it)) it.paidAt = o.paidAt ?? null;
+    if (!("deliveredAt" in it)) it.deliveredAt = o.deliveredAt ?? null;
+  });
+  const latest = (f) => o.items.every((it) => it[f]) ? o.items.map((it) => it[f]).sort().at(-1) : null;
+  o.paidAt = latest("paidAt"); o.deliveredAt = latest("deliveredAt");
+  return o;
+}
+const countOf = (o, f) => o.items.filter((it) => it[f]).length;
+
 /* ================= estado ================= */
 let CONFIG = null;
 const S = {
@@ -366,7 +389,7 @@ const S = {
   form: store.get("draft", { parent: "", player: "", phone: "", notes: "" }),
   qty: store.get("draft-qty", {}),
   done: null,
-  admin: { tab: store.get("admin-tab", "compras"), orders: [], filter: "pend", q: "", onlyPaid: false, confirmDel: null, cfgDraft: null },
+  admin: { tab: store.get("admin-tab", "compras"), orders: [], filter: "pend", prod: "all", q: "", onlyPaid: false, confirmDel: null, cfgDraft: null },
 };
 const saveDraft = () => { store.set("draft", S.form); store.set("draft-qty", S.qty); };
 const cartItems = () => CONFIG.products.filter((p) => p.active && (S.qty[p.id] || 0) > 0).map((p) => ({ productId: p.id, name: p.name, detail: p.detail, qty: S.qty[p.id], cost: p.cost, price: p.price }));
@@ -668,9 +691,9 @@ function renderLogin(msg) {
   };
 }
 
-function consolidate(orders) {
+function consolidate(orders, onlyPaid) {
   const map = new Map();
-  orders.forEach((o) => o.items.forEach((it) => {
+  orders.forEach((o) => o.items.filter((it) => !onlyPaid || it.paidAt).forEach((it) => {
     const r = map.get(it.productId) || { name: it.name, detail: it.detail, qty: 0, cost: 0, sale: 0, orders: 0 };
     r.qty += it.qty; r.cost += it.qty * it.cost; r.sale += it.qty * it.price; r.orders += 1; map.set(it.productId, r);
   }));
@@ -681,14 +704,15 @@ function drawAdmin() {
   const A = S.admin, O = A.orders;
   const sum = (arr, f) => arr.reduce((s, x) => s + f(x), 0);
   const paid = O.filter((o) => o.paidAt), deliv = O.filter((o) => o.deliveredAt);
+  const cobrado = sum(O, (o) => sum(o.items.filter((it) => it.paidAt), (it) => it.qty * it.cost));
   const tabs = [["compras", "Compras"], ["pedidos", `Pedidos (${O.length})`], ["entregas", "Entregas"], ["productos", "Productos y datos"]];
   let html = header(true, "Panel del organizador", CONFIG.campaign || "") + `<main class="wrap">
     <div class="kpis">
       <div class="kpi"><small>Pedidos</small><strong>${O.length}</strong><span>${new Set(O.map((o) => o.player.trim().toLowerCase())).size} jugadores</span></div>
       <div class="kpi hl"><small>A recaudar</small><strong>${money(sum(O, (o) => o.totalCost))}</strong><span>lo que tienen que transferir</span></div>
-      <div class="kpi"><small>Cobrado</small><strong>${money(sum(paid, (o) => o.totalCost))}</strong><span>${paid.length} de ${O.length} pagaron</span></div>
+      <div class="kpi"><small>Cobrado</small><strong>${money(cobrado)}</strong><span>${paid.length} de ${O.length} pagaron todo</span></div>
       <div class="kpi"><small>Ganancia de las familias</small><strong style="color:var(--gold)">${money(sum(O, (o) => o.profit))}</strong><span>vendiendo todo</span></div>
-      <div class="kpi"><small>Entregados</small><strong>${deliv.length}/${O.length}</strong><span>${O.length - deliv.length} pendientes</span></div>
+      <div class="kpi"><small>Entregados</small><strong>${deliv.length}/${O.length}</strong><span>pedidos completos</span></div>
     </div>
     <div class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" data-tab="${k}" aria-selected="${A.tab === k}">${n}</button>`).join("")}
       <span style="flex:1"></span><button data-act="logout" title="Cerrar sesión">Salir</button></div>
@@ -703,8 +727,8 @@ function drawAdmin() {
 }
 
 function tabCompras() {
-  const A = S.admin; const src = A.onlyPaid ? A.orders.filter((o) => o.paidAt) : A.orders;
-  const rows = consolidate(src);
+  const A = S.admin;
+  const rows = consolidate(A.orders, A.onlyPaid);
   const tc = rows.reduce((s, r) => s + r.cost, 0), ts = rows.reduce((s, r) => s + r.sale, 0);
   return `<div class="toolbar"><div><div class="h2" style="font-size:22px">Lista de compras</div><div class="muted" style="font-size:13.5px">Todos los pedidos unificados por producto: esto es lo que tenés que comprar.</div></div>
     <span class="spacer"></span>
@@ -727,32 +751,49 @@ function tabPedidos() {
       <td><b>${esc(o.parent)}</b><div class="muted" style="font-size:13px">${esc(o.player)}${o.phone ? " · " + esc(o.phone) : ""}</div></td>
       <td style="font-size:13px">${o.items.map((it) => `${it.qty}× ${esc(it.name)}`).join("<br>")}${o.notes ? `<div class="muted">“${esc(o.notes)}”</div>` : ""}</td>
       <td class="r"><b>${money(o.totalCost)}</b></td>
-      <td><button class="pill ${o.paidAt ? "yes" : "no"}" data-pay="${esc(o.id)}" title="Tocá para cambiar">${o.paidAt ? `Pagado <span class="t">${whenShort(o.paidAt)}</span>` : "Sin pagar"}</button></td>
+      <td>${payPill(o)}</td>
       <td>${A.confirmDel === o.id ? `<button class="btn danger sm" data-del-yes="${esc(o.id)}">¿Borrar? Sí</button> <button class="btn ghost sm" data-del-no>No</button>` : `<button class="btn ghost sm" data-del="${esc(o.id)}" aria-label="Borrar pedido ${esc(o.id)}">Borrar</button>`}</td>
     </tr>`).join("")}</tbody></table></div>` : `<div class="panel empty">${q ? "No hay pedidos que coincidan con la búsqueda." : "Todavía no hay pedidos."}</div>`}`;
 }
 
+function payPill(o) {
+  const n = countOf(o, "paidAt"), tot = o.items.length;
+  const cls = n === tot ? "yes" : "no";
+  const txt = n === tot ? `Pagado <span class="t">${whenShort(o.paidAt)}</span>` : n ? `Pagó ${n} de ${tot}` : "Sin pagar";
+  return `<button class="pill ${cls}" data-pay="${esc(o.id)}" title="${n === tot ? "Tocá para marcar todo sin pagar" : "Tocá para marcar todo pagado"}">${txt}</button>`;
+}
+
 function tabEntregas() {
   const A = S.admin; const q = A.q.trim().toLowerCase();
-  let list = A.orders.filter((o) => !q || (o.parent + " " + o.player + " " + o.id).toLowerCase().includes(q));
-  if (A.filter === "pend") list = list.filter((o) => !o.deliveredAt);
-  if (A.filter === "done") list = list.filter((o) => o.deliveredAt).sort((a, b) => b.deliveredAt.localeCompare(a.deliveredAt));
-  else list.sort((a, b) => (!!a.deliveredAt - !!b.deliveredAt) || a.player.localeCompare(b.player));
-  const pend = A.orders.filter((o) => !o.deliveredAt).length;
-  return `<div class="toolbar"><div><div class="h2" style="font-size:22px">Planilla de entregas</div><div class="muted" style="font-size:13.5px">Tildá cada pedido cuando lo entregues. Se guarda la fecha y la hora.</div></div><span class="spacer"></span>
-    <input class="input" id="q" type="search" placeholder="Buscar jugador o familia" value="${esc(A.q)}" aria-label="Buscar en entregas">
-    <div class="seg" role="group" aria-label="Filtrar entregas"><button data-f="pend" aria-pressed="${A.filter === "pend"}">Pendientes (${pend})</button><button data-f="done" aria-pressed="${A.filter === "done"}">Entregados (${A.orders.length - pend})</button><button data-f="all" aria-pressed="${A.filter === "all"}">Todos</button></div>
+  const pidList = [...new Map(A.orders.flatMap((o) => o.items).map((it) => [it.productId, it.name])).entries()];
+  if (A.prod !== "all" && !pidList.some(([id]) => id === A.prod)) A.prod = "all";
+  const rel = (o) => o.items.filter((it) => A.prod === "all" || it.productId === A.prod);
+  const isDone = (o) => rel(o).every((it) => it.deliveredAt);
+  let list = A.orders.filter((o) => rel(o).length && (!q || (o.parent + " " + o.player + " " + o.id).toLowerCase().includes(q)));
+  const pend = list.filter((o) => !isDone(o)).length, done = list.length - pend;
+  if (A.filter === "pend") list = list.filter((o) => !isDone(o));
+  if (A.filter === "done") list = list.filter(isDone);
+  list.sort((a, b) => (isDone(a) - isDone(b)) || a.parent.localeCompare(b.parent, "es"));
+  const tog = (kind, o, it) => {
+    const on = kind === "pay" ? it.paidAt : it.deliveredAt;
+    const label = kind === "pay" ? "Pagado" : "Entregado";
+    return `<button type="button" class="tog ${on ? "on" : ""}" data-i${kind === "pay" ? "pay" : "deliv"}="${esc(o.id)}" data-pid="${esc(it.productId)}" aria-pressed="${!!on}" aria-label="${label}: ${esc(it.name)} de ${esc(o.parent)}">
+      <span class="box" aria-hidden="true"></span><span class="lbl">${label}</span><span class="t">${on ? whenShort(on) : kind === "pay" ? "sin pagar" : "pendiente"}</span></button>`;
+  };
+  return `<div class="toolbar"><div><div class="h2" style="font-size:22px">Planilla de entregas</div><div class="muted" style="font-size:13.5px">Marcá el pago y la entrega de cada producto por separado. Se guarda la fecha y la hora.</div></div><span class="spacer"></span>
+    <input class="input" id="q" type="search" placeholder="Buscar familia o jugador" value="${esc(A.q)}" aria-label="Buscar en entregas">
+    <select class="input" id="prodSel" aria-label="Filtrar por producto"><option value="all">Todos los productos</option>${pidList.map(([id, n]) => `<option value="${esc(id)}" ${A.prod === id ? "selected" : ""}>${esc(n)}</option>`).join("")}</select>
+    <div class="seg" role="group" aria-label="Filtrar entregas"><button data-f="pend" aria-pressed="${A.filter === "pend"}">Pendientes (${pend})</button><button data-f="done" aria-pressed="${A.filter === "done"}">Entregados (${done})</button><button data-f="all" aria-pressed="${A.filter === "all"}">Todos</button></div>
     <button class="btn ghost sm" data-act="csv-entregas">Descargar CSV</button></div>
-    ${list.length ? `<div class="deliv">${list.map((o) => `<div class="drow ${o.deliveredAt ? "done" : ""}">
-      <input type="checkbox" class="check" id="d-${esc(o.id)}" data-deliv="${esc(o.id)}" ${o.deliveredAt ? "checked" : ""} aria-label="Entregado a ${esc(o.player)}">
-      <label for="d-${esc(o.id)}" style="cursor:pointer;min-width:0">
-        <div class="who">${esc(o.player)} <span class="muted" style="font-weight:500;font-size:14px">· ${esc(o.parent)}</span></div>
-        <div class="items-inline">${o.items.map((it) => `<b>${it.qty}×</b> ${esc(it.name)}`).join(" · ")}</div>
-        ${o.deliveredAt ? `<div class="stamp">✓ Entregado el ${when(o.deliveredAt)}</div>` : ""}
-      </label>
-      <div class="side"><span class="code-sm">#${esc(o.id)}</span>
-        <button class="pill ${o.paidAt ? "yes" : "no"}" data-pay="${esc(o.id)}">${o.paidAt ? "Pagado" : "Sin pagar · " + money(o.totalCost)}</button></div>
-    </div>`).join("")}</div>` : `<div class="panel empty">${A.filter === "pend" && A.orders.length ? "Entregaste todos los pedidos." : "No hay pedidos para mostrar."}</div>`}`;
+    ${list.length ? `<div class="deliv">${list.map((o) => {
+      const items = rel(o);
+      const np = items.filter((it) => it.paidAt).length, nd = items.filter((it) => it.deliveredAt).length;
+      return `<div class="dcard ${isDone(o) ? "done" : ""}">
+      <div class="dhead"><div style="min-width:0"><div class="who">${esc(o.parent)}</div><div class="who-sub">${esc(o.player)} · <span class="code-sm" style="font-size:14px">#${esc(o.id)}</span>${o.phone ? " · " + esc(o.phone) : ""}</div></div>
+        <div class="dsum"><span class="pill ${np === items.length ? "yes" : "no"}" style="cursor:default">Pagado ${np}/${items.length}</span><span class="pill ${nd === items.length ? "yes" : "no"}" style="cursor:default">Entregado ${nd}/${items.length}</span></div></div>
+      ${items.map((it) => `<div class="ditem"><div class="iname"><b>${it.qty}×</b> ${esc(it.name)} <span class="muted num">· ${money(it.qty * it.cost)}</span></div>${tog("pay", o, it)}${tog("deliv", o, it)}</div>`).join("")}
+      ${o.notes ? `<div class="dfoot" style="justify-content:flex-start"><span class="muted" style="font-size:13px">“${esc(o.notes)}”</span></div>` : ""}
+    </div>`; }).join("")}</div>` : `<div class="panel empty">${A.filter === "pend" && A.orders.length ? "No quedan entregas pendientes." : "No hay pedidos para mostrar."}</div>`}`;
 }
 
 function tabProductos() {
@@ -799,24 +840,30 @@ function bindAdmin() {
   const A = S.admin;
   const app = $("#app");
   app.onclick = async (e) => {
-    const t = e.target.closest("button, [data-deliv]"); if (!t) return;
+    const t = e.target.closest("button"); if (!t) return;
     if (t.dataset.tab) { A.tab = t.dataset.tab; A.q = ""; A.confirmDel = null; store.set("admin-tab", A.tab); return drawAdmin(); }
     if (t.dataset.paid) { A.onlyPaid = t.dataset.paid === "1"; return drawAdmin(); }
     if (t.dataset.f) { A.filter = t.dataset.f; return drawAdmin(); }
     if (t.dataset.pay) return mutate(t.dataset.pay, (o) => ({ paid: !o.paidAt }));
     if (t.dataset.deliv) return mutate(t.dataset.deliv, (o) => ({ delivered: !o.deliveredAt }));
+    if (t.dataset.ipay) return mutate(t.dataset.ipay, (o) => ({ productId: t.dataset.pid, paid: !o.items.find((it) => it.productId === t.dataset.pid).paidAt }));
+    if (t.dataset.ideliv) return mutate(t.dataset.ideliv, (o) => ({ productId: t.dataset.pid, delivered: !o.items.find((it) => it.productId === t.dataset.pid).deliveredAt }));
     if (t.dataset.del) { A.confirmDel = t.dataset.del; return drawAdmin(); }
     if ("delNo" in t.dataset) { A.confirmDel = null; return drawAdmin(); }
     if (t.dataset.delYes) { try { await api.remove(t.dataset.delYes); A.orders = A.orders.filter((o) => o.id !== t.dataset.delYes); A.confirmDel = null; toast("Pedido borrado"); drawAdmin(); } catch (err) { toast(err.message); } return; }
     const act = t.dataset.act;
     if (act === "logout") { api.pin = ""; store.sset("pin", ""); location.hash = ""; return; }
-    if (act === "csv-compras") return csv("lista-de-compras.csv", [["Producto", "Detalle", "Cantidad", "Costo total", "Venta total"], ...consolidate(A.onlyPaid ? A.orders.filter((o) => o.paidAt) : A.orders).map((r) => [r.name, r.detail, r.qty, r.cost, r.sale])]);
-    if (act === "csv-pedidos" || act === "csv-entregas") return csv(act === "csv-pedidos" ? "pedidos.csv" : "entregas.csv", [["Pedido", "Fecha", "Padre/madre", "Jugador", "Teléfono", "Productos", "A transferir", "Ganancia", "Pagado", "Entregado", "Comentario"],
+    if (act === "csv-compras") return csv("lista-de-compras.csv", [["Producto", "Detalle", "Cantidad", "Costo total", "Venta total"], ...consolidate(A.orders, A.onlyPaid).map((r) => [r.name, r.detail, r.qty, r.cost, r.sale])]);
+    if (act === "csv-entregas") return csv("entregas.csv", [["Pedido", "Padre/madre", "Jugador", "Teléfono", "Producto", "Cantidad", "Monto", "Pagado", "Entregado"],
+      ...A.orders.flatMap((o) => o.items.map((it) => [o.id, o.parent, o.player, o.phone, it.name, it.qty, it.qty * it.cost, when(it.paidAt), when(it.deliveredAt)]))]);
+    if (act === "csv-pedidos") return csv("pedidos.csv", [["Pedido", "Fecha", "Padre/madre", "Jugador", "Teléfono", "Productos", "A transferir", "Ganancia", "Pagado", "Entregado", "Comentario"],
       ...A.orders.map((o) => [o.id, when(o.createdAt), o.parent, o.player, o.phone, o.items.map((it) => `${it.qty} x ${it.name}`).join(" | "), o.totalCost, o.profit, when(o.paidAt), when(o.deliveredAt), o.notes])]);
     if (act === "addp") { A.cfgDraft.products.push({ id: "p" + Date.now().toString(36), name: "", detail: "", cost: 0, price: 0, active: true }); drawAdmin(); $(`#p-name-${A.cfgDraft.products.length - 1}`).focus(); return; }
     if (t.dataset.rmp) { A.cfgDraft.products.splice(Number(t.dataset.rmp), 1); return drawAdmin(); }
     if (act === "resetcfg") { A.cfgDraft = null; return drawAdmin(); }
   };
+  const ps = $("#prodSel");
+  if (ps) ps.onchange = (e) => { A.prod = e.target.value; drawAdmin(); };
   const q = $("#q");
   if (q) q.oninput = (e) => { A.q = e.target.value; const pos = e.target.selectionStart; drawAdmin(); const n = $("#q"); n.focus(); n.setSelectionRange(pos, pos); };
   const f = $("#cfgF");
