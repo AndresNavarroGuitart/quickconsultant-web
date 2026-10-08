@@ -12,6 +12,8 @@ y panel del organizador con lista de compras unificada, pedidos y planilla de en
 2. Elegir el repo `quickconsultant-web` y la rama a publicar.
 3. **Base directory**: `pedidos-futbol` (lo demás lo toma de `netlify.toml`).
 4. **Environment variables**: agregar `ADMIN_PIN` con el PIN del panel (sin esto el panel no deja entrar).
+   Sin tildar "Contains secret values" (el escaneo de secretos puede frenar el deploy con un PIN corto),
+   "Same value for all deploy contexts". Después de crearla hay que volver a publicar: Netlify no toma variables nuevas hasta el próximo deploy.
 5. Deploy. Opcional: en *Domain management* cambiar el nombre del sitio (ej. `pedidos-mi-equipo.netlify.app`).
 
 Después de publicar: entrar a `/#admin`, ir a **Productos y datos** y cargar productos, precios, alias y fecha límite.
