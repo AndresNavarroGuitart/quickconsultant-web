@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pedidos del Equipo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: banda verde de cancha arriba, una columna angosta para padres, panel ancho con solapas para admin. */
+:root {
+  --bg: #F2F5F0;
+  --surface: #FFFFFF;
+  --sunk: #E8EEE6;
+  --ink: #15241B;
+  --muted: #5B6C60;
+  --line: #D3DDD3;
+  --pitch: #1D6A3A;
+  --pitch-deep: #134C29;
+  --on-pitch: #F4FAF2;
+  --chalk: rgba(244, 250, 242, .32);
+  --gold: #B9860B;
+  --gold-soft: #FBEFC8;
+  --ok: #1D7A45;
+  --ok-soft: #DDF2E4;
+  --warn: #A55A00;
+  --warn-soft: #FCEBD3;
+  --danger: #B3261E;
+  --pitch-text: #1D6A3A;
+  --bar: #13241A;
+  --bar-gold: #F0C445;
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1611; --surface: #15211A; --sunk: #1B2A21; --ink: #E5EEE7; --muted: #93A698; --line: #2A3B31;
+    --pitch: #1B5E34; --pitch-deep: #0F3B20; --on-pitch: #F0F8EE; --chalk: rgba(240, 248, 238, .22);
+    --gold: #F0C445; --gold-soft: #3A3014; --ok: #5BD08A; --ok-soft: #173826; --warn: #F2A64A; --warn-soft: #3B2A12; --danger: #FF8A80; --pitch-text: #5BD08A; --bar: #050C08;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1611; --surface: #15211A; --sunk: #1B2A21; --ink: #E5EEE7; --muted: #93A698; --line: #2A3B31;
+  --pitch: #1B5E34; --pitch-deep: #0F3B20; --on-pitch: #F0F8EE; --chalk: rgba(240, 248, 238, .22);
+  --gold: #F0C445; --gold-soft: #3A3014; --ok: #5BD08A; --ok-soft: #173826; --warn: #F2A64A; --warn-soft: #3B2A12; --danger: #FF8A80; --pitch-text: #5BD08A; --bar: #050C08;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--body); -webkit-font-smoothing: antialiased; }
+[hidden] { display: none !important; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* ---------- Banda de cancha ---------- */
+.band { background: var(--pitch); color: var(--on-pitch); position: relative; overflow: hidden; padding: 22px 16px 26px; }
+.band::before { /* círculo central y línea media, dibujados con tiza */
+  content: ""; position: absolute; width: 260px; height: 260px; border: 2px solid var(--chalk); border-radius: 50%;
+  right: -70px; top: 50%; transform: translateY(-50%);
+}
+.band::after { content: ""; position: absolute; top: 0; bottom: 0; right: 58px; border-left: 2px solid var(--chalk); }
+.band-in { max-width: 760px; margin: 0 auto; position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.wide .band-in { max-width: 1100px; }
+.eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; opacity: .85; font-weight: 600; }
+.band h1 { font-family: var(--display); font-weight: 900; font-size: clamp(34px, 7vw, 52px); line-height: .95; margin: 4px 0 0; letter-spacing: .01em; text-transform: uppercase; text-wrap: balance; }
+.band .sub { margin-top: 6px; font-size: 14px; opacity: .9; }
+.mode-chip { font-size: 12px; font-weight: 600; background: var(--pitch-deep); border: 1px solid var(--chalk); padding: 4px 10px; border-radius: 99px; white-space: nowrap; }
+
+.wrap { max-width: 760px; margin: 0 auto; padding: 20px 16px 120px; }
+.wide .wrap { max-width: 1100px; }
+
+/* ---------- Pasos ---------- */
+.steps { display: flex; gap: 6px; list-style: none; padding: 0; margin: 0 0 18px; }
+.steps li { flex: 1; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--muted); border-bottom: 3px solid var(--line); padding-bottom: 8px; min-width: 0; }
+.steps li b { font-family: var(--display); font-size: 22px; line-height: 1; }
+.steps li span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.steps li.on { color: var(--pitch-text); border-color: var(--pitch-text); }
+.steps li.done { color: var(--ink); border-color: var(--ink); }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; }
+.panel h2, .h2 { font-family: var(--display); font-weight: 800; font-size: 26px; text-transform: uppercase; margin: 0 0 4px; letter-spacing: .01em; line-height: 1.05; }
+.lead { color: var(--muted); margin: 0 0 18px; }
+.note { background: var(--gold-soft); color: var(--ink); border-radius: 8px; padding: 10px 12px; font-size: 13.5px; margin-bottom: 16px; }
+
+.field { display: grid; gap: 6px; }
+.field label { font-weight: 600; font-size: 13.5px; }
+.field small { color: var(--muted); font-size: 12.5px; }
+.input { width: 100%; background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px; padding: 11px 12px; min-height: 46px; }
+.input:focus { border-color: var(--pitch); outline: none; box-shadow: 0 0 0 3px var(--ok-soft); }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.stack { display: grid; gap: 14px; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 8px; padding: 12px 18px; min-height: 46px; font-weight: 700; cursor: pointer; background: var(--pitch); color: var(--on-pitch); text-decoration: none; }
+.btn:hover { background: var(--pitch-deep); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+.btn.ghost:hover { background: var(--sunk); }
+.btn.sm { padding: 6px 12px; min-height: 34px; font-size: 13.5px; }
+.btn.danger { background: transparent; color: var(--danger); border: 1.5px solid var(--line); }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; margin-top: 20px; }
+.err { color: var(--danger); font-weight: 600; font-size: 13.5px; }
+
+/* ---------- Grilla de productos ---------- */
+.prod { display: grid; grid-template-columns: 1fr auto; gap: 6px 14px; align-items: center; padding: 14px 0; border-top: 1px solid var(--line); }
+.prod:first-child { border-top: 0; }
+.prod .name { font-weight: 700; }
+.prod .detail { color: var(--muted); font-size: 13px; }
+.prod .prices { grid-column: 1 / -1; display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+.prod .prices b { color: var(--ink); font-weight: 600; }
+.prod .prices .gain b { color: var(--gold); }
+.prod.has { background: linear-gradient(90deg, var(--ok-soft), transparent 70%); margin: 0 -20px; padding-inline: 20px; }
+.stepper { display: inline-flex; align-items: center; border: 1.5px solid var(--line); border-radius: 99px; background: var(--surface); }
+.stepper button { width: 40px; height: 40px; border: 0; background: none; font-size: 20px; font-weight: 700; cursor: pointer; border-radius: 99px; color: var(--pitch-text); }
+.stepper button:hover { background: var(--sunk); }
+.stepper input { width: 46px; text-align: center; border: 0; background: none; font-family: var(--display); font-size: 22px; font-weight: 800; padding: 0; -moz-appearance: textfield; }
+.stepper input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+/* Marcador fijo abajo: lo que transfiere y lo que gana */
+.scorebar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bar); color: #F2F5F0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 20; }
+.scorebar-in { max-width: 760px; margin: 0 auto; display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.score { display: grid; line-height: 1.05; }
+.score small { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; opacity: .75; font-weight: 600; }
+.score strong { font-family: var(--display); font-size: 30px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.score.gain strong { color: var(--bar-gold); }
+.scorebar .btn { margin-left: auto; background: var(--bar-gold); color: #1d1600; }
+.scorebar .btn:hover { filter: brightness(1.06); background: var(--bar-gold); }
+@media (max-width: 460px) { .scorebar .btn { margin-left: 0; width: 100%; } .score strong { font-size: 26px; } }
+
+/* ---------- Resumen / comprobante ---------- */
+.ticket { border: 1.5px dashed var(--line); border-radius: var(--r); padding: 16px; background: var(--surface); }
+.ticket-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; font-size: 14px; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; font-weight: 600; }
+.lines { width: 100%; border-collapse: collapse; font-size: 14px; margin: 10px 0; }
+.lines th { text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; padding: 6px 4px; border-bottom: 1px solid var(--line); }
+.lines td { padding: 7px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.lines .r { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 8px; }
+.tot { background: var(--sunk); border-radius: 8px; padding: 10px 12px; }
+.tot small { display: block; font-size: 11.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; }
+.tot strong { font-family: var(--display); font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.tot.pay { background: var(--pitch); color: var(--on-pitch); }
+.tot.pay small { color: var(--on-pitch); opacity: .8; }
+.tot.gain strong { color: var(--gold); }
+
+dialog { border: 0; border-radius: 14px; padding: 0; width: min(560px, calc(100% - 32px)); background: var(--bg); color: var(--ink); max-height: calc(100% - 40px); }
+dialog::backdrop { background: rgba(8, 20, 12, .55); }
+.dlg { padding: 20px; display: grid; gap: 14px; }
+
+.code { font-family: var(--display); font-weight: 900; font-size: 44px; letter-spacing: .06em; line-height: 1; }
+.success-mark { width: 54px; height: 54px; border-radius: 50%; background: var(--ok-soft); color: var(--ok); display: grid; place-items: center; font-size: 28px; font-weight: 800; }
+.transfer { display: grid; gap: 4px; background: var(--sunk); border-radius: 8px; padding: 12px; font-size: 14px; }
+.transfer .alias { font-family: var(--display); font-size: 24px; font-weight: 800; letter-spacing: .02em; word-break: break-all; }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-weight: 600; z-index: 50; }
+
+footer.foot { text-align: center; color: var(--muted); font-size: 12.5px; padding: 8px 16px 30px; }
+footer.foot a { color: var(--muted); }
+
+/* ---------- Admin ---------- */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 18px; overflow-x: auto; }
+.tabs button { background: none; border: 0; border-bottom: 3px solid transparent; padding: 10px 14px; font-weight: 700; color: var(--muted); cursor: pointer; white-space: nowrap; }
+.tabs button[aria-selected="true"] { color: var(--ink); border-color: var(--pitch-text); }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 20px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; }
+.kpi small { font-size: 11.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; }
+.kpi strong { display: block; font-family: var(--display); font-size: 32px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.kpi span { font-size: 12.5px; color: var(--muted); }
+.kpi.hl { background: var(--pitch); color: var(--on-pitch); border-color: var(--pitch); }
+.kpi.hl small, .kpi.hl span { color: var(--on-pitch); opacity: .85; }
+.toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+.toolbar .input { max-width: 280px; min-height: 40px; padding: 8px 12px; }
+.toolbar .spacer { flex: 1; }
+.seg { display: inline-flex; border: 1.5px solid var(--line); border-radius: 99px; padding: 2px; background: var(--surface); }
+.seg button { border: 0; background: none; padding: 6px 12px; border-radius: 99px; font-weight: 600; font-size: 13.5px; cursor: pointer; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
+table.data { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.data th { text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--sunk); white-space: nowrap; }
+table.data td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+table.data tr:last-child td { border-bottom: 0; }
+table.data .r { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.data tfoot td { font-weight: 800; background: var(--sunk); }
+.big { font-family: var(--display); font-size: 24px; font-weight: 800; }
+.pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 99px; padding: 3px 10px; font-size: 12.5px; font-weight: 700; white-space: nowrap; border: 0; cursor: pointer; }
+.pill.yes { background: var(--ok-soft); color: var(--ok); }
+.pill.no { background: var(--warn-soft); color: var(--warn); }
+.pill .t { font-weight: 500; opacity: .85; }
+.muted { color: var(--muted); }
+.code-sm { font-family: var(--display); font-weight: 800; font-size: 17px; letter-spacing: .05em; }
+.example { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; background: var(--gold-soft); color: var(--gold); padding: 2px 6px; border-radius: 4px; }
+
+/* Planilla de entregas */
+.deliv { display: grid; gap: 8px; }
+.drow { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; }
+.drow.done { background: var(--sunk); }
+.drow.done .who { text-decoration: line-through; text-decoration-color: var(--muted); }
+.check { appearance: none; -webkit-appearance: none; width: 34px; height: 34px; border: 2.5px solid var(--line); border-radius: 8px; cursor: pointer; display: grid; place-items: center; background: var(--surface); margin: 0; }
+.check:checked { background: var(--ok); border-color: var(--ok); }
+.check:checked::after { content: ""; width: 9px; height: 17px; border: solid var(--surface); border-width: 0 3.5px 3.5px 0; transform: translateY(-2px) rotate(45deg); }
+.who { font-weight: 700; font-size: 16px; }
+.items-inline { font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+.items-inline b { color: var(--ink); }
+.stamp { font-size: 12.5px; color: var(--ok); font-weight: 700; margin-top: 4px; }
+.drow .side { text-align: right; display: grid; gap: 6px; justify-items: end; }
+@media (max-width: 520px) { .drow { grid-template-columns: auto 1fr; } .drow .side { grid-column: 2; justify-items: start; text-align: left; } }
+
+.pedit td { padding: 6px 8px; }
+.pedit .input { min-height: 38px; padding: 6px 8px; }
+.pedit .input.n { width: 100px; text-align: right; }
+.empty { text-align: center; padding: 36px 16px; color: var(--muted); }
+.login { max-width: 380px; margin: 30px auto; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .panel, .kpis, .tablewrap, .deliv { animation: rise .25s ease-out both; }
+  @keyframes rise { from { transform: translateY(6px); opacity: .6; } to { transform: none; opacity: 1; } }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" class="toast" hidden></div>
+
+<dialog id="confirmDlg" aria-labelledby="confirmTitle">
+  <div class="dlg">
+    <div>
+      <div class="h2" id="confirmTitle">Revisá tu pedido</div>
+      <p class="lead" style="margin:0">Cuando confirmes, el pedido queda cerrado y lo recibe el organizador.</p>
+    </div>
+    <div id="confirmBody"></div>
+    <div class="err" id="confirmErr" hidden></div>
+    <div class="actions" style="margin-top:0">
+      <button class="btn ghost" type="button" id="confirmBack">Volver a editar</button>
+      <button class="btn" type="button" id="confirmGo">Confirmar y cerrar pedido</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+/* ================= utilidades ================= */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const money = (n) => "$ " + Math.round(n || 0).toLocaleString("es-AR");
+const when = (iso) => iso ? new Date(iso).toLocaleString("es-AR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
+const whenShort = (iso) => iso ? new Date(iso).toLocaleString("es-AR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : "";
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  sget(k) { try { return sessionStorage.getItem(k) || ""; } catch { return ""; } },
+  sset(k, v) { try { sessionStorage.setItem(k, v); } catch {} },
+};
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 2600); }
+function totals(items) {
+  const cost = items.reduce((s, it) => s + it.qty * it.cost, 0);
+  const sale = items.reduce((s, it) => s + it.qty * it.price, 0);
+  return { cost, sale, profit: sale - cost, units: items.reduce((s, it) => s + it.qty, 0) };
+}
+
+/* ================= datos: servidor Netlify o modo demo ================= */
+const DEMO_CONFIG = {
+  team: "Mi equipo", campaign: "Campeonato 2026", alias: "equipo.futbol.mp", holder: "Nombre del organizador", deadline: "Viernes 23/10",
+  note: "Los productos de esta lista son de ejemplo. Editalos desde el panel de administración.",
+  products: [
+    { id: "alf", name: "Alfajores de maicena", detail: "Caja x 12", cost: 4500, price: 7000, active: true },
+    { id: "pasta", name: "Pastafrola grande", detail: "De membrillo, 28 cm", cost: 6000, price: 9000, active: true },
+    { id: "pizza", name: "Pizzas congeladas", detail: "Pack x 2, muzzarella", cost: 5500, price: 8000, active: true },
+    { id: "emp", name: "Empanadas congeladas", detail: "Docena, carne o JyQ", cost: 9000, price: 13500, active: true },
+    { id: "bud", name: "Budín de limón", detail: "500 g", cost: 3500, price: 5500, active: true },
+    { id: "rifa", name: "Bono rifa", detail: "Sorteo el día de la final", cost: 1000, price: 2000, active: true },
+  ],
+};
+function demoOrders() {
+  const P = Object.fromEntries(DEMO_CONFIG.products.map((p) => [p.id, p]));
+  const mk = (id, h, parent, player, list, paid, deliv) => {
+    const items = list.map(([pid, qty]) => ({ productId: pid, name: P[pid].name, detail: P[pid].detail, qty, cost: P[pid].cost, price: P[pid].price }));
+    const t = totals(items); const base = Date.now() - h * 3600e3;
+    return { id, example: true, createdAt: new Date(base).toISOString(), parent, player, phone: "", notes: "", items, totalCost: t.cost, totalSale: t.sale, profit: t.profit,
+      paidAt: paid ? new Date(base + 5 * 3600e3).toISOString() : null, deliveredAt: deliv ? new Date(base + 30 * 3600e3).toISOString() : null };
+  };
+  return [
+    mk("K7P2Q", 70, "Familia de ejemplo 1", "Jugador ejemplo 1", [["alf", 3], ["rifa", 10]], true, true),
+    mk("M4XR8", 52, "Familia de ejemplo 2", "Jugador ejemplo 2", [["pizza", 4], ["emp", 2]], true, false),
+    mk("T9HB3", 30, "Familia de ejemplo 3", "Jugador ejemplo 3", [["pasta", 2], ["bud", 3], ["alf", 2]], false, false),
+    mk("W2CJ6", 6, "Familia de ejemplo 4", "Jugador ejemplo 4", [["emp", 1], ["rifa", 5]], false, false),
+  ];
+}
+const api = {
+  mode: "live",
+  pin: "",
+  async boot() {
+    try {
+      const r = await fetch("api/config", { cache: "no-store" });
+      if (r.ok && (r.headers.get("content-type") || "").includes("json")) { this.mode = "live"; return await r.json(); }
+    } catch {}
+    this.mode = "demo";
+    this.demo = store.get("demo-state", null) || { config: DEMO_CONFIG, orders: demoOrders() };
+    return this.demo.config;
+  },
+  saveDemo() { store.set("demo-state", this.demo); },
+  async call(method, path, body) {
+    const r = await fetch("api/" + path, { method, headers: { "content-type": "application/json", "x-admin-pin": this.pin }, body: body ? JSON.stringify(body) : undefined });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.error || "No se pudo conectar. Probá de nuevo.");
+    return data;
+  },
+  async login(pin) {
+    if (this.mode === "demo") { if (pin !== "1234") throw new Error("PIN incorrecto. En la vista previa el PIN es 1234."); this.pin = pin; return; }
+    await this.call("POST", "login", { pin }); this.pin = pin;
+  },
+  async createOrder(o) {
+    if (this.mode === "live") return this.call("POST", "orders", o);
+    const byId = new Map(this.demo.config.products.map((p) => [p.id, p]));
+    const items = o.items.map((it) => ({ ...byId.get(it.productId), productId: it.productId, qty: it.qty })).map(({ productId, name, detail, qty, cost, price }) => ({ productId, name, detail, qty, cost, price }));
+    const t = totals(items); const C = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    const order = { id: Array.from({ length: 5 }, () => C[Math.floor(Math.random() * C.length)]).join(""), createdAt: new Date().toISOString(), parent: o.parent, player: o.player, phone: o.phone, notes: o.notes,
+      items, totalCost: t.cost, totalSale: t.sale, profit: t.profit, paidAt: null, deliveredAt: null };
+    this.demo.orders.push(order); this.saveDemo(); return order;
+  },
+  async orders() { return this.mode === "live" ? this.call("GET", "orders") : structuredClone(this.demo.orders); },
+  async patch(id, body) {
+    if (this.mode === "live") return this.call("PATCH", "orders/" + id, body);
+    const o = this.demo.orders.find((x) => x.id === id); const now = new Date().toISOString();
+    if ("paid" in body) o.paidAt = body.paid ? (o.paidAt || now) : null;
+    if ("delivered" in body) o.deliveredAt = body.delivered ? (o.deliveredAt || now) : null;
+    this.saveDemo(); return structuredClone(o);
+  },
+  async remove(id) {
+    if (this.mode === "live") return this.call("DELETE", "orders/" + id);
+    this.demo.orders = this.demo.orders.filter((x) => x.id !== id); this.saveDemo();
+  },
+  async saveConfig(cfg) {
+    if (this.mode === "live") return this.call("PUT", "config", cfg);
+    this.demo.config = cfg; this.saveDemo(); return cfg;
+  },
+};
+
+/* ================= estado ================= */
+let CONFIG = null;
+const S = {
+  step: 1,
+  form: store.get("draft", { parent: "", player: "", phone: "", notes: "" }),
+  qty: store.get("draft-qty", {}),
+  done: null,
+  admin: { tab: store.get("admin-tab", "compras"), orders: [], filter: "pend", q: "", onlyPaid: false, confirmDel: null, cfgDraft: null },
+};
+const saveDraft = () => { store.set("draft", S.form); store.set("draft-qty", S.qty); };
+const cartItems = () => CONFIG.products.filter((p) => p.active && (S.qty[p.id] || 0) > 0).map((p) => ({ productId: p.id, name: p.name, detail: p.detail, qty: S.qty[p.id], cost: p.cost, price: p.price }));
+
+/* ================= vista: padres ================= */
+function header(wide, title, sub) {
+  return `<header class="band"><div class="band-in">
+    <div><div class="eyebrow">${esc(CONFIG.team || "Equipo")} · Recaudación</div>
+    <h1>${esc(title)}</h1><div class="sub">${esc(sub)}</div></div>
+    ${api.mode === "demo" ? `<span class="mode-chip">Vista previa · datos de ejemplo</span>` : ""}
+  </div></header>`;
+}
+function stepsBar() {
+  const names = ["Tus datos", "Productos", "Confirmar"];
+  return `<ol class="steps" aria-label="Pasos del pedido">${names.map((n, i) => {
+    const k = i + 1; const cls = S.step === k ? "on" : S.step > k ? "done" : "";
+    return `<li class="${cls}" ${S.step === k ? 'aria-current="step"' : ""}><b>${k}</b><span>${n}</span></li>`;
+  }).join("")}</ol>`;
+}
+
+function renderParent() {
+  document.body.classList.remove("wide");
+  const sub = [CONFIG.campaign, CONFIG.deadline ? "Pedidos hasta el " + CONFIG.deadline : ""].filter(Boolean).join(" · ");
+  let html = header(false, "Hacé tu pedido", sub) + `<main class="wrap">`;
+  if (S.done) html += doneView();
+  else {
+    html += stepsBar();
+    if (S.step === 1) html += step1();
+    else html += step2();
+  }
+  html += `</main><footer class="foot">¿Sos el organizador? <a href="#admin">Entrar al panel</a></footer>`;
+  if (!S.done && S.step === 2) html += scorebar();
+  $("#app").innerHTML = html;
+  bindParent();
+}
+
+function step1() {
+  const f = S.form;
+  return `<form class="panel" id="f1" novalidate>
+    <h2>Tus datos</h2>
+    <p class="lead">Con esto el organizador sabe de quién es cada pedido a la hora de entregar.</p>
+    <div class="stack">
+      <div class="grid2">
+        <div class="field"><label for="parent">Nombre del padre o madre</label><input class="input" id="parent" autocomplete="name" value="${esc(f.parent)}" required></div>
+        <div class="field"><label for="player">Nombre del jugador</label><input class="input" id="player" value="${esc(f.player)}" required></div>
+      </div>
+      <div class="field"><label for="phone">Teléfono / WhatsApp <span class="muted">(opcional)</span></label><input class="input" id="phone" inputmode="tel" autocomplete="tel" value="${esc(f.phone)}"></div>
+      <div class="field"><label for="notes">Comentario <span class="muted">(opcional)</span></label><textarea class="input" id="notes" rows="2" placeholder="Por ejemplo: empanadas mitad carne, mitad JyQ">${esc(f.notes)}</textarea></div>
+    </div>
+    <div class="err" id="err1" hidden></div>
+    <div class="actions"><span></span><button class="btn" type="submit">Siguiente: elegir productos →</button></div>
+  </form>`;
+}
+
+function step2() {
+  const prods = CONFIG.products.filter((p) => p.active);
+  return `<section class="panel">
+    <h2>Elegí los productos</h2>
+    <p class="lead">Comprás al precio de costo y vendés al precio sugerido. La diferencia es la ganancia para el equipo.</p>
+    ${CONFIG.note ? `<div class="note">${esc(CONFIG.note)}</div>` : ""}
+    <div id="grid">${prods.map((p) => {
+      const q = S.qty[p.id] || 0;
+      return `<div class="prod ${q ? "has" : ""}" data-id="${esc(p.id)}">
+        <div><div class="name">${esc(p.name)}</div><div class="detail">${esc(p.detail)}</div></div>
+        <div class="stepper"><button type="button" data-d="-1" aria-label="Quitar uno de ${esc(p.name)}">−</button><input type="number" min="0" max="500" inputmode="numeric" id="q-${esc(p.id)}" value="${q}" aria-label="Cantidad de ${esc(p.name)}"><button type="button" data-d="1" aria-label="Agregar uno de ${esc(p.name)}">+</button></div>
+        <div class="prices num"><span>Costo <b>${money(p.cost)}</b></span><span>Venta <b>${money(p.price)}</b></span><span class="gain">Ganás <b>${money(p.price - p.cost)}</b> c/u</span><span class="sub-line">${q ? `Subtotal costo <b>${money(q * p.cost)}</b>` : ""}</span></div>
+      </div>`;
+    }).join("")}</div>
+    <div class="actions"><button class="btn ghost" type="button" id="back1">← Volver a tus datos</button></div>
+  </section>`;
+}
+
+function scorebar() {
+  const t = totals(cartItems());
+  return `<div class="scorebar" role="region" aria-label="Totales del pedido"><div class="scorebar-in">
+    <div class="score"><small>Me transferís</small><strong id="sbCost">${money(t.cost)}</strong></div>
+    <div class="score gain"><small>Tu ganancia</small><strong id="sbGain">${money(t.profit)}</strong></div>
+    <button class="btn" type="button" id="review" ${t.units ? "" : "disabled"}>Revisar y cerrar pedido</button>
+  </div></div>`;
+}
+
+function ticketHTML(o) {
+  const t = { cost: o.totalCost, sale: o.totalSale, profit: o.profit };
+  return `<div class="ticket">
+    <div class="ticket-head">
+      <dl class="kv"><dt>Padre/madre</dt><dd>${esc(o.parent)}</dd><dt>Jugador</dt><dd>${esc(o.player)}</dd>${o.phone ? `<dt>Teléfono</dt><dd>${esc(o.phone)}</dd>` : ""}${o.createdAt ? `<dt>Fecha</dt><dd>${when(o.createdAt)}</dd>` : ""}</dl>
+      ${o.id ? `<div style="text-align:right"><div class="muted" style="font-size:12px">PEDIDO</div><div class="code-sm" style="font-size:24px">#${esc(o.id)}</div></div>` : ""}
+    </div>
+    <table class="lines"><thead><tr><th>Producto</th><th class="r">Cant.</th><th class="r">Costo</th><th class="r">Venta</th></tr></thead><tbody>
+      ${o.items.map((it) => `<tr><td>${esc(it.name)}<div class="muted" style="font-size:12px">${esc(it.detail)}</div></td><td class="r">${it.qty}</td><td class="r">${money(it.qty * it.cost)}</td><td class="r">${money(it.qty * it.price)}</td></tr>`).join("")}
+    </tbody></table>
+    ${o.notes ? `<p class="muted" style="margin:6px 0 10px;font-size:13.5px">Comentario: ${esc(o.notes)}</p>` : ""}
+    <div class="totals">
+      <div class="tot pay"><small>A transferir</small><strong>${money(t.cost)}</strong></div>
+      <div class="tot"><small>Vendiendo todo</small><strong>${money(t.sale)}</strong></div>
+      <div class="tot gain"><small>Ganancia</small><strong>${money(t.profit)}</strong></div>
+    </div>
+  </div>`;
+}
+
+function transferHTML(amount) {
+  if (!CONFIG.alias) return "";
+  return `<div class="transfer"><span class="muted">Transferí <b style="color:var(--ink)">${money(amount)}</b> a este alias:</span>
+    <span class="alias" id="aliasTxt">${esc(CONFIG.alias)}</span>${CONFIG.holder ? `<span class="muted">Titular: ${esc(CONFIG.holder)}</span>` : ""}
+    <div><button class="btn ghost sm" type="button" id="copyAlias">Copiar alias</button></div></div>`;
+}
+
+function doneView() {
+  const o = S.done;
+  return `<section class="panel stack">
+    <div style="display:flex;gap:14px;align-items:center"><div class="success-mark" aria-hidden="true">✓</div>
+      <div><h2 style="margin:0">Pedido cerrado</h2><div class="muted">Guardá el comprobante. Tu número de pedido es</div></div></div>
+    <div class="code num">#${esc(o.id)}</div>
+    ${transferHTML(o.totalCost)}
+    ${ticketHTML(o)}
+    <div class="actions" style="margin-top:4px">
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" type="button" id="dl">Descargar comprobante</button>
+        <button class="btn ghost" type="button" id="copySum">Copiar resumen para WhatsApp</button>
+      </div>
+      <button class="btn ghost" type="button" id="again">Hacer otro pedido</button>
+    </div>
+    ${api.mode === "demo" ? `<p class="muted" style="margin:0;font-size:12.5px">En esta vista previa la descarga puede estar bloqueada. En el sitio publicado en Netlify se descarga como imagen.</p>` : ""}
+  </section>`;
+}
+
+function bindParent() {
+  const f1 = $("#f1");
+  if (f1) {
+    ["parent", "player", "phone", "notes"].forEach((k) => $("#" + k).addEventListener("input", (e) => { S.form[k] = e.target.value; saveDraft(); }));
+    f1.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const miss = [];
+      if (!S.form.parent.trim()) miss.push("el nombre del padre o madre");
+      if (!S.form.player.trim()) miss.push("el nombre del jugador");
+      if (miss.length) { const er = $("#err1"); er.textContent = "Falta completar " + miss.join(" y ") + "."; er.hidden = false; $(S.form.parent.trim() ? "#player" : "#parent").focus(); return; }
+      S.step = 2; renderParent(); window.scrollTo(0, 0);
+    });
+  }
+  const grid = $("#grid");
+  if (grid) {
+    const update = (row, q) => {
+      const id = row.dataset.id; const p = CONFIG.products.find((x) => x.id === id);
+      q = Math.max(0, Math.min(500, Math.round(Number(q) || 0)));
+      S.qty[id] = q; saveDraft();
+      row.querySelector("input").value = q;
+      row.classList.toggle("has", q > 0);
+      row.querySelector(".sub-line").innerHTML = q ? `Subtotal costo <b>${money(q * p.cost)}</b>` : "";
+      const t = totals(cartItems());
+      $("#sbCost").textContent = money(t.cost); $("#sbGain").textContent = money(t.profit); $("#review").disabled = !t.units;
+    };
+    grid.addEventListener("click", (e) => { const b = e.target.closest("button[data-d]"); if (!b) return; const row = b.closest(".prod"); update(row, (S.qty[row.dataset.id] || 0) + Number(b.dataset.d)); });
+    grid.addEventListener("change", (e) => { if (e.target.matches("input")) update(e.target.closest(".prod"), e.target.value); });
+    $("#back1").onclick = () => { S.step = 1; renderParent(); };
+    $("#review").onclick = openConfirm;
+  }
+  if ($("#dl")) {
+    $("#dl").onclick = () => downloadReceipt(S.done);
+    $("#copySum").onclick = (e) => copyText(summaryText(S.done), e.currentTarget);
+    $("#again").onclick = () => { S.done = null; S.step = 1; S.qty = {}; saveDraft(); renderParent(); };
+  }
+  if ($("#copyAlias")) $("#copyAlias").onclick = (e) => copyText(CONFIG.alias, e.currentTarget, $("#aliasTxt"));
+}
+
+function openConfirm() {
+  const items = cartItems(); const t = totals(items);
+  S.step = 3;
+  document.querySelectorAll(".steps li").forEach((li, i) => { li.className = i < 2 ? "done" : "on"; });
+  $("#confirmBody").innerHTML = ticketHTML({ ...S.form, items, totalCost: t.cost, totalSale: t.sale, profit: t.profit });
+  $("#confirmErr").hidden = true;
+  const d = $("#confirmDlg");
+  d.showModal();
+}
+$("#confirmBack").onclick = () => { $("#confirmDlg").close(); };
+$("#confirmDlg").addEventListener("close", () => { if (!S.done) { S.step = 2; document.querySelectorAll(".steps li").forEach((li, i) => { li.className = i === 0 ? "done" : i === 1 ? "on" : ""; }); } });
+$("#confirmGo").onclick = async (e) => {
+  const btn = e.currentTarget; btn.disabled = true; btn.textContent = "Enviando…";
+  try {
+    const order = await api.createOrder({ ...S.form, items: cartItems().map((it) => ({ productId: it.productId, qty: it.qty })) });
+    S.done = order; S.qty = {}; saveDraft();
+    $("#confirmDlg").close();
+    renderParent(); window.scrollTo(0, 0);
+  } catch (err) {
+    const er = $("#confirmErr"); er.textContent = err.message; er.hidden = false;
+  } finally { btn.disabled = false; btn.textContent = "Confirmar y cerrar pedido"; }
+};
+
+function summaryText(o) {
+  return [`Pedido #${o.id} · ${CONFIG.team} – ${CONFIG.campaign}`, `${o.parent} (jugador: ${o.player})`, "",
+    ...o.items.map((it) => `${it.qty} x ${it.name} – ${money(it.qty * it.cost)}`), "",
+    `A transferir: ${money(o.totalCost)}`, `Ganancia vendiendo todo: ${money(o.profit)}`, CONFIG.alias ? `Alias: ${CONFIG.alias}` : ""].filter((l, i, a) => l !== "" || a[i - 1] !== "").join("\n");
+}
+async function copyText(text, btn, selectEl) {
+  const old = btn.textContent;
+  try { await navigator.clipboard.writeText(text); btn.textContent = "Copiado"; }
+  catch {
+    if (selectEl) { const r = document.createRange(); r.selectNodeContents(selectEl); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = "Seleccionado, copiá con Ctrl+C"; }
+    else { btn.textContent = "No se pudo copiar"; }
+  }
+  setTimeout(() => (btn.textContent = old), 2000);
+}
+
+/* Comprobante como imagen PNG, dibujado a mano en un canvas (sin librerías) */
+function downloadReceipt(o) {
+  const css = getComputedStyle(document.documentElement);
+  const W = 900, pad = 48, rowH = 52;
+  const H = 420 + o.items.length * rowH + (o.notes ? 40 : 0) + (CONFIG.alias ? 70 : 0);
+  const c = document.createElement("canvas"); c.width = W * 2; c.height = H * 2;
+  const g = c.getContext("2d"); g.scale(2, 2);
+  const disp = '"Big Shoulders Display", "Arial Narrow", sans-serif', body = 'Figtree, system-ui, sans-serif';
+  g.fillStyle = "#FFFFFF"; g.fillRect(0, 0, W, H);
+  g.fillStyle = "#1D6A3A"; g.fillRect(0, 0, W, 130);
+  g.strokeStyle = "rgba(244,250,242,.35)"; g.lineWidth = 2; g.beginPath(); g.arc(W - 40, 65, 95, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = "#F4FAF2"; g.font = `600 15px ${body}`; g.fillText(`${CONFIG.team} · ${CONFIG.campaign}`.toUpperCase(), pad, 46);
+  g.font = `900 46px ${disp}`; g.fillText("COMPROBANTE DE PEDIDO", pad, 98);
+  g.fillStyle = "#15241B"; g.font = `800 34px ${disp}`; g.textAlign = "right"; g.fillText("#" + o.id, W - pad, 180); g.textAlign = "left";
+  g.font = `500 16px ${body}`; g.fillStyle = "#5B6C60";
+  const kv = [["Padre/madre", o.parent], ["Jugador", o.player], ["Fecha", when(o.createdAt)]];
+  kv.forEach(([k, v], i) => { g.fillStyle = "#5B6C60"; g.fillText(k, pad, 172 + i * 26); g.fillStyle = "#15241B"; g.font = `700 16px ${body}`; g.fillText(v, pad + 120, 172 + i * 26); g.font = `500 16px ${body}`; });
+  let y = 270;
+  g.font = `600 13px ${body}`; g.fillStyle = "#5B6C60";
+  g.fillText("PRODUCTO", pad, y); g.textAlign = "right"; g.fillText("CANT.", 560, y); g.fillText("COSTO", 700, y); g.fillText("VENTA", W - pad, y); g.textAlign = "left";
+  g.fillStyle = "#D3DDD3"; g.fillRect(pad, y + 12, W - pad * 2, 1.5);
+  y += 12;
+  o.items.forEach((it) => {
+    y += rowH;
+    g.fillStyle = "#15241B"; g.font = `700 17px ${body}`; g.fillText(it.name, pad, y - 22);
+    g.fillStyle = "#5B6C60"; g.font = `500 13px ${body}`; g.fillText(it.detail || "", pad, y - 5);
+    g.fillStyle = "#15241B"; g.font = `600 17px ${body}`; g.textAlign = "right";
+    g.fillText(String(it.qty), 560, y - 14); g.fillText(money(it.qty * it.cost), 700, y - 14); g.fillText(money(it.qty * it.price), W - pad, y - 14); g.textAlign = "left";
+    g.fillStyle = "#E3EAE3"; g.fillRect(pad, y + 4, W - pad * 2, 1);
+  });
+  if (o.notes) { y += 34; g.fillStyle = "#5B6C60"; g.font = `500 14px ${body}`; g.fillText("Comentario: " + o.notes.slice(0, 90), pad, y); }
+  y += 34;
+  const boxes = [["A TRANSFERIR", o.totalCost, "#1D6A3A", "#F4FAF2"], ["VENDIENDO TODO", o.totalSale, "#E8EEE6", "#15241B"], ["GANANCIA", o.profit, "#FBEFC8", "#7A5800"]];
+  const bw = (W - pad * 2 - 24) / 3;
+  boxes.forEach(([lbl, val, bg, fg], i) => {
+    const x = pad + i * (bw + 12); g.fillStyle = bg; g.beginPath(); g.roundRect ? g.roundRect(x, y, bw, 84, 10) : g.rect(x, y, bw, 84); g.fill();
+    g.fillStyle = fg; g.font = `600 12px ${body}`; g.fillText(lbl, x + 16, y + 26); g.font = `800 34px ${disp}`; g.fillText(money(val), x + 16, y + 66);
+  });
+  y += 84;
+  if (CONFIG.alias) { y += 44; g.fillStyle = "#15241B"; g.font = `600 16px ${body}`; g.fillText(`Transferí a: ${CONFIG.alias}${CONFIG.holder ? "  ·  Titular: " + CONFIG.holder : ""}`, pad, y); }
+  c.toBlob((blob) => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `pedido-${o.id}-${o.player.replace(/\s+/g, "-").toLowerCase()}.png`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    toast("Comprobante descargado");
+  }, "image/png");
+}
+
+/* ================= vista: admin ================= */
+async function renderAdmin() {
+  document.body.classList.add("wide");
+  if (!api.pin) api.pin = store.sget("pin");
+  if (!api.pin) return renderLogin();
+  try { S.admin.orders = await api.orders(); }
+  catch (err) { api.pin = ""; store.sset("pin", ""); return renderLogin(err.message); }
+  drawAdmin();
+}
+function renderLogin(msg) {
+  $("#app").innerHTML = header(true, "Panel del organizador", CONFIG.campaign || "") + `<main class="wrap">
+    <form class="panel login stack" id="loginF">
+      <h2>Entrar</h2>
+      <div class="field"><label for="pin">PIN de administrador</label><input class="input" id="pin" type="password" inputmode="numeric" autocomplete="current-password"></div>
+      ${api.mode === "demo" ? `<small class="muted">Vista previa: el PIN es <b>1234</b>.</small>` : ""}
+      <div class="err" id="loginErr" ${msg ? "" : "hidden"}>${esc(msg || "")}</div>
+      <button class="btn" type="submit">Entrar</button>
+      <a href="#" class="muted" style="font-size:13px">← Volver al formulario de pedidos</a>
+    </form></main>`;
+  $("#pin").focus();
+  $("#loginF").onsubmit = async (e) => {
+    e.preventDefault();
+    try { await api.login($("#pin").value.trim()); store.sset("pin", api.pin); renderAdmin(); }
+    catch (err) { const er = $("#loginErr"); er.textContent = err.message; er.hidden = false; }
+  };
+}
+
+function consolidate(orders) {
+  const map = new Map();
+  orders.forEach((o) => o.items.forEach((it) => {
+    const r = map.get(it.productId) || { name: it.name, detail: it.detail, qty: 0, cost: 0, sale: 0, orders: 0 };
+    r.qty += it.qty; r.cost += it.qty * it.cost; r.sale += it.qty * it.price; r.orders += 1; map.set(it.productId, r);
+  }));
+  return [...map.values()].sort((a, b) => b.qty - a.qty);
+}
+
+function drawAdmin() {
+  const A = S.admin, O = A.orders;
+  const sum = (arr, f) => arr.reduce((s, x) => s + f(x), 0);
+  const paid = O.filter((o) => o.paidAt), deliv = O.filter((o) => o.deliveredAt);
+  const tabs = [["compras", "Compras"], ["pedidos", `Pedidos (${O.length})`], ["entregas", "Entregas"], ["productos", "Productos y datos"]];
+  let html = header(true, "Panel del organizador", CONFIG.campaign || "") + `<main class="wrap">
+    <div class="kpis">
+      <div class="kpi"><small>Pedidos</small><strong>${O.length}</strong><span>${new Set(O.map((o) => o.player.trim().toLowerCase())).size} jugadores</span></div>
+      <div class="kpi hl"><small>A recaudar</small><strong>${money(sum(O, (o) => o.totalCost))}</strong><span>lo que tienen que transferir</span></div>
+      <div class="kpi"><small>Cobrado</small><strong>${money(sum(paid, (o) => o.totalCost))}</strong><span>${paid.length} de ${O.length} pagaron</span></div>
+      <div class="kpi"><small>Ganancia de las familias</small><strong style="color:var(--gold)">${money(sum(O, (o) => o.profit))}</strong><span>vendiendo todo</span></div>
+      <div class="kpi"><small>Entregados</small><strong>${deliv.length}/${O.length}</strong><span>${O.length - deliv.length} pendientes</span></div>
+    </div>
+    <div class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" data-tab="${k}" aria-selected="${A.tab === k}">${n}</button>`).join("")}
+      <span style="flex:1"></span><button data-act="logout" title="Cerrar sesión">Salir</button></div>
+    <div id="tabBody">`;
+  if (A.tab === "compras") html += tabCompras();
+  else if (A.tab === "pedidos") html += tabPedidos();
+  else if (A.tab === "entregas") html += tabEntregas();
+  else html += tabProductos();
+  html += `</div></main><footer class="foot"><a href="#">Ver el formulario que ven los padres</a></footer>`;
+  $("#app").innerHTML = html;
+  bindAdmin();
+}
+
+function tabCompras() {
+  const A = S.admin; const src = A.onlyPaid ? A.orders.filter((o) => o.paidAt) : A.orders;
+  const rows = consolidate(src);
+  const tc = rows.reduce((s, r) => s + r.cost, 0), ts = rows.reduce((s, r) => s + r.sale, 0);
+  return `<div class="toolbar"><div><div class="h2" style="font-size:22px">Lista de compras</div><div class="muted" style="font-size:13.5px">Todos los pedidos unificados por producto: esto es lo que tenés que comprar.</div></div>
+    <span class="spacer"></span>
+    <div class="seg" role="group" aria-label="Qué pedidos incluir"><button data-paid="0" aria-pressed="${!A.onlyPaid}">Todos</button><button data-paid="1" aria-pressed="${A.onlyPaid}">Solo pagados</button></div>
+    <button class="btn ghost sm" data-act="csv-compras">Descargar CSV</button></div>
+    ${rows.length ? `<div class="tablewrap"><table class="data"><thead><tr><th>Producto</th><th class="r">Cantidad a comprar</th><th class="r">En pedidos</th><th class="r">Costo total</th><th class="r">Venta total</th></tr></thead><tbody>
+      ${rows.map((r) => `<tr><td><b>${esc(r.name)}</b><div class="muted" style="font-size:12.5px">${esc(r.detail)}</div></td><td class="r"><span class="big">${r.qty}</span></td><td class="r muted">${r.orders}</td><td class="r">${money(r.cost)}</td><td class="r">${money(r.sale)}</td></tr>`).join("")}
+    </tbody><tfoot><tr><td>Total</td><td class="r">${rows.reduce((s, r) => s + r.qty, 0)} u.</td><td></td><td class="r">${money(tc)}</td><td class="r">${money(ts)}</td></tr></tfoot></table></div>`
+      : `<div class="panel empty">Todavía no hay pedidos${A.onlyPaid ? " pagados" : ""}. Cuando los padres completen el formulario, acá vas a ver cuánto comprar de cada producto.</div>`}`;
+}
+
+function tabPedidos() {
+  const A = S.admin; const q = A.q.trim().toLowerCase();
+  const list = A.orders.filter((o) => !q || (o.parent + " " + o.player + " " + o.id).toLowerCase().includes(q)).slice().reverse();
+  return `<div class="toolbar"><input class="input" id="q" type="search" placeholder="Buscar por nombre o número" value="${esc(A.q)}" aria-label="Buscar pedidos"><span class="spacer"></span><button class="btn ghost sm" data-act="csv-pedidos">Descargar CSV</button></div>
+  ${list.length ? `<div class="tablewrap"><table class="data"><thead><tr><th>Pedido</th><th>Fecha</th><th>Padre/madre · Jugador</th><th>Productos</th><th class="r">A transferir</th><th>Pago</th><th></th></tr></thead><tbody>
+    ${list.map((o) => `<tr>
+      <td><span class="code-sm">#${esc(o.id)}</span>${o.example ? ` <span class="example">Ejemplo</span>` : ""}</td>
+      <td class="muted num" style="white-space:nowrap">${whenShort(o.createdAt)}</td>
+      <td><b>${esc(o.parent)}</b><div class="muted" style="font-size:13px">${esc(o.player)}${o.phone ? " · " + esc(o.phone) : ""}</div></td>
+      <td style="font-size:13px">${o.items.map((it) => `${it.qty}× ${esc(it.name)}`).join("<br>")}${o.notes ? `<div class="muted">“${esc(o.notes)}”</div>` : ""}</td>
+      <td class="r"><b>${money(o.totalCost)}</b></td>
+      <td><button class="pill ${o.paidAt ? "yes" : "no"}" data-pay="${esc(o.id)}" title="Tocá para cambiar">${o.paidAt ? `Pagado <span class="t">${whenShort(o.paidAt)}</span>` : "Sin pagar"}</button></td>
+      <td>${A.confirmDel === o.id ? `<button class="btn danger sm" data-del-yes="${esc(o.id)}">¿Borrar? Sí</button> <button class="btn ghost sm" data-del-no>No</button>` : `<button class="btn ghost sm" data-del="${esc(o.id)}" aria-label="Borrar pedido ${esc(o.id)}">Borrar</button>`}</td>
+    </tr>`).join("")}</tbody></table></div>` : `<div class="panel empty">${q ? "No hay pedidos que coincidan con la búsqueda." : "Todavía no hay pedidos."}</div>`}`;
+}
+
+function tabEntregas() {
+  const A = S.admin; const q = A.q.trim().toLowerCase();
+  let list = A.orders.filter((o) => !q || (o.parent + " " + o.player + " " + o.id).toLowerCase().includes(q));
+  if (A.filter === "pend") list = list.filter((o) => !o.deliveredAt);
+  if (A.filter === "done") list = list.filter((o) => o.deliveredAt).sort((a, b) => b.deliveredAt.localeCompare(a.deliveredAt));
+  else list.sort((a, b) => (!!a.deliveredAt - !!b.deliveredAt) || a.player.localeCompare(b.player));
+  const pend = A.orders.filter((o) => !o.deliveredAt).length;
+  return `<div class="toolbar"><div><div class="h2" style="font-size:22px">Planilla de entregas</div><div class="muted" style="font-size:13.5px">Tildá cada pedido cuando lo entregues. Se guarda la fecha y la hora.</div></div><span class="spacer"></span>
+    <input class="input" id="q" type="search" placeholder="Buscar jugador o familia" value="${esc(A.q)}" aria-label="Buscar en entregas">
+    <div class="seg" role="group" aria-label="Filtrar entregas"><button data-f="pend" aria-pressed="${A.filter === "pend"}">Pendientes (${pend})</button><button data-f="done" aria-pressed="${A.filter === "done"}">Entregados (${A.orders.length - pend})</button><button data-f="all" aria-pressed="${A.filter === "all"}">Todos</button></div>
+    <button class="btn ghost sm" data-act="csv-entregas">Descargar CSV</button></div>
+    ${list.length ? `<div class="deliv">${list.map((o) => `<div class="drow ${o.deliveredAt ? "done" : ""}">
+      <input type="checkbox" class="check" id="d-${esc(o.id)}" data-deliv="${esc(o.id)}" ${o.deliveredAt ? "checked" : ""} aria-label="Entregado a ${esc(o.player)}">
+      <label for="d-${esc(o.id)}" style="cursor:pointer;min-width:0">
+        <div class="who">${esc(o.player)} <span class="muted" style="font-weight:500;font-size:14px">· ${esc(o.parent)}</span></div>
+        <div class="items-inline">${o.items.map((it) => `<b>${it.qty}×</b> ${esc(it.name)}`).join(" · ")}</div>
+        ${o.deliveredAt ? `<div class="stamp">✓ Entregado el ${when(o.deliveredAt)}</div>` : ""}
+      </label>
+      <div class="side"><span class="code-sm">#${esc(o.id)}</span>
+        <button class="pill ${o.paidAt ? "yes" : "no"}" data-pay="${esc(o.id)}">${o.paidAt ? "Pagado" : "Sin pagar · " + money(o.totalCost)}</button></div>
+    </div>`).join("")}</div>` : `<div class="panel empty">${A.filter === "pend" && A.orders.length ? "Entregaste todos los pedidos." : "No hay pedidos para mostrar."}</div>`}`;
+}
+
+function tabProductos() {
+  const A = S.admin;
+  if (!A.cfgDraft) A.cfgDraft = structuredClone(CONFIG);
+  const c = A.cfgDraft;
+  return `<form id="cfgF" class="stack">
+    <section class="panel stack">
+      <h2>Datos de la campaña</h2>
+      <div class="grid2">
+        <div class="field"><label for="c-team">Nombre del equipo</label><input class="input" id="c-team" data-k="team" value="${esc(c.team)}"></div>
+        <div class="field"><label for="c-campaign">Campaña</label><input class="input" id="c-campaign" data-k="campaign" value="${esc(c.campaign)}"></div>
+        <div class="field"><label for="c-alias">Alias o CBU para transferir</label><input class="input" id="c-alias" data-k="alias" value="${esc(c.alias)}"></div>
+        <div class="field"><label for="c-holder">Titular de la cuenta</label><input class="input" id="c-holder" data-k="holder" value="${esc(c.holder)}"></div>
+        <div class="field"><label for="c-deadline">Fecha límite de pedidos</label><input class="input" id="c-deadline" data-k="deadline" value="${esc(c.deadline)}" placeholder="Viernes 23/10"></div>
+      </div>
+      <div class="field"><label for="c-note">Aviso para los padres</label><textarea class="input" id="c-note" data-k="note" rows="2">${esc(c.note)}</textarea><small>Aparece arriba de la lista de productos. Dejalo vacío para no mostrar nada.</small></div>
+    </section>
+    <section class="panel stack">
+      <div class="toolbar" style="margin:0"><h2 style="margin:0">Productos</h2><span class="spacer"></span><button class="btn ghost sm" type="button" data-act="addp">+ Agregar producto</button></div>
+      <div class="tablewrap"><table class="data pedit"><thead><tr><th>Producto</th><th>Detalle</th><th class="r">Costo</th><th class="r">Venta</th><th class="r">Ganancia</th><th>Visible</th><th></th></tr></thead><tbody>
+        ${c.products.map((p, i) => `<tr data-i="${i}">
+          <td><input class="input" id="p-name-${i}" data-pk="name" value="${esc(p.name)}" aria-label="Nombre"></td>
+          <td><input class="input" id="p-detail-${i}" data-pk="detail" value="${esc(p.detail)}" aria-label="Detalle"></td>
+          <td class="r"><input class="input n" id="p-cost-${i}" data-pk="cost" type="number" min="0" value="${p.cost}" aria-label="Costo"></td>
+          <td class="r"><input class="input n" id="p-price-${i}" data-pk="price" type="number" min="0" value="${p.price}" aria-label="Precio de venta"></td>
+          <td class="r" style="color:var(--gold);font-weight:700">${money(p.price - p.cost)}</td>
+          <td><input type="checkbox" id="p-active-${i}" data-pk="active" ${p.active ? "checked" : ""} aria-label="Visible para los padres"></td>
+          <td><button class="btn ghost sm" type="button" data-rmp="${i}">Quitar</button></td></tr>`).join("")}
+      </tbody></table></div>
+      <small class="muted">Los pedidos ya hechos conservan el precio que tenían al momento de pedir.</small>
+    </section>
+    <div class="actions" style="margin:0"><button class="btn ghost" type="button" data-act="resetcfg">Descartar cambios</button><button class="btn" type="submit">Guardar cambios</button></div>
+  </form>`;
+}
+
+function csv(name, rows) {
+  const text = "﻿" + rows.map((r) => r.map((v) => `"${String(v ?? "").replace(/"/g, '""')}"`).join(";")).join("\r\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: "text/csv;charset=utf-8" })); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+function bindAdmin() {
+  const A = S.admin;
+  const app = $("#app");
+  app.onclick = async (e) => {
+    const t = e.target.closest("button, [data-deliv]"); if (!t) return;
+    if (t.dataset.tab) { A.tab = t.dataset.tab; A.q = ""; A.confirmDel = null; store.set("admin-tab", A.tab); return drawAdmin(); }
+    if (t.dataset.paid) { A.onlyPaid = t.dataset.paid === "1"; return drawAdmin(); }
+    if (t.dataset.f) { A.filter = t.dataset.f; return drawAdmin(); }
+    if (t.dataset.pay) return mutate(t.dataset.pay, (o) => ({ paid: !o.paidAt }));
+    if (t.dataset.deliv) return mutate(t.dataset.deliv, (o) => ({ delivered: !o.deliveredAt }));
+    if (t.dataset.del) { A.confirmDel = t.dataset.del; return drawAdmin(); }
+    if ("delNo" in t.dataset) { A.confirmDel = null; return drawAdmin(); }
+    if (t.dataset.delYes) { try { await api.remove(t.dataset.delYes); A.orders = A.orders.filter((o) => o.id !== t.dataset.delYes); A.confirmDel = null; toast("Pedido borrado"); drawAdmin(); } catch (err) { toast(err.message); } return; }
+    const act = t.dataset.act;
+    if (act === "logout") { api.pin = ""; store.sset("pin", ""); location.hash = ""; return; }
+    if (act === "csv-compras") return csv("lista-de-compras.csv", [["Producto", "Detalle", "Cantidad", "Costo total", "Venta total"], ...consolidate(A.onlyPaid ? A.orders.filter((o) => o.paidAt) : A.orders).map((r) => [r.name, r.detail, r.qty, r.cost, r.sale])]);
+    if (act === "csv-pedidos" || act === "csv-entregas") return csv(act === "csv-pedidos" ? "pedidos.csv" : "entregas.csv", [["Pedido", "Fecha", "Padre/madre", "Jugador", "Teléfono", "Productos", "A transferir", "Ganancia", "Pagado", "Entregado", "Comentario"],
+      ...A.orders.map((o) => [o.id, when(o.createdAt), o.parent, o.player, o.phone, o.items.map((it) => `${it.qty} x ${it.name}`).join(" | "), o.totalCost, o.profit, when(o.paidAt), when(o.deliveredAt), o.notes])]);
+    if (act === "addp") { A.cfgDraft.products.push({ id: "p" + Date.now().toString(36), name: "", detail: "", cost: 0, price: 0, active: true }); drawAdmin(); $(`#p-name-${A.cfgDraft.products.length - 1}`).focus(); return; }
+    if (t.dataset.rmp) { A.cfgDraft.products.splice(Number(t.dataset.rmp), 1); return drawAdmin(); }
+    if (act === "resetcfg") { A.cfgDraft = null; return drawAdmin(); }
+  };
+  const q = $("#q");
+  if (q) q.oninput = (e) => { A.q = e.target.value; const pos = e.target.selectionStart; drawAdmin(); const n = $("#q"); n.focus(); n.setSelectionRange(pos, pos); };
+  const f = $("#cfgF");
+  if (f) {
+    f.oninput = f.onchange = (e) => {
+      const el = e.target;
+      if (el.dataset.k) A.cfgDraft[el.dataset.k] = el.value;
+      if (el.dataset.pk) {
+        const p = A.cfgDraft.products[Number(el.closest("tr").dataset.i)];
+        p[el.dataset.pk] = el.type === "checkbox" ? el.checked : el.type === "number" ? Math.max(0, Number(el.value) || 0) : el.value;
+        if (e.type === "change" && (el.dataset.pk === "cost" || el.dataset.pk === "price")) el.closest("tr").children[4].textContent = money(p.price - p.cost);
+      }
+    };
+    f.onsubmit = async (e) => {
+      e.preventDefault();
+      const c = A.cfgDraft; c.products = c.products.filter((p) => p.name.trim());
+      try { CONFIG = await api.saveConfig(c); A.cfgDraft = null; toast("Cambios guardados"); drawAdmin(); }
+      catch (err) { toast(err.message); }
+    };
+  }
+}
+async function mutate(id, fn) {
+  const A = S.admin; const i = A.orders.findIndex((o) => o.id === id); if (i < 0) return;
+  try { A.orders[i] = await api.patch(id, fn(A.orders[i])); drawAdmin(); }
+  catch (err) { toast(err.message); drawAdmin(); }
+}
+
+/* ================= arranque ================= */
+function route() { location.hash === "#admin" ? renderAdmin() : renderParent(); }
+(async function start() {
+  CONFIG = await api.boot();
+  window.addEventListener("hashchange", route);
+  route();
+})();
+</script>
+</body>
+</html>

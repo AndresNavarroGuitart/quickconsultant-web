@@ -1,0 +1,8 @@
+# Sitio de pedidos para recaudar fondos del equipo.
+# En Netlify: Base directory = pedidos-futbol
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "22"
