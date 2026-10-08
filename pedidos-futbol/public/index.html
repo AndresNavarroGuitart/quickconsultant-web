@@ -281,7 +281,7 @@ function totals(items) {
 
 /* ================= datos: servidor Netlify o modo demo ================= */
 const DEMO_CONFIG = {
-  team: "Mi equipo", campaign: "Campeonato 2026", alias: "equipo.futbol.mp", holder: "Nombre del organizador", deadline: "Viernes 23/10",
+  team: "", campaign: "Campeonato 2026", alias: "equipo.futbol.mp", holder: "Nombre del organizador", deadline: "",
   note: "Los productos de esta lista son de ejemplo. Editalos desde el panel de administración.",
   products: [
     { id: "alf", name: "Alfajores de maicena", detail: "Caja x 12", cost: 4500, price: 7000, active: true },
@@ -316,10 +316,10 @@ const api = {
       if (r.ok && (r.headers.get("content-type") || "").includes("json")) { this.mode = "live"; return await r.json(); }
     } catch {}
     this.mode = "demo";
-    this.demo = store.get("demo-state", null) || { config: DEMO_CONFIG, orders: demoOrders() };
+    this.demo = store.get("demo-state-v2", null) || { config: DEMO_CONFIG, orders: demoOrders() };
     return this.demo.config;
   },
-  saveDemo() { store.set("demo-state", this.demo); },
+  saveDemo() { store.set("demo-state-v2", this.demo); },
   async call(method, path, body) {
     const r = await fetch("api/" + path, { method, headers: { "content-type": "application/json", "x-admin-pin": this.pin }, body: body ? JSON.stringify(body) : undefined });
     const data = await r.json().catch(() => ({}));
@@ -372,7 +372,7 @@ const cartItems = () => CONFIG.products.filter((p) => p.active && (S.qty[p.id] |
 /* ================= vista: padres ================= */
 function header(wide, title, sub) {
   return `<header class="band"><div class="band-in">
-    <div><div class="eyebrow">${esc(CONFIG.team || "Equipo")} · Recaudación</div>
+    <div><div class="eyebrow">${CONFIG.team ? esc(CONFIG.team) + " · " : ""}Recaudación</div>
     <h1>${esc(title)}</h1><div class="sub">${esc(sub)}</div></div>
     ${api.mode === "demo" ? `<span class="mode-chip">Vista previa · datos de ejemplo</span>` : ""}
   </div></header>`;
@@ -387,8 +387,7 @@ function stepsBar() {
 
 function renderParent() {
   document.body.classList.remove("wide");
-  const sub = [CONFIG.campaign, CONFIG.deadline ? "Pedidos hasta el " + CONFIG.deadline : ""].filter(Boolean).join(" · ");
-  let html = header(false, "Hacé tu pedido", sub) + `<main class="wrap">`;
+  let html = header(false, "Hacé tu pedido", CONFIG.campaign || "") + `<main class="wrap">`;
   if (S.done) html += doneView();
   else {
     html += stepsBar();
@@ -569,7 +568,7 @@ $("#confirmGo").onclick = async (e) => {
 };
 
 function summaryText(o) {
-  return [`Pedido #${o.id} · ${CONFIG.team} – ${CONFIG.campaign}`, `${o.parent} (jugador: ${o.player})`, "",
+  return [`Pedido #${o.id}` + ([CONFIG.team, CONFIG.campaign].filter(Boolean).length ? " · " + [CONFIG.team, CONFIG.campaign].filter(Boolean).join(" – ") : ""), `${o.parent} (jugador: ${o.player})`, "",
     ...o.items.map((it) => `${it.qty} x ${it.name} – ${money(it.qty * it.cost)}`), "",
     `A transferir: ${money(o.totalCost)}`, `Ganancia vendiendo todo: ${money(o.profit)}`, CONFIG.alias ? `Alias: ${CONFIG.alias}` : ""].filter((l, i, a) => l !== "" || a[i - 1] !== "").join("\n");
 }
@@ -594,7 +593,7 @@ function downloadReceipt(o) {
   g.fillStyle = "#FFFFFF"; g.fillRect(0, 0, W, H);
   g.fillStyle = "#1D6A3A"; g.fillRect(0, 0, W, 130);
   g.strokeStyle = "rgba(244,250,242,.35)"; g.lineWidth = 2; g.beginPath(); g.arc(W - 40, 65, 95, 0, Math.PI * 2); g.stroke();
-  g.fillStyle = "#F4FAF2"; g.font = `600 15px ${body}`; g.fillText(`${CONFIG.team} · ${CONFIG.campaign}`.toUpperCase(), pad, 46);
+  g.fillStyle = "#F4FAF2"; g.font = `600 15px ${body}`; g.fillText([CONFIG.team, CONFIG.campaign].filter(Boolean).join(" · ").toUpperCase(), pad, 46);
   g.font = `900 46px ${disp}`; g.fillText("COMPROBANTE DE PEDIDO", pad, 98);
   g.fillStyle = "#15241B"; g.font = `800 34px ${disp}`; g.textAlign = "right"; g.fillText("#" + o.id, W - pad, 180); g.textAlign = "left";
   g.font = `500 16px ${body}`; g.fillStyle = "#5B6C60";
@@ -755,11 +754,10 @@ function tabProductos() {
     <section class="panel stack">
       <h2>Datos de la campaña</h2>
       <div class="grid2">
-        <div class="field"><label for="c-team">Nombre del equipo</label><input class="input" id="c-team" data-k="team" value="${esc(c.team)}"></div>
+        <div class="field"><label for="c-team">Nombre del equipo <span class="muted">(opcional)</span></label><input class="input" id="c-team" data-k="team" value="${esc(c.team)}"></div>
         <div class="field"><label for="c-campaign">Campaña</label><input class="input" id="c-campaign" data-k="campaign" value="${esc(c.campaign)}"></div>
         <div class="field"><label for="c-alias">Alias o CBU para transferir</label><input class="input" id="c-alias" data-k="alias" value="${esc(c.alias)}"></div>
         <div class="field"><label for="c-holder">Titular de la cuenta</label><input class="input" id="c-holder" data-k="holder" value="${esc(c.holder)}"></div>
-        <div class="field"><label for="c-deadline">Fecha límite de pedidos</label><input class="input" id="c-deadline" data-k="deadline" value="${esc(c.deadline)}" placeholder="Viernes 23/10"></div>
       </div>
       <div class="field"><label for="c-note">Aviso para los padres</label><textarea class="input" id="c-note" data-k="note" rows="2">${esc(c.note)}</textarea><small>Aparece arriba de la lista de productos. Dejalo vacío para no mostrar nada.</small></div>
     </section>

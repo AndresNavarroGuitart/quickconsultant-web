@@ -11,7 +11,7 @@
 import { getStore } from "@netlify/blobs";
 
 const DEFAULT_CONFIG = {
-  team: "Mi equipo",
+  team: "",
   campaign: "Campeonato 2026",
   alias: "",
   holder: "",
