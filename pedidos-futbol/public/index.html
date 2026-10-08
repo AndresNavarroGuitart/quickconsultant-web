@@ -287,14 +287,11 @@ function totals(items) {
 /* ================= datos: servidor Netlify o modo demo ================= */
 const DEMO_CONFIG = {
   team: "", campaign: "Campeonato 2026", alias: "negro.navarro.82", cvu: "0000003100088974020013", holder: "Osvaldo Andres Navarro Guitart", deadline: "",
-  note: "Los productos de esta lista son de ejemplo. Editalos desde el panel de administración.",
+  note: "",
   products: [
-    { id: "alf", name: "Alfajores de maicena", detail: "Caja x 12", cost: 4500, price: 7000, active: true },
-    { id: "pasta", name: "Pastafrola grande", detail: "De membrillo, 28 cm", cost: 6000, price: 9000, active: true },
-    { id: "pizza", name: "Pizzas congeladas", detail: "Pack x 2, muzzarella", cost: 5500, price: 8000, active: true },
-    { id: "emp", name: "Empanadas congeladas", detail: "Docena, carne o JyQ", cost: 9000, price: 13500, active: true },
-    { id: "bud", name: "Budín de limón", detail: "500 g", cost: 3500, price: 5500, active: true },
-    { id: "rifa", name: "Bono rifa", detail: "Sorteo el día de la final", cost: 1000, price: 2000, active: true },
+    { id: "choc", name: "Chocolate BLOCK 38 gramos", detail: "La caja trae 20 unidades", cost: 1600, price: 2500, active: true },
+    { id: "snack", name: "Combo Snack", detail: "2 papas saborizadas + 2 maní saborizado", cost: 5000, price: 7000, active: true },
+    { id: "picada", name: "Combo Picada", detail: "1 maní sal marina + 2 maní saborizado + 1 pickle mixto + 1 maní sin sal + 1 aceituna verde + 1 ají despuntado + 1 maní japonés saborizado", cost: 13500, price: 19500, active: true },
   ],
 };
 function demoOrders() {
@@ -306,10 +303,10 @@ function demoOrders() {
       paidAt: paid ? new Date(base + 5 * 3600e3).toISOString() : null, deliveredAt: deliv ? new Date(base + 30 * 3600e3).toISOString() : null };
   };
   return [
-    mk("K7P2Q", 70, "Familia de ejemplo 1", "Jugador ejemplo 1", [["alf", 3], ["rifa", 10]], true, true),
-    mk("M4XR8", 52, "Familia de ejemplo 2", "Jugador ejemplo 2", [["pizza", 4], ["emp", 2]], true, false),
-    mk("T9HB3", 30, "Familia de ejemplo 3", "Jugador ejemplo 3", [["pasta", 2], ["bud", 3], ["alf", 2]], false, false),
-    mk("W2CJ6", 6, "Familia de ejemplo 4", "Jugador ejemplo 4", [["emp", 1], ["rifa", 5]], false, false),
+    mk("K7P2Q", 70, "Familia de ejemplo 1", "Jugador ejemplo 1", [["choc", 20], ["snack", 2]], true, true),
+    mk("M4XR8", 52, "Familia de ejemplo 2", "Jugador ejemplo 2", [["picada", 2], ["snack", 3]], true, false),
+    mk("T9HB3", 30, "Familia de ejemplo 3", "Jugador ejemplo 3", [["choc", 10], ["picada", 1]], false, false),
+    mk("W2CJ6", 6, "Familia de ejemplo 4", "Jugador ejemplo 4", [["snack", 4]], false, false),
   ];
 }
 const api = {
@@ -321,10 +318,10 @@ const api = {
       if (r.ok && (r.headers.get("content-type") || "").includes("json")) { this.mode = "live"; return await r.json(); }
     } catch {}
     this.mode = "demo";
-    this.demo = store.get("demo-state-v3", null) || { config: DEMO_CONFIG, orders: demoOrders() };
+    this.demo = store.get("demo-state-v4", null) || { config: DEMO_CONFIG, orders: demoOrders() };
     return this.demo.config;
   },
-  saveDemo() { store.set("demo-state-v3", this.demo); },
+  saveDemo() { store.set("demo-state-v4", this.demo); },
   async call(method, path, body) {
     const r = await fetch("api/" + path, { method, headers: { "content-type": "application/json", "x-admin-pin": this.pin }, body: body ? JSON.stringify(body) : undefined });
     const data = await r.json().catch(() => ({}));
@@ -416,7 +413,7 @@ function step1() {
         <div class="field"><label for="player">Nombre del jugador</label><input class="input" id="player" value="${esc(f.player)}" required></div>
       </div>
       <div class="field"><label for="phone">Teléfono / WhatsApp <span class="muted">(opcional)</span></label><input class="input" id="phone" inputmode="tel" autocomplete="tel" value="${esc(f.phone)}"></div>
-      <div class="field"><label for="notes">Comentario <span class="muted">(opcional)</span></label><textarea class="input" id="notes" rows="2" placeholder="Por ejemplo: empanadas mitad carne, mitad JyQ">${esc(f.notes)}</textarea></div>
+      <div class="field"><label for="notes">Comentario <span class="muted">(opcional)</span></label><textarea class="input" id="notes" rows="2" placeholder="Algo que el organizador tenga que saber">${esc(f.notes)}</textarea></div>
     </div>
     <div class="err" id="err1" hidden></div>
     <div class="actions"><span></span><button class="btn" type="submit">Siguiente: elegir productos →</button></div>

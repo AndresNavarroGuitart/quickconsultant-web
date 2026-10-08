@@ -17,14 +17,11 @@ const DEFAULT_CONFIG = {
   cvu: "0000003100088974020013",
   holder: "Osvaldo Andres Navarro Guitart",
   deadline: "",
-  note: "Los productos de esta lista son de ejemplo. Editalos desde el panel de administración.",
+  note: "",
   products: [
-    { id: "alf", name: "Alfajores de maicena", detail: "Caja x 12", cost: 4500, price: 7000, active: true },
-    { id: "pasta", name: "Pastafrola grande", detail: "De membrillo, 28 cm", cost: 6000, price: 9000, active: true },
-    { id: "pizza", name: "Pizzas congeladas", detail: "Pack x 2, muzzarella", cost: 5500, price: 8000, active: true },
-    { id: "emp", name: "Empanadas congeladas", detail: "Docena, carne o JyQ", cost: 9000, price: 13500, active: true },
-    { id: "bud", name: "Budín de limón", detail: "500 g", cost: 3500, price: 5500, active: true },
-    { id: "rifa", name: "Bono rifa", detail: "Sorteo el día de la final", cost: 1000, price: 2000, active: true },
+    { id: "choc", name: "Chocolate BLOCK 38 gramos", detail: "La caja trae 20 unidades", cost: 1600, price: 2500, active: true },
+    { id: "snack", name: "Combo Snack", detail: "2 papas saborizadas + 2 maní saborizado", cost: 5000, price: 7000, active: true },
+    { id: "picada", name: "Combo Picada", detail: "1 maní sal marina + 2 maní saborizado + 1 pickle mixto + 1 maní sin sal + 1 aceituna verde + 1 ají despuntado + 1 maní japonés saborizado", cost: 13500, price: 19500, active: true },
   ],
 };
 
