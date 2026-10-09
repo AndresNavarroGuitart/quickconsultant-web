@@ -262,6 +262,12 @@ table.data tfoot td { font-weight: 800; background: var(--sunk); }
 .rv-body iframe { width: 100%; height: 66vh; border: 0; background: #fff; }
 .rv-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: space-between; }
 .rv-actions > div { display: flex; gap: 8px; flex-wrap: wrap; }
+#editDlg { width: min(640px, calc(100% - 24px)); }
+.ed-items { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: 0 14px; }
+.ed-items .prod { padding: 10px 0; }
+.ed-total { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--pitch); color: var(--on-pitch); border-radius: 8px; padding: 10px 14px; }
+.ed-total strong { font-family: var(--display); font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.ed-flag { font-size: 11.5px; font-weight: 700; color: var(--ok); }
 .empty { text-align: center; padding: 36px 16px; color: var(--muted); }
 .login { max-width: 380px; margin: 30px auto; }
 
@@ -288,6 +294,10 @@ table.data tfoot td { font-weight: 800; background: var(--sunk); }
       <button class="btn" type="button" id="confirmGo">Confirmar y cerrar pedido</button>
     </div>
   </div>
+</dialog>
+
+<dialog id="editDlg" aria-labelledby="edTitle">
+  <form class="dlg" id="edForm" novalidate></form>
 </dialog>
 
 <dialog id="rcptDlg" aria-labelledby="rvTitle">
@@ -388,6 +398,17 @@ const api = {
       if ("paid" in body) it.paidAt = body.paid ? (it.paidAt || now) : null;
       if ("delivered" in body) it.deliveredAt = body.delivered ? (it.deliveredAt || now) : null;
     });
+    norm(o); this.saveDemo(); return structuredClone(o);
+  },
+  async editOrder(id, data) {
+    if (this.mode === "live") return norm(await this.call("PUT", "orders/" + id, data));
+    const o = norm(this.demo.orders.find((x) => x.id === id));
+    const prev = new Map(o.items.map((it) => [it.productId, it])), cat = new Map(this.demo.config.products.map((p) => [p.id, p]));
+    o.items = data.items.filter((it) => it.qty > 0).map(({ productId, qty }) => prev.has(productId) ? { ...prev.get(productId), qty }
+      : (({ id, name, detail, cost, price }) => ({ productId: id, name, detail, cost, price, qty, paidAt: null, deliveredAt: null }))(cat.get(productId)));
+    if (!o.items.length) throw new Error("El pedido tiene que tener al menos un producto.");
+    const t = totals(o.items);
+    Object.assign(o, { parent: data.parent, player: data.player, category: data.category, line: data.line, phone: data.phone, notes: data.notes, totalCost: t.cost, totalSale: t.sale, profit: t.profit, editedAt: new Date().toISOString() });
     norm(o); this.saveDemo(); return structuredClone(o);
   },
   demoFiles: new Map(),
@@ -821,13 +842,13 @@ function tabPedidos() {
   ${list.length ? `<div class="tablewrap"><table class="data"><thead><tr><th>Pedido</th><th>Fecha</th><th>Padre/madre · Jugador</th><th>Productos</th><th class="r">A transferir</th><th>Pago</th><th>Comprobantes</th><th></th></tr></thead><tbody>
     ${list.map((o) => `<tr>
       <td><span class="code-sm">#${esc(o.id)}</span>${o.example ? ` <span class="example">Ejemplo</span>` : ""}</td>
-      <td class="muted num" style="white-space:nowrap">${whenShort(o.createdAt)}</td>
+      <td class="muted num" style="white-space:nowrap">${whenShort(o.createdAt)}${o.editedAt ? `<div class="ed-flag">Editado ${whenShort(o.editedAt)}</div>` : ""}</td>
       <td><b>${esc(o.parent)}</b><div class="muted" style="font-size:13px">${esc(o.player)}${teamInfo(o) ? " · " + esc(teamInfo(o)) : ""}${o.phone ? " · " + esc(o.phone) : ""}</div></td>
       <td style="font-size:13px">${o.items.map((it) => `${it.qty}× ${esc(it.name)}`).join("<br>")}${o.notes ? `<div class="muted">“${esc(o.notes)}”</div>` : ""}</td>
       <td class="r"><b>${money(o.totalCost)}</b></td>
       <td>${payPill(o)}</td>
       <td>${receiptsCell(o)}</td>
-      <td>${A.confirmDel === o.id ? `<button class="btn danger sm" data-del-yes="${esc(o.id)}">¿Borrar? Sí</button> <button class="btn ghost sm" data-del-no>No</button>` : `<button class="btn ghost sm" data-del="${esc(o.id)}" aria-label="Borrar pedido ${esc(o.id)}">Borrar</button>`}</td>
+      <td>${A.confirmDel === o.id ? `<button class="btn danger sm" data-del-yes="${esc(o.id)}">¿Borrar? Sí</button> <button class="btn ghost sm" data-del-no>No</button>` : `<div style="display:flex;gap:6px"><button class="btn ghost sm" data-edit="${esc(o.id)}" aria-label="Editar pedido ${esc(o.id)}">Editar</button><button class="btn ghost sm" data-del="${esc(o.id)}" aria-label="Borrar pedido ${esc(o.id)}">Borrar</button></div>`}</td>
     </tr>`).join("")}</tbody></table></div>` : `<div class="panel empty">${q ? "No hay pedidos que coincidan con la búsqueda." : "Todavía no hay pedidos."}</div>`}`;
 }
 
@@ -900,6 +921,67 @@ $("#rvDel").onclick = async () => {
 };
 $("#rcptFile").onchange = (e) => { const files = [...e.target.files]; e.target.value = ""; if (files.length && RV.addTo) uploadReceipts(RV.addTo, files); };
 
+/* ---------- Editor de pedidos (solo admin) ---------- */
+const ED = { id: null, qty: {}, rows: [] };
+function openEditor(id) {
+  const o = S.admin.orders.find((x) => x.id === id); if (!o) return;
+  ED.id = id; ED.qty = Object.fromEntries(o.items.map((it) => [it.productId, it.qty]));
+  // Productos del pedido (con su precio original) + el resto del catálogo activo (a precio actual)
+  ED.rows = [...o.items.map((it) => ({ id: it.productId, name: it.name, detail: it.detail, cost: it.cost, price: it.price, had: true, status: it })),
+    ...CONFIG.products.filter((p) => p.active && !o.items.some((it) => it.productId === p.id)).map((p) => ({ ...p, had: false }))];
+  const f = $("#edForm");
+  f.innerHTML = `<div class="rv-head"><div><div class="h2" id="edTitle">Editar pedido #${esc(o.id)}</div><div class="muted" style="font-size:13px">Hecho el ${when(o.createdAt)}</div></div><button class="btn ghost sm" type="button" data-ed-close>Cancelar</button></div>
+    <div class="grid2">
+      <div class="field"><label for="ed-parent">Padre o madre</label><input class="input" id="ed-parent" value="${esc(o.parent)}" required></div>
+      <div class="field"><label for="ed-player">Jugador</label><input class="input" id="ed-player" value="${esc(o.player)}" required></div>
+      <div class="field"><label for="ed-category">Categoría</label><input class="input" id="ed-category" value="${esc(o.category || "")}"></div>
+      <div class="field"><label for="ed-line">Línea</label><select class="input" id="ed-line"><option value="">Sin elegir</option>${["Bronce", "Plata"].map((l) => `<option ${o.line === l ? "selected" : ""}>${l}</option>`).join("")}</select></div>
+      <div class="field"><label for="ed-phone">Teléfono</label><input class="input" id="ed-phone" inputmode="tel" value="${esc(o.phone || "")}"></div>
+    </div>
+    <div class="field"><label for="ed-notes">Comentario</label><textarea class="input" id="ed-notes" rows="2">${esc(o.notes || "")}</textarea></div>
+    <div><div style="font-weight:700;font-size:13.5px;margin-bottom:6px">Productos</div>
+    <div class="ed-items" id="edItems">${ED.rows.map((r) => `<div class="prod" data-id="${esc(r.id)}">
+      <div><div class="name">${esc(r.name)}</div><div class="detail num">Costo ${money(r.cost)}${r.had ? "" : " · precio actual"}${r.had && (r.status.paidAt || r.status.deliveredAt) ? ` · <span style="color:var(--ok);font-weight:700">${[r.status.paidAt ? "pagado" : "", r.status.deliveredAt ? "entregado" : ""].filter(Boolean).join(" y ")}</span>` : ""}</div></div>
+      <div class="stepper"><button type="button" data-d="-1" aria-label="Quitar uno de ${esc(r.name)}">−</button><input type="number" min="0" max="500" inputmode="numeric" id="ed-q-${esc(r.id)}" value="${ED.qty[r.id] || 0}" aria-label="Cantidad de ${esc(r.name)}"><button type="button" data-d="1" aria-label="Agregar uno de ${esc(r.name)}">+</button></div>
+    </div>`).join("")}</div>
+    <small class="muted" style="display:block;margin-top:6px">Si dejás un producto en 0 se saca del pedido. Los productos que ya estaban mantienen su precio y si estaban pagados o entregados.</small></div>
+    <div class="ed-total"><span>A transferir</span><strong id="edTotal"></strong></div>
+    <div class="err" id="edErr" hidden></div>
+    <div class="actions" style="margin-top:0"><button class="btn ghost" type="button" data-ed-close>Cancelar</button><button class="btn" type="submit" id="edSave">Guardar cambios</button></div>`;
+  edTotal();
+  $("#editDlg").showModal();
+}
+function edTotal() {
+  $("#edTotal").textContent = money(ED.rows.reduce((t, r) => t + (ED.qty[r.id] || 0) * r.cost, 0));
+}
+$("#edForm").addEventListener("click", (e) => {
+  if (e.target.closest("[data-ed-close]")) return $("#editDlg").close();
+  const b = e.target.closest("button[data-d]"); if (!b) return;
+  const row = b.closest(".prod"), id = row.dataset.id;
+  ED.qty[id] = Math.max(0, Math.min(500, (ED.qty[id] || 0) + Number(b.dataset.d)));
+  row.querySelector("input").value = ED.qty[id]; edTotal();
+});
+$("#edForm").addEventListener("change", (e) => {
+  if (!e.target.id.startsWith("ed-q-")) return;
+  const id = e.target.closest(".prod").dataset.id;
+  ED.qty[id] = Math.max(0, Math.min(500, Math.round(Number(e.target.value) || 0))); e.target.value = ED.qty[id]; edTotal();
+});
+$("#edForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const v = (k) => $("#ed-" + k).value.trim();
+  const err = $("#edErr"); err.hidden = true;
+  if (!v("parent") || !v("player")) { err.textContent = "Completá el nombre del padre/madre y del jugador."; err.hidden = false; return; }
+  const items = ED.rows.map((r) => ({ productId: r.id, qty: ED.qty[r.id] || 0 })).filter((it) => it.qty > 0);
+  if (!items.length) { err.textContent = "El pedido tiene que tener al menos un producto. Si querés anularlo, borralo desde la lista."; err.hidden = false; return; }
+  const btn = $("#edSave"); btn.disabled = true; btn.textContent = "Guardando…";
+  try {
+    const upd = await api.editOrder(ED.id, { parent: v("parent"), player: v("player"), category: v("category"), line: $("#ed-line").value, phone: v("phone"), notes: v("notes"), items });
+    const A = S.admin; A.orders[A.orders.findIndex((x) => x.id === ED.id)] = upd;
+    $("#editDlg").close(); toast("Pedido actualizado"); drawAdmin();
+  } catch (ex) { err.textContent = ex.message; err.hidden = false; }
+  finally { btn.disabled = false; btn.textContent = "Guardar cambios"; }
+});
+
 function payPill(o) {
   const n = countOf(o, "paidAt"), tot = o.items.length;
   const cls = n === tot ? "yes" : "no";
@@ -934,7 +1016,7 @@ function tabEntregas() {
       const np = items.filter((it) => it.paidAt).length, nd = items.filter((it) => it.deliveredAt).length;
       return `<div class="dcard ${isDone(o) ? "done" : ""}">
       <div class="dhead"><div style="min-width:0"><div class="who">${esc(o.parent)}</div><div class="who-sub">${esc(o.player)}${teamInfo(o) ? " · " + esc(teamInfo(o)) : ""} · <span class="code-sm" style="font-size:14px">#${esc(o.id)}</span>${o.phone ? " · " + esc(o.phone) : ""}</div></div>
-        <div class="dsum">${receiptsCell(o, true)}<span class="pill ${np === items.length ? "yes" : "no"}" style="cursor:default">Pagado ${np}/${items.length}</span><span class="pill ${nd === items.length ? "yes" : "no"}" style="cursor:default">Entregado ${nd}/${items.length}</span></div></div>
+        <div class="dsum"><button class="rchip" data-edit="${esc(o.id)}">Editar</button>${receiptsCell(o, true)}<span class="pill ${np === items.length ? "yes" : "no"}" style="cursor:default">Pagado ${np}/${items.length}</span><span class="pill ${nd === items.length ? "yes" : "no"}" style="cursor:default">Entregado ${nd}/${items.length}</span></div></div>
       ${items.map((it) => `<div class="ditem"><div class="iname"><b>${it.qty}×</b> ${esc(it.name)} <span class="muted num">· ${money(it.qty * it.cost)}</span></div>${tog("pay", o, it)}${tog("deliv", o, it)}</div>`).join("")}
       ${o.notes ? `<div class="dfoot" style="justify-content:flex-start"><span class="muted" style="font-size:13px">“${esc(o.notes)}”</span></div>` : ""}
     </div>`; }).join("")}</div>` : `<div class="panel empty">${A.filter === "pend" && A.orders.length ? "No quedan entregas pendientes." : "No hay pedidos para mostrar."}</div>`}`;
@@ -988,6 +1070,7 @@ function bindAdmin() {
     if (t.dataset.tab) { A.tab = t.dataset.tab; A.q = ""; A.confirmDel = null; store.set("admin-tab", A.tab); return drawAdmin(); }
     if (t.dataset.paid) { A.onlyPaid = t.dataset.paid === "1"; return drawAdmin(); }
     if (t.dataset.f) { A.filter = t.dataset.f; return drawAdmin(); }
+    if (t.dataset.edit) return openEditor(t.dataset.edit);
     if (t.dataset.radd) { RV.addTo = t.dataset.radd; return $("#rcptFile").click(); }
     if (t.dataset.rview) { RV.id = t.dataset.rview; RV.i = Number(t.dataset.ri); $("#rcptDlg").showModal(); return showReceipt(); }
     if (t.dataset.pay) return mutate(t.dataset.pay, (o) => ({ paid: !o.paidAt }));

@@ -5,6 +5,7 @@
 //   POST   /api/orders               crear pedido (público)
 //   GET    /api/orders               listar pedidos (admin)
 //   PATCH  /api/orders/:id           { productId?, paid?: bool, delivered?: bool } (admin)
+//   PUT    /api/orders/:id           editar datos y cantidades del pedido (admin)
 //   DELETE /api/orders/:id           borrar pedido y sus comprobantes (admin)
 //   POST   /api/orders/:id/receipts  adjuntar comprobante: cuerpo = archivo, header x-filename (admin)
 //   GET    /api/orders/:id/receipts/:rid   ver comprobante (admin)
@@ -188,6 +189,43 @@ export default async (req) => {
             return json(order);
           }
           return json({ error: "Ruta no encontrada." }, 404);
+        }
+
+        if (method === "PUT") {
+          // Los productos que ya estaban conservan su precio y su estado de pago/entrega;
+          // los que se agregan toman el precio actual del catálogo.
+          const body = await readBody();
+          const parent = clip(body.parent, 80), player = clip(body.player, 80);
+          if (!parent || !player) return json({ error: "Completá el nombre del padre/madre y del jugador." }, 400);
+          const cfg = await getConfig();
+          const catalog = new Map(cfg.products.map((p) => [p.id, p]));
+          const prev = new Map(order.items.map((it) => [it.productId, it]));
+          const seen = new Set();
+          const items = [];
+          for (const req of Array.isArray(body.items) ? body.items : []) {
+            const qty = Math.min(500, num(req.qty));
+            if (!qty || seen.has(req.productId)) continue;
+            seen.add(req.productId);
+            const old = prev.get(req.productId), p = catalog.get(req.productId);
+            if (old) items.push({ ...old, qty });
+            else if (p) items.push({ productId: p.id, name: p.name, detail: p.detail, qty, cost: p.cost, price: p.price, paidAt: null, deliveredAt: null });
+          }
+          if (!items.length) return json({ error: "El pedido tiene que tener al menos un producto." }, 400);
+          Object.assign(order, {
+            parent, player,
+            category: clip(body.category, 40),
+            line: ["Bronce", "Plata"].includes(body.line) ? body.line : "",
+            phone: clip(body.phone, 40),
+            notes: clip(body.notes, 300),
+            items,
+            totalCost: items.reduce((t, it) => t + it.qty * it.cost, 0),
+            totalSale: items.reduce((t, it) => t + it.qty * it.price, 0),
+            editedAt: new Date().toISOString(),
+          });
+          order.profit = order.totalSale - order.totalCost;
+          normalize(order);
+          await store.setJSON(key, order);
+          return json(order);
         }
 
         if (method === "DELETE") {
