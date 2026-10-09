@@ -5,7 +5,10 @@
 //   POST   /api/orders               crear pedido (público)
 //   GET    /api/orders               listar pedidos (admin)
 //   PATCH  /api/orders/:id           { productId?, paid?: bool, delivered?: bool } (admin)
-//   DELETE /api/orders/:id           borrar pedido (admin)
+//   DELETE /api/orders/:id           borrar pedido y sus comprobantes (admin)
+//   POST   /api/orders/:id/receipts  adjuntar comprobante: cuerpo = archivo, header x-filename (admin)
+//   GET    /api/orders/:id/receipts/:rid   ver comprobante (admin)
+//   DELETE /api/orders/:id/receipts/:rid   borrar comprobante (admin)
 //   POST   /api/login                validar PIN (admin)
 // El PIN de admin se configura en Netlify como variable de entorno ADMIN_PIN.
 import { getStore } from "@netlify/blobs";
@@ -31,6 +34,9 @@ const json = (data, status = 200) =>
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
   });
 
+const RECEIPT_MAX_BYTES = 4 * 1024 * 1024;
+const RECEIPT_MAX_PER_ORDER = 10;
+const RECEIPT_TYPES = /^(image\/(jpeg|png|webp|gif|heic|heif)|application\/pdf)$/;
 const clip = (v, n) => String(v ?? "").trim().slice(0, n);
 const num = (v) => Math.max(0, Math.round(Number(v) || 0));
 const CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -64,6 +70,7 @@ function normalize(order) {
     if (!("paidAt" in it)) it.paidAt = order.paidAt ?? null;
     if (!("deliveredAt" in it)) it.deliveredAt = order.deliveredAt ?? null;
   }
+  if (!Array.isArray(order.receipts)) order.receipts = [];
   const latest = (field) => order.items.every((it) => it[field]) ? order.items.map((it) => it[field]).sort().at(-1) : null;
   order.paidAt = latest("paidAt");
   order.deliveredAt = latest("deliveredAt");
@@ -73,7 +80,7 @@ function normalize(order) {
 export default async (req) => {
   const store = getStore({ name: "pedidos-futbol", consistency: "strong" });
   const url = new URL(req.url);
-  const [resource, id] = url.pathname.replace(/^\/api\/?/, "").split("/").filter(Boolean);
+  const [resource, id, sub, subId] = url.pathname.replace(/^\/api\/?/, "").split("/").filter(Boolean);
   const method = req.method;
 
   const pin = (globalThis.Netlify?.env?.get("ADMIN_PIN") ?? process.env.ADMIN_PIN ?? "").trim();
@@ -129,7 +136,7 @@ export default async (req) => {
           notes: clip(body.notes, 300),
           items: items.map((it) => ({ ...it, paidAt: null, deliveredAt: null })),
           totalCost, totalSale, profit: totalSale - totalCost,
-          paidAt: null, deliveredAt: null,
+          paidAt: null, deliveredAt: null, receipts: [],
         };
         await store.setJSON(`order/${code}`, order);
         return json(order, 201);
@@ -149,7 +156,45 @@ export default async (req) => {
         const order = await store.get(key, { type: "json" });
         if (!order) return json({ error: "Pedido no encontrado." }, 404);
         normalize(order);
-        if (method === "DELETE") { await store.delete(key); return json({ ok: true }); }
+
+        if (sub === "receipts") {
+          const rkey = (rid) => `receipt/${order.id}/${rid}`;
+          if (method === "POST" && !subId) {
+            const type = (req.headers.get("content-type") || "").split(";")[0].trim().toLowerCase();
+            if (!RECEIPT_TYPES.test(type)) return json({ error: "Solo se pueden adjuntar imágenes o PDF." }, 400);
+            if (order.receipts.length >= RECEIPT_MAX_PER_ORDER) return json({ error: `Máximo ${RECEIPT_MAX_PER_ORDER} comprobantes por pedido.` }, 400);
+            const data = await req.arrayBuffer();
+            if (!data.byteLength) return json({ error: "El archivo está vacío." }, 400);
+            if (data.byteLength > RECEIPT_MAX_BYTES) return json({ error: "El archivo pesa más de 4 MB." }, 400);
+            const rid = newCode() + newCode();
+            let name = "comprobante";
+            try { name = clip(decodeURIComponent(req.headers.get("x-filename") || ""), 120) || name; } catch {}
+            await store.set(rkey(rid), data, { metadata: { type } });
+            order.receipts.push({ id: rid, name, type, size: data.byteLength, uploadedAt: new Date().toISOString() });
+            await store.setJSON(key, order);
+            return json(order, 201);
+          }
+          const rec = order.receipts.find((r) => r.id === subId);
+          if (!rec) return json({ error: "Comprobante no encontrado." }, 404);
+          if (method === "GET") {
+            const blob = await store.get(rkey(rec.id), { type: "arrayBuffer" });
+            if (!blob) return json({ error: "Comprobante no encontrado." }, 404);
+            return new Response(blob, { headers: { "content-type": rec.type, "cache-control": "private, no-store" } });
+          }
+          if (method === "DELETE") {
+            await store.delete(rkey(rec.id));
+            order.receipts = order.receipts.filter((r) => r.id !== rec.id);
+            await store.setJSON(key, order);
+            return json(order);
+          }
+          return json({ error: "Ruta no encontrada." }, 404);
+        }
+
+        if (method === "DELETE") {
+          await Promise.all(order.receipts.map((r) => store.delete(`receipt/${order.id}/${r.id}`)));
+          await store.delete(key);
+          return json({ ok: true });
+        }
         if (method === "PATCH") {
           // { productId?, paid?, delivered? } — sin productId aplica a todos los productos del pedido.
           const body = await readBody();

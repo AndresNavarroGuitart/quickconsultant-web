@@ -247,6 +247,21 @@ table.data tfoot td { font-weight: 800; background: var(--sunk); }
 .pedit td { padding: 6px 8px; }
 .pedit .input { min-height: 38px; padding: 6px 8px; }
 .pedit .input.n { width: 100px; text-align: right; }
+.rcpts { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.rchip { display: inline-flex; align-items: center; gap: 5px; border: 1.5px solid var(--line); background: var(--surface); border-radius: 8px; padding: 4px 9px; font-size: 12.5px; font-weight: 700; cursor: pointer; color: var(--ink); white-space: nowrap; }
+.rchip:hover { background: var(--sunk); }
+.rchip.add { border-style: dashed; color: var(--pitch-text); }
+.rchip svg { width: 14px; height: 14px; flex: none; }
+.rchip.busy { opacity: .6; cursor: progress; }
+#rcptDlg { width: min(860px, calc(100% - 24px)); }
+.rv-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.rv-title { min-width: 0; }
+.rv-title b { display: block; overflow-wrap: anywhere; }
+.rv-body { background: var(--sunk); border-radius: 10px; min-height: 240px; display: grid; place-items: center; overflow: auto; max-height: 68vh; }
+.rv-body img { max-width: 100%; max-height: 66vh; display: block; }
+.rv-body iframe { width: 100%; height: 66vh; border: 0; background: #fff; }
+.rv-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: space-between; }
+.rv-actions > div { display: flex; gap: 8px; flex-wrap: wrap; }
 .empty { text-align: center; padding: 36px 16px; color: var(--muted); }
 .login { max-width: 380px; margin: 30px auto; }
 
@@ -274,6 +289,18 @@ table.data tfoot td { font-weight: 800; background: var(--sunk); }
     </div>
   </div>
 </dialog>
+
+<dialog id="rcptDlg" aria-labelledby="rvTitle">
+  <div class="dlg">
+    <div class="rv-head"><div class="rv-title" id="rvTitle"></div><button class="btn ghost sm" type="button" id="rvClose">Cerrar</button></div>
+    <div class="rv-body" id="rvBody"></div>
+    <div class="rv-actions">
+      <div><button class="btn ghost sm" type="button" id="rvPrev">← Anterior</button><button class="btn ghost sm" type="button" id="rvNext">Siguiente →</button></div>
+      <div><a class="btn ghost sm" id="rvOpen" target="_blank" rel="noopener">Abrir en otra pestaña</a><button class="btn danger sm" type="button" id="rvDel">Eliminar</button></div>
+    </div>
+  </div>
+</dialog>
+<input type="file" id="rcptFile" accept="image/*,application/pdf" multiple hidden>
 
 <script>
 "use strict";
@@ -363,6 +390,32 @@ const api = {
     });
     norm(o); this.saveDemo(); return structuredClone(o);
   },
+  demoFiles: new Map(),
+  async uploadReceipt(id, file) {
+    if (this.mode === "demo") {
+      const o = this.demo.orders.find((x) => x.id === id); o.receipts = o.receipts || [];
+      const rid = Math.random().toString(36).slice(2, 10); this.demoFiles.set(rid, file);
+      o.receipts.push({ id: rid, name: file.name, type: file.type, size: file.size, uploadedAt: new Date().toISOString() });
+      this.saveDemo(); return norm(structuredClone(o));
+    }
+    const r = await fetch(`api/orders/${id}/receipts`, { method: "POST", headers: { "content-type": file.type, "x-filename": encodeURIComponent(file.name), "x-admin-pin": this.pin }, body: file });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.error || "No se pudo subir el comprobante.");
+    return norm(data);
+  },
+  async receiptBlob(id, rid) {
+    if (this.mode === "demo") { const f = this.demoFiles.get(rid); if (!f) throw new Error("En la vista previa los comprobantes no quedan guardados al recargar."); return f; }
+    const r = await fetch(`api/orders/${id}/receipts/${rid}`, { headers: { "x-admin-pin": this.pin } });
+    if (!r.ok) throw new Error("No se pudo abrir el comprobante.");
+    return r.blob();
+  },
+  async deleteReceipt(id, rid) {
+    if (this.mode === "demo") {
+      const o = this.demo.orders.find((x) => x.id === id); o.receipts = (o.receipts || []).filter((r) => r.id !== rid);
+      this.demoFiles.delete(rid); this.saveDemo(); return norm(structuredClone(o));
+    }
+    return norm(await this.call("DELETE", `orders/${id}/receipts/${rid}`));
+  },
   async remove(id) {
     if (this.mode === "live") return this.call("DELETE", "orders/" + id);
     this.demo.orders = this.demo.orders.filter((x) => x.id !== id); this.saveDemo();
@@ -379,6 +432,7 @@ function norm(o) {
     if (!("paidAt" in it)) it.paidAt = o.paidAt ?? null;
     if (!("deliveredAt" in it)) it.deliveredAt = o.deliveredAt ?? null;
   });
+  if (!Array.isArray(o.receipts)) o.receipts = [];
   const latest = (f) => o.items.every((it) => it[f]) ? o.items.map((it) => it[f]).sort().at(-1) : null;
   o.paidAt = latest("paidAt"); o.deliveredAt = latest("deliveredAt");
   return o;
@@ -764,7 +818,7 @@ function tabPedidos() {
   const A = S.admin; const q = A.q.trim().toLowerCase();
   const list = A.orders.filter((o) => !q || (o.parent + " " + o.player + " " + o.id + " " + (o.category || "") + " " + (o.line || "")).toLowerCase().includes(q)).slice().reverse();
   return `<div class="toolbar"><input class="input" id="q" type="search" placeholder="Buscar por nombre o número" value="${esc(A.q)}" aria-label="Buscar pedidos"><span class="spacer"></span><button class="btn ghost sm" data-act="csv-pedidos">Descargar CSV</button></div>
-  ${list.length ? `<div class="tablewrap"><table class="data"><thead><tr><th>Pedido</th><th>Fecha</th><th>Padre/madre · Jugador</th><th>Productos</th><th class="r">A transferir</th><th>Pago</th><th></th></tr></thead><tbody>
+  ${list.length ? `<div class="tablewrap"><table class="data"><thead><tr><th>Pedido</th><th>Fecha</th><th>Padre/madre · Jugador</th><th>Productos</th><th class="r">A transferir</th><th>Pago</th><th>Comprobantes</th><th></th></tr></thead><tbody>
     ${list.map((o) => `<tr>
       <td><span class="code-sm">#${esc(o.id)}</span>${o.example ? ` <span class="example">Ejemplo</span>` : ""}</td>
       <td class="muted num" style="white-space:nowrap">${whenShort(o.createdAt)}</td>
@@ -772,9 +826,79 @@ function tabPedidos() {
       <td style="font-size:13px">${o.items.map((it) => `${it.qty}× ${esc(it.name)}`).join("<br>")}${o.notes ? `<div class="muted">“${esc(o.notes)}”</div>` : ""}</td>
       <td class="r"><b>${money(o.totalCost)}</b></td>
       <td>${payPill(o)}</td>
+      <td>${receiptsCell(o)}</td>
       <td>${A.confirmDel === o.id ? `<button class="btn danger sm" data-del-yes="${esc(o.id)}">¿Borrar? Sí</button> <button class="btn ghost sm" data-del-no>No</button>` : `<button class="btn ghost sm" data-del="${esc(o.id)}" aria-label="Borrar pedido ${esc(o.id)}">Borrar</button>`}</td>
     </tr>`).join("")}</tbody></table></div>` : `<div class="panel empty">${q ? "No hay pedidos que coincidan con la búsqueda." : "Todavía no hay pedidos."}</div>`}`;
 }
+
+const CLIP_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5l-8.6 8.6a5.5 5.5 0 01-7.8-7.8l9.2-9.2a3.7 3.7 0 015.2 5.2l-9.2 9.2a1.8 1.8 0 01-2.6-2.6l8.5-8.5"/></svg>`;
+function receiptsCell(o, compact) {
+  const busy = S.admin.uploading === o.id;
+  const chips = compact
+    ? (o.receipts.length ? `<button class="rchip" data-rview="${esc(o.id)}" data-ri="0">${CLIP_ICON}${o.receipts.length} ${o.receipts.length === 1 ? "comprobante" : "comprobantes"}</button>` : "")
+    : o.receipts.map((r, i) => `<button class="rchip" data-rview="${esc(o.id)}" data-ri="${i}" title="${esc(r.name)} · ${when(r.uploadedAt)}">${CLIP_ICON}${r.type === "application/pdf" ? "PDF" : "Foto"} ${i + 1}</button>`).join("");
+  return `<div class="rcpts">${chips}<button class="rchip add ${busy ? "busy" : ""}" data-radd="${esc(o.id)}" ${busy ? "disabled" : ""} aria-label="Adjuntar comprobante al pedido ${esc(o.id)}">${busy ? "Subiendo…" : "+ Adjuntar"}</button></div>`;
+}
+
+/* Las fotos se achican antes de subir (máx. 1800 px) para que pesen poco; los PDF van tal cual. */
+async function prepareReceipt(file) {
+  if (!file.type.startsWith("image/") || file.type === "image/gif") return file;
+  try {
+    const bmp = await createImageBitmap(file);
+    const k = Math.min(1, 1800 / Math.max(bmp.width, bmp.height));
+    const c = document.createElement("canvas"); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+    const blob = await new Promise((res) => c.toBlob(res, "image/jpeg", 0.82));
+    if (!blob || blob.size >= file.size) return file;
+    return new File([blob], file.name.replace(/\.[^.]+$/, "") + ".jpg", { type: "image/jpeg" });
+  } catch { return file; }
+}
+async function uploadReceipts(id, files) {
+  const A = S.admin; A.uploading = id; drawAdmin();
+  let ok = 0;
+  for (const f of files) {
+    try {
+      const prepared = await prepareReceipt(f);
+      if (prepared.size > 4 * 1024 * 1024) throw new Error(`"${f.name}" pesa más de 4 MB.`);
+      const o = await api.uploadReceipt(id, prepared);
+      A.orders[A.orders.findIndex((x) => x.id === id)] = o; ok++;
+    } catch (err) { toast(err.message); }
+  }
+  A.uploading = null; drawAdmin();
+  if (ok) toast(ok === 1 ? "Comprobante adjuntado" : `${ok} comprobantes adjuntados`);
+}
+
+const RV = { id: null, i: 0, url: null, confirm: false };
+async function showReceipt() {
+  const o = S.admin.orders.find((x) => x.id === RV.id); const r = o && o.receipts[RV.i];
+  if (!r) { $("#rcptDlg").close(); return; }
+  RV.confirm = false; $("#rvDel").textContent = "Eliminar";
+  $("#rvTitle").innerHTML = `<span class="muted" style="font-size:12.5px">Comprobante ${RV.i + 1} de ${o.receipts.length} · ${esc(o.parent)} · #${esc(o.id)}</span><b>${esc(r.name)}</b><span class="muted" style="font-size:12.5px">Adjuntado el ${when(r.uploadedAt)}</span>`;
+  $("#rvPrev").disabled = RV.i === 0; $("#rvNext").disabled = RV.i >= o.receipts.length - 1;
+  const body = $("#rvBody"); body.innerHTML = `<span class="muted">Cargando…</span>`;
+  if (RV.url) URL.revokeObjectURL(RV.url);
+  RV.url = null; $("#rvOpen").removeAttribute("href");
+  try {
+    const blob = await api.receiptBlob(o.id, r.id);
+    RV.url = URL.createObjectURL(blob); $("#rvOpen").href = RV.url;
+    body.innerHTML = r.type === "application/pdf" ? `<iframe src="${RV.url}" title="${esc(r.name)}"></iframe>` : `<img src="${RV.url}" alt="${esc(r.name)}">`;
+  } catch (err) { body.innerHTML = `<span class="muted" style="padding:20px;text-align:center">${esc(err.message)}</span>`; }
+}
+$("#rvClose").onclick = () => $("#rcptDlg").close();
+$("#rcptDlg").addEventListener("close", () => { if (RV.url) URL.revokeObjectURL(RV.url); RV.url = null; $("#rvBody").innerHTML = ""; });
+$("#rvPrev").onclick = () => { RV.i--; showReceipt(); };
+$("#rvNext").onclick = () => { RV.i++; showReceipt(); };
+$("#rvDel").onclick = async () => {
+  if (!RV.confirm) { RV.confirm = true; $("#rvDel").textContent = "¿Eliminar? Tocá de nuevo"; return; }
+  const o = S.admin.orders.find((x) => x.id === RV.id);
+  try {
+    const upd = await api.deleteReceipt(o.id, o.receipts[RV.i].id);
+    S.admin.orders[S.admin.orders.indexOf(o)] = upd; toast("Comprobante eliminado"); drawAdmin();
+    if (!upd.receipts.length) return $("#rcptDlg").close();
+    RV.i = Math.min(RV.i, upd.receipts.length - 1); showReceipt();
+  } catch (err) { toast(err.message); }
+};
+$("#rcptFile").onchange = (e) => { const files = [...e.target.files]; e.target.value = ""; if (files.length && RV.addTo) uploadReceipts(RV.addTo, files); };
 
 function payPill(o) {
   const n = countOf(o, "paidAt"), tot = o.items.length;
@@ -810,7 +934,7 @@ function tabEntregas() {
       const np = items.filter((it) => it.paidAt).length, nd = items.filter((it) => it.deliveredAt).length;
       return `<div class="dcard ${isDone(o) ? "done" : ""}">
       <div class="dhead"><div style="min-width:0"><div class="who">${esc(o.parent)}</div><div class="who-sub">${esc(o.player)}${teamInfo(o) ? " · " + esc(teamInfo(o)) : ""} · <span class="code-sm" style="font-size:14px">#${esc(o.id)}</span>${o.phone ? " · " + esc(o.phone) : ""}</div></div>
-        <div class="dsum"><span class="pill ${np === items.length ? "yes" : "no"}" style="cursor:default">Pagado ${np}/${items.length}</span><span class="pill ${nd === items.length ? "yes" : "no"}" style="cursor:default">Entregado ${nd}/${items.length}</span></div></div>
+        <div class="dsum">${receiptsCell(o, true)}<span class="pill ${np === items.length ? "yes" : "no"}" style="cursor:default">Pagado ${np}/${items.length}</span><span class="pill ${nd === items.length ? "yes" : "no"}" style="cursor:default">Entregado ${nd}/${items.length}</span></div></div>
       ${items.map((it) => `<div class="ditem"><div class="iname"><b>${it.qty}×</b> ${esc(it.name)} <span class="muted num">· ${money(it.qty * it.cost)}</span></div>${tog("pay", o, it)}${tog("deliv", o, it)}</div>`).join("")}
       ${o.notes ? `<div class="dfoot" style="justify-content:flex-start"><span class="muted" style="font-size:13px">“${esc(o.notes)}”</span></div>` : ""}
     </div>`; }).join("")}</div>` : `<div class="panel empty">${A.filter === "pend" && A.orders.length ? "No quedan entregas pendientes." : "No hay pedidos para mostrar."}</div>`}`;
@@ -864,6 +988,8 @@ function bindAdmin() {
     if (t.dataset.tab) { A.tab = t.dataset.tab; A.q = ""; A.confirmDel = null; store.set("admin-tab", A.tab); return drawAdmin(); }
     if (t.dataset.paid) { A.onlyPaid = t.dataset.paid === "1"; return drawAdmin(); }
     if (t.dataset.f) { A.filter = t.dataset.f; return drawAdmin(); }
+    if (t.dataset.radd) { RV.addTo = t.dataset.radd; return $("#rcptFile").click(); }
+    if (t.dataset.rview) { RV.id = t.dataset.rview; RV.i = Number(t.dataset.ri); $("#rcptDlg").showModal(); return showReceipt(); }
     if (t.dataset.pay) return mutate(t.dataset.pay, (o) => ({ paid: !o.paidAt }));
     if (t.dataset.deliv) return mutate(t.dataset.deliv, (o) => ({ delivered: !o.deliveredAt }));
     if (t.dataset.ipay) return mutate(t.dataset.ipay, (o) => ({ productId: t.dataset.pid, paid: !o.items.find((it) => it.productId === t.dataset.pid).paidAt }));
