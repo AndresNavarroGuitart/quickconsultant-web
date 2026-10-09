@@ -3,12 +3,15 @@ import Logo from "@/components/Logo";
 import TeamShieldIllustration from "@/components/TeamShieldIllustration";
 import WavyBanner from "@/components/WavyBanner";
 import { SUBSCRIPTION_PRICE_LABEL } from "@/lib/mercadopago/pricing";
+import { SUBSCRIPTIONS_ENABLED } from "@/lib/subscription/config";
 
 const STEPS = [
   {
     color: "var(--color-sport-cyan)",
     title: "Creá tu cuenta",
-    description: "Registrate en un minuto y arrancá tu prueba gratis de 7 días.",
+    description: SUBSCRIPTIONS_ENABLED
+      ? "Registrate en un minuto y arrancá tu prueba gratis de 7 días."
+      : "Registrate en un minuto. Es totalmente gratis.",
     icon: IconAccount,
   },
   {
@@ -83,7 +86,9 @@ export default function Home() {
               </Link>
             </div>
             <p className="text-xs text-slate-500">
-              7 días de prueba gratis. Después, {SUBSCRIPTION_PRICE_LABEL} por mes.
+              {SUBSCRIPTIONS_ENABLED
+                ? `7 días de prueba gratis. Después, ${SUBSCRIPTION_PRICE_LABEL} por mes.`
+                : "100% GRATIS."}
             </p>
           </div>
 

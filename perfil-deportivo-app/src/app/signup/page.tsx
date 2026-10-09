@@ -53,7 +53,7 @@ export default function SignupPage() {
           </div>
           <p className="text-sm text-slate-700">
             Te enviamos un email a <strong>{email}</strong> para confirmar tu
-            cuenta. Abrilo para activar tus 7 días de prueba gratis.
+            cuenta. Abrilo para activarla: es totalmente gratis.
           </p>
           <Link
             href="/login"

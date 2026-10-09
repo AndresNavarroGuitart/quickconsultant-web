@@ -21,7 +21,7 @@ export default async function OnboardingPage() {
       <p className="text-sm text-slate-500">
         {hasProfiles
           ? "Podés cargar un segundo perfil dentro de la misma cuenta (por ejemplo, el de un hijo/a) y elegir cuál ver desde Mi perfil."
-          : "Con esto arrancás tu prueba gratuita de 7 días. Después vas a poder sumar foto, clubes y partidos."}
+          : "Con esto arrancás gratis. Después vas a poder sumar foto, clubes y partidos."}
       </p>
       <OnboardingForm />
     </div>

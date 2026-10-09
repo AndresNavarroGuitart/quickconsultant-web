@@ -1,3 +1,5 @@
+import { SUBSCRIPTIONS_ENABLED } from "@/lib/subscription/config";
+
 type AccessInput = {
   isAdmin: boolean;
   trialEndsAt: Date;
@@ -24,7 +26,8 @@ export function getAccessStatus({
   // interruptor de desarrollo y ser admin: bloquear a alguien que no debería
   // tener que dejar de serlo para que el bloqueo funcione.
   const hasAccess =
-    !isBlocked && (GATING_DISABLED || isAdmin || trialActive || hasActiveSubscription);
+    !isBlocked &&
+    (!SUBSCRIPTIONS_ENABLED || GATING_DISABLED || isAdmin || trialActive || hasActiveSubscription);
 
   return { hasAccess, trialActive, isAdmin, hasActiveSubscription, isBlocked };
 }

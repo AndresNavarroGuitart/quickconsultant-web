@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/auth/getSessionContext";
 import { prisma } from "@/lib/prisma";
+import { SUBSCRIPTIONS_ENABLED } from "@/lib/subscription/config";
 import ProfileSummaryCard from "@/components/ProfileSummaryCard";
 import MatchHistoryCarousel from "@/components/MatchHistoryCarousel";
 import MatchPhotoGallery from "@/components/MatchPhotoGallery";
@@ -39,13 +40,13 @@ export default async function EstadisticasPage() {
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-semibold text-slate-900">Estadísticas</h1>
 
-      {!hasAccess && (
+      {SUBSCRIPTIONS_ENABLED && !hasAccess && (
         <div className="rounded-md border border-slate-200 border-l-4 border-l-accent-500 bg-white px-4 py-3 text-sm text-slate-700">
           Tu prueba gratuita terminó. Activá tu suscripción para volver a
           cargar clubes y partidos.
         </div>
       )}
-      {hasAccess && trialActive && !ctx.dbUser.isAdmin && (
+      {SUBSCRIPTIONS_ENABLED && hasAccess && trialActive && !ctx.dbUser.isAdmin && (
         <div className="rounded-md border border-slate-200 border-l-4 border-l-brand-500 bg-white px-4 py-3 text-sm text-slate-700">
           Estás en período de prueba hasta el{" "}
           {ctx.dbUser.trialEndsAt.toLocaleDateString("es-AR")}.

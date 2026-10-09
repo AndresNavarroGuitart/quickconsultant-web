@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/auth/getSessionContext";
 import { prisma } from "@/lib/prisma";
 import { SUBSCRIPTION_PRICE_LABEL } from "@/lib/mercadopago/pricing";
+import { SUBSCRIPTIONS_ENABLED } from "@/lib/subscription/config";
 import SubscribeButton from "@/components/SubscribeButton";
 import CancelSubscriptionButton from "@/components/CancelSubscriptionButton";
 import PendingPaymentBanner from "@/components/PendingPaymentBanner";
@@ -32,6 +33,8 @@ function formatAmount(amount: unknown, currency: string) {
 export default async function SuscripcionPage() {
   const ctx = await getSessionContext();
   if (!ctx) redirect("/login");
+
+  if (!SUBSCRIPTIONS_ENABLED) redirect("/estadisticas");
 
   const { hasAccess, trialActive, hasActiveSubscription } = ctx.access;
 

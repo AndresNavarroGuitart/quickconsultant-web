@@ -4,11 +4,19 @@ import { requireSession } from "@/lib/auth/requireSession";
 import { getMercadoPagoConfig } from "@/lib/mercadopago/client";
 import { SUBSCRIPTION_AMOUNT as AMOUNT, SUBSCRIPTION_CURRENCY as CURRENCY } from "@/lib/mercadopago/pricing";
 import { mapSubscriptionStatus } from "@/lib/mercadopago/statusMaps";
+import { SUBSCRIPTIONS_ENABLED } from "@/lib/subscription/config";
 import { prisma } from "@/lib/prisma";
 
 const PENDING_REUSE_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 export async function POST() {
+  if (!SUBSCRIPTIONS_ENABLED) {
+    return NextResponse.json(
+      { error: "Las suscripciones están desactivadas: la app es gratuita por ahora." },
+      { status: 403 }
+    );
+  }
+
   const result = await requireSession();
   if ("error" in result) return result.error;
   const { ctx } = result;

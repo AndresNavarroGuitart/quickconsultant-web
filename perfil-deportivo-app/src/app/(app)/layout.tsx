@@ -9,6 +9,7 @@ import Logo from "@/components/Logo";
 import NotificationBadge from "@/components/NotificationBadge";
 import ProfileNavMenu from "@/components/ProfileNavMenu";
 import OnboardingTour from "@/components/OnboardingTour";
+import { SUBSCRIPTIONS_ENABLED } from "@/lib/subscription/config";
 import { BellIcon, EnvelopeIcon } from "@/components/icons";
 
 export default async function AppLayout({
@@ -84,12 +85,14 @@ export default async function AppLayout({
               Racha Potrero
             </Link>
 
-            <Link
-              href="/suscripcion"
-              className="text-sm font-bold text-slate-700 transition-colors hover:text-brand-700"
-            >
-              Mi suscripción
-            </Link>
+            {SUBSCRIPTIONS_ENABLED && (
+              <Link
+                href="/suscripcion"
+                className="text-sm font-bold text-slate-700 transition-colors hover:text-brand-700"
+              >
+                Mi suscripción
+              </Link>
+            )}
 
             {canAddProfile && (
               <Link
