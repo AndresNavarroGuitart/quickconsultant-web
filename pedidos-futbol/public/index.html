@@ -349,7 +349,7 @@ const api = {
     const byId = new Map(this.demo.config.products.map((p) => [p.id, p]));
     const items = o.items.map((it) => ({ ...byId.get(it.productId), productId: it.productId, qty: it.qty })).map(({ productId, name, detail, qty, cost, price }) => ({ productId, name, detail, qty, cost, price }));
     const t = totals(items); const C = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    const order = { id: Array.from({ length: 5 }, () => C[Math.floor(Math.random() * C.length)]).join(""), createdAt: new Date().toISOString(), parent: o.parent, player: o.player, phone: o.phone, notes: o.notes,
+    const order = { id: Array.from({ length: 5 }, () => C[Math.floor(Math.random() * C.length)]).join(""), createdAt: new Date().toISOString(), parent: o.parent, player: o.player, category: o.category, line: o.line, phone: o.phone, notes: o.notes,
       items, totalCost: t.cost, totalSale: t.sale, profit: t.profit, paidAt: null, deliveredAt: null };
     this.demo.orders.push(order); this.saveDemo(); return order;
   },
@@ -383,13 +383,14 @@ function norm(o) {
   o.paidAt = latest("paidAt"); o.deliveredAt = latest("deliveredAt");
   return o;
 }
+const teamInfo = (o) => [o.category ? "Cat. " + o.category : "", o.line ? "Línea " + o.line : ""].filter(Boolean).join(" · ");
 const countOf = (o, f) => o.items.filter((it) => it[f]).length;
 
 /* ================= estado ================= */
 let CONFIG = null;
 const S = {
   step: 1,
-  form: store.get("draft", { parent: "", player: "", phone: "", notes: "" }),
+  form: { parent: "", player: "", category: "", line: "", phone: "", notes: "", ...store.get("draft", {}) },
   qty: store.get("draft-qty", {}),
   done: null,
   admin: { tab: store.get("admin-tab", "compras"), orders: [], filter: "pend", prod: "all", q: "", onlyPaid: false, confirmDel: null, cfgDraft: null },
@@ -440,7 +441,14 @@ function step1() {
         <div class="field"><label for="parent">Nombre del padre o madre</label><input class="input" id="parent" autocomplete="name" value="${esc(f.parent)}" required></div>
         <div class="field"><label for="player">Nombre del jugador</label><input class="input" id="player" value="${esc(f.player)}" required></div>
       </div>
-      <div class="field"><label for="phone">Teléfono / WhatsApp <span class="muted">(opcional)</span></label><input class="input" id="phone" inputmode="tel" autocomplete="tel" value="${esc(f.phone)}"></div>
+      <div class="grid2">
+        <div class="field"><label for="category">Categoría</label><input class="input" id="category" inputmode="numeric" placeholder="Ej: 2015" value="${esc(f.category)}" required></div>
+        <div class="field"><label for="line">Línea</label><select class="input" id="line" required>
+          <option value="" ${f.line ? "" : "selected"} disabled>Elegí la línea</option>
+          ${["Bronce", "Plata"].map((l) => `<option value="${l}" ${f.line === l ? "selected" : ""}>${l}</option>`).join("")}
+        </select></div>
+      </div>
+      <div class="field"><label for="phone">Teléfono / WhatsApp</label><input class="input" id="phone" inputmode="tel" autocomplete="tel" placeholder="Ej: 351 611 9126" value="${esc(f.phone)}" required></div>
       <div class="field"><label for="notes">Comentario <span class="muted">(opcional)</span></label><textarea class="input" id="notes" rows="2" placeholder="Algo que el organizador tenga que saber">${esc(f.notes)}</textarea></div>
     </div>
     <div class="err" id="err1" hidden></div>
@@ -493,7 +501,7 @@ function ticketHTML(o) {
   const t = { cost: o.totalCost, sale: o.totalSale, profit: o.profit };
   return `<div class="ticket">
     <div class="ticket-head">
-      <dl class="kv"><dt>Padre/madre</dt><dd>${esc(o.parent)}</dd><dt>Jugador</dt><dd>${esc(o.player)}</dd>${o.phone ? `<dt>Teléfono</dt><dd>${esc(o.phone)}</dd>` : ""}${o.createdAt ? `<dt>Fecha</dt><dd>${when(o.createdAt)}</dd>` : ""}</dl>
+      <dl class="kv"><dt>Padre/madre</dt><dd>${esc(o.parent)}</dd><dt>Jugador</dt><dd>${esc(o.player)}</dd>${o.category ? `<dt>Categoría</dt><dd>${esc(o.category)}</dd>` : ""}${o.line ? `<dt>Línea</dt><dd>${esc(o.line)}</dd>` : ""}${o.phone ? `<dt>Teléfono</dt><dd>${esc(o.phone)}</dd>` : ""}${o.createdAt ? `<dt>Fecha</dt><dd>${when(o.createdAt)}</dd>` : ""}</dl>
       ${o.id ? `<div style="text-align:right"><div class="muted" style="font-size:12px">PEDIDO</div><div class="code-sm" style="font-size:24px">#${esc(o.id)}</div></div>` : ""}
     </div>
     <table class="lines"><thead><tr><th>Producto</th><th class="r">Cant.</th><th class="r">Costo</th><th class="r">Venta</th></tr></thead><tbody>
@@ -539,13 +547,20 @@ function doneView() {
 function bindParent() {
   const f1 = $("#f1");
   if (f1) {
-    ["parent", "player", "phone", "notes"].forEach((k) => $("#" + k).addEventListener("input", (e) => { S.form[k] = e.target.value; saveDraft(); }));
+    ["parent", "player", "category", "line", "phone", "notes"].forEach((k) => $("#" + k).addEventListener(k === "line" ? "change" : "input", (e) => { S.form[k] = e.target.value; saveDraft(); }));
     f1.addEventListener("submit", (e) => {
       e.preventDefault();
       const miss = [];
-      if (!S.form.parent.trim()) miss.push("el nombre del padre o madre");
-      if (!S.form.player.trim()) miss.push("el nombre del jugador");
-      if (miss.length) { const er = $("#err1"); er.textContent = "Falta completar " + miss.join(" y ") + "."; er.hidden = false; $(S.form.parent.trim() ? "#player" : "#parent").focus(); return; }
+      if (!S.form.parent.trim()) miss.push(["el nombre del padre o madre", "#parent"]);
+      if (!S.form.player.trim()) miss.push(["el nombre del jugador", "#player"]);
+      if (!S.form.category.trim()) miss.push(["la categoría", "#category"]);
+      if (!S.form.line) miss.push(["la línea", "#line"]);
+      if (S.form.phone.replace(/\D/g, "").length < 8) miss.push(["un teléfono válido", "#phone"]);
+      if (miss.length) {
+        const er = $("#err1"); const names = miss.map((m) => m[0]);
+        er.textContent = "Falta completar " + (names.length > 1 ? names.slice(0, -1).join(", ") + " y " + names.at(-1) : names[0]) + ".";
+        er.hidden = false; $(miss[0][1]).focus(); return;
+      }
       S.step = 2; renderParent(); window.scrollTo(0, 0);
     });
   }
@@ -600,7 +615,7 @@ $("#confirmGo").onclick = async (e) => {
 };
 
 function summaryText(o) {
-  return [`Pedido #${o.id}` + ([CONFIG.team, CONFIG.campaign].filter(Boolean).length ? " · " + [CONFIG.team, CONFIG.campaign].filter(Boolean).join(" – ") : ""), `${o.parent} (jugador: ${o.player})`, "",
+  return [`Pedido #${o.id}` + ([CONFIG.team, CONFIG.campaign].filter(Boolean).length ? " · " + [CONFIG.team, CONFIG.campaign].filter(Boolean).join(" – ") : ""), `${o.parent} (jugador: ${o.player}${teamInfo(o) ? " · " + teamInfo(o) : ""})`, "",
     ...o.items.map((it) => `${it.qty} x ${it.name} – ${money(it.qty * it.cost)}`), "",
     `A transferir: ${money(o.totalCost)}`, `Ganancia vendiendo todo: ${money(o.profit)}`, CONFIG.alias ? `Alias: ${CONFIG.alias}` : "", CONFIG.cvu ? `CVU: ${CONFIG.cvu}` : "", CONFIG.holder ? `A nombre de: ${CONFIG.holder}` : ""].filter((l, i, a) => l !== "" || a[i - 1] !== "").join("\n");
 }
@@ -629,7 +644,7 @@ function downloadReceipt(o) {
   g.font = `900 46px ${disp}`; g.fillText("COMPROBANTE DE PEDIDO", pad, 98);
   g.fillStyle = "#15241B"; g.font = `800 34px ${disp}`; g.textAlign = "right"; g.fillText("#" + o.id, W - pad, 180); g.textAlign = "left";
   g.font = `500 16px ${body}`; g.fillStyle = "#5B6C60";
-  const kv = [["Padre/madre", o.parent], ["Jugador", o.player], ["Fecha", when(o.createdAt)]];
+  const kv = [["Padre/madre", o.parent], ["Jugador", o.player + (teamInfo(o) ? "  ·  " + teamInfo(o) : "")], ["Fecha", when(o.createdAt)]];
   kv.forEach(([k, v], i) => { g.fillStyle = "#5B6C60"; g.fillText(k, pad, 172 + i * 26); g.fillStyle = "#15241B"; g.font = `700 16px ${body}`; g.fillText(v, pad + 120, 172 + i * 26); g.font = `500 16px ${body}`; });
   let y = 270;
   g.font = `600 13px ${body}`; g.fillStyle = "#5B6C60";
@@ -747,13 +762,13 @@ function tabCompras() {
 
 function tabPedidos() {
   const A = S.admin; const q = A.q.trim().toLowerCase();
-  const list = A.orders.filter((o) => !q || (o.parent + " " + o.player + " " + o.id).toLowerCase().includes(q)).slice().reverse();
+  const list = A.orders.filter((o) => !q || (o.parent + " " + o.player + " " + o.id + " " + (o.category || "") + " " + (o.line || "")).toLowerCase().includes(q)).slice().reverse();
   return `<div class="toolbar"><input class="input" id="q" type="search" placeholder="Buscar por nombre o número" value="${esc(A.q)}" aria-label="Buscar pedidos"><span class="spacer"></span><button class="btn ghost sm" data-act="csv-pedidos">Descargar CSV</button></div>
   ${list.length ? `<div class="tablewrap"><table class="data"><thead><tr><th>Pedido</th><th>Fecha</th><th>Padre/madre · Jugador</th><th>Productos</th><th class="r">A transferir</th><th>Pago</th><th></th></tr></thead><tbody>
     ${list.map((o) => `<tr>
       <td><span class="code-sm">#${esc(o.id)}</span>${o.example ? ` <span class="example">Ejemplo</span>` : ""}</td>
       <td class="muted num" style="white-space:nowrap">${whenShort(o.createdAt)}</td>
-      <td><b>${esc(o.parent)}</b><div class="muted" style="font-size:13px">${esc(o.player)}${o.phone ? " · " + esc(o.phone) : ""}</div></td>
+      <td><b>${esc(o.parent)}</b><div class="muted" style="font-size:13px">${esc(o.player)}${teamInfo(o) ? " · " + esc(teamInfo(o)) : ""}${o.phone ? " · " + esc(o.phone) : ""}</div></td>
       <td style="font-size:13px">${o.items.map((it) => `${it.qty}× ${esc(it.name)}`).join("<br>")}${o.notes ? `<div class="muted">“${esc(o.notes)}”</div>` : ""}</td>
       <td class="r"><b>${money(o.totalCost)}</b></td>
       <td>${payPill(o)}</td>
@@ -774,7 +789,7 @@ function tabEntregas() {
   if (A.prod !== "all" && !pidList.some(([id]) => id === A.prod)) A.prod = "all";
   const rel = (o) => o.items.filter((it) => A.prod === "all" || it.productId === A.prod);
   const isDone = (o) => rel(o).every((it) => it.deliveredAt);
-  let list = A.orders.filter((o) => rel(o).length && (!q || (o.parent + " " + o.player + " " + o.id).toLowerCase().includes(q)));
+  let list = A.orders.filter((o) => rel(o).length && (!q || (o.parent + " " + o.player + " " + o.id + " " + (o.category || "") + " " + (o.line || "")).toLowerCase().includes(q)));
   const pend = list.filter((o) => !isDone(o)).length, done = list.length - pend;
   if (A.filter === "pend") list = list.filter((o) => !isDone(o));
   if (A.filter === "done") list = list.filter(isDone);
@@ -794,7 +809,7 @@ function tabEntregas() {
       const items = rel(o);
       const np = items.filter((it) => it.paidAt).length, nd = items.filter((it) => it.deliveredAt).length;
       return `<div class="dcard ${isDone(o) ? "done" : ""}">
-      <div class="dhead"><div style="min-width:0"><div class="who">${esc(o.parent)}</div><div class="who-sub">${esc(o.player)} · <span class="code-sm" style="font-size:14px">#${esc(o.id)}</span>${o.phone ? " · " + esc(o.phone) : ""}</div></div>
+      <div class="dhead"><div style="min-width:0"><div class="who">${esc(o.parent)}</div><div class="who-sub">${esc(o.player)}${teamInfo(o) ? " · " + esc(teamInfo(o)) : ""} · <span class="code-sm" style="font-size:14px">#${esc(o.id)}</span>${o.phone ? " · " + esc(o.phone) : ""}</div></div>
         <div class="dsum"><span class="pill ${np === items.length ? "yes" : "no"}" style="cursor:default">Pagado ${np}/${items.length}</span><span class="pill ${nd === items.length ? "yes" : "no"}" style="cursor:default">Entregado ${nd}/${items.length}</span></div></div>
       ${items.map((it) => `<div class="ditem"><div class="iname"><b>${it.qty}×</b> ${esc(it.name)} <span class="muted num">· ${money(it.qty * it.cost)}</span></div>${tog("pay", o, it)}${tog("deliv", o, it)}</div>`).join("")}
       ${o.notes ? `<div class="dfoot" style="justify-content:flex-start"><span class="muted" style="font-size:13px">“${esc(o.notes)}”</span></div>` : ""}
@@ -859,10 +874,10 @@ function bindAdmin() {
     const act = t.dataset.act;
     if (act === "logout") { api.pin = ""; store.sset("pin", ""); location.hash = ""; return; }
     if (act === "csv-compras") return csv("lista-de-compras.csv", [["Producto", "Detalle", "Cantidad", "Costo total", "Venta total"], ...consolidate(A.orders, A.onlyPaid).map((r) => [r.name, r.detail, r.qty, r.cost, r.sale])]);
-    if (act === "csv-entregas") return csv("entregas.csv", [["Pedido", "Padre/madre", "Jugador", "Teléfono", "Producto", "Cantidad", "Monto", "Pagado", "Entregado"],
-      ...A.orders.flatMap((o) => o.items.map((it) => [o.id, o.parent, o.player, o.phone, it.name, it.qty, it.qty * it.cost, when(it.paidAt), when(it.deliveredAt)]))]);
-    if (act === "csv-pedidos") return csv("pedidos.csv", [["Pedido", "Fecha", "Padre/madre", "Jugador", "Teléfono", "Productos", "A transferir", "Ganancia", "Pagado", "Entregado", "Comentario"],
-      ...A.orders.map((o) => [o.id, when(o.createdAt), o.parent, o.player, o.phone, o.items.map((it) => `${it.qty} x ${it.name}`).join(" | "), o.totalCost, o.profit, when(o.paidAt), when(o.deliveredAt), o.notes])]);
+    if (act === "csv-entregas") return csv("entregas.csv", [["Pedido", "Padre/madre", "Jugador", "Categoría", "Línea", "Teléfono", "Producto", "Cantidad", "Monto", "Pagado", "Entregado"],
+      ...A.orders.flatMap((o) => o.items.map((it) => [o.id, o.parent, o.player, o.category, o.line, o.phone, it.name, it.qty, it.qty * it.cost, when(it.paidAt), when(it.deliveredAt)]))]);
+    if (act === "csv-pedidos") return csv("pedidos.csv", [["Pedido", "Fecha", "Padre/madre", "Jugador", "Categoría", "Línea", "Teléfono", "Productos", "A transferir", "Ganancia", "Pagado", "Entregado", "Comentario"],
+      ...A.orders.map((o) => [o.id, when(o.createdAt), o.parent, o.player, o.category, o.line, o.phone, o.items.map((it) => `${it.qty} x ${it.name}`).join(" | "), o.totalCost, o.profit, when(o.paidAt), when(o.deliveredAt), o.notes])]);
     if (act === "addp") { A.cfgDraft.products.push({ id: "p" + Date.now().toString(36), name: "", detail: "", cost: 0, price: 0, active: true }); drawAdmin(); $(`#p-name-${A.cfgDraft.products.length - 1}`).focus(); return; }
     if (t.dataset.rmp) { A.cfgDraft.products.splice(Number(t.dataset.rmp), 1); return drawAdmin(); }
     if (act === "resetcfg") { A.cfgDraft = null; return drawAdmin(); }

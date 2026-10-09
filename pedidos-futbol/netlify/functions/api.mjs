@@ -103,7 +103,11 @@ export default async (req) => {
         const body = await readBody();
         const parent = clip(body.parent, 80);
         const player = clip(body.player, 80);
+        const category = clip(body.category, 40);
+        const line = ["Bronce", "Plata"].includes(body.line) ? body.line : "";
         if (!parent || !player) return json({ error: "Completá el nombre del padre/madre y del jugador." }, 400);
+        if (!category || !line) return json({ error: "Completá la categoría y la línea del jugador." }, 400);
+        if (clip(body.phone, 40).replace(/\D/g, "").length < 8) return json({ error: "Completá un teléfono válido." }, 400);
         const cfg = await getConfig();
         const byId = new Map(cfg.products.filter((p) => p.active).map((p) => [p.id, p]));
         // Los precios se toman del catálogo del servidor, no de lo que manda el navegador.
@@ -120,6 +124,7 @@ export default async (req) => {
           id: code,
           createdAt: new Date().toISOString(),
           parent, player,
+          category, line,
           phone: clip(body.phone, 40),
           notes: clip(body.notes, 300),
           items: items.map((it) => ({ ...it, paidAt: null, deliveredAt: null })),
