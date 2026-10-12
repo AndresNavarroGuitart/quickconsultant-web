@@ -270,6 +270,18 @@ body{padding:0;display:flex;flex-direction:column}
 @media (max-width:640px){.fgrid .wide{grid-column:auto}}
 [hidden]{display:none!important}
 /* tablero */
+.cov td{vertical-align:middle}
+.cov th{white-space:normal;vertical-align:bottom;line-height:1.3}
+.cov td:first-child{white-space:normal}
+.cov tbody tr{cursor:pointer}
+.cov tbody tr:hover td{background:var(--tint)}
+.cov tbody tr.sel td{background:var(--brand-soft)}
+.cov tr.tot td{font-weight:700;border-top:1px solid var(--ink);cursor:default;background:transparent}
+.cbar{display:flex;align-items:center;gap:8px;min-width:120px}
+.cbar .tr{flex:1;height:10px;background:var(--out-soft);border-radius:3px;overflow:hidden}
+.cbar .tr div{height:100%;background:var(--ok);border-radius:3px}
+.cbar span{font-size:12px;width:40px;text-align:right}
+.ratio.lo{color:var(--brand);font-weight:700}
 .fbar{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;padding:12px 14px;background:var(--tint);border:1px solid var(--line);border-radius:8px}
 .fgroup{display:grid;gap:6px}
 .flab{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
@@ -452,6 +464,10 @@ textarea.fin{resize:vertical;line-height:1.45}
         <div class="panel"><div class="wtop"><h4>Plazo de la búsqueda</h4><span class="chip" id="g2-st"></span></div><label class="sr" for="g2-sel">Búsqueda</label><select class="sel" id="g2-sel"></select><div class="gauge" id="g2"></div><div class="blist" id="g2-list"></div></div>
         <div class="panel"><h4>Postulantes por género</h4><span class="cap" id="gen-cap"></span><div class="gend" id="gend"></div><div class="glegend" id="gen-leg"></div></div>
       </div>
+
+      <div class="panel"><div class="wtop"><h4>Búsquedas por puesto</h4><span class="cap">Puestos a cubrir, cubiertos y entrevistados al día de hoy · no depende del filtro de fechas</span></div>
+        <div class="tbl-scroll"><table class="dt num cov"><thead><tr><th>Puesto</th><th class="r">Búsquedas abiertas</th><th class="r">Puestos a cubrir</th><th class="r">Cubiertos</th><th class="r">Faltan</th><th>Cobertura</th><th class="r">Entrevistados</th><th class="r">Entrevistados por faltante</th></tr></thead><tbody id="cov-body"></tbody></table></div>
+        <span class="foot">Búsquedas abiertas = sucursales o localidades con vacantes para ese puesto. Hacé clic en un puesto para verlo en el reloj de plazo.</span></div>
 
       <div class="panel"><div class="wtop"><h4>Entrevistas de línea: proyección por día vs. contrataciones</h4><span class="cap">Días hábiles · las entrevistas tienen que terminar el 06/11 para llegar a antecedentes y propuestas</span></div>
         <div class="pjx">
@@ -638,13 +654,22 @@ textarea.fin{resize:vertical;line-height:1.45}
     el.innerHTML=s+'<span class="gv num">'+rem+' días</span><span class="gc">faltan para finalizar · <b>día '+o.el+' de '+o.total+'</b><br>'+o.cap+'</span>';
     var z=ZONES.find(function(z){return p<=z[1]})||ZONES[2];return{p:p,z:z};}
   function gaugeChip(id,res){var e=document.getElementById(id),k=res.z[3];e.className="chip "+(k==="En plazo"?"ok":k==="Atención"?"warn":"cur");e.textContent=k;}
-  var BUS=[{n:"Cajero / Tesorero",ini:new Date(2026,8,1),pl:75,pu:40,cu:6},{n:"Ejecutivo de Cuentas",ini:new Date(2026,8,8),pl:70,pu:15,cu:2},{n:"Oficial de Negocios PyME",ini:new Date(2026,8,15),pl:45,pu:8,cu:1},{n:"Asistente Administrativo",ini:new Date(2026,8,1),pl:60,pu:12,cu:0}];
+  var BUS=[{n:"Cajero / Tesorero",ini:new Date(2026,8,1),pl:75,pu:40,cu:6,bq:6,en:112},{n:"Ejecutivo de Cuentas",ini:new Date(2026,8,8),pl:70,pu:15,cu:2,bq:6,en:54},{n:"Oficial de Negocios PyME",ini:new Date(2026,8,15),pl:45,pu:8,cu:1,bq:4,en:21},{n:"Asistente Administrativo",ini:new Date(2026,8,1),pl:60,pu:12,cu:0,bq:3,en:27}];
   var g2=document.getElementById("g2-sel");g2.innerHTML=BUS.map(function(b,i){return'<option value="'+i+'">'+b.n+'</option>'}).join("");g2.value="2";
   function drawGauges(){var el1=diff(D0,TODAY);gaugeChip("g1-st",gauge(document.getElementById("g1"),{total:90,el:el1,cap:"Inicio 01/09 · fin "+dd(addD(D0,90))+"/2026",aria:"Concurso: día "+el1+" de 90"}));
     var b=BUS[+g2.value],e2=diff(b.ini,TODAY);gaugeChip("g2-st",gauge(document.getElementById("g2"),{total:b.pl,el:e2,cap:"Inicio "+dd(b.ini)+" · fin "+dd(addD(b.ini,b.pl))+" · "+b.cu+" de "+b.pu+" puestos cubiertos",aria:b.n+": día "+e2+" de "+b.pl}));
     document.getElementById("g2-list").innerHTML=BUS.map(function(x,i){var r=x.pl-diff(x.ini,TODAY),p=diff(x.ini,TODAY)/x.pl,z=ZONES.find(function(z){return p<=z[1]})||ZONES[2];return'<button type="button" class="bl" data-b="'+i+'" aria-pressed="'+(i===+g2.value)+'"><span>'+x.n+'<br><small>'+x.cu+'/'+x.pu+' puestos</small></span><b class="num">'+r+' d</b><span class="chip '+(z[3]==="En plazo"?"ok":z[3]==="Atención"?"warn":"cur")+'">'+z[3]+'</span></button>'}).join("");}
-  g2.addEventListener("change",drawGauges);
-  document.getElementById("g2-list").addEventListener("click",function(e){var b=e.target.closest("[data-b]");if(!b)return;g2.value=b.dataset.b;drawGauges();});
+  function drawCov(){var sel=+g2.value,T={bq:0,pu:0,cu:0,en:0};
+    var row=function(b,i){var fa=b.pu-b.cu,c=b.cu/b.pu,r=fa?b.en/fa:0;
+      return'<tr'+(i!=null?' data-b="'+i+'" class="'+(i===sel?"sel":"")+'" tabindex="0"':' class="tot"')+'><td>'+(i!=null?'<b>'+b.n+'</b>':'Total')+'</td><td class="r">'+b.bq+'</td><td class="r">'+b.pu+'</td><td class="r">'+b.cu+'</td><td class="r"><b>'+fa+'</b></td>'+
+        '<td><div class="cbar" data-tip="'+b.cu+' de '+b.pu+' puestos cubiertos ('+pc(c)+')"><div class="tr"><div style="width:'+(c*100).toFixed(1)+'%"></div></div><span>'+pc(c,0)+'</span></div></td>'+
+        '<td class="r">'+fmt(b.en)+'</td><td class="r"><span class="ratio'+(fa&&r<3?" lo":"")+'"'+(fa&&r<3?' data-tip="Menos de 3 entrevistados por puesto faltante: conviene sumar candidatos"':'')+'>'+(fa?r.toLocaleString("es-AR",{maximumFractionDigits:1}):"—")+'</span></td></tr>';};
+    var h=BUS.map(function(b,i){T.bq+=b.bq;T.pu+=b.pu;T.cu+=b.cu;T.en+=b.en;return row(b,i)}).join("");
+    document.getElementById("cov-body").innerHTML=h+row(T,null);}
+  document.getElementById("cov-body").addEventListener("click",function(e){var tr=e.target.closest("tr[data-b]");if(!tr)return;g2.value=tr.dataset.b;drawGauges();drawCov();});
+  document.getElementById("cov-body").addEventListener("keydown",function(e){if(e.key!=="Enter")return;var tr=e.target.closest("tr[data-b]");if(!tr)return;g2.value=tr.dataset.b;drawGauges();drawCov();});
+  g2.addEventListener("change",function(){drawGauges();drawCov();});
+  document.getElementById("g2-list").addEventListener("click",function(e){var b=e.target.closest("[data-b]");if(!b)return;g2.value=b.dataset.b;drawGauges();drawCov();});
   // ---- proyección de entrevistas
   function drawProj(){var real=[18,24,27,29,31,28,30,27],rd=["01/10","02/10","05/10","06/10","07/10","08/10","09/10","12/10"];
     var done=real.reduce(function(a,b){return a+b},0),pend=598-done,fut=[],d=addD(TODAY,1),end=new Date(2026,10,6);
@@ -718,7 +743,7 @@ textarea.fin{resize:vertical;line-height:1.45}
   var PR={all:[0,29],w1:[0,6],m:[10,19],wl:[23,29]};
   document.querySelector(".pres").addEventListener("click",function(e){var b=e.target.closest("[data-pr]");if(!b)return;var r=PR[b.dataset.pr];setRange(r[0],r[1],b.dataset.pr);});
   [dF,dT].forEach(function(inp){inp.addEventListener("change",function(){if(!dF.value||!dT.value)return;var a=idx(dF.value),b=idx(dT.value);if(a>b){var x=a;a=b;b=x;}var pr=Object.keys(PR).find(function(k){return PR[k][0]===a&&PR[k][1]===b})||"";setRange(a,b,pr);});});
-  drawGauges();drawProj();drawDaily();drawStats();
+  drawGauges();drawCov();drawProj();drawDaily();drawStats();
   // Postulantes (ficticios)
   var P=[
     ["Martina Ledesma","38512214","Cajero / Tesorero","Córdoba Capital","cur","Entrevista de línea",88.5,82,85,84.6,3,null,null],
