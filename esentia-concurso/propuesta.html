@@ -96,6 +96,25 @@ table{border-collapse:collapse;width:100%}
 .cmp th.rec{color:var(--pink)}
 .reco{margin-top:20px;border-radius:16px;padding:22px 26px;background:var(--dark);color:#fff;display:grid;gap:6px}
 .reco b{color:#F472B6}
+/* Recorrido */
+.tour{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:24px;align-items:start}
+.ttabs{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px}
+.ttab{all:unset;cursor:pointer;font-size:.86rem;font-weight:700;padding:9px 16px;border-radius:100px;border:1px solid var(--border);background:var(--white);color:var(--text)}
+.ttab:hover{border-color:var(--pink)}
+.ttab[aria-selected="true"]{background:var(--grad);color:#fff;border-color:transparent}
+.ttab:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+.tshot{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--white);box-shadow:0 24px 60px -30px rgba(26,26,46,.45);min-width:0}
+.tbar{display:flex;align-items:center;gap:6px;padding:9px 12px;background:var(--light);border-bottom:1px solid var(--border)}
+.tbar i{width:10px;height:10px;border-radius:50%;background:#E3E3EA}
+.tbar span{margin-left:10px;font-size:.75rem;color:var(--muted)}
+.tshot img{display:block;width:100%;height:auto}
+.tcap{display:grid;gap:12px;align-content:start}
+.tcap h3{font-size:1.2rem;font-weight:800}
+.tcap ul{margin:0;padding-left:0;list-style:none;display:grid;gap:8px;font-size:.92rem;color:var(--muted)}
+.tcap li{padding-left:22px;position:relative}
+.tcap li::before{content:"";position:absolute;left:0;top:.5em;width:10px;height:10px;border-radius:3px;background:var(--grad)}
+.tcap .btn{justify-self:start;margin-top:6px}
+@media (max-width:900px){.tour{grid-template-columns:1fr}}
 /* Plan */
 .plan{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
 .wk{border-radius:16px;border:1px solid var(--border);background:var(--white);padding:20px;display:grid;gap:8px;align-content:start}
@@ -204,19 +223,28 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center}
 </div></section>
 
 <section><div class="container">
-  <div class="head"><span class="tag">04 · La solución</span><h2 class="title">Plataforma de gestión <span class="grad-text">del concurso</span></h2><p class="sub">Seis módulos sobre una base de datos central. Todo exportable a Excel cuando el Banco lo pida. <a href="herramienta.html" target="_blank" rel="noopener" style="color:var(--pink);font-weight:700">Recorré la demo</a>.</p></div>
+  <div class="head"><span class="tag">04 · La solución</span><h2 class="title">Plataforma de gestión <span class="grad-text">de búsquedas</span></h2><p class="sub">Cinco módulos sobre una base de datos central, con un usuario por persona y registro de cada acción. Todo exportable a Excel cuando el Banco lo pida. <a href="herramienta.html" target="_blank" rel="noopener" style="color:var(--pink);font-weight:700">Recorré la demo</a>.</p></div>
   <div class="cards">
-    <div class="card"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></svg></span><h3>Tablero del concurso</h3><p>Embudo por etapa, postulaciones por vacante y localidad, distribución de notas UNC, aprobación por etapa y pendientes del día.</p></div>
-    <div class="card"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6"/></svg></span><h3>Base de postulantes y ficha</h3><p>Búsqueda por nombre o DNI, filtros, recorrido por etapas e historial completo de cada persona, listo para responder al Banco.</p></div>
-    <div class="card"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M4.5 15v4.5h15V15"/></svg></span><h3>Cargas de terceros</h3><p>Plantilla por proveedor, validación previa (DNI inexistente, notas fuera de rango, duplicados) y aplicación solo de lo correcto.</p></div>
-    <div class="card"><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h9M5 18h5"/><circle cx="17.5" cy="16.5" r="2.5"/></svg></span><h3>Etapas y reglas</h3><p>Ponderaciones, notas de corte y orden de mérito configurables y versionados. Cerrar una etapa congela sus resultados.</p></div>
-    <div class="card"><span class="ic"><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg></span><h3>Seguridad y auditoría</h3><p>Usuarios personales con segundo factor, permisos por rol y etapa, registro de cada cambio y exportaciones marcadas.</p></div>
-    <div class="card"><span class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><h3>Reportes para el Banco</h3><p>Exportaciones a Excel de cualquier vista filtrada y reportes de avance listos para enviar.</p></div>
+    <div class="card"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></svg></span><h3>Tablero de gestión de búsquedas</h3><p>Filtro por fecha de postulación, relojes de plazo del concurso y de cada búsqueda, búsquedas por puesto (a cubrir, cubiertos, entrevistados), proyección de entrevistas vs. contrataciones, embudo con porcentajes, género y postulantes por día.</p></div>
+    <div class="card"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6"/></svg></span><h3>Postulantes y ficha</h3><p>Búsqueda por nombre o DNI y filtros. Al tocar un postulante se abre su ficha: recorrido por etapas, cambio de estado con motivo obligatorio, observaciones por etapa, observación general e historial completo.</p></div>
+    <div class="card"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M4.5 15v4.5h15V15"/></svg></span><h3>Cargas de terceros</h3><p>Asistente en cuatro pasos: elegir proveedor, subir Excel o CSV, preview con cruce por DNI y detección de desvíos (DNI inexistente o repetido, notas fuera de rango, excluidos, reemplazos) y aplicar solo lo correcto.</p></div>
+    <div class="card"><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h9M5 18h5"/><circle cx="17.5" cy="16.5" r="2.5"/></svg></span><h3>Etapas y reglas</h3><p>Reordenar etapas, agregar nuevas, editar pesos y notas de corte. Solo se guarda si los pesos suman 100%, cada versión queda registrada y cerrar una etapa congela sus resultados.</p></div>
+    <div class="card"><span class="ic"><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg></span><h3>Seguridad y auditoría</h3><p>Alta, baja y modificación de usuarios con rol y alcance (Gerencia, Analista, UNC, Consultoras, Bancor), segundo factor y registro de actividad con usuario, fecha, módulo y detalle de cada acción.</p></div>
+    <div class="card"><span class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><h3>Reportes para el Banco</h3><p>Exportación a Excel de cualquier vista filtrada y de la ficha con su historial, con marca de usuario y fecha para saber quién envió qué.</p></div>
   </div>
 </div></section>
 
-<section class="alt"><div class="container">
-  <div class="head"><span class="tag">05 · Alternativas</span><h2 class="title">Excel blindado o <span class="grad-text">plataforma web</span></h2><p class="sub">Evaluamos las dos opciones que plantea el brief.</p></div>
+<section class="alt" id="recorrido"><div class="container">
+  <div class="head"><span class="tag">05 · Recorrido</span><h2 class="title">Así se ve <span class="grad-text">la herramienta</span></h2><p class="sub">Capturas de la demo navegable, con datos de ejemplo de un concurso ficticio. Elegí una pantalla para verla.</p></div>
+  <div class="tour">
+    <div class="ttabs" role="tablist" aria-label="Pantallas de la herramienta" id="ttabs"></div>
+    <figure class="tshot"><div class="tbar"><i></i><i></i><i></i><span id="turl">esentia · Concurso Bancor 2026</span></div><img id="timg" alt="" width="1120" height="752"></figure>
+    <div class="tcap"><h3 id="tt"></h3><ul id="tli"></ul><a class="btn btn-p" href="herramienta.html" target="_blank" rel="noopener">Probar la demo →</a></div>
+  </div>
+</div></section>
+
+<section><div class="container">
+  <div class="head"><span class="tag">06 · Alternativas</span><h2 class="title">Excel blindado o <span class="grad-text">plataforma web</span></h2><p class="sub">Evaluamos las dos opciones que plantea el brief.</p></div>
   <div class="tbl-scroll"><table class="cmp">
     <thead><tr><th></th><th>Excel protegido</th><th class="rec">Plataforma web (recomendada)</th></tr></thead>
     <tbody>
@@ -231,19 +259,19 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center}
   <div class="reco"><span><b>Recomendación:</b> plataforma web con base central, cargas por plantilla y exportación a Excel en un clic.</span><span style="color:rgba(255,255,255,.75);font-size:.92rem">Si la inscripción cierra antes de que esté lista, arrancamos con un Excel protegido de transición que usa las mismas plantillas, y migramos los datos sin retrabajo.</span></div>
 </div></section>
 
-<section><div class="container">
-  <div class="head"><span class="tag">06 · Plan de trabajo</span><h2 class="title">Cinco semanas a la <span class="grad-text">primera versión operativa</span></h2></div>
+<section class="alt"><div class="container">
+  <div class="head"><span class="tag">07 · Plan de trabajo</span><h2 class="title">Cinco semanas a la <span class="grad-text">primera versión operativa</span></h2></div>
   <div class="plan">
-    <div class="wk"><span class="n">Semana 1</span><h4>Relevamiento y base</h4><ul><li>Reglas, pesos y cortes definitivos</li><li>Modelo de datos</li><li>Importador del export de HR</li></ul><span class="out">Base cargada desde HR</span></div>
-    <div class="wk"><span class="n">Semana 2</span><h4>Cargas y reglas</h4><ul><li>Plantillas por proveedor</li><li>Validación previa</li><li>Motor de ponderación y cortes</li></ul><span class="out">Primera carga UNC de prueba</span></div>
-    <div class="wk"><span class="n">Semana 3</span><h4>Consulta y tablero</h4><ul><li>Listado y ficha del postulante</li><li>Historial de cambios</li><li>Tablero e indicadores</li></ul><span class="out">Versión beta para ESENTIA</span></div>
-    <div class="wk"><span class="n">Semana 4</span><h4>Seguridad y reportes</h4><ul><li>Usuarios, roles y segundo factor</li><li>Auditoría y cierre de etapas</li><li>Exportaciones para el Banco</li></ul><span class="out">Accesos para proveedores</span></div>
+    <div class="wk"><span class="n">Semana 1</span><h4>Relevamiento y base</h4><ul><li>Reglas, pesos y cortes definitivos</li><li>Modelo de datos con DNI como clave</li><li>Importador del export de Hiring Room</li></ul><span class="out">Base cargada desde HR</span></div>
+    <div class="wk"><span class="n">Semana 2</span><h4>Cargas y reglas</h4><ul><li>Asistente de cargas con cruce por DNI</li><li>Detección de desvíos y plantillas</li><li>Editor de etapas, pesos y cortes</li></ul><span class="out">Primera carga UNC de prueba</span></div>
+    <div class="wk"><span class="n">Semana 3</span><h4>Postulantes y tablero</h4><ul><li>Listado y ficha editable</li><li>Observaciones e historial</li><li>Tablero de gestión de búsquedas</li></ul><span class="out">Versión beta para ESENTIA</span></div>
+    <div class="wk"><span class="n">Semana 4</span><h4>Seguridad y reportes</h4><ul><li>ABM de usuarios, roles y segundo factor</li><li>Registro de actividad</li><li>Exportaciones para el Banco</li></ul><span class="out">Accesos para proveedores</span></div>
     <div class="wk"><span class="n">Semana 5</span><h4>Puesta en marcha</h4><ul><li>Pruebas con datos reales</li><li>Ajustes finales</li><li>Capacitación y manual</li></ul><span class="out">Plataforma en producción</span></div>
   </div>
 </div></section>
 
-<section class="alt" id="inversion"><div class="container">
-  <div class="head"><span class="tag">07 · Inversión</span><h2 class="title">Inversión <span class="grad-text">del proyecto</span></h2><p class="sub">Valores en dólares estadounidenses, sin IVA. Precio cerrado para el alcance descripto en esta propuesta.</p></div>
+<section id="inversion"><div class="container">
+  <div class="head"><span class="tag">08 · Inversión</span><h2 class="title">Inversión <span class="grad-text">del proyecto</span></h2><p class="sub">Valores en dólares estadounidenses, sin IVA. Precio cerrado para el alcance descripto en esta propuesta.</p></div>
   <div class="inv">
     <div class="price num"><span class="l">Implementación · pago único</span><span class="v">USD 13.650</span><p>Desarrollo de los seis módulos, importación de la base de HR, plantillas para proveedores, pruebas con datos reales, capacitación y manual de uso.</p>
       <div class="pay"><div><b>USD 5.460</b><span>40% al aprobar la propuesta</span></div><div><b>USD 4.095</b><span>30% al entregar la beta (semana 3)</span></div><div><b>USD 4.095</b><span>30% al pasar a producción</span></div></div></div>
@@ -255,14 +283,14 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center}
     </div>
   </div>
   <div class="inc">
-    <div class="mini yes"><h4>Incluye</h4><ul><li>Los seis módulos descriptos en la sección 04</li><li>Hasta 5 plantillas de proveedores y 10 usuarios</li><li>Migración de la base inicial de Hiring Room</li><li>2 sesiones de capacitación y manual de uso</li><li>Garantía de 60 días sobre errores de funcionamiento</li></ul></div>
+    <div class="mini yes"><h4>Incluye</h4><ul><li>Los módulos descriptos en la sección 04, tal como se ven en la demo</li><li>Hasta 5 plantillas de proveedores y 10 usuarios</li><li>Migración de la base inicial de Hiring Room</li><li>2 sesiones de capacitación y manual de uso</li><li>Garantía de 60 días sobre errores de funcionamiento</li></ul></div>
     <div class="mini no"><h4>No incluye</h4><ul><li>Carga manual de resultados de proveedores</li><li>Cambios de reglas o etapas luego de aprobada la semana 1 (se cotizan aparte)</li><li>Auditoría de seguridad externa (pentest)</li><li>Licencias de software de terceros que ESENTIA ya utilice</li></ul></div>
   </div>
   <p class="note">Validez de la propuesta: 30 días. Precio sujeto a confirmar el alcance en el relevamiento de la semana 1.</p>
 </div></section>
 
-<section><div class="container">
-  <div class="head"><span class="tag">08 · Próximos pasos</span><h2 class="title">Preguntas para <span class="grad-text">arrancar</span></h2></div>
+<section class="alt"><div class="container">
+  <div class="head"><span class="tag">09 · Próximos pasos</span><h2 class="title">Preguntas para <span class="grad-text">arrancar</span></h2></div>
   <ol class="q">
     <li>¿Las ponderaciones de la Base Madre (35 / 20 / 15 / 20 / 10) y el corte de 70 en el examen UNC son definitivos o pueden cambiar durante el concurso?</li>
     <li>¿El orden de mérito se arma por vacante, por localidad o por sucursal?</li>
@@ -275,6 +303,28 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center}
 </div></section>
 
 <footer>Quick Consultant · Transformación digital · Propuesta preparada para ESENTIA Recursos Humanos · Octubre 2026</footer>
+
+<script>
+(function(){
+  var SRC={"tablero": "assets/capturas/tablero.webp", "tablero2": "assets/capturas/tablero2.webp", "ficha": "assets/capturas/ficha.webp", "cargas": "assets/capturas/cargas.webp", "reglas": "assets/capturas/reglas.webp", "usuarios": "assets/capturas/usuarios.webp", "registro": "assets/capturas/registro.webp"};
+  var S=[
+    ["tablero","Tablero","Tablero de gestión de búsquedas",["Filtro por fecha de postulación con rangos rápidos","Relojes de plazo: concurso de 90 días y cada búsqueda","Indicadores de inscriptos, en carrera, excluidos y aprobación UNC","Postulantes por género: inscriptos y en carrera"]],
+    ["tablero2","Búsquedas y proyección","Búsquedas por puesto y proyección",["Puestos a cubrir, cubiertos, faltantes y cobertura","Entrevistados por puesto y alerta cuando son pocos por faltante","Entrevistas por día: hechas vs. ritmo necesario hasta el cierre","Contratados actuales vs. faltantes"]],
+    ["ficha","Ficha","Ficha del postulante",["Se abre al tocar un postulante, sin salir de la lista","Cambio de estado por etapa con motivo obligatorio","Observaciones por etapa y observación general","Historial completo para responder al Banco"]],
+    ["cargas","Cargas de terceros","Cargas con cruce por DNI",["Proveedor → archivo → preview → aplicar","DNI normalizado sin puntos ni espacios","Desvíos: DNI inexistente o repetido, fuera de rango, excluidos","Solo se aplica lo correcto; los errores vuelven al proveedor"]],
+    ["reglas","Etapas y reglas","Editor de etapas y reglas",["Reordenar etapas arrastrando o con flechas","Agregar etapas con responsable, peso y regla","Los pesos tienen que sumar 100% para guardar","Cada versión queda registrada; las etapas cerradas no se tocan"]],
+    ["usuarios","Usuarios","Usuarios y roles",["Alta, edición, desactivación y baja de usuarios","Rol y alcance por persona: Gerencia, Analista, UNC, Consultoras, Bancor","Segundo factor y reenvío de invitación","Solo Gerencia administra usuarios"]],
+    ["registro","Registro de actividad","Registro de actividad",["Cada acción con usuario, rol, fecha, módulo y detalle","Filtros por usuario, módulo y texto libre","Se conserva aunque el usuario sea dado de baja","Exportable para auditoría"]]];
+  var tabs=document.getElementById("ttabs"),img=document.getElementById("timg");
+  tabs.innerHTML=S.map(function(s,i){return'<button type="button" role="tab" class="ttab" data-i="'+i+'" aria-selected="'+(i===0)+'">'+s[1]+'</button>'}).join("");
+  function sel(i){var s=S[i];img.src=SRC[s[0]];img.alt="Captura de la pantalla "+s[2];document.getElementById("tt").textContent=s[2];
+    document.getElementById("tli").innerHTML=s[3].map(function(x){return"<li>"+x+"</li>"}).join("");
+    tabs.querySelectorAll(".ttab").forEach(function(b){b.setAttribute("aria-selected",+b.dataset.i===i?"true":"false")});}
+  tabs.addEventListener("click",function(e){var b=e.target.closest("[data-i]");if(b)sel(+b.dataset.i);});
+  tabs.addEventListener("keydown",function(e){var c=+document.activeElement.dataset.i;if(isNaN(c))return;var n=e.key==="ArrowRight"?c+1:e.key==="ArrowLeft"?c-1:null;if(n==null)return;n=(n+S.length)%S.length;sel(n);tabs.children[n].focus();});
+  sel(0);
+})();
+</script>
 
 </body>
 </html>
