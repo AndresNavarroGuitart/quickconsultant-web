@@ -85,17 +85,6 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8rem;bac
 .st .ct{font-size:.74rem}
 .legend{display:flex;flex-wrap:wrap;gap:20px;font-size:.85rem;color:var(--muted);margin-top:14px}
 .legend i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:6px}
-/* Tabla comparativa */
-.tbl-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:16px;background:var(--white)}
-table{border-collapse:collapse;width:100%}
-.cmp th,.cmp td{text-align:left;padding:14px 18px;border-bottom:1px solid var(--border);font-size:.92rem;vertical-align:top;min-width:200px}
-.cmp tr:last-child td{border-bottom:0}
-.cmp th{font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.cmp td:first-child{font-weight:700;min-width:160px}
-.cmp .rec{background:var(--grad-soft)}
-.cmp th.rec{color:var(--pink)}
-.reco{margin-top:20px;border-radius:16px;padding:22px 26px;background:var(--dark);color:#fff;display:grid;gap:6px}
-.reco b{color:#F472B6}
 /* Recorrido */
 .tour{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:24px;align-items:start}
 .ttabs{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px}
@@ -244,23 +233,7 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center}
 </div></section>
 
 <section><div class="container">
-  <div class="head"><span class="tag">06 · Alternativas</span><h2 class="title">Excel blindado o <span class="grad-text">plataforma web</span></h2><p class="sub">Evaluamos las dos opciones que plantea el brief.</p></div>
-  <div class="tbl-scroll"><table class="cmp">
-    <thead><tr><th></th><th>Excel protegido</th><th class="rec">Plataforma web (recomendada)</th></tr></thead>
-    <tbody>
-      <tr><td>Errores accidentales</td><td>Se reducen con celdas bloqueadas, pero la protección de hoja es débil y circulan copias desactualizadas.</td><td class="rec">No hay celdas para pisar: los datos entran por cargas validadas y el cálculo vive en el servidor.</td></tr>
-      <tr><td>Permisos</td><td>Por archivo o carpeta.</td><td class="rec">Por rol y por etapa: cada proveedor ve y carga solo lo suyo.</td></tr>
-      <tr><td>Trazabilidad</td><td>Versiones del archivo, sin detalle por dato.</td><td class="rec">Quién cambió qué dato, cuándo, desde qué archivo y por qué.</td></tr>
-      <tr><td>Indicadores</td><td>Tablas dinámicas que se refrescan a mano.</td><td class="rec">Tablero en vivo con filtros.</td></tr>
-      <tr><td>Volumen</td><td>Lento con miles de filas y 90+ columnas; un editor a la vez.</td><td class="rec">Varios usuarios en simultáneo, sin límite práctico.</td></tr>
-      <tr><td>Puesta en marcha</td><td>1 a 2 semanas.</td><td class="rec">5 semanas.</td></tr>
-    </tbody>
-  </table></div>
-  <div class="reco"><span><b>Recomendación:</b> plataforma web con base central, cargas por plantilla y exportación a Excel en un clic.</span><span style="color:rgba(255,255,255,.75);font-size:.92rem">Si la inscripción cierra antes de que esté lista, arrancamos con un Excel protegido de transición que usa las mismas plantillas, y migramos los datos sin retrabajo.</span></div>
-</div></section>
-
-<section class="alt"><div class="container">
-  <div class="head"><span class="tag">07 · Plan de trabajo</span><h2 class="title">Cinco semanas a la <span class="grad-text">primera versión operativa</span></h2></div>
+  <div class="head"><span class="tag">06 · Plan de trabajo</span><h2 class="title">Cinco semanas a la <span class="grad-text">primera versión operativa</span></h2></div>
   <div class="plan">
     <div class="wk"><span class="n">Semana 1</span><h4>Relevamiento y base</h4><ul><li>Reglas, pesos y cortes definitivos</li><li>Modelo de datos con DNI como clave</li><li>Importador del export de Hiring Room</li></ul><span class="out">Base cargada desde HR</span></div>
     <div class="wk"><span class="n">Semana 2</span><h4>Cargas y reglas</h4><ul><li>Asistente de cargas con cruce por DNI</li><li>Detección de desvíos y plantillas</li><li>Editor de etapas, pesos y cortes</li></ul><span class="out">Primera carga UNC de prueba</span></div>
@@ -270,8 +243,8 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center}
   </div>
 </div></section>
 
-<section id="inversion"><div class="container">
-  <div class="head"><span class="tag">08 · Inversión</span><h2 class="title">Inversión <span class="grad-text">del proyecto</span></h2><p class="sub">Valores en dólares estadounidenses, sin IVA. Precio cerrado para el alcance descripto en esta propuesta.</p></div>
+<section class="alt" id="inversion"><div class="container">
+  <div class="head"><span class="tag">07 · Inversión</span><h2 class="title">Inversión <span class="grad-text">del proyecto</span></h2><p class="sub">Valores en dólares estadounidenses, sin IVA. Precio cerrado para el alcance descripto en esta propuesta.</p></div>
   <div class="inv">
     <div class="price num"><span class="l">Implementación · pago único</span><span class="v">USD 13.650</span><p>Desarrollo de los seis módulos, importación de la base de HR, plantillas para proveedores, pruebas con datos reales, capacitación y manual de uso.</p>
       <div class="pay"><div><b>USD 5.460</b><span>40% al aprobar la propuesta</span></div><div><b>USD 4.095</b><span>30% al entregar la beta (semana 3)</span></div><div><b>USD 4.095</b><span>30% al pasar a producción</span></div></div></div>
@@ -279,7 +252,7 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center}
       <div class="mini num"><span class="l">Mensual · mientras dure el concurso</span><span class="v">USD 350 <small>/ mes</small></span>
         <div class="lines"><div><span>Infraestructura: hosting, base de datos, respaldos diarios, archivos y correo</span><b>USD 70</b></div><div><span>Soporte y ajustes: 8 horas mensuales</span><b>USD 280</b></div></div></div>
       <div class="mini num"><span class="l">Opcionales</span>
-        <div class="lines"><div><span>Excel protegido de transición</span><b>USD 2.450</b></div><div><span>Integración directa con la API de Hiring Room, si el Banco la habilita</span><b>USD 840</b></div><div><span>Configuración para un nuevo concurso</span><b>USD 3.500</b></div><div><span>Hora adicional fuera de alcance</span><b>USD 35</b></div></div></div>
+        <div class="lines"><div><span>Integración directa con la API de Hiring Room, si el Banco la habilita</span><b>USD 840</b></div><div><span>Configuración para un nuevo concurso</span><b>USD 3.500</b></div><div><span>Hora adicional fuera de alcance</span><b>USD 35</b></div></div></div>
     </div>
   </div>
   <div class="inc">
@@ -289,8 +262,8 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center}
   <p class="note">Validez de la propuesta: 30 días. Precio sujeto a confirmar el alcance en el relevamiento de la semana 1.</p>
 </div></section>
 
-<section class="alt"><div class="container">
-  <div class="head"><span class="tag">09 · Próximos pasos</span><h2 class="title">Preguntas para <span class="grad-text">arrancar</span></h2></div>
+<section><div class="container">
+  <div class="head"><span class="tag">08 · Próximos pasos</span><h2 class="title">Preguntas para <span class="grad-text">arrancar</span></h2></div>
   <ol class="q">
     <li>¿Las ponderaciones de la Base Madre (35 / 20 / 15 / 20 / 10) y el corte de 70 en el examen UNC son definitivos o pueden cambiar durante el concurso?</li>
     <li>¿El orden de mérito se arma por vacante, por localidad o por sucursal?</li>
