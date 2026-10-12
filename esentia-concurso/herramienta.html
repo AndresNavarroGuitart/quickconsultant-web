@@ -269,6 +269,43 @@ body{padding:0;display:flex;flex-direction:column}
 .chg{margin:0;padding-left:18px;font-size:13px;display:grid;gap:4px}
 @media (max-width:640px){.fgrid .wide{grid-column:auto}}
 [hidden]{display:none!important}
+/* cargas */
+.stp span{display:block}
+.stp.done{cursor:default}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.tc{all:unset;box-sizing:border-box;cursor:pointer;border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:6px;align-content:start;background:var(--paper)}
+.tc:hover{border-color:var(--brand);box-shadow:0 6px 18px -12px rgba(219,1,62,.6)}
+.tc:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.tc b{font-size:14px}
+.tc .who{font-size:12px;color:var(--muted)}
+.tc .need{font-size:12px;font-weight:700;color:var(--brand)}
+.tc .need.zero{color:var(--muted);font-weight:400}
+.cols{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.colchips{display:flex;flex-wrap:wrap;gap:6px}
+.colchips code{background:var(--tint);border:1px solid var(--line);font-size:12px}
+.colchips code.req{border-color:var(--brand);color:var(--brand)}
+.drop{display:grid;gap:4px;place-items:center;text-align:center;border:2px dashed var(--line);border-radius:10px;padding:28px 16px;cursor:pointer;background:var(--tint)}
+.drop:hover,.drop.over{border-color:var(--brand);background:var(--brand-soft)}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.drop:focus-within{outline:2px solid var(--brand);outline-offset:2px}
+.drop span{font-size:12px;color:var(--muted)}
+.orrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13px;color:var(--muted)}
+.vc.f{all:unset;box-sizing:border-box;cursor:pointer;border-radius:6px;padding:12px;background:var(--bg);display:grid;gap:2px;border:2px solid transparent}
+.vc.f[aria-pressed="true"]{border-color:var(--fg)}
+.vc.f:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.vc .s{font-size:11px;color:var(--muted)}
+.prev td{vertical-align:middle}
+.prev tr.e td{background:color-mix(in srgb,var(--brand-soft) 55%,var(--paper))}
+.dt td.dev{font-size:12.5px;white-space:normal;min-width:200px;max-width:320px}
+.dev.e{color:var(--brand);font-weight:700}
+.dev.w{color:var(--warn);font-weight:700}
+.dev.i{color:var(--muted)}
+.dev.o{color:var(--ok)}
+.prev input[type=checkbox]{width:16px;height:16px;accent-color:var(--brand)}
+.okhead{display:flex;gap:12px;align-items:center}
+.okico{width:36px;height:36px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.newb{font-size:10px;font-weight:700;color:var(--ok);background:var(--ok-soft);padding:1px 6px;border-radius:999px;margin-left:4px}
+.dt tr.upd td{background:color-mix(in srgb,var(--ok-soft) 60%,var(--paper))}
 .col{display:grid;gap:16px;align-content:start;min-width:0}
 .tbody{min-width:0}
 .ti .res{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
@@ -346,7 +383,7 @@ textarea.fin{resize:vertical;line-height:1.45}
     <div class="screen" data-screen="list" hidden>
       <div class="bar"><div><h3>Postulantes</h3><span class="sub">Vista de lectura. Las notas se modifican solo con una carga o una corrección autorizada.</span></div>
         <div class="filters"><input class="search" id="q" placeholder="Buscar por nombre o DNI" aria-label="Buscar postulante"><select class="sel" id="f-st" aria-label="Estado"><option value="">Todos los estados</option><option value="cur">En carrera</option><option value="out">Excluidos</option></select><button class="btn ghost" type="button" id="exp">Exportar a Excel</button></div></div>
-      <div class="tbl-scroll"><table class="dt num" id="tbl"><thead><tr><th>Postulante</th><th>Vacante · Localidad</th><th>Etapa actual</th><th class="r">UNC</th><th class="r">Assess.</th><th class="r">Psico</th><th class="r">Score</th><th class="r">Mérito</th></tr></thead><tbody></tbody></table></div>
+      <div class="tbl-scroll"><table class="dt num" id="tbl"><thead><tr><th>Postulante</th><th>Vacante · Localidad</th><th>Etapa actual</th><th class="r">UNC</th><th class="r">Assess.</th><th class="r">Psico</th><th class="r">Entrev.</th><th class="r">Score</th><th class="r">Mérito</th></tr></thead><tbody></tbody></table></div>
       <span class="foot">Mostrando 10 de 4.812 · <span class="lock">🔒</span> etapa cerrada, el valor no se puede editar · Datos de ejemplo</span>
     </div>
 
@@ -368,29 +405,34 @@ textarea.fin{resize:vertical;line-height:1.45}
 
     <!-- CARGAS -->
     <div class="screen" data-screen="load" hidden>
-      <div class="bar"><div><h3>Cargas de terceros</h3><span class="sub">Cada proveedor sube su plantilla. Nada entra a la base sin pasar la validación.</span></div><button class="btn" type="button" id="newload">Nueva carga</button></div>
-      <div class="steps"><div class="stp done"><b>1 · PLANTILLA ✓</b>Examen técnico UNC</div><div class="stp done"><b>2 · ARCHIVO ✓</b>Subido por UNC</div><div class="stp now" id="stp3"><b>3 · VALIDACIÓN</b>Revisá las observaciones</div><div class="stp" id="stp4"><b>4 · CONFIRMAR</b>Aplicar a la base</div></div>
-      <div class="file"><span><b>UNC_resultados_turno05.xlsx</b> · 418 filas · subido por <b style="font-family:inherit">unc.examenes</b> hoy 08:55</span><span class="chip warn">6 observaciones</span></div>
-      <div class="val num">
-        <div class="vc" style="--bg:var(--ok-soft);--fg:var(--ok)"><span class="v">412</span><span class="l">Coinciden por DNI y turno</span></div>
-        <div class="vc" style="--bg:var(--brand-soft);--fg:var(--brand)"><span class="v">2</span><span class="l">DNI no encontrados</span></div>
-        <div class="vc" style="--bg:var(--warn-soft);--fg:var(--warn)"><span class="v">2</span><span class="l">Notas fuera de rango (0–100)</span></div>
-        <div class="vc" style="--bg:var(--out-soft);--fg:var(--ink)"><span class="v">2</span><span class="l">DNI repetidos en el archivo</span></div>
+      <div class="bar"><div><h3>Cargas de terceros</h3><span class="sub">Cada resultado se cruza por DNI con la base del concurso. Nada se aplica sin tu confirmación.</span></div><button class="btn" type="button" id="newload">Nueva carga</button></div>
+      <div class="steps" id="ld-steps"><div class="stp" data-n="1"><b>1 · TERCERO</b><span>Qué resultados cargás</span></div><div class="stp" data-n="2"><b>2 · ARCHIVO</b><span>Excel o CSV del proveedor</span></div><div class="stp" data-n="3"><b>3 · PREVIEW Y DESVÍOS</b><span>Cruce por DNI</span></div><div class="stp" data-n="4"><b>4 · APLICAR</b><span>Impacta en postulantes</span></div></div>
+
+      <div class="panel ldp" id="ld-1"><h4>¿Qué resultados vas a cargar?</h4><span class="cap">Elegí el tercero. Cada uno tiene una plantilla con columnas fijas; la columna DNI es obligatoria en todas.</span><div class="tgrid" id="tgrid"></div></div>
+
+      <div class="panel ldp" id="ld-2" hidden>
+        <div class="wtop"><h4 id="ld2-title">Subí el archivo</h4><button class="eb" type="button" data-back="1">← Cambiar tercero</button></div>
+        <div class="cols"><span class="cap">Columnas que tiene que traer el archivo:</span><div id="ld2-cols" class="colchips"></div><button class="eb" type="button" id="copy-cols">Copiar encabezados</button></div>
+        <label class="drop" for="ld-file" id="drop"><input type="file" id="ld-file" accept=".xlsx,.xls,.csv"><b>Elegí un archivo o arrastralo acá</b><span>Formatos: .xlsx, .xls o .csv · la primera fila tiene que ser el encabezado</span></label>
+        <div class="orrow"><span>¿No tenés un archivo a mano?</span><button class="btn ghost" type="button" id="ld-sample">Usar archivo de ejemplo</button></div>
+        <p class="ferr" id="ld2-err" hidden></p>
       </div>
-      <div class="tbl-scroll"><table class="dt num"><thead><tr><th>Fila</th><th>DNI</th><th>Dato recibido</th><th>Observación</th><th>Acción</th></tr></thead><tbody>
-        <tr><td>37</td><td>40.***.118</td><td>Nota 885</td><td>Fuera de rango. ¿Quiso decir 88,5?</td><td><span class="chip warn">Pedir a UNC</span></td></tr>
-        <tr><td>102</td><td>36.***.920</td><td>Nota 101</td><td>Fuera de rango</td><td><span class="chip warn">Pedir a UNC</span></td></tr>
-        <tr><td>211</td><td>41.***.007</td><td>Nota 72,0</td><td>DNI no existe en la base del concurso</td><td><span class="chip out">Descartar fila</span></td></tr>
-        <tr><td>298</td><td>33.***.561</td><td>Nota 64,0</td><td>DNI no existe en la base del concurso</td><td><span class="chip out">Descartar fila</span></td></tr>
-        <tr><td>344 / 345</td><td>39.***.442</td><td>Notas 70,0 y 77,0</td><td>Dos notas distintas para la misma persona</td><td><span class="chip warn">Pedir a UNC</span></td></tr>
-      </tbody></table></div>
-      <div class="filters"><button class="btn" type="button" id="apply">Aplicar 412 resultados válidos</button><button class="btn ghost" type="button" id="giveback">Devolver observaciones a UNC</button></div>
-      <div class="panel"><h4>Plantillas por proveedor</h4><div class="tbl-scroll"><table class="dt"><thead><tr><th>Proveedor</th><th>Etapa</th><th>Columnas obligatorias</th><th>Última carga</th></tr></thead><tbody>
-        <tr><td>UNC</td><td>Examen técnico</td><td>DNI · Turno · Asistencia · Nota</td><td>Hoy · en validación</td></tr>
-        <tr><td>Consultora Pedemonte</td><td>Assessment</td><td>DNI · Consultor · Puntaje · Estado</td><td>11/10 · retenida</td></tr>
-        <tr><td>Consultoras psico</td><td>Psicotécnico</td><td>DNI · Fecha · Dictamen · Puntaje</td><td>10/10 · aplicada</td></tr>
-        <tr><td>Bancor</td><td>Entrevista de línea</td><td>DNI · Entrevistadores · Fecha · Calificación</td><td>Hoy 09:40 · aplicada</td></tr>
-      </tbody></table></div></div>
+
+      <div class="ldp" id="ld-3" hidden>
+        <div class="file"><span id="ld3-file"></span><button class="eb" type="button" data-back="2">← Subir otro archivo</button></div>
+        <div class="val num" id="ld3-cards"></div>
+        <div class="tbl-scroll"><table class="dt num prev"><thead><tr><th>Fila</th><th>DNI en archivo</th><th>Postulante</th><th>Dato recibido</th><th>Resultado</th><th>Desvío detectado</th><th class="r">Aplicar</th></tr></thead><tbody id="ld3-body"></tbody></table></div>
+        <p class="hint">Las filas con aviso se aplican solo si las marcás. Las filas con error no se aplican: devolvelas al proveedor para que las corrija.</p>
+        <div class="filters"><button class="btn" type="button" id="ld-apply"></button><button class="btn ghost" type="button" id="ld-return">Devolver errores al proveedor</button><button class="btn ghost" type="button" data-back="1">Cancelar carga</button></div>
+      </div>
+
+      <div class="panel ldp" id="ld-4" hidden>
+        <div class="okhead"><span class="okico">✓</span><div><h4 id="ld4-title"></h4><span class="cap" id="ld4-sub"></span></div></div>
+        <div class="tbl-scroll"><table class="dt num"><thead><tr><th>Postulante</th><th>Etapa</th><th>Valor aplicado</th><th>Nuevo estado</th><th></th></tr></thead><tbody id="ld4-body"></tbody></table></div>
+        <div class="filters"><button class="btn" type="button" id="ld-golist">Ver en Postulantes</button><button class="btn ghost" type="button" data-back="1">Hacer otra carga</button></div>
+      </div>
+
+      <div class="panel"><h4>Cargas recientes</h4><div class="tbl-scroll"><table class="dt num"><thead><tr><th>Fecha</th><th>Tercero</th><th>Archivo</th><th class="r">Filas</th><th class="r">Aplicadas</th><th class="r">Con error</th><th>Usuario</th></tr></thead><tbody id="ld-hist"></tbody></table></div></div>
     </div>
 
     <!-- REGLAS -->
@@ -442,6 +484,7 @@ textarea.fin{resize:vertical;line-height:1.45}
   </div>
 <div class="toast" id="toast" role="status" hidden></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 (function(){
   // Embudo
@@ -464,22 +507,24 @@ textarea.fin{resize:vertical;line-height:1.45}
   document.getElementById("heat").innerHTML=h;
   // Postulantes (ficticios)
   var P=[
-    ["Martina Ledesma","38.***.214","Cajero / Tesorero","Córdoba Capital","cur","Entrevista de línea",88.5,82,85,84.6,3,1],
-    ["Joaquín Bustos","37.***.905","Ejecutivo de Cuentas","Río Cuarto","cur","Entrevista de línea",91,78,80,84.2,1,1],
-    ["Camila Ferrero","40.***.330","Cajero / Tesorero","Villa María","cur","Entrevista de línea",79.5,85,90,83.1,2,1],
-    ["Lucas Giménez","35.***.871","Oficial PyME","Córdoba Capital","cur","Entrevista de línea",76,74,72,74.4,9,1],
-    ["Sofía Paredes","39.***.016","Asistente Adm.","San Francisco","out","Psicotécnico · No apto",84,70,null,null,null,1],
-    ["Tomás Villarreal","36.***.448","Cajero / Tesorero","V. Carlos Paz","out","Assessment · 52 < 60",73,52,null,null,null,1],
-    ["Valentina Ríos","41.***.762","Ejecutivo de Cuentas","Córdoba Capital","out","Examen UNC · 54 < 70",54,null,null,null,null,1],
-    ["Nicolás Acosta","34.***.193","Cajero / Tesorero","Bell Ville","out","Examen UNC · Ausente",null,null,null,null,null,1],
-    ["Florencia Quiroga","38.***.587","Oficial PyME","Río Cuarto","out","Requisitos · Residencia",null,null,null,null,null,1],
-    ["Agustín Moyano","37.***.250","Asistente Adm.","Villa María","cur","Entrevista de línea",82,80,78,80.6,4,1]];
+    ["Martina Ledesma","38512214","Cajero / Tesorero","Córdoba Capital","cur","Entrevista de línea",88.5,82,85,84.6,3,null,null],
+    ["Joaquín Bustos","37640905","Ejecutivo de Cuentas","Río Cuarto","cur","Entrevista de línea",91,78,80,84.2,1,null,null],
+    ["Camila Ferrero","40118330","Cajero / Tesorero","Villa María","cur","Entrevista de línea",79.5,85,90,83.1,2,null,null],
+    ["Lucas Giménez","35277871","Oficial PyME","Córdoba Capital","cur","Entrevista de línea",76,74,72,74.4,9,null,null],
+    ["Sofía Paredes","39804016","Asistente Adm.","San Francisco","out","Psicotécnico · No apto",84,70,null,null,null,null,null],
+    ["Tomás Villarreal","36955448","Cajero / Tesorero","V. Carlos Paz","out","Assessment · 52 < 60",73,52,null,null,null,null,null],
+    ["Valentina Ríos","41230762","Ejecutivo de Cuentas","Córdoba Capital","out","Examen UNC · 54 < 70",54,null,null,null,null,null,null],
+    ["Nicolás Acosta","34601193","Cajero / Tesorero","Bell Ville","out","Examen UNC · Ausente",null,null,null,null,null,null,null],
+    ["Florencia Quiroga","38749587","Oficial PyME","Río Cuarto","out","Requisitos · Residencia",null,null,null,null,null,null,null],
+    ["Agustín Moyano","37388250","Asistente Adm.","Villa María","cur","Entrevista de línea",82,80,78,80.6,4,null,null]];
+  // p: 0 nombre, 1 DNI, 2 vacante, 3 localidad, 4 estado, 5 etapa, 6 UNC, 7 assessment, 8 psico, 9 score, 10 mérito, 11 entrevista, 12 antecedentes
+  var mask=function(d){return d.slice(0,2)+".***."+d.slice(-3)},UPD={};
   var tb=document.querySelector("#tbl tbody"),q=document.getElementById("q"),fs=document.getElementById("f-st");
   var n=function(v){return v==null?'<span class="lock">—</span>':v.toLocaleString("es-AR",{minimumFractionDigits:1,maximumFractionDigits:1})};
   function render(){var t=(q.value||"").toLowerCase(),s=fs.value;tb.innerHTML="";
-    P.forEach(function(p,i){if(s&&p[4]!==s)return;if(t&&(p[0]+" "+p[1]).toLowerCase().indexOf(t)<0)return;
-      var tr=document.createElement("tr");tr.className="click";tr.tabIndex=0;
-      tr.innerHTML='<td class="nm"><b>'+p[0]+'</b><small>DNI '+p[1]+'</small></td><td>'+p[2]+'<br><small style="color:var(--muted)">'+p[3]+'</small></td><td><span class="chip '+p[4]+'">'+p[5]+'</span></td><td class="r">'+n(p[6])+(p[6]!=null?' <span class="lock">🔒</span>':'')+'</td><td class="r">'+n(p[7])+'</td><td class="r">'+n(p[8])+'</td><td class="r"><b>'+n(p[9])+'</b></td><td class="r">'+(p[10]?p[10]+"°":'<span class="lock">—</span>')+'</td>';
+    P.forEach(function(p,i){if(s&&p[4]!==s)return;if(t&&(p[0]+" "+p[1]+" "+mask(p[1])).toLowerCase().replace(/\./g,"").indexOf(t.replace(/\./g,""))<0)return;
+      var tr=document.createElement("tr");tr.className="click"+(UPD[p[1]]?" upd":"");tr.tabIndex=0;
+      tr.innerHTML='<td class="nm"><b>'+p[0]+'</b><small>DNI '+mask(p[1])+(UPD[p[1]]?' <span class="newb">Actualizado por carga</span>':'')+'</small></td><td>'+p[2]+'<br><small style="color:var(--muted)">'+p[3]+'</small></td><td><span class="chip '+p[4]+'">'+p[5]+'</span></td><td class="r">'+n(p[6])+(p[6]!=null?' <span class="lock">🔒</span>':'')+'</td><td class="r">'+n(p[7])+'</td><td class="r">'+n(p[8])+'</td><td class="r">'+n(p[11])+'</td><td class="r"><b>'+n(p[9])+'</b></td><td class="r">'+(p[10]?p[10]+"°":'<span class="lock">—</span>')+'</td>';
       var open=function(){openFicha(p)};
       tr.addEventListener("click",open);tr.addEventListener("keydown",function(e){if(e.key==="Enter")open()});
       tb.appendChild(tr);});}
@@ -493,7 +538,7 @@ textarea.fin{resize:vertical;line-height:1.45}
   var now=function(){var d=new Date();return"hoy "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")};
   function stateOf(p){if(FS[p[1]])return FS[p[1]];
     var why=p[5],out=p[4]==="out",at=/Requisitos/.test(why)?1:/UNC/.test(why)?2:/Assessment/.test(why)?3:/Psico/.test(why)?4:5;
-    var sc=[null,null,p[6],p[7],p[8],null,null],st=[],L=[{t:"Alta desde Hiring Room",m:"30/09 19:00 · Importación inicial"}];
+    var sc=[null,null,p[6],p[7],p[8],p[11],p[12]],st=[],L=[{t:"Alta desde Hiring Room",m:"30/09 19:00 · Importación inicial"}];
     for(var i=0;i<7;i++)st.push(i<at?"ok":i===at?(out?(/Ausente/.test(why)?"aus":"fail"):"pend"):(out?"na":"wait"));
     if(p[6]!=null)L.unshift({t:"Nota UNC cargada: "+n(p[6]),m:"02/10 10:47 · Carga “UNC_resultados_T04.xlsx”"});
     if(p[7]!=null)L.unshift({t:"Assessment cargado: "+n(p[7]),m:"06/10 12:02 · Carga “Pedemonte_assessment.xlsx”"});
@@ -507,7 +552,7 @@ textarea.fin{resize:vertical;line-height:1.45}
   function chipFor(i,s){var c={ok:"ok",fail:"out",aus:"out",pend:"cur",wait:"warn",na:"warn"}[s];return'<span class="chip '+c+'">'+lab(i,s)+'</span>';}
   function drawFicha(){var p=cur,S=stateOf(p),out=p[4]==="out";
     document.getElementById("p-name").textContent=p[0];
-    document.getElementById("p-id").textContent="DNI "+p[1]+" · "+p[2]+" · "+p[3];
+    document.getElementById("p-id").textContent="DNI "+mask(p[1])+" · "+p[2]+" · "+p[3];
     document.getElementById("p-score").textContent=out||p[9]==null?"—":n(p[9]);
     document.getElementById("p-pos").textContent=!out&&p[10]?"Score parcial · posición "+p[10]+" en su vacante y localidad":"Excluido · sin posición en el orden de mérito";
     var pe=document.getElementById("p-state");pe.className="chip "+(out?"out":"cur");pe.textContent=out?"Excluido":"En carrera";
@@ -556,10 +601,7 @@ textarea.fin{resize:vertical;line-height:1.45}
   // Acciones de la demo
   var to=document.getElementById("toast"),tt;
   function toast(m){to.textContent=m;to.hidden=false;clearTimeout(tt);tt=setTimeout(function(){to.hidden=true},3800);}
-  document.getElementById("apply").addEventListener("click",function(){var s3=document.getElementById("stp3"),s4=document.getElementById("stp4");s3.className="stp done";s3.innerHTML="<b>3 · VALIDACIÓN ✓</b>6 observaciones apartadas";s4.className="stp done";s4.innerHTML="<b>4 · CONFIRMAR ✓</b>Aplicado por Gerencia";this.disabled=true;this.textContent="412 resultados aplicados";toast("Se aplicaron 412 notas del Turno 05. Las 6 filas observadas quedaron apartadas y no tocaron la base.");});
-  document.getElementById("giveback").addEventListener("click",function(){toast("Se envió a UNC el detalle de las 6 observaciones para corregir y reenviar.")});
   document.getElementById("exp").addEventListener("click",function(){toast("En la versión real se descarga un Excel con la vista filtrada, marcado con tu usuario y la fecha.")});
-  document.getElementById("newload").addEventListener("click",function(){toast("Elegís proveedor y etapa: la plantilla define qué columnas se aceptan.")});
   document.querySelectorAll(".act").forEach(function(a){a.setAttribute("role","button");a.tabIndex=0;a.style.cursor="pointer";a.addEventListener("click",function(){toast(a.textContent+": "+a.previousElementSibling.firstChild.textContent.trim())})});
   document.getElementById("f-vac").addEventListener("change",function(){var v=this.selectedIndex;document.querySelectorAll("#heat tbody tr").forEach(function(r,i){r.style.opacity=(!v||i===v-1||r.classList.contains("tot"))?1:.25})});
   // Etapas y reglas: editor
@@ -641,6 +683,134 @@ textarea.fin{resize:vertical;line-height:1.45}
     document.getElementById("ver-sub").textContent="Versión "+ver+" · guardada hoy por Gerencia ESENTIA. El orden de mérito se recalculó y el cambio quedó en la auditoría.";
     renderRules();toast("Versión "+ver+" guardada con "+n+" cambio"+(n===1?"":"s")+". Se recalculó el orden de mérito.");});
   renderRules();
+  // Cargas de terceros: tercero → archivo → preview por DNI → aplicar
+  var NUM=function(v){var s=String(v==null?"":v).trim().replace(",",".");if(s==="")return{err:"Sin valor"};var x=Number(s);if(isNaN(x))return{err:"Valor no numérico: “"+String(v).trim()+"”"};if(x<0||x>100)return{err:"Fuera de rango (0–100): "+String(v).trim()};return{v:Math.round(x*10)/10};};
+  var norm=function(s){return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").trim()};
+  var TYPES=[
+    {k:"unc",who:"UNC",name:"Examen técnico",stage:2,col:6,cols:["DNI","Turno","Asistencia","Nota"],req:["DNI","Nota"],file:"UNC_resultados_turno06.xlsx",
+     map:{dni:["dni","documento"],a:["asistencia"],v:["nota","puntaje","calificacion"]},
+     ev:function(r){if(/aus/i.test(r.a||""))return{res:"aus",txt:"Ausente"};var x=NUM(r.v);if(x.err)return x;return{score:x.v,res:x.v>=70?"ok":"fail",txt:"Nota "+n(x.v)};},
+     mk:function(d,v){return{"DNI":d,"Turno":"UNC-TURNO-06","Asistencia":v==="Ausente"?"Ausente":"Presente","Nota":v==="Ausente"?"":v}},vals:[78,52,91,84,73]},
+    {k:"ass",who:"Consultora Pedemonte",name:"Assessment",stage:3,col:7,cols:["DNI","Consultor","Puntaje","Estado"],req:["DNI","Puntaje"],file:"Pedemonte_assessment_lote4.xlsx",
+     map:{dni:["dni","documento"],v:["puntaje","nota","score"]},
+     ev:function(r){var x=NUM(r.v);if(x.err)return x;return{score:x.v,res:x.v>=60?"ok":"fail",txt:"Puntaje "+n(x.v)};},
+     mk:function(d,v){return{"DNI":d,"Consultor":"Lic. P. Herrera","Puntaje":v,"Estado":""}},vals:[76,48,82,70,66]},
+    {k:"psi",who:"Consultoras psico",name:"Psicotécnico",stage:4,col:8,cols:["DNI","Fecha","Dictamen","Puntaje"],req:["DNI","Dictamen"],file:"Psico_lote5.xlsx",
+     map:{dni:["dni","documento"],d:["dictamen","resultado"],v:["puntaje"]},
+     ev:function(r){var d=norm(r.d||"");if(!d)return{err:"Sin dictamen"};var res=/no apto/.test(d)?"fail":/apto/.test(d)?"ok":null;if(!res)return{err:"Dictamen no válido: “"+r.d+"” (Apto / No apto)"};var x=String(r.v||"").trim()?NUM(r.v):{v:null};if(x.err)return x;return{score:x.v,res:res,txt:(res==="ok"?"Apto":"No apto")+(x.v!=null?" · "+n(x.v):"")};},
+     mk:function(d,v){return{"DNI":d,"Fecha":"12/10/2026","Dictamen":v[0],"Puntaje":v[1]}},vals:[["Apto",81],["No apto",44],["Apto",88],["Apto",76],["Apto",70]]},
+    {k:"ent",who:"Bancor",name:"Entrevista de línea",stage:5,col:11,cols:["DNI","Entrevistadores","Fecha","Calificación"],req:["DNI","Calificación"],file:"Bancor_entrevistas_semana2.xlsx",
+     map:{dni:["dni","documento"],v:["calificacion","nota","puntaje"]},
+     ev:function(r){if(/aus/i.test(String(r.v||"")))return{res:"aus",txt:"Ausente"};var x=NUM(r.v);if(x.err)return x;return{score:x.v,res:x.v>=65?"ok":"fail",txt:"Calificación "+n(x.v)};},
+     mk:function(d,v){return{"DNI":d,"Entrevistadores":"Gerente Suc. + RRHH","Fecha":"12/10/2026","Calificación":v}},vals:[78,58,86,"7O",74]},
+    {k:"ant",who:"Nosis / referencias",name:"Antecedentes",stage:6,col:12,cols:["DNI","Score Nosis","Referencias","Puntaje"],req:["DNI","Referencias"],file:"Antecedentes_lote1.xlsx",
+     map:{dni:["dni","documento"],d:["referencia","dictamen"],v:["puntaje"]},
+     ev:function(r){var d=norm(r.d||"");var res=/desfav/.test(d)?"fail":/favor/.test(d)?"ok":null;if(!res)return{err:"Referencias no válidas: “"+(r.d||"")+"” (Favorable / Desfavorable)"};var x=String(r.v||"").trim()?NUM(r.v):{v:null};if(x.err)return x;return{score:x.v,res:res,txt:(res==="ok"?"Favorable":"Desfavorable")+(x.v!=null?" · "+n(x.v):"")};},
+     mk:function(d,v){return{"DNI":d,"Score Nosis":"Verde","Referencias":v[0],"Puntaje":v[1]}},vals:[["Favorable",90],["Desfavorable",35],["Favorable",80],["Favorable",85],["Favorable",75]]}];
+  var LD={step:1,type:null,file:"",rows:[],filter:"all"},HIST=[
+    ["Hoy 09:40","Bancor · Entrevista de línea","Bancor_entrevistas_semana1.xlsx",38,38,0,"bancor.rrhh"],
+    ["11/10 17:02","Consultora Pedemonte · Assessment","Pedemonte_assessment_lote3.xlsx",214,211,3,"a.perez"],
+    ["10/10 18:20","Consultoras psico · Psicotécnico","Psico_lote4.xlsx",742,742,0,"m.rossi"],
+    ["02/10 10:47","UNC · Examen técnico","UNC_resultados_T04.xlsx",862,855,7,"unc.examenes"]];
+  var $=function(id){return document.getElementById(id)};
+  function ldStep(s){LD.step=s;[1,2,3,4].forEach(function(k){$("ld-"+k).hidden=k!==s;});
+    document.querySelectorAll("#ld-steps .stp").forEach(function(e){var k=+e.dataset.n;e.className="stp"+(k<s?" done":k===s?" now":"");e.querySelector("b").textContent=e.querySelector("b").textContent.replace(" ✓","")+(k<s?" ✓":"");});
+    var sv=document.querySelector(".main");if(sv)sv.scrollTop=0;}
+  function drawTypes(){$("tgrid").innerHTML=TYPES.map(function(T,ix){var nn=P.filter(function(p){return stateOf(p).st[T.stage]==="pend"}).length;
+    return'<button class="tc" type="button" data-t="'+ix+'"><b>'+T.who+'</b><span class="who">'+T.name+' · etapa '+(T.stage+1)+'</span><span class="who">Columnas: '+T.cols.join(", ")+'</span><span class="need'+(nn?"":" zero")+'">'+(nn?nn+" postulante"+(nn>1?"s":"")+" esperando resultado":"Nadie pendiente: solo correcciones")+'</span></button>';}).join("");}
+  function drawHist(){$("ld-hist").innerHTML=HIST.map(function(h){return"<tr><td>"+h[0]+"</td><td>"+esc(h[1])+"</td><td><code>"+esc(h[2])+"</code></td><td class='r'>"+h[3]+"</td><td class='r'>"+h[4]+"</td><td class='r'>"+(h[5]?'<span class="dev e">'+h[5]+"</span>":"0")+"</td><td>"+h[6]+"</td></tr>"}).join("");}
+  $("tgrid").addEventListener("click",function(e){var b=e.target.closest("[data-t]");if(!b)return;LD.type=TYPES[+b.dataset.t];
+    $("ld2-title").textContent="Subí el archivo de "+LD.type.who+" · "+LD.type.name;
+    $("ld2-cols").innerHTML=LD.type.cols.map(function(c){return'<code class="'+(LD.type.req.indexOf(c)>=0?"req":"")+'">'+c+'</code>'}).join("")+'<span class="cap">en rojo, obligatorias</span>';
+    $("ld2-err").hidden=true;$("ld-file").value="";ldStep(2);});
+  $("copy-cols").addEventListener("click",function(){var s=LD.type.cols.join("\t");var ok=function(){toast("Encabezados copiados. Pegalos en la primera fila del Excel.")};
+    try{navigator.clipboard.writeText(s).then(ok,function(){toast("Encabezados: "+LD.type.cols.join(" · "))})}catch(x){toast("Encabezados: "+LD.type.cols.join(" · "))}});
+  // archivo real
+  function readFile(f){var er=$("ld2-err");er.hidden=true;if(!f)return;
+    if(!/\.(xlsx|xls|csv)$/i.test(f.name)){er.textContent="El archivo tiene que ser .xlsx, .xls o .csv.";er.hidden=false;return;}
+    if(/\.csv$/i.test(f.name)){var rc=new FileReader();rc.onload=function(){var rows=parseCSV(String(rc.result));if(!rows.length){er.textContent="El archivo no tiene filas debajo del encabezado.";er.hidden=false;return;}analyze(rows,f.name,2);};rc.readAsText(f);return;}
+    if(typeof XLSX==="undefined"){er.textContent="No se pudo cargar el lector de Excel. Guardá el archivo como CSV o probá con el archivo de ejemplo.";er.hidden=false;return;}
+    var rd=new FileReader();rd.onload=function(){try{var wb=XLSX.read(new Uint8Array(rd.result),{type:"array"});var ws=wb.Sheets[wb.SheetNames[0]];
+      var rows=XLSX.utils.sheet_to_json(ws,{defval:"",raw:false});if(!rows.length){er.textContent="El archivo no tiene filas debajo del encabezado.";er.hidden=false;return;}
+      analyze(rows,f.name,2);}catch(x){er.textContent="No pudimos leer el archivo. Revisá que no esté protegido con contraseña.";er.hidden=false;}};
+    rd.readAsArrayBuffer(f);}
+  function parseCSV(s){s=s.replace(/^\uFEFF/,"");var first=s.split(/\r?\n/)[0]||"",sep=(first.split(";").length>first.split(",").length)?";":",";
+    var out=[],row=[],cell="",q=false;for(var k=0;k<s.length;k++){var ch=s[k];
+      if(q){if(ch==='"'){if(s[k+1]==='"'){cell+='"';k++;}else q=false;}else cell+=ch;}
+      else if(ch==='"')q=true;else if(ch===sep){row.push(cell);cell="";}else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&s[k+1]==="\n")k++;row.push(cell);out.push(row);row=[];cell="";}else cell+=ch;}
+    if(cell!==""||row.length){row.push(cell);out.push(row);}
+    out=out.filter(function(r){return r.some(function(c){return String(c).trim()!==""})});if(out.length<2)return[];
+    var h=out[0].map(function(x){return x.trim()});return out.slice(1).map(function(r){var o={};h.forEach(function(k,j){o[k]=r[j]==null?"":r[j]});return o;});}
+  $("ld-file").addEventListener("change",function(){readFile(this.files[0])});
+  var dz=$("drop");["dragover","dragenter"].forEach(function(ev){dz.addEventListener(ev,function(e){e.preventDefault();dz.classList.add("over")})});
+  ["dragleave","drop"].forEach(function(ev){dz.addEventListener(ev,function(e){e.preventDefault();dz.classList.remove("over")})});
+  dz.addEventListener("drop",function(e){var f=e.dataTransfer&&e.dataTransfer.files[0];readFile(f)});
+  // archivo de ejemplo armado con el estado actual de la base
+  $("ld-sample").addEventListener("click",function(){var T=LD.type,i=T.stage,rows=[],V=T.vals;
+    var E=P.filter(function(p){return stateOf(p).st[i]==="pend"});
+    E.forEach(function(p,k){var v=V[k%V.length];rows.push(T.mk(k===E.length-1?p[1].replace(/(\d{2})(\d{3})(\d{3})/,"$1.$2.$3"):p[1],v));});
+    if(E.length>=3)rows.push(T.mk(E[0][1],V[2]));
+    var done=P.filter(function(p){var s=stateOf(p).st[i];return s==="ok"||s==="fail"||s==="aus"});
+    if(done[0]){var s0=stateOf(done[0]).sc[i];rows.push(T.mk(done[0][1],typeof V[0]==="object"?[stateOf(done[0]).st[i]==="ok"?"Apto":"No apto",s0]:(s0==null?"Ausente":s0)));}
+    if(done[1]){var s1=stateOf(done[1]).sc[i];rows.push(T.mk(done[1][1],typeof V[0]==="object"?["Apto",s1==null?75:Math.min(100,s1+6)]:(s1==null?72:Math.min(99,s1+4))));}
+    var ex=P.find(function(p){return stateOf(p).st[i]==="na"});if(ex)rows.push(T.mk(ex[1],V[0]));
+    rows.push(T.mk("30111222",V[0]));
+    rows.push(T.mk("S/D",V[2]));
+    var used=rows.map(function(r){return String(r.DNI).replace(/\D/g,"")}),oq=P.find(function(p){var s=stateOf(p).st[i];return used.indexOf(p[1])<0&&s!=="na"&&s!=="wait"});
+    if(oq)rows.push(T.mk(oq[1],typeof V[0]==="object"?[V[0][0],"885"]:"885"));
+    analyze(rows,T.file,2);});
+  function analyze(raw,fname,first){var T=LD.type,i=T.stage,heads=Object.keys(raw[0]||{});
+    var find=function(keys){return heads.find(function(h){var x=norm(h);return keys.some(function(k){return x.indexOf(k)>=0})})};
+    var H={};Object.keys(T.map).forEach(function(f){H[f]=find(T.map[f])});
+    var miss=[];if(!H.dni)miss.push("DNI");if(!H.v&&!H.d)miss.push(T.req[1]);if(T.map.d&&!H.d)miss.push(T.req[1]);
+    if(miss.length){var er=$("ld2-err");er.textContent="Al archivo le falta la columna "+miss.filter(function(x,k,a){return a.indexOf(x)===k}).join(" y ")+". Encabezados encontrados: "+(heads.join(", ")||"ninguno")+".";er.hidden=false;ldStep(2);return;}
+    var byDni={},rows=raw.map(function(r,k){var o={fila:k+first,raw:String(r[H.dni]).trim()},src={};Object.keys(H).forEach(function(f){if(H[f])src[f]=r[H[f]]});
+      o.dni=o.raw.replace(/\D/g,"");o.norm=o.dni!==o.raw&&o.dni.length>=7;(byDni[o.dni]=byDni[o.dni]||[]).push(o);o.src=src;return o;});
+    rows.forEach(function(o){var e=T.ev(o.src);o.txt=e.txt||String(o.src.v!=null&&o.src.v!==""?o.src.v:(o.src.d||"—"));
+      if(o.dni.length<7||o.dni.length>8){o.k="e";o.msg="DNI inválido: “"+o.raw+"”";return;}
+      if(byDni[o.dni].length>1){o.k="e";o.msg="DNI repetido en el archivo (filas "+byDni[o.dni].map(function(x){return x.fila}).join(" y ")+")";}
+      o.p=P.find(function(p){return p[1]===o.dni});
+      if(o.k)return;
+      if(!o.p){o.k="e";o.msg="El DNI no está en la base del concurso";return;}
+      if(e.err){o.k="e";o.msg=e.err;return;}
+      o.res=e.res;o.score=e.score;var S=stateOf(o.p),cs=S.st[i];
+      if(cs==="na"){var f=S.st.findIndex(function(s){return s==="fail"||s==="aus"});o.k="e";o.msg="Excluido en "+ST_SHORT[f]+": no corresponde cargarle esta etapa";return;}
+      if(cs==="wait"){o.k="e";o.msg="Todavía no llegó a esta etapa";return;}
+      if(cs==="pend"){o.k="o";o.msg="Coincide por DNI"+(o.norm?" (DNI normalizado sin puntos)":"");o.on=true;return;}
+      if(cs===o.res&&S.sc[i]===o.score){o.k="i";o.msg="Sin cambios: ya tiene este resultado";return;}
+      o.k="w";o.on=false;o.msg="Ya tiene resultado: "+(S.sc[i]!=null?n(S.sc[i])+" · ":"")+lab(i,cs)+" → se reemplaza"+(cs!==o.res?" y cambia su estado":"");});
+    LD.rows=rows;LD.file=fname;LD.filter="all";drawPreview();ldStep(3);}
+  var KINDS=[["all","Todas las filas","var(--tint)","var(--ink)"],["o","Listas para aplicar","var(--ok-soft)","var(--ok)"],["w","Con aviso","var(--warn-soft)","var(--warn)"],["e","Con error","var(--brand-soft)","var(--brand)"],["i","Sin cambios","var(--out-soft)","var(--ink)"]];
+  function drawPreview(){var R=LD.rows,c=function(k){return k==="all"?R.length:R.filter(function(r){return r.k===k}).length};
+    $("ld3-file").innerHTML='<b>'+esc(LD.file)+'</b> · '+R.length+' filas · '+LD.type.who+' → '+LD.type.name+' · cruce por DNI';
+    $("ld3-cards").innerHTML=KINDS.map(function(K){return'<button type="button" class="vc f" data-f="'+K[0]+'" aria-pressed="'+(LD.filter===K[0])+'" style="--bg:'+K[2]+';--fg:'+K[3]+'"><span class="v">'+c(K[0])+'</span><span class="l">'+K[1]+'</span></button>'}).join("");
+    var ic={o:"✓ ",w:"⚠ ",e:"✕ ",i:"= "};
+    $("ld3-body").innerHTML=R.filter(function(r){return LD.filter==="all"||r.k===LD.filter}).map(function(r){var ix=R.indexOf(r);
+      return'<tr class="'+(r.k==="e"?"e":"")+'"><td>'+r.fila+'</td><td><code>'+esc(r.raw||"(vacío)")+'</code></td><td>'+(r.p?'<b>'+esc(r.p[0])+'</b><br><small style="color:var(--muted)">'+esc(r.p[2])+'</small>':'<span class="lock">—</span>')+'</td><td>'+esc(r.txt)+'</td><td>'+(r.res&&r.k!=="e"?chipFor(LD.type.stage,r.res):'<span class="lock">—</span>')+'</td><td class="dev '+r.k+'">'+ic[r.k]+esc(r.msg)+'</td><td class="r">'+(r.k==="o"?'<input type="checkbox" checked disabled aria-label="Se aplica">':r.k==="w"?'<input type="checkbox" data-row="'+ix+'"'+(r.on?" checked":"")+' aria-label="Aplicar reemplazo fila '+r.fila+'">':'<span class="lock">No</span>')+'</td></tr>';}).join("")||'<tr><td colspan="7" class="cap">No hay filas en este grupo.</td></tr>';
+    var nApply=R.filter(function(r){return r.on}).length,ba=$("ld-apply");ba.disabled=!nApply;ba.textContent=nApply?"Aplicar "+nApply+" resultado"+(nApply>1?"s":""):"No hay filas para aplicar";
+    $("ld-return").hidden=!c("e");}
+  $("ld3-cards").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;LD.filter=b.dataset.f;drawPreview();});
+  $("ld3-body").addEventListener("change",function(e){var x=e.target.dataset.row;if(x==null)return;LD.rows[+x].on=e.target.checked;drawPreview();});
+  $("ld-return").addEventListener("click",function(){var n2=LD.rows.filter(function(r){return r.k==="e"}).length;toast("Se envió a "+LD.type.who+" el detalle de "+n2+" fila"+(n2>1?"s":"")+" con error para corregir y reenviar.");});
+  var W5={2:35,3:20,4:15,5:20,6:10};
+  $("ld-apply").addEventListener("click",function(){var T=LD.type,i=T.stage,ap=LD.rows.filter(function(r){return r.on}),m=now()+" · Carga “"+LD.file+"” · "+T.who;UPD={};
+    ap.forEach(function(r){var p=r.p,S=stateOf(p),old=S.st[i];S.st[i]=r.res;S.sc[i]=r.score==null?null:r.score;
+      for(var k=i+1;k<7;k++){if(r.res!=="ok")S.st[k]="na";else if(S.st[k]==="na"||S.st[k]==="wait")S.st[k]=(k===i+1)?"pend":"wait";}
+      p[T.col]=S.sc[i];S.log.unshift({t:ST_SHORT[i]+(old==="pend"?" cargado: ":" reemplazado: ")+(r.score!=null?n(r.score)+" · ":"")+lab(i,r.res),m:m});
+      sync(p,S);
+      if(p[4]==="out"){p[9]=null;p[10]=null;}else{var sw=0,sv=0;for(var j=2;j<7;j++)if(S.sc[j]!=null&&S.st[j]==="ok"){sw+=W5[j];sv+=W5[j]*S.sc[j];}p[9]=sw?Math.round(sv/sw*10)/10:null;}
+      UPD[p[1]]=1;r.after=p[4]==="out"?'<span class="chip out">'+esc(p[5])+'</span>':'<span class="chip cur">'+esc(p[5])+'</span>';});
+    var ne=LD.rows.filter(function(r){return r.k==="e"}).length;
+    HIST.unshift(["Hoy "+now().slice(4),T.who+" · "+T.name,LD.file,LD.rows.length,ap.length,ne,"gerencia"]);
+    $("ld4-title").textContent="Se aplicaron "+ap.length+" resultado"+(ap.length>1?"s":"")+" de "+T.who+" en "+T.name;
+    $("ld4-sub").textContent=(ne?ne+" fila"+(ne>1?"s":"")+" con error quedaron fuera. ":"")+"Cada cambio quedó en el historial de la ficha y en la auditoría.";
+    $("ld4-body").innerHTML=ap.map(function(r){return'<tr><td><b>'+esc(r.p[0])+'</b><br><small style="color:var(--muted)">DNI '+mask(r.p[1])+'</small></td><td>'+T.name+'</td><td>'+esc(r.txt)+' · '+chipFor(i,r.res)+'</td><td>'+r.after+'</td><td class="r"><button class="eb" type="button" data-open="'+r.p[1]+'">Ver ficha</button></td></tr>'}).join("");
+    drawHist();drawTypes();render();ldStep(4);toast("Listo: "+ap.length+" postulantes actualizados en la base.");});
+  $("ld4-body").addEventListener("click",function(e){var b=e.target.closest("[data-open]");if(b)openFicha(P.find(function(p){return p[1]===b.dataset.open}));});
+  $("ld-golist").addEventListener("click",function(){show("list");});
+  document.querySelector('[data-screen="load"]').addEventListener("click",function(e){var b=e.target.closest("[data-back]");if(!b)return;var s=+b.dataset.back;if(s===1){drawTypes();}if(s===2)$("ld-file").value="";ldStep(s);});
+  $("newload").addEventListener("click",function(){drawTypes();ldStep(1);var f=document.querySelector("#tgrid .tc");if(f)f.focus();});
+  drawTypes();drawHist();ldStep(1);
   // Navegación
   var navs=document.querySelectorAll(".nav"),scr=document.querySelectorAll(".screen");
   function show(k){scr.forEach(function(s){s.hidden=s.dataset.screen!==k});navs.forEach(function(b){b.setAttribute("aria-current",b.dataset.s===k?"true":"false")});}
