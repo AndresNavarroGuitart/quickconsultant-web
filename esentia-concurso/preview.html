@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Concurso Bancor · ESENTIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap">
+<style>
+/* Layout: documento de propuesta (columna de lectura) + maqueta de la app en un marco con barra lateral.
+   Estética única clara, alineada a la marca ESENTIA: blanco, gris grafito y el carmín del logo. */
+:root{
+  --brand:#DB013E;        /* carmín del logo */
+  --brand-soft:#FBE6EC;
+  --ink:#3B3A3F;          /* grafito del logotipo */
+  --muted:#7C7780;
+  --line:#E9E4E7;
+  --paper:#FFFFFF;
+  --tint:#F8F6F7;
+  --ok:#1E8A5A; --ok-soft:#E3F3EB;
+  --warn:#B97800; --warn-soft:#FBF0D9;
+  --out:#8E8790; --out-soft:#EFECEE;
+  --f-display:"Jura","Trebuchet MS",sans-serif;
+  --f-body:"Nunito Sans","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;padding-inline:16px;padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:500;text-wrap:balance;margin:0;color:var(--ink)}
+p{margin:0}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1180px;margin-inline:auto}
+.prose{max-width:760px}
+/* Encabezado */
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-block:28px 22px;border-bottom:1px solid var(--line)}
+.top img{height:54px;width:auto}
+.top .meta{text-align:right;font-size:13px;color:var(--muted)}
+.top .meta b{display:block;color:var(--ink);font-family:var(--f-display);font-size:17px;font-weight:600;letter-spacing:.02em}
+.eyebrow{font-family:var(--f-display);text-transform:uppercase;letter-spacing:.16em;font-size:12px;color:var(--brand);font-weight:600}
+.hero{padding-block:48px 28px;display:grid;gap:14px}
+.hero h1{font-size:clamp(30px,4.4vw,46px);font-weight:400;line-height:1.1;letter-spacing:-.01em}
+.hero h1 em{font-style:normal;color:var(--brand)}
+.hero p{font-size:18px;color:var(--muted);max-width:680px}
+section.block{padding-block:36px;border-top:1px solid var(--line);display:grid;gap:20px}
+section.block>h2{font-size:28px}
+.lede{font-size:16px;max-width:720px}
+/* Puntos del brief */
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.pt{border:1px solid var(--line);border-radius:6px;padding:18px;display:grid;gap:8px;align-content:start;min-width:0}
+.pt .k{font-family:var(--f-display);font-size:13px;color:var(--brand);font-weight:600;letter-spacing:.06em}
+.pt h3{font-size:19px}
+.pt p{font-size:14px;color:var(--muted)}
+.pt .imp{font-size:14px;color:var(--ink);border-top:1px dashed var(--line);padding-top:8px}
+.pt .imp b{color:var(--brand)}
+/* Hallazgos */
+.finds{display:grid;gap:0;border-top:1px solid var(--line)}
+.find{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;padding-block:14px;border-bottom:1px solid var(--line)}
+.find .what{font-weight:600}
+.find .what small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.find .so{font-size:14px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;background:var(--tint);padding:1px 5px;border-radius:3px}
+/* Flujo del concurso */
+.flow-scroll{overflow-x:auto;padding-bottom:6px}
+.flow{display:grid;grid-template-columns:repeat(10,minmax(108px,1fr));gap:0;min-width:1080px}
+.st{position:relative;padding:14px 12px 14px 14px;border-top:3px solid var(--line);display:grid;gap:4px;align-content:start}
+.st.w{border-top-color:var(--brand)}
+.st.f{border-top-color:var(--ink)}
+.st .n{font-family:var(--f-display);font-size:12px;color:var(--muted);letter-spacing:.08em}
+.st .t{font-weight:700;font-size:14px;line-height:1.25}
+.st .who{font-size:12px;color:var(--muted)}
+.st .wt{font-family:var(--f-display);font-size:22px;color:var(--brand);font-weight:600;line-height:1}
+.st .ct{font-size:12px}
+.legend{display:flex;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:18px;height:3px;margin-right:6px;vertical-align:middle;background:var(--sw)}
+/* Comparativa */
+.tbl-scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+.cmp th,.cmp td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top}
+.cmp th{font-family:var(--f-display);font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--muted)}
+.cmp td:first-child{font-weight:600;width:22%}
+.cmp .rec{background:var(--brand-soft)}
+.cmp th.rec{color:var(--brand)}
+.reco{border-left:3px solid var(--brand);padding:14px 18px;background:var(--tint);max-width:820px}
+.reco b{color:var(--brand)}
+ol.q{margin:0;padding-left:22px;display:grid;gap:8px;max-width:760px}
+/* ===== Maqueta de la app ===== */
+.app{border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 18px 50px -24px rgba(59,58,63,.35);display:grid;grid-template-columns:220px minmax(0,1fr);min-height:720px;background:var(--paper)}
+.side{background:var(--tint);border-right:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:4px}
+.side img{width:132px;margin:2px 8px 4px}
+.side .proj{font-size:12px;color:var(--muted);margin:0 8px 14px;line-height:1.35}
+.side .proj b{color:var(--ink);display:block;font-size:13px}
+.nav{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:6px;font-size:14px;color:var(--ink)}
+.nav:hover{background:var(--paper)}
+.nav:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.nav[aria-current="true"]{background:var(--paper);color:var(--brand);font-weight:700;box-shadow:inset 3px 0 0 var(--brand)}
+.nav svg{width:17px;height:17px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7}
+.side .who{margin-top:auto;border-top:1px solid var(--line);padding:12px 8px 0;font-size:12px;color:var(--muted)}
+.side .who b{display:block;color:var(--ink);font-size:13px}
+.main{padding:22px 26px 28px;display:grid;gap:18px;align-content:start;min-width:0}
+.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:end;justify-content:space-between}
+.bar h3{font-size:24px}
+.bar .sub{font-size:13px;color:var(--muted)}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.sel{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:6px;padding:6px 10px;background:var(--paper);color:var(--ink)}
+.btn{font:inherit;font-size:13px;font-weight:700;border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:6px;padding:7px 14px;cursor:pointer}
+.btn.ghost{background:var(--paper);color:var(--brand)}
+.btn:focus-visible,.sel:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.sample{font-size:11px;font-family:var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--warn);background:var(--warn-soft);padding:3px 8px;border-radius:3px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:grid;gap:2px}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-display);font-size:28px;font-weight:600;line-height:1.15}
+.kpi .d{font-size:12px;color:var(--muted)}
+.kpi.hl .v{color:var(--brand)}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
+.panel{border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:12px;align-content:start;min-width:0}
+.panel h4{font-size:16px;font-weight:600}
+.panel .cap{font-size:12px;color:var(--muted)}
+/* Embudo */
+.fun{display:grid;gap:7px}
+.fr{display:grid;grid-template-columns:150px minmax(0,1fr) 54px;gap:10px;align-items:center;font-size:13px}
+.fr .track{height:18px;background:var(--tint);border-radius:2px;position:relative}
+.fr .fill{position:absolute;inset:0 auto 0 0;background:var(--brand);border-radius:2px}
+.fr.cur .fill{background:repeating-linear-gradient(135deg,var(--brand) 0 6px,#E8476F 6px 12px)}
+.fr .out{font-size:11px;color:var(--muted);grid-column:2/4}
+.fr .val{text-align:right;font-weight:700}
+/* Histograma */
+.hist{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;height:170px;align-items:end;position:relative;border-bottom:1px solid var(--ink);padding-top:16px}
+.hb{background:var(--out);border-radius:2px 2px 0 0;position:relative}
+.hb.pass{background:var(--brand)}
+.hb span{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted);margin-bottom:2px}
+.hx{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;font-size:10px;color:var(--muted);text-align:center}
+.cut{position:absolute;top:0;bottom:-6px;left:70%;border-left:2px dashed var(--ink)}
+.cut b{position:absolute;top:-2px;left:6px;font-size:11px;white-space:nowrap;background:var(--paper);padding:0 3px}
+/* Heatmap */
+.heat th,.heat td{padding:6px 8px;font-size:12.5px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.heat th{font-weight:600;color:var(--muted);font-size:11.5px}
+.heat td:first-child,.heat th:first-child{text-align:left}
+.heat td.c{background:color-mix(in srgb,var(--brand) calc(var(--a)*100%),var(--paper))}
+.heat td.c.dk{color:#fff}
+.heat tr.tot td{font-weight:700;border-top:1px solid var(--ink)}
+/* Alertas */
+.alerts{display:grid;gap:0}
+.al{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:12px;align-items:start;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+.al:last-child{border-bottom:0}
+.al i{width:8px;height:8px;border-radius:50%;margin-top:6px;background:var(--c)}
+.al small{display:block;color:var(--muted)}
+.al .act{font-weight:700;color:var(--brand);font-size:12px;white-space:nowrap}
+/* Chips */
+.chip{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.out{background:var(--out-soft);color:var(--out);text-decoration:line-through}
+.chip.cur{background:var(--brand-soft);color:var(--brand)}
+/* Tabla postulantes */
+.dt th,.dt td{padding:9px 10px;font-size:13px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.dt th{font-size:11.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;background:var(--tint)}
+.dt td.r,.dt th.r{text-align:right}
+.dt tr.click{cursor:pointer}
+.dt tr.click:hover td{background:var(--tint)}
+.dt .lock{color:var(--muted);font-size:11px}
+.dt .nm b{display:block}
+.dt .nm small{color:var(--muted)}
+.search{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:6px;padding:7px 12px;min-width:min(260px,100%);color:var(--ink);background:var(--paper)}
+/* Ficha */
+.ficha{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px}
+.person{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:6px;padding:16px}
+.person h4{font-size:22px}
+.person .id{font-size:13px;color:var(--muted)}
+.score{text-align:center;display:grid;gap:0}
+.score .big{font-family:var(--f-display);font-size:40px;color:var(--brand);font-weight:600;line-height:1}
+.score small{font-size:12px;color:var(--muted)}
+.tl{display:grid;gap:0;position:relative}
+.ti{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:12px;padding-bottom:14px;position:relative}
+.ti::before{content:"";position:absolute;left:10px;top:18px;bottom:0;border-left:2px solid var(--line)}
+.ti:last-child::before{display:none}
+.ti .dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--c);background:var(--paper);display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--c);position:relative;z-index:1}
+.ti .dot.full{background:var(--c);color:#fff}
+.ti .tt{font-weight:700;font-size:14px}
+.ti .src{font-size:12px;color:var(--muted)}
+.ti .res{text-align:right;font-size:13px}
+.ti .res b{font-family:var(--f-display);font-size:18px;display:block}
+.log{display:grid;gap:0;font-size:12.5px}
+.log div{padding:8px 0;border-bottom:1px solid var(--line)}
+.log small{display:block;color:var(--muted)}
+/* Cargas */
+.steps{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.stp{flex:1 1 140px;padding:10px 14px;font-size:13px;border-right:1px solid var(--line);color:var(--muted)}
+.stp:last-child{border-right:0}
+.stp b{display:block;font-family:var(--f-display);font-size:12px;letter-spacing:.08em}
+.stp.done{color:var(--ink)}
+.stp.done b{color:var(--ok)}
+.stp.now{background:var(--brand-soft);color:var(--ink)}
+.stp.now b{color:var(--brand)}
+.val{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.vc{border-radius:6px;padding:12px;background:var(--bg);display:grid;gap:2px}
+.vc .v{font-family:var(--f-display);font-size:26px;font-weight:600;color:var(--fg)}
+.vc .l{font-size:12px;color:var(--ink)}
+.file{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;border:1px dashed var(--muted);border-radius:6px;padding:12px 14px;font-size:13px}
+.file b{font-family:ui-monospace,Menlo,monospace;font-size:12.5px}
+/* Reglas y seguridad */
+.wbar{display:flex;height:14px;border-radius:2px;overflow:hidden;gap:2px}
+.wbar div{background:var(--brand);opacity:var(--o)}
+.mx th,.mx td{padding:8px 10px;font-size:13px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+.mx td:first-child,.mx th:first-child{text-align:left}
+.mx th{font-size:11.5px;color:var(--muted)}
+.y{color:var(--ok);font-weight:700}
+.p{color:var(--warn);font-weight:700}
+.x{color:var(--out)}
+.foot{font-size:12px;color:var(--muted)}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr}
+  .side{flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid var(--line)}
+  .side img,.side .proj,.side .who{display:none}
+  .nav{padding:7px 9px;font-size:13px}
+  .main{padding:16px}
+  .ficha{grid-template-columns:1fr}
+  .find{grid-template-columns:1fr;gap:6px}
+  .fr{grid-template-columns:110px minmax(0,1fr) 46px}
+  .panels{grid-template-columns:minmax(0,1fr)}
+  .top .meta{text-align:left}
+}
+@media (prefers-reduced-motion:no-preference){.screen{animation:in .25s ease}}
+@keyframes in{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <img src="assets/logo-esentia.webp" alt="ESENTIA Recursos Humanos">
+  <div class="meta"><b>Concurso Bancor · Base de postulantes</b>Interpretación del pedido y preview del diseño · Octubre 2026</div>
+</header>
+
+<div class="hero">
+  <span class="eyebrow">Propuesta para ESENTIA RH</span>
+  <h1>Una sola base del concurso, <em>al día en cada etapa</em>, que cualquiera del equipo pueda consultar sin miedo a romperla.</h1>
+  <p>Leímos el pedido desde el lugar de la gerencia que tiene que responderle al Banco: saber en todo momento quién sigue, quién quedó afuera, por qué y con qué dato.</p>
+</div>
+
+<section class="block">
+  <span class="eyebrow">1 · Interpretación</span>
+  <h2>Qué entendemos que necesitan</h2>
+  <p class="lede">Hoy la información nace en Hiring Room, pero los resultados que deciden el concurso llegan después y de afuera: la UNC, las consultoras, el Banco. El problema no es guardar datos, es <b>unir fuentes distintas sobre la misma persona sin perder trazabilidad</b> y que el puntaje final sea indiscutible.</p>
+  <div class="grid4">
+    <div class="pt"><span class="k">PUNTO 1 · ORIGEN</span><h3>Hiring Room es la puerta de entrada</h3><p>Se descarga el Excel completo al cierre de inscripción. La IA de HR no es confiable para filtrar.</p><p class="imp"><b>Implica:</b> importar el Excel de HR tal cual sale, sin retocarlo a mano, y aplicar los filtros con reglas propias y explícitas.</p></div>
+    <div class="pt"><span class="k">PUNTO 2 · GESTIÓN</span><h3>Cada etapa suma, pondera y filtra</h3><p>Examen UNC, psicotécnico y demás instancias, cada una con su peso y un mínimo para seguir.</p><p class="imp"><b>Implica:</b> un motor de reglas con ponderaciones y notas de corte configurables, y un estado por etapa para cada postulante.</p></div>
+    <div class="pt"><span class="k">PUNTO 3 · SEGURIDAD Y REPORTES</span><h3>Robusta, sin errores accidentales</h3><p>Bloqueo de celdas, fórmulas protegidas, permisos. Indicadores por vacante, localidad y etapa.</p><p class="imp"><b>Implica:</b> que nadie edite la base a mano: se carga por archivo validado, cada cambio queda registrado y los reportes salen solos.</p></div>
+    <div class="pt"><span class="k">PUNTO 4 · TERCEROS</span><h3>Muchos proveedores, un solo formato</h3><p>UNC, consultoras de RRHH y otros responsables envían sus resultados.</p><p class="imp"><b>Implica:</b> una plantilla fija por proveedor, cruce automático por DNI y un control previo que rechaza lo que no cierra antes de tocar la base.</p></div>
+  </div>
+</section>
+
+<section class="block">
+  <span class="eyebrow">2 · Lo que vimos en los archivos</span>
+  <h2>Hallazgos en la base de HR y en la Base Madre de ejemplo</h2>
+  <div class="finds">
+    <div class="find"><div class="what">El export de HR trae 93 columnas por postulación<small>Estudios, experiencia y preguntas vienen repetidos en columnas: <code>EST[1..4]</code>, <code>Exp[1..4]</code>, <code>PREG[1..4]</code>.</small></div><div class="so">Se guardan como datos de solo lectura del postulante. Las preguntas excluyentes (secundario completo, residencia en zona, incompatibilidad estatal) se convierten en el primer filtro automático.</div></div>
+    <div class="find"><div class="what">Una persona puede postularse a varias vacantes<small>HR informa “Postulación en múltiples vacantes” y usa su propio <code>id</code>.</small></div><div class="so">La persona se identifica por DNI y cada postulación por DNI + vacante. Así el examen UNC se carga una vez y vale para todas sus postulaciones, sin duplicar notas.</div></div>
+    <div class="find"><div class="what">El puntaje global depende de letras de columna<small><code>=ROUND((AJ3*0.35)+(AM3*0.2)+(AR3*0.15)+(AU3*0.2)+(AY3*0.1),2)</code></small></div><div class="so">Si alguien inserta o mueve una columna, el cálculo apunta a otro dato sin avisar. Las ponderaciones pasan a una tabla de reglas única, versionada, y el cálculo no se puede editar.</div></div>
+    <div class="find"><div class="what">El motivo de rechazo de HR no sirve para auditar<small>En la base de prueba, el 100% de los rechazados dice “Otras”.</small></div><div class="so">El motivo fundado lo registra ESENTIA: etapa, regla incumplida y dato que la respalda (por ejemplo, “Nota 54,0 inferior al corte 70,0”).</div></div>
+    <div class="find"><div class="what">Localidades cargadas por el postulante, sin normalizar<small>“Córdoba”, “Alta Córdoba”, “Arguello” conviven; 32 registros sin localidad.</small></div><div class="so">Una tabla de equivalencias agrupa barrios y variantes en la localidad o sucursal de referencia, para que los indicadores por localidad sean confiables.</div></div>
+    <div class="find"><div class="what">La Base Madre ya separa bien los dos mundos<small>Bloque “Exportación nativa HR” y bloque “Gestión y trazabilidad ESENTIA”.</small></div><div class="so">Mantenemos esa lógica: lo que viene de HR no se modifica, y todo lo que agrega ESENTIA y los terceros vive en capas por etapa, con fecha, fuente y responsable.</div></div>
+  </div>
+</section>
+
+<section class="block">
+  <span class="eyebrow">3 · El concurso como proceso</span>
+  <h2>Etapas, ponderaciones y cortes</h2>
+  <p class="lede">Tomado de las columnas de la Base Madre. Los pesos suman 100%; las etapas en gris oscuro son filtros (pasa o no pasa) y no suman puntaje.</p>
+  <div class="flow-scroll"><div class="flow">
+    <div class="st f"><span class="n">01</span><span class="t">Inscripción</span><span class="who">Hiring Room</span><span class="ct">Export completo al cierre</span></div>
+    <div class="st f"><span class="n">02</span><span class="t">Requisitos y check documental</span><span class="who">ESENTIA</span><span class="ct">Preguntas excluyentes</span></div>
+    <div class="st w"><span class="n">03</span><span class="t">Examen técnico</span><span class="who">UNC</span><span class="wt">35%</span><span class="ct">Corte 70 / 100</span></div>
+    <div class="st w"><span class="n">04</span><span class="t">Assessment</span><span class="who">Consultora externa</span><span class="wt">20%</span><span class="ct">Competencias</span></div>
+    <div class="st w"><span class="n">05</span><span class="t">Psicotécnico</span><span class="who">Consultora psico</span><span class="wt">15%</span><span class="ct">Dictamen Apto</span></div>
+    <div class="st w"><span class="n">06</span><span class="t">Entrevista de línea</span><span class="who">Bancor</span><span class="wt">20%</span><span class="ct">Calificación de línea</span></div>
+    <div class="st w"><span class="n">07</span><span class="t">Antecedentes</span><span class="who">Nosis / referencias</span><span class="wt">10%</span><span class="ct">Score y validaciones</span></div>
+    <div class="st f"><span class="n">08</span><span class="t">Orden de mérito</span><span class="who">Cálculo automático</span><span class="ct">Por vacante y localidad</span></div>
+    <div class="st f"><span class="n">09</span><span class="t">Propuesta y preocupacional</span><span class="who">Bancor / salud</span><span class="ct">Sucursal asignada</span></div>
+    <div class="st f"><span class="n">10</span><span class="t">Ingreso</span><span class="who">Bancor</span><span class="ct">Fecha efectiva</span></div>
+  </div></div>
+  <div class="legend"><span style="--sw:var(--brand)">Etapa que pondera</span><span style="--sw:var(--ink)">Filtro o hito, sin puntaje</span></div>
+</section>
+
+<section class="block">
+  <span class="eyebrow">4 · Propuesta</span>
+  <h2>Excel blindado o plataforma web</h2>
+  <p class="lede">Evaluamos las dos alternativas que plantea el brief. Ambas pueden exportar a Excel cuando el Banco lo pida.</p>
+  <div class="tbl-scroll"><table class="cmp">
+    <thead><tr><th></th><th>Excel protegido (hojas bloqueadas + Power Query)</th><th class="rec">Plataforma web ESENTIA (recomendada)</th></tr></thead>
+    <tbody>
+      <tr><td>Errores accidentales</td><td>Se reducen con celdas bloqueadas, pero la contraseña de hoja es débil y una copia local puede circular desactualizada.</td><td class="rec">No hay celdas para pisar: los datos entran por cargas validadas y el cálculo vive en el servidor.</td></tr>
+      <tr><td>Permisos</td><td>Por archivo o carpeta. No distingue “la UNC solo carga notas”.</td><td class="rec">Por rol y por etapa: cada proveedor ve y carga solo lo suyo.</td></tr>
+      <tr><td>Trazabilidad</td><td>Historial de versiones del archivo, sin detalle por dato.</td><td class="rec">Quién cambió qué dato, cuándo, desde qué archivo y por qué motivo.</td></tr>
+      <tr><td>Indicadores</td><td>Tablas dinámicas que hay que refrescar a mano.</td><td class="rec">Tablero en vivo con filtros por vacante, localidad y etapa.</td></tr>
+      <tr><td>Volumen y concurrencia</td><td>Se vuelve lento con miles de filas y 90+ columnas; un solo editor a la vez.</td><td class="rec">Varios usuarios en simultáneo, sin límite práctico de postulantes.</td></tr>
+      <tr><td>Tiempo de puesta en marcha</td><td>Rápido, 1 a 2 semanas.</td><td class="rec">3 a 5 semanas para una primera versión operativa.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="reco"><b>Recomendación:</b> plataforma web con base de datos central, cargas por plantilla y exportación a Excel en un clic. Si la inscripción cierra antes de que esté lista, arrancamos con el Excel protegido usando las mismas plantillas y migramos los datos sin retrabajo.</div>
+</section>
+
+<section class="block">
+  <span class="eyebrow">5 · Preview del diseño</span>
+  <h2>Así se vería la herramienta</h2>
+  <p class="lede">Maqueta navegable con datos de ejemplo de un concurso ficticio de 4.812 inscriptos. Probá el menú lateral y hacé clic en un postulante.</p>
+
+  <div class="app" id="app">
+    <aside class="side">
+      <img src="assets/logo-esentia.webp" alt="ESENTIA">
+      <div class="proj"><b>Concurso Bancor 2026</b>Cierre de inscripción: 30/09/2026</div>
+      <button class="nav" data-s="dash" aria-current="true"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></svg>Tablero</button>
+      <button class="nav" data-s="list"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6M16 5.5a3 3 0 0 1 0 5.6M18 14.6c1.4.7 2.3 2.2 2.6 4.4"/></svg>Postulantes</button>
+      <button class="nav" data-s="ficha"><svg viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Ficha</button>
+      <button class="nav" data-s="load"><svg viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M4.5 15v4.5h15V15"/></svg>Cargas de terceros</button>
+      <button class="nav" data-s="rules"><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h9M5 18h5"/><circle cx="17.5" cy="16.5" r="2.5"/></svg>Etapas y reglas</button>
+      <button class="nav" data-s="sec"><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>Seguridad y auditoría</button>
+      <div class="who"><b>Gerencia ESENTIA</b>Rol: Administrador</div>
+    </aside>
+
+    <div class="main">
+
+    <!-- TABLERO -->
+    <div class="screen" data-screen="dash">
+      <div class="bar"><div><h3>Tablero del concurso</h3><span class="sub">Actualizado hoy 09:42 · última carga: Entrevistas de línea (Bancor)</span></div>
+        <div class="filters"><select class="sel" id="f-vac" aria-label="Vacante"><option>Todas las vacantes</option><option>Cajero / Tesorero</option><option>Ejecutivo de Cuentas</option><option>Oficial de Negocios PyME</option><option>Asistente Administrativo</option></select><select class="sel" id="f-loc" aria-label="Localidad"><option>Todas las localidades</option><option>Córdoba Capital</option><option>Villa María</option><option>Río Cuarto</option></select><span class="sample">Datos de ejemplo</span></div></div>
+      <div class="kpis">
+        <div class="kpi"><span class="l">Inscriptos (HR)</span><span class="v num">4.812</span><span class="d">4.390 personas únicas</span></div>
+        <div class="kpi hl"><span class="l">Siguen en carrera</span><span class="v num">598</span><span class="d">12,4% de los inscriptos</span></div>
+        <div class="kpi"><span class="l">Excluidos</span><span class="v num">4.214</span><span class="d">con motivo fundado</span></div>
+        <div class="kpi"><span class="l">Aprobación examen UNC</span><span class="v num">37,8%</span><span class="d">1.288 de 3.410 presentes</span></div>
+        <div class="kpi"><span class="l">Etapa en curso</span><span class="v num">214 / 598</span><span class="d">Entrevistas de línea hechas</span></div>
+      </div>
+      <div class="panels">
+        <div class="panel"><h4>Embudo por etapa</h4><span class="cap">Postulaciones que llegan a cada etapa y cuántas quedan afuera en ella.</span><div class="fun" id="funnel"></div></div>
+        <div class="panel"><h4>Notas del examen técnico UNC</h4><span class="cap">Distribución de 3.410 presentes. Corte mínimo: 70 puntos.</span>
+          <div class="hist" id="hist"><div class="cut"><b>Corte 70</b></div></div>
+          <div class="hx num"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span><span>60</span><span>70</span><span>80</span><span>90</span></div>
+          <span class="cap">Promedio 58,6 · Mediana 61 · Ausentes 550 (13,9%)</span></div>
+      </div>
+      <div class="panels">
+        <div class="panel"><h4>Postulaciones por vacante y localidad</h4><div class="tbl-scroll"><table class="heat num" id="heat"></table></div></div>
+        <div class="panel"><h4>Pendientes para hoy</h4><div class="alerts">
+          <div class="al" style="--c:var(--warn)"><i></i><div>UNC · Turno 05 sin resultados<small>Vence 14/10 · 412 postulantes esperando nota</small></div><span class="act">Avisar</span></div>
+          <div class="al" style="--c:var(--brand)"><i></i><div>3 DNI de Consultora Pedemonte no existen en la base<small>Carga del 11/10 retenida hasta revisar</small></div><span class="act">Revisar</span></div>
+          <div class="al" style="--c:var(--warn)"><i></i><div>Consulta del Banco: postulantes de Villa María en psicotécnico<small>Pedido de M. Ferreyra, Bancor RRHH</small></div><span class="act">Exportar</span></div>
+          <div class="al" style="--c:var(--ok)"><i></i><div>Psicotécnico cerrado y bloqueado<small>598 aptos · 144 no aptos · 10/10 por Gerencia</small></div><span class="act">Ver</span></div>
+          <div class="al" style="--c:var(--muted)"><i></i><div>422 personas con 2 o más vacantes<small>El examen UNC se aplica una vez por DNI</small></div><span class="act">Ver</span></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- POSTULANTES -->
+    <div class="screen" data-screen="list" hidden>
+      <div class="bar"><div><h3>Postulantes</h3><span class="sub">Vista de lectura. Las notas se modifican solo con una carga o una corrección autorizada.</span></div>
+        <div class="filters"><input class="search" id="q" placeholder="Buscar por nombre o DNI" aria-label="Buscar postulante"><select class="sel" id="f-st" aria-label="Estado"><option value="">Todos los estados</option><option value="cur">En carrera</option><option value="out">Excluidos</option></select><button class="btn ghost" type="button">Exportar a Excel</button></div></div>
+      <div class="tbl-scroll"><table class="dt num" id="tbl"><thead><tr><th>Postulante</th><th>Vacante · Localidad</th><th>Etapa actual</th><th class="r">UNC</th><th class="r">Assess.</th><th class="r">Psico</th><th class="r">Score</th><th class="r">Mérito</th></tr></thead><tbody></tbody></table></div>
+      <span class="foot">Mostrando 10 de 4.812 · <span class="lock">🔒</span> etapa cerrada, el valor no se puede editar · Datos de ejemplo</span>
+    </div>
+
+    <!-- FICHA -->
+    <div class="screen" data-screen="ficha" hidden>
+      <div class="person"><div><span class="eyebrow">Ficha del postulante</span><h4 id="p-name">Martina Ledesma</h4><span class="id" id="p-id">DNI 38.***.214 · Cajero / Tesorero · Córdoba Capital · ID HR 5fa977…cb</span></div>
+        <div class="score"><span class="big num" id="p-score">84,6</span><small>Score parcial · posición 3 de 61</small></div></div>
+      <div class="ficha">
+        <div class="panel"><h4>Recorrido por etapas</h4><div class="tl">
+          <div class="ti" style="--c:var(--ok)"><span class="dot full">✓</span><div><span class="tt">Inscripción</span><br><span class="src">Hiring Room · export 30/09/2026</span></div><div class="res">Completa</div></div>
+          <div class="ti" style="--c:var(--ok)"><span class="dot full">✓</span><div><span class="tt">Requisitos y check documental</span><br><span class="src">Secundario ✓ · Residencia en zona ✓ · Sin incompatibilidad ✓</span></div><div class="res">Cumple</div></div>
+          <div class="ti" style="--c:var(--ok)"><span class="dot full">✓</span><div><span class="tt">Examen técnico UNC · 35%</span><br><span class="src">UNC-TURNO-04 · Presente · UNC_resultados_T04.xlsx</span></div><div class="res"><b class="num">88,5</b>Aprobado</div></div>
+          <div class="ti" style="--c:var(--ok)"><span class="dot full">✓</span><div><span class="tt">Assessment · 20%</span><br><span class="src">Consultora Pedemonte · 06/10/2026</span></div><div class="res"><b class="num">82,0</b>Aprobado</div></div>
+          <div class="ti" style="--c:var(--ok)"><span class="dot full">✓</span><div><span class="tt">Psicotécnico · 15%</span><br><span class="src">Lic. M. Rossi · 08/10/2026</span></div><div class="res"><b class="num">85,0</b>Apto</div></div>
+          <div class="ti" style="--c:var(--brand)"><span class="dot">6</span><div><span class="tt">Entrevista de línea · 20%</span><br><span class="src">Gerente Suc. Centro + RRHH · agendada 15/10</span></div><div class="res"><span class="chip cur">Pendiente</span></div></div>
+          <div class="ti" style="--c:var(--line)"><span class="dot">7</span><div><span class="tt">Antecedentes · 10%</span><br><span class="src">Se habilita al aprobar la entrevista</span></div><div class="res">—</div></div>
+        </div></div>
+        <div class="panel"><h4>Historial de cambios</h4><div class="log">
+          <div>Nota UNC corregida de 85,5 a 88,5<small>11/10 16:05 · A. Gómez · Motivo: fe de erratas UNC, nota 1873 · aprobado por Gerencia</small></div>
+          <div>Dictamen psicotécnico cargado: Apto, 85,0<small>08/10 18:20 · Carga “Psico_Rossi_lote3.xlsx”</small></div>
+          <div>Assessment cargado: 82,0<small>06/10 12:02 · Carga “Pedemonte_assessment.xlsx”</small></div>
+          <div>Nota UNC cargada: 85,5<small>02/10 10:47 · Carga “UNC_resultados_T04.xlsx”</small></div>
+          <div>Alta desde Hiring Room<small>30/09 19:00 · Importación inicial</small></div>
+        </div><span class="foot">Para responder al Banco: este historial se exporta con la ficha.</span></div>
+      </div>
+    </div>
+
+    <!-- CARGAS -->
+    <div class="screen" data-screen="load" hidden>
+      <div class="bar"><div><h3>Cargas de terceros</h3><span class="sub">Cada proveedor sube su plantilla. Nada entra a la base sin pasar la validación.</span></div><button class="btn" type="button">Nueva carga</button></div>
+      <div class="steps"><div class="stp done"><b>1 · PLANTILLA ✓</b>Examen técnico UNC</div><div class="stp done"><b>2 · ARCHIVO ✓</b>Subido por UNC</div><div class="stp now"><b>3 · VALIDACIÓN</b>Revisá las observaciones</div><div class="stp"><b>4 · CONFIRMAR</b>Aplicar a la base</div></div>
+      <div class="file"><span><b>UNC_resultados_turno05.xlsx</b> · 418 filas · subido por <b style="font-family:inherit">unc.examenes</b> hoy 08:55</span><span class="chip warn">6 observaciones</span></div>
+      <div class="val num">
+        <div class="vc" style="--bg:var(--ok-soft);--fg:var(--ok)"><span class="v">412</span><span class="l">Coinciden por DNI y turno</span></div>
+        <div class="vc" style="--bg:var(--brand-soft);--fg:var(--brand)"><span class="v">2</span><span class="l">DNI no encontrados</span></div>
+        <div class="vc" style="--bg:var(--warn-soft);--fg:var(--warn)"><span class="v">2</span><span class="l">Notas fuera de rango (0–100)</span></div>
+        <div class="vc" style="--bg:var(--out-soft);--fg:var(--ink)"><span class="v">2</span><span class="l">DNI repetidos en el archivo</span></div>
+      </div>
+      <div class="tbl-scroll"><table class="dt num"><thead><tr><th>Fila</th><th>DNI</th><th>Dato recibido</th><th>Observación</th><th>Acción</th></tr></thead><tbody>
+        <tr><td>37</td><td>40.***.118</td><td>Nota 885</td><td>Fuera de rango. ¿Quiso decir 88,5?</td><td><span class="chip warn">Pedir a UNC</span></td></tr>
+        <tr><td>102</td><td>36.***.920</td><td>Nota 101</td><td>Fuera de rango</td><td><span class="chip warn">Pedir a UNC</span></td></tr>
+        <tr><td>211</td><td>41.***.007</td><td>Nota 72,0</td><td>DNI no existe en la base del concurso</td><td><span class="chip out">Descartar fila</span></td></tr>
+        <tr><td>298</td><td>33.***.561</td><td>Nota 64,0</td><td>DNI no existe en la base del concurso</td><td><span class="chip out">Descartar fila</span></td></tr>
+        <tr><td>344 / 345</td><td>39.***.442</td><td>Notas 70,0 y 77,0</td><td>Dos notas distintas para la misma persona</td><td><span class="chip warn">Pedir a UNC</span></td></tr>
+      </tbody></table></div>
+      <div class="filters"><button class="btn" type="button">Aplicar 412 resultados válidos</button><button class="btn ghost" type="button">Devolver observaciones a UNC</button></div>
+      <div class="panel"><h4>Plantillas por proveedor</h4><div class="tbl-scroll"><table class="dt"><thead><tr><th>Proveedor</th><th>Etapa</th><th>Columnas obligatorias</th><th>Última carga</th></tr></thead><tbody>
+        <tr><td>UNC</td><td>Examen técnico</td><td>DNI · Turno · Asistencia · Nota</td><td>Hoy · en validación</td></tr>
+        <tr><td>Consultora Pedemonte</td><td>Assessment</td><td>DNI · Consultor · Puntaje · Estado</td><td>11/10 · retenida</td></tr>
+        <tr><td>Consultoras psico</td><td>Psicotécnico</td><td>DNI · Fecha · Dictamen · Puntaje</td><td>10/10 · aplicada</td></tr>
+        <tr><td>Bancor</td><td>Entrevista de línea</td><td>DNI · Entrevistadores · Fecha · Calificación</td><td>Hoy 09:40 · aplicada</td></tr>
+      </tbody></table></div></div>
+    </div>
+
+    <!-- REGLAS -->
+    <div class="screen" data-screen="rules" hidden>
+      <div class="bar"><div><h3>Etapas y reglas</h3><span class="sub">Versión 3 · aprobada por Gerencia el 28/09/2026. Cambiarla recalcula el orden de mérito y queda registrado.</span></div><span class="sample">Datos de ejemplo</span></div>
+      <div class="panel"><h4>Ponderación del score global</h4><div class="wbar"><div style="flex:35;--o:1"></div><div style="flex:20;--o:.8"></div><div style="flex:15;--o:.62"></div><div style="flex:20;--o:.46"></div><div style="flex:10;--o:.3"></div></div><span class="cap">UNC 35% · Assessment 20% · Psicotécnico 15% · Entrevista 20% · Antecedentes 10% = 100%</span></div>
+      <div class="tbl-scroll"><table class="dt num"><thead><tr><th>Etapa</th><th>Responsable</th><th>Tipo de resultado</th><th class="r">Peso</th><th>Regla para seguir</th><th>Estado</th></tr></thead><tbody>
+        <tr><td>Requisitos y check documental</td><td>ESENTIA</td><td>Sí / No</td><td class="r">—</td><td>3 preguntas excluyentes en “Sí”</td><td><span class="chip ok">🔒 Cerrada</span></td></tr>
+        <tr><td>Examen técnico</td><td>UNC</td><td>Nota 0–100</td><td class="r">35%</td><td>Presente y nota ≥ 70</td><td><span class="chip ok">🔒 Cerrada</span></td></tr>
+        <tr><td>Assessment</td><td>Consultora externa</td><td>Puntaje 0–100</td><td class="r">20%</td><td>Puntaje ≥ 60</td><td><span class="chip ok">🔒 Cerrada</span></td></tr>
+        <tr><td>Psicotécnico</td><td>Consultoras psico</td><td>Dictamen + puntaje</td><td class="r">15%</td><td>Dictamen “Apto”</td><td><span class="chip ok">🔒 Cerrada</span></td></tr>
+        <tr><td>Entrevista de línea</td><td>Bancor</td><td>Calificación 0–100</td><td class="r">20%</td><td>Calificación ≥ 65</td><td><span class="chip cur">En curso</span></td></tr>
+        <tr><td>Antecedentes</td><td>Nosis / ESENTIA</td><td>Score + validaciones</td><td class="r">10%</td><td>Sin deudas y referencias favorables</td><td><span class="chip warn">Pendiente</span></td></tr>
+        <tr><td>Orden de mérito</td><td>Automático</td><td>Posición</td><td class="r">—</td><td>Por vacante y localidad, desempate por nota UNC</td><td><span class="chip warn">Pendiente</span></td></tr>
+      </tbody></table></div>
+      <span class="foot">Cerrar una etapa congela sus resultados. Reabrirla exige motivo y aprobación de la Gerencia.</span>
+    </div>
+
+    <!-- SEGURIDAD -->
+    <div class="screen" data-screen="sec" hidden>
+      <div class="bar"><div><h3>Seguridad y auditoría</h3><span class="sub">Permisos por rol y por etapa. Datos personales protegidos según Ley 25.326.</span></div></div>
+      <div class="panels">
+        <div class="panel"><h4>Quién puede hacer qué</h4><div class="tbl-scroll"><table class="mx"><thead><tr><th>Rol</th><th>Ver datos personales</th><th>Cargar resultados</th><th>Corregir</th><th>Reglas</th><th>Exportar</th></tr></thead><tbody>
+          <tr><td>Gerencia ESENTIA</td><td class="y">Sí</td><td class="y">Todas</td><td class="y">Aprueba</td><td class="y">Sí</td><td class="y">Sí</td></tr>
+          <tr><td>Analista ESENTIA</td><td class="y">Sí</td><td class="y">Todas</td><td class="p">Solicita</td><td class="x">No</td><td class="p">Con registro</td></tr>
+          <tr><td>UNC</td><td class="p">Solo DNI y turno</td><td class="p">Examen</td><td class="x">No</td><td class="x">No</td><td class="x">No</td></tr>
+          <tr><td>Consultoras</td><td class="p">Sus asignados</td><td class="p">Su etapa</td><td class="x">No</td><td class="x">No</td><td class="x">No</td></tr>
+          <tr><td>Bancor</td><td class="p">Finalistas</td><td class="p">Entrevista</td><td class="x">No</td><td class="x">No</td><td class="p">Indicadores</td></tr>
+        </tbody></table></div></div>
+        <div class="panel"><h4>Registro de actividad</h4><div class="log">
+          <div>Bancor aplicó 38 calificaciones de entrevista<small>Hoy 09:40 · usuario bancor.rrhh</small></div>
+          <div>UNC subió UNC_resultados_turno05.xlsx (en validación)<small>Hoy 08:55 · usuario unc.examenes</small></div>
+          <div>Exportación “Psicotécnico Villa María” para el Banco<small>11/10 17:30 · A. Pérez · 46 filas</small></div>
+          <div>Corrección de nota UNC aprobada (DNI 38.***.214)<small>11/10 16:05 · Gerencia</small></div>
+          <div>Etapa Psicotécnico cerrada y bloqueada<small>10/10 19:12 · Gerencia</small></div>
+        </div></div>
+      </div>
+      <div class="panel"><h4>Otras protecciones</h4><span class="cap">Ingreso con usuario personal y segundo factor · Respaldo diario con restauración a cualquier fecha · Cada export lleva marca de agua con usuario y fecha · Excel de HR original guardado sin cambios como evidencia.</span></div>
+    </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <span class="eyebrow">6 · Para validar con ESENTIA</span>
+  <h2>Preguntas antes de construir</h2>
+  <ol class="q">
+    <li>¿Las ponderaciones de la Base Madre (35 / 20 / 15 / 20 / 10) y el corte de 70 en el examen UNC son definitivos o pueden cambiar durante el concurso?</li>
+    <li>¿El orden de mérito se arma por vacante, por localidad o por sucursal?</li>
+    <li>Si una persona se postuló a dos vacantes, ¿rinde un solo examen UNC que vale para ambas?</li>
+    <li>¿El Banco accederá directamente a la herramienta o recibirá reportes exportados por ESENTIA?</li>
+    <li>¿Qué formato usan hoy la UNC y las consultoras para enviar resultados? Con un ejemplo de cada uno armamos las plantillas.</li>
+  </ol>
+</section>
+</div>
+
+<script>
+(function(){
+  // Embudo
+  var F=[["Inscriptos (HR)",4812,0],["Requisitos y documental",3960,852],["Presentes examen UNC",3410,550],["Aprobados UNC (≥70)",1288,2122],["Aprobados assessment",742,546],["Aptos psicotécnico",598,144],["Entrevista de línea",598,0,1]];
+  var fe=document.getElementById("funnel"),max=F[0][1];
+  F.forEach(function(r){var d=document.createElement("div");d.className="fr"+(r[3]?" cur":"");
+    d.innerHTML='<span>'+r[0]+'</span><span class="track"><span class="fill" style="width:'+(r[1]/max*100).toFixed(2)+'%"></span></span><span class="val num">'+r[1].toLocaleString("es-AR")+'</span>'+(r[2]?'<span class="out num">−'+r[2].toLocaleString("es-AR")+' quedan afuera en esta etapa</span>':(r[3]?'<span class="out">En curso: 214 realizadas, 384 por agendar</span>':''));
+    fe.appendChild(d);});
+  // Histograma
+  var H=[22,61,140,262,412,568,657,640,470,178],hm=Math.max.apply(null,H),he=document.getElementById("hist");
+  H.forEach(function(v,i){var b=document.createElement("div");b.className="hb"+(i>=7?" pass":"");b.style.height=(v/hm*100)+"%";b.innerHTML='<span class="num">'+v+'</span>';b.title=(i*10)+"–"+(i*10+10)+": "+v;he.appendChild(b);});
+  // Heatmap
+  var L=["Córdoba Cap.","Villa María","Río Cuarto","San Francisco","V. Carlos Paz","Bell Ville"];
+  var V=[["Cajero / Tesorero",[1240,310,345,198,221,112]],["Ejecutivo de Cuentas",[620,140,165,90,96,49]],["Oficial PyME",[305,88,102,61,37,30]],["Asistente Adm.",[380,52,70,38,41,22]]];
+  var fmt=function(n){return n.toLocaleString("es-AR")};
+  var h='<thead><tr><th>Vacante</th>'+L.map(function(l){return"<th>"+l+"</th>"}).join("")+'<th>Total</th></tr></thead><tbody>';
+  var tot=[0,0,0,0,0,0];
+  V.forEach(function(r){var s=0;h+="<tr><td>"+r[0]+"</td>";r[1].forEach(function(v,i){s+=v;tot[i]+=v;var a=Math.max(.06,v/1240*.85);h+='<td class="c'+(a>.5?' dk':'')+'" style="--a:'+a.toFixed(3)+'">'+fmt(v)+"</td>"});h+="<td><b>"+fmt(s)+"</b></td></tr>";});
+  h+='<tr class="tot"><td>Total</td>'+tot.map(function(v){return"<td>"+fmt(v)+"</td>"}).join("")+"<td>"+fmt(tot.reduce(function(a,b){return a+b},0))+"</td></tr></tbody>";
+  document.getElementById("heat").innerHTML=h;
+  // Postulantes (ficticios)
+  var P=[
+    ["Martina Ledesma","38.***.214","Cajero / Tesorero","Córdoba Capital","cur","Entrevista de línea",88.5,82,85,84.6,3,1],
+    ["Joaquín Bustos","37.***.905","Ejecutivo de Cuentas","Río Cuarto","cur","Entrevista de línea",91,78,80,84.2,1,1],
+    ["Camila Ferrero","40.***.330","Cajero / Tesorero","Villa María","cur","Entrevista de línea",79.5,85,90,83.1,2,1],
+    ["Lucas Giménez","35.***.871","Oficial PyME","Córdoba Capital","cur","Entrevista de línea",76,74,72,74.4,9,1],
+    ["Sofía Paredes","39.***.016","Asistente Adm.","San Francisco","out","Psicotécnico · No apto",84,70,null,null,null,1],
+    ["Tomás Villarreal","36.***.448","Cajero / Tesorero","V. Carlos Paz","out","Assessment · 52 < 60",73,52,null,null,null,1],
+    ["Valentina Ríos","41.***.762","Ejecutivo de Cuentas","Córdoba Capital","out","Examen UNC · 54 < 70",54,null,null,null,null,1],
+    ["Nicolás Acosta","34.***.193","Cajero / Tesorero","Bell Ville","out","Examen UNC · Ausente",null,null,null,null,null,1],
+    ["Florencia Quiroga","38.***.587","Oficial PyME","Río Cuarto","out","Requisitos · Residencia",null,null,null,null,null,1],
+    ["Agustín Moyano","37.***.250","Asistente Adm.","Villa María","cur","Entrevista de línea",82,80,78,80.6,4,1]];
+  var tb=document.querySelector("#tbl tbody"),q=document.getElementById("q"),fs=document.getElementById("f-st");
+  var n=function(v){return v==null?'<span class="lock">—</span>':v.toLocaleString("es-AR",{minimumFractionDigits:1,maximumFractionDigits:1})};
+  function render(){var t=(q.value||"").toLowerCase(),s=fs.value;tb.innerHTML="";
+    P.forEach(function(p,i){if(s&&p[4]!==s)return;if(t&&(p[0]+" "+p[1]).toLowerCase().indexOf(t)<0)return;
+      var tr=document.createElement("tr");tr.className="click";tr.tabIndex=0;
+      tr.innerHTML='<td class="nm"><b>'+p[0]+'</b><small>DNI '+p[1]+'</small></td><td>'+p[2]+'<br><small style="color:var(--muted)">'+p[3]+'</small></td><td><span class="chip '+p[4]+'">'+p[5]+'</span></td><td class="r">'+n(p[6])+(p[6]!=null?' <span class="lock">🔒</span>':'')+'</td><td class="r">'+n(p[7])+'</td><td class="r">'+n(p[8])+'</td><td class="r"><b>'+n(p[9])+'</b></td><td class="r">'+(p[10]?p[10]+"°":'<span class="lock">—</span>')+'</td>';
+      var open=function(){show("ficha");document.getElementById("p-name").textContent=p[0];document.getElementById("p-id").textContent="DNI "+p[1]+" · "+p[2]+" · "+p[3];document.getElementById("p-score").textContent=p[9]==null?"—":n(p[9]);};
+      tr.addEventListener("click",open);tr.addEventListener("keydown",function(e){if(e.key==="Enter")open()});
+      tb.appendChild(tr);});}
+  q.addEventListener("input",render);fs.addEventListener("change",render);render();
+  // Navegación
+  var navs=document.querySelectorAll(".nav"),scr=document.querySelectorAll(".screen");
+  function show(k){scr.forEach(function(s){s.hidden=s.dataset.screen!==k});navs.forEach(function(b){b.setAttribute("aria-current",b.dataset.s===k?"true":"false")});}
+  navs.forEach(function(b){b.addEventListener("click",function(){show(b.dataset.s)})});
+})();
+</script>
+
+</body>
+</html>
