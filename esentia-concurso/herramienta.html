@@ -270,6 +270,41 @@ body{padding:0;display:flex;flex-direction:column}
 @media (max-width:640px){.fgrid .wide{grid-column:auto}}
 [hidden]{display:none!important}
 /* cargas */
+/* seguridad */
+.side .who label{display:block;font-size:11px;margin-bottom:4px}
+.side .who .sel{width:100%;margin-bottom:4px;font-weight:700}
+.side .who #cu-role{display:block}
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;background:var(--tint);border:1px solid var(--line);border-radius:8px;justify-self:start}
+.sg{all:unset;cursor:pointer;padding:7px 14px;border-radius:6px;font-size:13px;font-weight:700;color:var(--muted)}
+.sg[aria-selected="true"]{background:var(--paper);color:var(--brand);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.sg:focus-visible{outline:2px solid var(--brand)}
+.sgp{display:grid;gap:14px;min-width:0}
+.ustats{display:flex;flex-wrap:wrap;gap:8px}
+.ustats span{font-size:12.5px;background:var(--tint);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+.ustats b{font-family:var(--f-display);font-size:14px}
+.note{font-size:13px;background:var(--warn-soft);color:var(--warn);border-radius:6px;padding:10px 12px}
+.rchip{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--rb);color:var(--rf);white-space:nowrap}
+.users td{vertical-align:middle}
+.users tr.inact td{color:var(--muted)}
+.users tr.me td:first-child b::after{content:"Vos";margin-left:6px;font-size:10px;color:var(--brand);background:var(--brand-soft);padding:1px 6px;border-radius:999px}
+.users .acts{white-space:nowrap;text-align:right}
+.users .acts .eb{margin-left:6px}
+.users .acts .eb[disabled]{opacity:.35;cursor:default;text-decoration:none}
+.users tr.confirm td{background:var(--brand-soft);white-space:normal}
+.audit td{vertical-align:top}
+.audit td.det{white-space:normal;min-width:260px;max-width:420px}
+.audit .ip{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--muted)}
+.audit tr.fresh td{animation:flash 1.6s ease}
+.afil{align-items:center}
+.users td,.audit td{white-space:normal}
+.users td:nth-child(6),.audit td:first-child{white-space:nowrap}
+.stk{display:grid;gap:3px;justify-items:start}
+.stk small{font-size:11px;color:var(--muted)}
+.users .acts{white-space:normal;min-width:118px}
+.users .acts .eb{display:block;margin:2px 0 2px auto;text-align:right}
+.audit td.det{min-width:220px}
+
+
 .stp span{display:block}
 .stp.done{cursor:default}
 .tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
@@ -344,7 +379,7 @@ textarea.fin{resize:vertical;line-height:1.45}
       <button class="nav" data-s="load"><svg viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M4.5 15v4.5h15V15"/></svg>Cargas de terceros</button>
       <button class="nav" data-s="rules"><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h9M5 18h5"/><circle cx="17.5" cy="16.5" r="2.5"/></svg>Etapas y reglas</button>
       <button class="nav" data-s="sec"><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>Seguridad y auditoría</button>
-      <div class="who"><b>Gerencia ESENTIA</b>Rol: Administrador</div>
+      <div class="who"><label for="cu-sel">Usuario activo (demo)</label><select id="cu-sel" class="sel"></select><span id="cu-role"></span></div>
     </aside>
 
     <div class="main">
@@ -460,24 +495,45 @@ textarea.fin{resize:vertical;line-height:1.45}
 
     <!-- SEGURIDAD -->
     <div class="screen" data-screen="sec" hidden>
-      <div class="bar"><div><h3>Seguridad y auditoría</h3><span class="sub">Permisos por rol y por etapa. Datos personales protegidos según Ley 25.326.</span></div></div>
-      <div class="panels">
-        <div class="panel"><h4>Quién puede hacer qué</h4><div class="tbl-scroll"><table class="mx"><thead><tr><th>Rol</th><th>Ver datos personales</th><th>Cargar resultados</th><th>Corregir</th><th>Reglas</th><th>Exportar</th></tr></thead><tbody>
-          <tr><td>Gerencia ESENTIA</td><td class="y">Sí</td><td class="y">Todas</td><td class="y">Aprueba</td><td class="y">Sí</td><td class="y">Sí</td></tr>
-          <tr><td>Analista ESENTIA</td><td class="y">Sí</td><td class="y">Todas</td><td class="p">Solicita</td><td class="x">No</td><td class="p">Con registro</td></tr>
-          <tr><td>UNC</td><td class="p">Solo DNI y turno</td><td class="p">Examen</td><td class="x">No</td><td class="x">No</td><td class="x">No</td></tr>
-          <tr><td>Consultoras</td><td class="p">Sus asignados</td><td class="p">Su etapa</td><td class="x">No</td><td class="x">No</td><td class="x">No</td></tr>
-          <tr><td>Bancor</td><td class="p">Finalistas</td><td class="p">Entrevista</td><td class="x">No</td><td class="x">No</td><td class="p">Indicadores</td></tr>
-        </tbody></table></div></div>
-        <div class="panel"><h4>Registro de actividad</h4><div class="log">
-          <div>Bancor aplicó 38 calificaciones de entrevista<small>Hoy 09:40 · usuario bancor.rrhh</small></div>
-          <div>UNC subió UNC_resultados_turno05.xlsx (en validación)<small>Hoy 08:55 · usuario unc.examenes</small></div>
-          <div>Exportación “Psicotécnico Villa María” para el Banco<small>11/10 17:30 · A. Pérez · 46 filas</small></div>
-          <div>Corrección de nota UNC aprobada (DNI 38.***.214)<small>11/10 16:05 · Gerencia</small></div>
-          <div>Etapa Psicotécnico cerrada y bloqueada<small>10/10 19:12 · Gerencia</small></div>
-        </div></div>
+      <div class="bar"><div><h3>Seguridad y auditoría</h3><span class="sub">Usuarios con acceso, permisos por rol y registro de todo lo que pasa en la herramienta. Datos personales protegidos según Ley 25.326.</span></div></div>
+      <div class="seg" role="tablist" aria-label="Secciones de seguridad"><button type="button" role="tab" class="sg" data-sg="users" aria-selected="true">Usuarios y roles</button><button type="button" role="tab" class="sg" data-sg="audit" aria-selected="false">Registro de actividad</button><button type="button" role="tab" class="sg" data-sg="perm" aria-selected="false">Permisos por rol</button></div>
+
+      <div class="sgp" data-sgp="users">
+        <div class="bar"><div class="ustats" id="u-stats"></div><button class="btn" type="button" id="u-new">+ Nuevo usuario</button></div>
+        <p class="note" id="u-ro" hidden>Estás usando la herramienta con un rol sin permiso de administración: podés ver los usuarios pero no darlos de alta, modificarlos ni darlos de baja.</p>
+        <form class="panel addf" id="u-form" hidden novalidate>
+          <h4 id="u-form-t">Nuevo usuario</h4>
+          <div class="fgrid">
+            <label for="u-name">Nombre y apellido<input id="u-name" class="fin" maxlength="60" placeholder="Ej.: Laura Castro"></label>
+            <label for="u-mail">Email<input id="u-mail" class="fin" type="email" maxlength="80" placeholder="nombre@empresa.com"></label>
+            <label for="u-role">Rol<select id="u-role" class="fin"></select><small id="u-role-d"></small></label>
+            <label for="u-org">Organización<input id="u-org" class="fin" maxlength="50" placeholder="Ej.: ESENTIA, UNC, Bancor"></label>
+            <label for="u-scope">Alcance<select id="u-scope" class="fin"></select></label>
+          </div>
+          <p class="ferr" id="u-err" hidden></p>
+          <p class="hint" id="u-hint">Al crear el usuario se le envía una invitación por email para definir su contraseña y activar el segundo factor.</p>
+          <div class="filters"><button class="btn" type="submit" id="u-submit">Crear usuario</button><button class="btn ghost" type="button" id="u-cancel">Cancelar</button></div>
+        </form>
+        <div class="tbl-scroll"><table class="dt num users"><thead><tr><th>Usuario</th><th>Rol</th><th>Organización</th><th>Alcance</th><th>Estado</th><th>Último acceso</th><th class="r">Acciones</th></tr></thead><tbody id="u-body"></tbody></table></div>
       </div>
-      <div class="panel"><h4>Otras protecciones</h4><span class="cap">Ingreso con usuario personal y segundo factor · Respaldo diario con restauración a cualquier fecha · Cada export lleva marca de agua con usuario y fecha · Excel de HR original guardado sin cambios como evidencia.</span></div>
+
+      <div class="sgp" data-sgp="audit" hidden>
+        <div class="filters afil"><select class="sel" id="a-user" aria-label="Filtrar por usuario"></select><select class="sel" id="a-mod" aria-label="Filtrar por módulo"></select><input class="search" id="a-q" placeholder="Buscar en el detalle (DNI, archivo, nombre…)" aria-label="Buscar en el registro"><button class="btn ghost" type="button" id="a-exp">Exportar registro</button></div>
+        <span class="cap" id="a-count"></span>
+        <div class="tbl-scroll"><table class="dt num audit"><thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Módulo</th><th>Acción</th><th>Detalle</th><th>Origen</th></tr></thead><tbody id="a-body"></tbody></table></div>
+        <span class="foot">El registro no se puede editar ni borrar desde la herramienta. Se conserva aunque el usuario sea dado de baja.</span>
+      </div>
+
+      <div class="sgp" data-sgp="perm" hidden>
+        <div class="panel"><h4>Qué puede hacer cada rol</h4><div class="tbl-scroll"><table class="mx"><thead><tr><th>Rol</th><th>Ver datos personales</th><th>Cargar resultados</th><th>Corregir estados</th><th>Reglas</th><th>Usuarios</th><th>Exportar</th></tr></thead><tbody>
+          <tr><td>Gerencia ESENTIA</td><td class="y">Sí</td><td class="y">Todas</td><td class="y">Sí, aprueba</td><td class="y">Sí</td><td class="y">ABM</td><td class="y">Sí</td></tr>
+          <tr><td>Analista ESENTIA</td><td class="y">Sí</td><td class="y">Todas</td><td class="p">Solicita</td><td class="x">No</td><td class="x">Solo ver</td><td class="p">Con registro</td></tr>
+          <tr><td>Proveedor UNC</td><td class="p">Solo DNI y turno</td><td class="p">Examen técnico</td><td class="x">No</td><td class="x">No</td><td class="x">No</td><td class="x">No</td></tr>
+          <tr><td>Consultora</td><td class="p">Sus asignados</td><td class="p">Su etapa</td><td class="x">No</td><td class="x">No</td><td class="x">No</td><td class="x">No</td></tr>
+          <tr><td>Bancor</td><td class="p">Finalistas</td><td class="p">Entrevista</td><td class="x">No</td><td class="x">No</td><td class="x">No</td><td class="p">Indicadores</td></tr>
+        </tbody></table></div></div>
+        <div class="panel"><h4>Otras protecciones</h4><span class="cap">Ingreso con usuario personal y segundo factor · Bloqueo tras 5 intentos fallidos · Cierre de sesión por inactividad a los 30 minutos · Respaldo diario con restauración a cualquier fecha · Cada exportación lleva marca de agua con usuario y fecha · Excel original de Hiring Room guardado sin cambios como evidencia.</span></div>
+      </div>
     </div>
 
     </div>
@@ -583,25 +639,27 @@ textarea.fin{resize:vertical;line-height:1.45}
     var prevObs=S.obs[i]?S.obs[i].t:"";
     if(ns!==old&&!ot){er.textContent="Escribí una observación que explique el cambio de estado.";er.hidden=false;document.getElementById("eo-"+i).focus();return;}
     if(ns===old&&ot===prevObs){editing=-1;drawFicha();return;}
-    var m=now()+" · Gerencia ESENTIA";
+    var m=now()+" · "+uname();
     if(ns!==old){S.st[i]=ns;
       for(var k=i+1;k<7;k++)S.st[k]=(ns==="fail"||ns==="aus")?"na":(k===i+1&&ns==="ok")?"pend":"wait";
       S.log.unshift({t:ST_SHORT[i]+": "+lab(i,old)+" → "+lab(i,ns),m:m+" · Motivo: "+ot});
+      audit("Ficha","Cambio de estado",cur[0]+" (DNI "+mask(cur[1])+") · "+ST_SHORT[i]+": "+lab(i,old)+" → "+lab(i,ns)+" · Motivo: "+ot);
       var wasOut=cur[4]==="out";sync(cur,S);
       toast(cur[4]==="out"&&!wasOut?cur[0]+" queda fuera del concurso desde "+ST_SHORT[i]+". El cambio quedó en la auditoría.":wasOut&&cur[4]==="cur"?cur[0]+" vuelve a estar en carrera: se habilitó "+cur[5]+".":"Estado de "+ST_SHORT[i]+" actualizado.");}
-    else{S.log.unshift({t:"Observación en "+ST_SHORT[i],m:m});toast("Observación guardada en "+ST_SHORT[i]+".");}
+    else{S.log.unshift({t:"Observación en "+ST_SHORT[i],m:m});audit("Ficha","Observación de etapa",cur[0]+" (DNI "+mask(cur[1])+") · "+ST_SHORT[i]+": “"+ot+"”");toast("Observación guardada en "+ST_SHORT[i]+".");}
     S.obs[i]=ot?{t:ot,m:m}:null;editing=-1;drawFicha();render();});
   document.getElementById("gen-view").addEventListener("click",function(e){if(e.target.id!=="gen-edit")return;editGen=true;var S=stateOf(cur);drawFicha();var ta=document.getElementById("gen-txt");ta.value=S.gen?S.gen.t:"";ta.focus();});
   document.getElementById("gen-cancel").addEventListener("click",function(){editGen=false;drawFicha();});
-  document.getElementById("gen-form").addEventListener("submit",function(e){e.preventDefault();var S=stateOf(cur),v=document.getElementById("gen-txt").value.trim(),m=now()+" · Gerencia ESENTIA";
+  document.getElementById("gen-form").addEventListener("submit",function(e){e.preventDefault();var S=stateOf(cur),v=document.getElementById("gen-txt").value.trim(),m=now()+" · "+uname();
     if((S.gen?S.gen.t:"")===v){editGen=false;drawFicha();return;}
     S.log.unshift({t:v?(S.gen?"Observación general editada":"Observación general agregada"):"Observación general eliminada",m:m});
+    audit("Ficha","Observación general",cur[0]+" (DNI "+mask(cur[1])+") · "+(v?"“"+v+"”":"eliminada"));
     S.gen=v?{t:v,m:m}:null;editGen=false;drawFicha();toast(v?"Observación general guardada.":"Se eliminó la observación general.");});
   q.addEventListener("input",render);fs.addEventListener("change",render);render();
   // Acciones de la demo
   var to=document.getElementById("toast"),tt;
   function toast(m){to.textContent=m;to.hidden=false;clearTimeout(tt);tt=setTimeout(function(){to.hidden=true},3800);}
-  document.getElementById("exp").addEventListener("click",function(){toast("En la versión real se descarga un Excel con la vista filtrada, marcado con tu usuario y la fecha.")});
+  document.getElementById("exp").addEventListener("click",function(){audit("Postulantes","Exportación a Excel","Vista filtrada: "+document.querySelectorAll("#tbl tbody tr.click").length+" filas"+(q.value?" · búsqueda “"+q.value+"”":"")+" · marca de agua con usuario y fecha");toast("En la versión real se descarga un Excel con la vista filtrada, marcado con tu usuario y la fecha.")});
   document.querySelectorAll(".act").forEach(function(a){a.setAttribute("role","button");a.tabIndex=0;a.style.cursor="pointer";a.addEventListener("click",function(){toast(a.textContent+": "+a.previousElementSibling.firstChild.textContent.trim())})});
   document.getElementById("f-vac").addEventListener("change",function(){var v=this.selectedIndex;document.querySelectorAll("#heat tbody tr").forEach(function(r,i){r.style.opacity=(!v||i===v-1||r.classList.contains("tot"))?1:.25})});
   // Etapas y reglas: editor
@@ -678,9 +736,9 @@ textarea.fin{resize:vertical;line-height:1.45}
     note("Nueva etapa “"+name+"” en la posición "+(STG.findIndex(function(s){return s.id===id})+1)+(w?" con "+w+"% de peso":" (filtro sin puntaje)"));
     af.reset();af.hidden=true;renderRules(id);
     toast(w?"Etapa agregada. Ajustá los pesos para que vuelvan a sumar 100% antes de guardar.":"Etapa agregada como filtro. Guardá la versión para aplicarla.");});
-  document.getElementById("rules-reset").addEventListener("click",function(){STG=clone(STG0);CHG=[];renderRules();toast("Se descartaron los cambios. Vuelve a regir la versión "+ver+".");});
-  document.getElementById("rules-save").addEventListener("click",function(){ver++;STG.forEach(function(s){delete s.isNew});STG0=clone(STG);var n=CHG.length;CHG=[];
-    document.getElementById("ver-sub").textContent="Versión "+ver+" · guardada hoy por Gerencia ESENTIA. El orden de mérito se recalculó y el cambio quedó en la auditoría.";
+  document.getElementById("rules-reset").addEventListener("click",function(){audit("Etapas y reglas","Cambios descartados",CHG.length+" cambio(s) sin guardar descartados · sigue la versión "+ver);STG=clone(STG0);CHG=[];renderRules();toast("Se descartaron los cambios. Vuelve a regir la versión "+ver+".");});
+  document.getElementById("rules-save").addEventListener("click",function(){audit("Etapas y reglas","Nueva versión de reglas","Versión "+(ver+1)+": "+CHG.join(" · "));ver++;STG.forEach(function(s){delete s.isNew});STG0=clone(STG);var n=CHG.length;CHG=[];
+    document.getElementById("ver-sub").textContent="Versión "+ver+" · guardada hoy por "+uname()+". El orden de mérito se recalculó y el cambio quedó en la auditoría.";
     renderRules();toast("Versión "+ver+" guardada con "+n+" cambio"+(n===1?"":"s")+". Se recalculó el orden de mérito.");});
   renderRules();
   // Cargas de terceros: tercero → archivo → preview por DNI → aplicar
@@ -779,6 +837,7 @@ textarea.fin{resize:vertical;line-height:1.45}
       if(cs==="pend"){o.k="o";o.msg="Coincide por DNI"+(o.norm?" (DNI normalizado sin puntos)":"");o.on=true;return;}
       if(cs===o.res&&S.sc[i]===o.score){o.k="i";o.msg="Sin cambios: ya tiene este resultado";return;}
       o.k="w";o.on=false;o.msg="Ya tiene resultado: "+(S.sc[i]!=null?n(S.sc[i])+" · ":"")+lab(i,cs)+" → se reemplaza"+(cs!==o.res?" y cambia su estado":"");});
+    audit("Cargas","Archivo subido para validación",fname+" · "+T.who+" → "+T.name+" · "+rows.length+" filas · "+rows.filter(function(r){return r.k==="e"}).length+" con error");
     LD.rows=rows;LD.file=fname;LD.filter="all";drawPreview();ldStep(3);}
   var KINDS=[["all","Todas las filas","var(--tint)","var(--ink)"],["o","Listas para aplicar","var(--ok-soft)","var(--ok)"],["w","Con aviso","var(--warn-soft)","var(--warn)"],["e","Con error","var(--brand-soft)","var(--brand)"],["i","Sin cambios","var(--out-soft)","var(--ink)"]];
   function drawPreview(){var R=LD.rows,c=function(k){return k==="all"?R.length:R.filter(function(r){return r.k===k}).length};
@@ -791,7 +850,7 @@ textarea.fin{resize:vertical;line-height:1.45}
     $("ld-return").hidden=!c("e");}
   $("ld3-cards").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;LD.filter=b.dataset.f;drawPreview();});
   $("ld3-body").addEventListener("change",function(e){var x=e.target.dataset.row;if(x==null)return;LD.rows[+x].on=e.target.checked;drawPreview();});
-  $("ld-return").addEventListener("click",function(){var n2=LD.rows.filter(function(r){return r.k==="e"}).length;toast("Se envió a "+LD.type.who+" el detalle de "+n2+" fila"+(n2>1?"s":"")+" con error para corregir y reenviar.");});
+  $("ld-return").addEventListener("click",function(){var n2=LD.rows.filter(function(r){return r.k==="e"}).length;audit("Cargas","Errores devueltos al proveedor",LD.file+" · "+n2+" fila(s) enviadas a "+LD.type.who);toast("Se envió a "+LD.type.who+" el detalle de "+n2+" fila"+(n2>1?"s":"")+" con error para corregir y reenviar.");});
   var W5={2:35,3:20,4:15,5:20,6:10};
   $("ld-apply").addEventListener("click",function(){var T=LD.type,i=T.stage,ap=LD.rows.filter(function(r){return r.on}),m=now()+" · Carga “"+LD.file+"” · "+T.who;UPD={};
     ap.forEach(function(r){var p=r.p,S=stateOf(p),old=S.st[i];S.st[i]=r.res;S.sc[i]=r.score==null?null:r.score;
@@ -801,7 +860,8 @@ textarea.fin{resize:vertical;line-height:1.45}
       if(p[4]==="out"){p[9]=null;p[10]=null;}else{var sw=0,sv=0;for(var j=2;j<7;j++)if(S.sc[j]!=null&&S.st[j]==="ok"){sw+=W5[j];sv+=W5[j]*S.sc[j];}p[9]=sw?Math.round(sv/sw*10)/10:null;}
       UPD[p[1]]=1;r.after=p[4]==="out"?'<span class="chip out">'+esc(p[5])+'</span>':'<span class="chip cur">'+esc(p[5])+'</span>';});
     var ne=LD.rows.filter(function(r){return r.k==="e"}).length;
-    HIST.unshift(["Hoy "+now().slice(4),T.who+" · "+T.name,LD.file,LD.rows.length,ap.length,ne,"gerencia"]);
+    audit("Cargas","Carga aplicada",LD.file+" · "+T.who+" → "+T.name+" · "+ap.length+" aplicada(s), "+ne+" con error · "+ap.map(function(r){return r.p[0]+" "+lab(i,r.res)}).join(", "));
+    HIST.unshift(["Hoy "+now().slice(4),T.who+" · "+T.name,LD.file,LD.rows.length,ap.length,ne,CU.user]);
     $("ld4-title").textContent="Se aplicaron "+ap.length+" resultado"+(ap.length>1?"s":"")+" de "+T.who+" en "+T.name;
     $("ld4-sub").textContent=(ne?ne+" fila"+(ne>1?"s":"")+" con error quedaron fuera. ":"")+"Cada cambio quedó en el historial de la ficha y en la auditoría.";
     $("ld4-body").innerHTML=ap.map(function(r){return'<tr><td><b>'+esc(r.p[0])+'</b><br><small style="color:var(--muted)">DNI '+mask(r.p[1])+'</small></td><td>'+T.name+'</td><td>'+esc(r.txt)+' · '+chipFor(i,r.res)+'</td><td>'+r.after+'</td><td class="r"><button class="eb" type="button" data-open="'+r.p[1]+'">Ver ficha</button></td></tr>'}).join("");
@@ -811,6 +871,94 @@ textarea.fin{resize:vertical;line-height:1.45}
   document.querySelector('[data-screen="load"]').addEventListener("click",function(e){var b=e.target.closest("[data-back]");if(!b)return;var s=+b.dataset.back;if(s===1){drawTypes();}if(s===2)$("ld-file").value="";ldStep(s);});
   $("newload").addEventListener("click",function(){drawTypes();ldStep(1);var f=document.querySelector("#tgrid .tc");if(f)f.focus();});
   drawTypes();drawHist();ldStep(1);
+  // Seguridad: usuarios (ABM), usuario activo y registro de actividad
+  var ROLES={ger:{n:"Gerencia ESENTIA",d:"Administra todo: usuarios, reglas y correcciones.",rb:"var(--brand-soft)",rf:"var(--brand)",sc:["Todo el concurso"]},
+    ana:{n:"Analista ESENTIA",d:"Carga resultados y consulta. Las correcciones las aprueba Gerencia.",rb:"var(--ok-soft)",rf:"var(--ok)",sc:["Todo el concurso","Solo Red Sucursales","Solo Sucursales Interior"]},
+    unc:{n:"Proveedor UNC",d:"Solo carga notas del examen técnico. Ve DNI y turno.",rb:"var(--warn-soft)",rf:"var(--warn)",sc:["Examen técnico"]},
+    con:{n:"Consultora",d:"Carga resultados de su etapa y ve solo a sus asignados.",rb:"var(--warn-soft)",rf:"var(--warn)",sc:["Assessment","Psicotécnico","Antecedentes"]},
+    ban:{n:"Bancor",d:"Carga entrevistas de línea y ve indicadores y finalistas.",rb:"var(--out-soft)",rf:"var(--ink)",sc:["Entrevista de línea y finalistas"]}};
+  var USERS=[
+    {id:1,name:"Andrea Gómez",mail:"a.gomez@esentiarh.com",user:"a.gomez",role:"ger",org:"ESENTIA",scope:"Todo el concurso",mfa:true,on:true,last:"Hoy 08:12",ip:"181.28.114.20"},
+    {id:2,name:"Aldana Pérez",mail:"a.perez@esentiarh.com",user:"a.perez",role:"ana",org:"ESENTIA",scope:"Todo el concurso",mfa:true,on:true,last:"Hoy 09:05",ip:"181.28.114.37"},
+    {id:3,name:"Marcos Díaz",mail:"unc.examenes@unc.edu.ar",user:"unc.examenes",role:"unc",org:"UNC",scope:"Examen técnico",mfa:true,on:true,last:"Hoy 08:55",ip:"200.16.16.91"},
+    {id:4,name:"Paula Herrera",mail:"p.herrera@pedemonte.com.ar",user:"p.herrera",role:"con",org:"Consultora Pedemonte",scope:"Assessment",mfa:true,on:true,last:"11/10 17:02",ip:"190.210.44.8"},
+    {id:5,name:"María Rossi",mail:"m.rossi@psicoconsult.com.ar",user:"m.rossi",role:"con",org:"Psico Consult",scope:"Psicotécnico",mfa:true,on:true,last:"10/10 18:20",ip:"190.17.82.140"},
+    {id:6,name:"Martín Ferreyra",mail:"m.ferreyra@bancor.com.ar",user:"bancor.rrhh",role:"ban",org:"Bancor RRHH",scope:"Entrevista de línea y finalistas",mfa:true,on:true,last:"Hoy 09:40",ip:"200.45.170.12"},
+    {id:7,name:"Julián Soria",mail:"j.soria@esentiarh.com",user:"j.soria",role:"ana",org:"ESENTIA",scope:"Solo Sucursales Interior",mfa:false,on:false,last:"25/09 10:00",ip:"181.28.114.52"}];
+  var uid=8,CU=USERS[0],uEdit=null,uDel=null;
+  var uname=function(){return CU.name+" ("+ROLES[CU.role].n+")"};
+  var stamp=function(){var d=new Date();return"Hoy "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")+":"+String(d.getSeconds()).padStart(2,"0")};
+  var AUD=[
+    ["Hoy 09:40:12",6,"Cargas","Carga aplicada","Bancor_entrevistas_semana1.xlsx · Bancor → Entrevista de línea · 38 aplicada(s), 0 con error"],
+    ["Hoy 09:05:41",2,"Acceso","Inicio de sesión","Navegador Chrome · segundo factor verificado"],
+    ["Hoy 08:55:03",3,"Cargas","Archivo subido para validación","UNC_resultados_turno05.xlsx · UNC → Examen técnico · 418 filas · 6 con error"],
+    ["Hoy 08:12:19",1,"Acceso","Inicio de sesión","Navegador Edge · segundo factor verificado"],
+    ["11/10 17:30:55",2,"Postulantes","Exportación a Excel","“Psicotécnico Villa María” para Bancor · 46 filas · marca de agua con usuario y fecha"],
+    ["11/10 17:02:30",4,"Cargas","Carga aplicada","Pedemonte_assessment_lote3.xlsx · Consultora Pedemonte → Assessment · 211 aplicada(s), 3 con error"],
+    ["11/10 16:05:08",1,"Ficha","Cambio de estado","Martina Ledesma (DNI 38.***.214) · Nota UNC 85,5 → 88,5 · Motivo: fe de erratas UNC, nota 1873"],
+    ["10/10 19:12:44",1,"Etapas y reglas","Etapa cerrada","Psicotécnico cerrada y bloqueada · 598 aptos, 144 no aptos"],
+    ["10/10 18:20:16",5,"Cargas","Carga aplicada","Psico_lote4.xlsx · Consultoras psico → Psicotécnico · 742 aplicada(s), 0 con error"],
+    ["03/10 11:00:02",1,"Usuarios","Alta de usuario","María Rossi · m.rossi@psicoconsult.com.ar · Consultora · Psicotécnico"],
+    ["28/09 15:30:27",1,"Etapas y reglas","Nueva versión de reglas","Versión 3 aprobada · pesos 35/20/15/20/10 · corte UNC 70"],
+    ["25/09 10:00:51",1,"Usuarios","Desactivación de usuario","Julián Soria · Motivo: licencia"]].map(function(a){return{ts:a[0],uid:a[1],mod:a[2],acc:a[3],det:a[4]}});
+  var freshN=0;
+  function audit(mod,acc,det){AUD.unshift({ts:stamp(),uid:CU.id,mod:mod,acc:acc,det:det});freshN++;CU.last="Hoy "+stamp().slice(4,9);if(!$("a-body").closest(".sgp").hidden)drawAudit();drawUsers();}
+  var U=function(id){return USERS.find(function(u){return u.id===id})};
+  var isAdmin=function(){return CU.role==="ger"};
+  function drawCU(){var s=$("cu-sel");s.innerHTML=USERS.filter(function(u){return u.on}).map(function(u){return'<option value="'+u.id+'"'+(u.id===CU.id?" selected":"")+'>'+esc(u.name)+'</option>'}).join("");
+    $("cu-role").textContent="Rol: "+ROLES[CU.role].n;}
+  function drawUsers(){var act=USERS.filter(function(u){return u.on}).length,pend=USERS.filter(function(u){return !u.mfa}).length,adm=isAdmin();
+    $("u-stats").innerHTML=(function(){var pl=function(k,s,p){return'<span><b>'+k+'</b> '+(k===1?s:p)+'</span>'};return pl(USERS.length,"usuario","usuarios")+pl(act,"activo","activos")+pl(USERS.length-act,"inactivo","inactivos")+pl(pend,"con segundo factor pendiente","con segundo factor pendiente");})();
+    $("u-ro").hidden=adm;$("u-new").disabled=!adm;if(!adm)$("u-form").hidden=true;
+    $("u-body").innerHTML=USERS.map(function(u){var R=ROLES[u.role],me=u.id===CU.id;
+      var row='<tr data-u="'+u.id+'" class="'+(u.on?"":"inact ")+(me?"me":"")+'"><td><b>'+esc(u.name)+'</b><br><small style="color:var(--muted)">'+esc(u.mail)+' · '+esc(u.user)+'</small></td><td><span class="rchip" style="--rb:'+R.rb+';--rf:'+R.rf+'">'+R.n+'</span></td><td>'+esc(u.org)+'</td><td>'+esc(u.scope)+'</td><td><div class="stk">'+(u.on?'<span class="chip ok">Activo</span>':'<span class="chip out">Inactivo</span>')+(u.mfa?'<small>2FA activo</small>':'<span class="chip warn">2FA pendiente</span>')+'</div></td><td>'+esc(u.last)+'</td>'+
+        '<td class="acts">'+(adm?'<button class="eb" type="button" data-ua="edit">Editar</button><button class="eb" type="button" data-ua="tog"'+(me?' disabled title="No podés desactivar tu propio usuario"':'')+'>'+(u.on?"Desactivar":"Reactivar")+'</button>'+(u.mfa?'':'<button class="eb" type="button" data-ua="inv">Reenviar invitación</button>')+'<button class="eb" type="button" data-ua="del"'+(me?' disabled title="No podés eliminar tu propio usuario"':'')+'>Eliminar</button>':'<span class="lock">Solo lectura</span>')+'</td></tr>';
+      if(uDel===u.id)row+='<tr class="confirm"><td colspan="7"><div class="filters" style="align-items:center"><span><b>¿Eliminar a '+esc(u.name)+'?</b> Pierde el acceso de inmediato. Su actividad queda en el registro.</span><button class="btn" type="button" data-ua="delok" data-id="'+u.id+'">Eliminar usuario</button><button class="btn ghost" type="button" data-ua="delno">Cancelar</button></div></td></tr>';
+      return row;}).join("");}
+  function fillRoleSel(role,scope){$("u-role").innerHTML=Object.keys(ROLES).map(function(k){return'<option value="'+k+'"'+(k===role?" selected":"")+'>'+ROLES[k].n+'</option>'}).join("");
+    var R=ROLES[$("u-role").value];$("u-role-d").textContent=R.d;$("u-scope").innerHTML=R.sc.map(function(s){return'<option'+(s===scope?" selected":"")+'>'+s+'</option>'}).join("");}
+  $("u-role").addEventListener("change",function(){fillRoleSel(this.value);if(this.value!=="con"&&this.value!=="ana"&&!$("u-org").value)$("u-org").value={ger:"ESENTIA",unc:"UNC",ban:"Bancor RRHH"}[this.value]||"";});
+  function openUForm(u){uEdit=u||null;var f=$("u-form");f.hidden=false;$("u-err").hidden=true;
+    $("u-form-t").textContent=u?"Editar usuario · "+u.name:"Nuevo usuario";$("u-submit").textContent=u?"Guardar cambios":"Crear usuario";$("u-hint").hidden=!!u;
+    $("u-name").value=u?u.name:"";$("u-mail").value=u?u.mail:"";$("u-org").value=u?u.org:"";fillRoleSel(u?u.role:"ana",u?u.scope:null);$("u-name").focus();}
+  $("u-new").addEventListener("click",function(){openUForm(null)});
+  $("u-cancel").addEventListener("click",function(){$("u-form").hidden=true;uEdit=null;});
+  $("u-form").addEventListener("submit",function(e){e.preventDefault();var g=function(id){return $(id).value.trim()},name=g("u-name"),mail=g("u-mail").toLowerCase(),role=g("u-role"),org=g("u-org"),scope=g("u-scope"),er=$("u-err");
+    var bad=!name?"Escribí el nombre y apellido.":!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)?"El email no tiene un formato válido.":USERS.some(function(u){return u.mail===mail&&u!==uEdit})?"Ya existe un usuario con ese email.":!org?"Indicá la organización.":"";
+    if(bad){er.textContent=bad;er.hidden=false;return;}
+    if(uEdit){var ch=[];if(uEdit.name!==name)ch.push("nombre: "+uEdit.name+" → "+name);if(uEdit.mail!==mail)ch.push("email: "+uEdit.mail+" → "+mail);if(uEdit.role!==role)ch.push("rol: "+ROLES[uEdit.role].n+" → "+ROLES[role].n);if(uEdit.org!==org)ch.push("organización: "+uEdit.org+" → "+org);if(uEdit.scope!==scope)ch.push("alcance: "+uEdit.scope+" → "+scope);
+      if(!ch.length){$("u-form").hidden=true;uEdit=null;return;}
+      Object.assign(uEdit,{name:name,mail:mail,role:role,org:org,scope:scope});audit("Usuarios","Modificación de usuario",name+" · "+ch.join(" · "));toast("Se guardaron los cambios de "+name+".");}
+    else{var u={id:uid++,name:name,mail:mail,user:mail.split("@")[0],role:role,org:org,scope:scope,mfa:false,on:true,last:"Nunca",ip:"—"};USERS.push(u);NAMES[u.id]=u;
+      audit("Usuarios","Alta de usuario",name+" · "+mail+" · "+ROLES[role].n+" · "+scope);toast("Se creó el usuario de "+name+" y se le envió la invitación a "+mail+".");}
+    $("u-form").hidden=true;uEdit=null;drawUsers();drawCU();fillAuditFilters();});
+  $("u-body").addEventListener("click",function(e){var b=e.target.closest("[data-ua]");if(!b||b.disabled)return;var a=b.dataset.ua,tr=b.closest("tr[data-u]"),u=tr?U(+tr.dataset.u):null;
+    if(a==="edit")openUForm(u);
+    else if(a==="tog"){u.on=!u.on;audit("Usuarios",u.on?"Reactivación de usuario":"Desactivación de usuario",u.name+" · "+ROLES[u.role].n);toast(u.on?u.name+" puede volver a ingresar.":u.name+" ya no puede ingresar. Sus datos y su actividad se conservan.");drawUsers();drawCU();}
+    else if(a==="inv"){audit("Usuarios","Invitación reenviada",u.name+" · "+u.mail);toast("Se reenvió la invitación a "+u.mail+".");}
+    else if(a==="del"){uDel=u.id;drawUsers();}
+    else if(a==="delno"){uDel=null;drawUsers();}
+    else if(a==="delok"){var d=U(+b.dataset.id);USERS=USERS.filter(function(x){return x!==d});uDel=null;audit("Usuarios","Baja de usuario",d.name+" · "+d.mail+" · "+ROLES[d.role].n);toast("Se eliminó el usuario de "+d.name+".");drawUsers();drawCU();}});
+  $("cu-sel").addEventListener("change",function(){CU=U(+this.value);drawCU();audit("Acceso","Inicio de sesión","Cambio de usuario en la demo · segundo factor verificado");drawUsers();toast("Ahora usás la herramienta como "+CU.name+" ("+ROLES[CU.role].n+"). Todo lo que hagas queda registrado a su nombre.");});
+  // registro
+  var AU_ALL=[];
+  function fillAuditFilters(){var su=$("a-user").value,sm=$("a-mod").value;
+    var ids=[];AUD.forEach(function(a){if(ids.indexOf(a.uid)<0)ids.push(a.uid)});USERS.forEach(function(u){if(ids.indexOf(u.id)<0)ids.push(u.id)});
+    AU_ALL=ids;$("a-user").innerHTML='<option value="">Todos los usuarios</option>'+ids.map(function(id){var u=U(id);return'<option value="'+id+'">'+(u?esc(u.name):"Usuario eliminado #"+id)+'</option>'}).join("");$("a-user").value=su;
+    var mods=["Acceso","Ficha","Cargas","Postulantes","Etapas y reglas","Usuarios"];$("a-mod").innerHTML='<option value="">Todos los módulos</option>'+mods.map(function(m){return"<option>"+m+"</option>"}).join("");$("a-mod").value=sm;}
+  var NAMES={};USERS.forEach(function(u){NAMES[u.id]=u});
+  function drawAudit(){var fu=$("a-user").value,fm=$("a-mod").value,fq=norm($("a-q").value||"");
+    var L=AUD.filter(function(a){return(!fu||a.uid===+fu)&&(!fm||a.mod===fm)&&(!fq||norm(a.det+" "+a.acc).indexOf(fq)>=0)});
+    $("a-count").textContent="Mostrando "+L.length+" de "+AUD.length+" eventos";
+    $("a-body").innerHTML=L.map(function(a,k){var u=U(a.uid)||NAMES[a.uid],R=u?ROLES[u.role]:null;
+      return'<tr class="'+(k<freshN&&!fu&&!fm&&!fq?"fresh":"")+'"><td>'+a.ts+'</td><td><b>'+(u?esc(u.name):"—")+'</b><br><small style="color:var(--muted)">'+(u?esc(u.user):"")+(R?' · '+R.n:"")+(u&&!U(a.uid)?" · eliminado":"")+'</small></td><td>'+a.mod+'</td><td>'+esc(a.acc)+'</td><td class="det">'+esc(a.det)+'</td><td class="ip">'+(u?u.ip:"—")+'</td></tr>'}).join("")||'<tr><td colspan="6" class="cap">No hay eventos con esos filtros.</td></tr>';
+    freshN=0;}
+  ["a-user","a-mod"].forEach(function(id){$(id).addEventListener("change",drawAudit)});$("a-q").addEventListener("input",drawAudit);
+  $("a-exp").addEventListener("click",function(){var nrows=$("a-body").querySelectorAll("tr").length;audit("Usuarios","Exportación del registro de actividad",nrows+" eventos exportados");toast("En la versión real se descarga el registro filtrado en Excel, firmado con tu usuario.");});
+  document.querySelector(".seg").addEventListener("click",function(e){var b=e.target.closest("[data-sg]");if(!b)return;
+    document.querySelectorAll(".sg").forEach(function(x){x.setAttribute("aria-selected",x===b?"true":"false")});
+    document.querySelectorAll(".sgp").forEach(function(p){p.hidden=p.dataset.sgp!==b.dataset.sg});if(b.dataset.sg==="audit"){fillAuditFilters();drawAudit();}});
+  drawCU();drawUsers();fillAuditFilters();drawAudit();
   // Navegación
   var navs=document.querySelectorAll(".nav"),scr=document.querySelectorAll(".screen");
   function show(k){scr.forEach(function(s){s.hidden=s.dataset.screen!==k});navs.forEach(function(b){b.setAttribute("aria-current",b.dataset.s===k?"true":"false")});}
