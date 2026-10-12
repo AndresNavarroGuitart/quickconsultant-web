@@ -232,6 +232,45 @@ body{padding:0;display:flex;flex-direction:column}
 .side{overflow:auto}
 .toast{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:#fff;padding:12px 16px;border-radius:6px;font-size:13px;max-width:min(380px,calc(100% - 40px));box-shadow:0 10px 30px -10px rgba(0,0,0,.4)}
 .btn:disabled{opacity:.6;cursor:default}
+.wtop{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
+.wsum{font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:999px}
+.wsum.ok{background:var(--ok-soft);color:var(--ok)}
+.wsum.bad{background:var(--warn-soft);color:var(--warn)}
+.wbar div{min-width:2px}
+.wleg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted)}
+.wleg span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--brand);opacity:var(--o);margin-right:6px;vertical-align:-1px}
+.addf{border-color:var(--brand);background:var(--brand-soft)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.fgrid label{display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted)}
+.fgrid label small{font-weight:400}
+.fgrid .wide{grid-column:span 2}
+.fin{font:inherit;font-size:13px;font-weight:400;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:7px 10px;width:100%}
+.fin:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.ferr{font-size:13px;color:var(--brand);font-weight:700}
+.rules td{vertical-align:middle}
+.rules .hcol{width:28px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.grip{cursor:grab;color:var(--muted);font-size:16px;user-select:none;padding:0 2px}
+.rules tr.lockd td{color:var(--muted)}
+.rules tr.dragging{opacity:.35}
+.rules tr.drop-before td{box-shadow:inset 0 2px 0 var(--brand)}
+.rules tr.drop-after td{box-shadow:inset 0 -2px 0 var(--brand)}
+.rules tr.isnew td:nth-child(3) b::after{content:"Nueva";margin-left:8px;font-size:10px;font-weight:700;color:var(--brand);background:var(--brand-soft);padding:1px 6px;border-radius:999px;vertical-align:1px}
+.rules tr.flash td{animation:flash 1.2s ease}
+@keyframes flash{from{background:var(--brand-soft)}to{background:transparent}}
+.cin{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:5px;padding:4px 6px;color:var(--ink);background:var(--paper)}
+.cin.w{width:58px;text-align:right}
+.cin.rl{width:100%;min-width:200px}
+.cin:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.ib{all:unset;cursor:pointer;width:26px;height:26px;border-radius:5px;display:inline-grid;place-items:center;color:var(--ink);border:1px solid var(--line);font-size:12px;margin-left:4px;background:var(--paper)}
+.ib:hover{border-color:var(--brand);color:var(--brand)}
+.ib:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.ib[disabled]{opacity:.3;cursor:default;border-color:var(--line);color:var(--muted)}
+.chg{margin:0;padding-left:18px;font-size:13px;display:grid;gap:4px}
+@media (max-width:640px){.fgrid .wide{grid-column:auto}}
+[hidden]{display:none!important}
+.fgrid label,.fgrid .fin{min-width:0}
+.main>.screen{min-width:0}
 @media (max-width:820px){body{display:block}.app{min-height:0}.main{overflow:visible;padding:16px}}
 </style>
 </head>
@@ -331,18 +370,25 @@ body{padding:0;display:flex;flex-direction:column}
 
     <!-- REGLAS -->
     <div class="screen" data-screen="rules" hidden>
-      <div class="bar"><div><h3>Etapas y reglas</h3><span class="sub">Versión 3 · aprobada por Gerencia el 28/09/2026. Cambiarla recalcula el orden de mérito y queda registrado.</span></div><span class="sample">Datos de ejemplo</span></div>
-      <div class="panel"><h4>Ponderación del score global</h4><div class="wbar"><div style="flex:35;--o:1"></div><div style="flex:20;--o:.8"></div><div style="flex:15;--o:.62"></div><div style="flex:20;--o:.46"></div><div style="flex:10;--o:.3"></div></div><span class="cap">UNC 35% · Assessment 20% · Psicotécnico 15% · Entrevista 20% · Antecedentes 10% = 100%</span></div>
-      <div class="tbl-scroll"><table class="dt num"><thead><tr><th>Etapa</th><th>Responsable</th><th>Tipo de resultado</th><th class="r">Peso</th><th>Regla para seguir</th><th>Estado</th></tr></thead><tbody>
-        <tr><td>Requisitos y check documental</td><td>ESENTIA</td><td>Sí / No</td><td class="r">—</td><td>3 preguntas excluyentes en “Sí”</td><td><span class="chip ok">🔒 Cerrada</span></td></tr>
-        <tr><td>Examen técnico</td><td>UNC</td><td>Nota 0–100</td><td class="r">35%</td><td>Presente y nota ≥ 70</td><td><span class="chip ok">🔒 Cerrada</span></td></tr>
-        <tr><td>Assessment</td><td>Consultora externa</td><td>Puntaje 0–100</td><td class="r">20%</td><td>Puntaje ≥ 60</td><td><span class="chip ok">🔒 Cerrada</span></td></tr>
-        <tr><td>Psicotécnico</td><td>Consultoras psico</td><td>Dictamen + puntaje</td><td class="r">15%</td><td>Dictamen “Apto”</td><td><span class="chip ok">🔒 Cerrada</span></td></tr>
-        <tr><td>Entrevista de línea</td><td>Bancor</td><td>Calificación 0–100</td><td class="r">20%</td><td>Calificación ≥ 65</td><td><span class="chip cur">En curso</span></td></tr>
-        <tr><td>Antecedentes</td><td>Nosis / ESENTIA</td><td>Score + validaciones</td><td class="r">10%</td><td>Sin deudas y referencias favorables</td><td><span class="chip warn">Pendiente</span></td></tr>
-        <tr><td>Orden de mérito</td><td>Automático</td><td>Posición</td><td class="r">—</td><td>Por vacante y localidad, desempate por nota UNC</td><td><span class="chip warn">Pendiente</span></td></tr>
-      </tbody></table></div>
-      <span class="foot">Cerrar una etapa congela sus resultados. Reabrirla exige motivo y aprobación de la Gerencia.</span>
+      <div class="bar"><div><h3>Etapas y reglas</h3><span class="sub" id="ver-sub">Versión 3 · aprobada por Gerencia el 28/09/2026. Cambiarla recalcula el orden de mérito y queda registrado.</span></div>
+        <div class="filters"><button class="btn ghost" type="button" id="add-open">+ Agregar etapa</button><button class="btn" type="button" id="rules-save" disabled>Guardar versión 4</button></div></div>
+      <div class="panel"><div class="wtop"><h4>Ponderación del score global</h4><span class="wsum" id="wsum"></span></div><div class="wbar" id="wbar"></div><div class="wleg" id="wleg"></div></div>
+      <form class="panel addf" id="addf" hidden novalidate>
+        <h4>Nueva etapa</h4>
+        <div class="fgrid">
+          <label for="n-name">Nombre de la etapa<input id="n-name" class="fin" placeholder="Ej.: Prueba de inglés" maxlength="60"></label>
+          <label for="n-who">Responsable<input id="n-who" class="fin" placeholder="Ej.: Instituto de idiomas" maxlength="40"></label>
+          <label for="n-type">Tipo de resultado<select id="n-type" class="fin"><option>Nota 0–100</option><option>Puntaje 0–100</option><option>Sí / No</option><option>Dictamen</option></select></label>
+          <label for="n-w">Peso en el score (%)<input id="n-w" class="fin" type="number" min="0" max="100" step="1" value="0"><small>0 = filtro sin puntaje</small></label>
+          <label for="n-rule" class="wide">Regla para seguir<input id="n-rule" class="fin" placeholder="Ej.: Nivel B1 o superior" maxlength="80"></label>
+          <label for="n-pos" class="wide">Ubicarla después de<select id="n-pos" class="fin"></select></label>
+        </div>
+        <p class="ferr" id="n-err" hidden></p>
+        <div class="filters"><button class="btn" type="submit">Agregar etapa</button><button class="btn ghost" type="button" id="add-cancel">Cancelar</button></div>
+      </form>
+      <div class="tbl-scroll"><table class="dt num rules"><thead><tr><th class="hcol"><span class="sr">Mover</span></th><th>#</th><th>Etapa</th><th>Responsable</th><th>Tipo de resultado</th><th class="r">Peso</th><th>Regla para seguir</th><th>Estado</th><th class="r">Orden</th></tr></thead><tbody id="rules-body"></tbody></table></div>
+      <div class="panel" id="pending" hidden><h4>Cambios sin guardar</h4><ul class="chg" id="chg"></ul><div class="filters"><button class="btn ghost" type="button" id="rules-reset">Descartar cambios</button></div></div>
+      <span class="foot">Arrastrá las etapas desde ⠿ o usá las flechas. Las etapas cerradas quedan fijas y congelan sus resultados; el orden de mérito siempre va al final. Reabrir una etapa exige motivo y aprobación de la Gerencia.</span>
     </div>
 
     <!-- SEGURIDAD -->
@@ -450,6 +496,85 @@ body{padding:0;display:flex;flex-direction:column}
   document.getElementById("newload").addEventListener("click",function(){toast("Elegís proveedor y etapa: la plantilla define qué columnas se aceptan.")});
   document.querySelectorAll(".act").forEach(function(a){a.setAttribute("role","button");a.tabIndex=0;a.style.cursor="pointer";a.addEventListener("click",function(){toast(a.textContent+": "+a.previousElementSibling.firstChild.textContent.trim())})});
   document.getElementById("f-vac").addEventListener("change",function(){var v=this.selectedIndex;document.querySelectorAll("#heat tbody tr").forEach(function(r,i){r.style.opacity=(!v||i===v-1||r.classList.contains("tot"))?1:.25})});
+  // Etapas y reglas: editor
+  var STG0=[
+    {id:"req",name:"Requisitos y check documental",who:"ESENTIA",type:"Sí / No",w:0,rule:"3 preguntas excluyentes en “Sí”",st:"closed"},
+    {id:"unc",name:"Examen técnico",who:"UNC",type:"Nota 0–100",w:35,rule:"Presente y nota ≥ 70",st:"closed"},
+    {id:"ass",name:"Assessment",who:"Consultora externa",type:"Puntaje 0–100",w:20,rule:"Puntaje ≥ 60",st:"closed"},
+    {id:"psi",name:"Psicotécnico",who:"Consultoras psico",type:"Dictamen + puntaje",w:15,rule:"Dictamen “Apto”",st:"closed"},
+    {id:"ent",name:"Entrevista de línea",who:"Bancor",type:"Calificación 0–100",w:20,rule:"Calificación ≥ 65",st:"cur"},
+    {id:"ant",name:"Antecedentes",who:"Nosis / ESENTIA",type:"Score + validaciones",w:10,rule:"Sin deudas y referencias favorables",st:"pend"},
+    {id:"mer",name:"Orden de mérito",who:"Automático",type:"Posición",w:0,rule:"Por vacante y localidad, desempate por nota UNC",st:"pend",end:true}];
+  var clone=function(a){return a.map(function(s){return Object.assign({},s)})};
+  var STG=clone(STG0),CHG=[],ver=3,seq=0,dragId=null;
+  var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+  var firstMov=function(){var i=0;while(i<STG.length&&STG[i].st==="closed")i++;return i};
+  var lastMov=function(){return STG.length-2};
+  var movable=function(s){return s.st!=="closed"&&!s.end};
+  var stChip={closed:'<span class="chip ok">🔒 Cerrada</span>',cur:'<span class="chip cur">En curso</span>',pend:'<span class="chip warn">Pendiente</span>'};
+  function note(m){CHG.push(m);}
+  function renderRules(flashId){
+    var tb=document.getElementById("rules-body"),fm=firstMov(),lm=lastMov();
+    tb.innerHTML=STG.map(function(s,i){var mv=movable(s),ed=s.st!=="closed"&&!s.end;
+      return '<tr data-id="'+s.id+'" class="'+(mv?"":"lockd ")+(s.isNew?"isnew ":"")+(s.id===flashId?"flash":"")+'"'+(mv?' draggable="true"':'')+'>'+
+      '<td>'+(mv?'<span class="grip" title="Arrastrar para reordenar" aria-hidden="true">⠿</span>':'<span class="lock" title="'+(s.end?"Siempre al final":"Etapa cerrada")+'">🔒</span>')+'</td>'+
+      '<td>'+(i+1)+'</td><td><b>'+esc(s.name)+'</b></td><td>'+esc(s.who)+'</td><td>'+esc(s.type)+'</td>'+
+      '<td class="r">'+(ed?'<input class="cin w" id="w-'+s.id+'" type="number" min="0" max="100" step="1" value="'+s.w+'" aria-label="Peso de '+esc(s.name)+'">%':(s.w?s.w+"%":"—"))+'</td>'+
+      '<td>'+(ed?'<input class="cin rl" id="r-'+s.id+'" value="'+esc(s.rule)+'" aria-label="Regla de '+esc(s.name)+'">':esc(s.rule))+'</td>'+
+      '<td>'+stChip[s.st]+'</td>'+
+      '<td class="r" style="white-space:nowrap">'+(mv?'<button class="ib" type="button" data-mv="-1" aria-label="Subir '+esc(s.name)+'"'+(i<=fm?" disabled":"")+'>▲</button><button class="ib" type="button" data-mv="1" aria-label="Bajar '+esc(s.name)+'"'+(i>=lm?" disabled":"")+'>▼</button>'+(s.st==="pend"?'<button class="ib" type="button" data-del aria-label="Quitar '+esc(s.name)+'">✕</button>':''):'<span class="lock">'+(s.end?"Fija al final":"Fija")+'</span>')+'</td></tr>';}).join("");
+    // pesos
+    var ws=STG.filter(function(s){return s.w>0}),sum=ws.reduce(function(a,s){return a+s.w},0),n=ws.length;
+    var op=function(k){return n<2?1:(1-k*(0.72/(n-1))).toFixed(2)};
+    document.getElementById("wbar").innerHTML=ws.map(function(s,k){return'<div style="flex:'+s.w+';--o:'+op(k)+'" title="'+esc(s.name)+' '+s.w+'%"></div>'}).join("");
+    document.getElementById("wleg").innerHTML=ws.map(function(s,k){return'<span style="--o:'+op(k)+'">'+esc(s.name)+' '+s.w+'%</span>'}).join("");
+    var wsEl=document.getElementById("wsum");wsEl.className="wsum "+(sum===100?"ok":"bad");
+    wsEl.textContent=sum===100?"Suman 100% ✓":"Suman "+sum+"% · "+(sum<100?"faltan "+(100-sum):"sobran "+(sum-100))+" puntos para guardar";
+    // posición en el formulario
+    var ps=document.getElementById("n-pos"),keep=ps.value;
+    ps.innerHTML=STG.slice(fm-1>=0?fm-1:0,STG.length-1).map(function(s){return'<option value="'+s.id+'">'+esc(s.name)+'</option>'}).join("");
+    if(keep&&ps.querySelector('option[value="'+keep+'"]'))ps.value=keep;else ps.value=STG[STG.length-2].id;
+    // cambios
+    var dirty=CHG.length>0;document.getElementById("pending").hidden=!dirty;
+    document.getElementById("chg").innerHTML=CHG.map(function(c){return"<li>"+esc(c)+"</li>"}).join("");
+    var sv=document.getElementById("rules-save");sv.disabled=!dirty||sum!==100;sv.textContent="Guardar versión "+(ver+1);
+    sv.title=sum!==100?"Los pesos tienen que sumar 100%":"";
+  }
+  function moveTo(id,to){var from=STG.findIndex(function(s){return s.id===id});if(from<0)return;
+    to=Math.max(firstMov(),Math.min(lastMov(),to));if(to===from)return;
+    var s=STG.splice(from,1)[0];STG.splice(to,0,s);note("“"+s.name+"” pasó de la posición "+(from+1)+" a la "+(to+1));renderRules(id);}
+  var rb=document.getElementById("rules-body");
+  rb.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;var id=b.closest("tr").dataset.id,i=STG.findIndex(function(s){return s.id===id});
+    if(b.dataset.mv){moveTo(id,i+parseInt(b.dataset.mv,10));var nb=rb.querySelector('tr[data-id="'+id+'"] button[data-mv="'+b.dataset.mv+'"]');if(nb&&!nb.disabled)nb.focus();}
+    else if(b.hasAttribute("data-del")){var s=STG.splice(i,1)[0];note("Se quitó la etapa “"+s.name+"”"+(s.w?" ("+s.w+"% a redistribuir)":""));renderRules();}});
+  rb.addEventListener("change",function(e){var el=e.target,id=el.closest("tr").dataset.id,s=STG.find(function(x){return x.id===id});
+    if(el.classList.contains("w")){var v=Math.max(0,Math.min(100,Math.round(+el.value||0)));if(v!==s.w){note("Peso de “"+s.name+"”: "+s.w+"% → "+v+"%");s.w=v;}renderRules();}
+    else{var r=el.value.trim();if(r&&r!==s.rule){note("Regla de “"+s.name+"”: "+r);s.rule=r;renderRules();}}});
+  rb.addEventListener("dragstart",function(e){var tr=e.target.closest("tr");if(!tr||!tr.draggable)return;dragId=tr.dataset.id;tr.classList.add("dragging");e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",dragId)}catch(x){}});
+  rb.addEventListener("dragend",function(){dragId=null;rb.querySelectorAll("tr").forEach(function(r){r.classList.remove("dragging","drop-before","drop-after")})});
+  rb.addEventListener("dragover",function(e){if(!dragId)return;var tr=e.target.closest("tr");if(!tr)return;var i=STG.findIndex(function(s){return s.id===tr.dataset.id});
+    if(i<firstMov()-1||i>lastMov())return;e.preventDefault();var r=tr.getBoundingClientRect(),after=e.clientY>r.top+r.height/2;
+    rb.querySelectorAll("tr").forEach(function(x){x.classList.remove("drop-before","drop-after")});tr.classList.add(after?"drop-after":"drop-before");});
+  rb.addEventListener("drop",function(e){if(!dragId)return;e.preventDefault();var tr=e.target.closest("tr");if(!tr)return;
+    var from=STG.findIndex(function(s){return s.id===dragId}),i=STG.findIndex(function(s){return s.id===tr.dataset.id}),r=tr.getBoundingClientRect(),after=e.clientY>r.top+r.height/2;
+    var to=i+(after?1:0);if(from<to)to--;moveTo(dragId,to);});
+  var af=document.getElementById("addf"),err=document.getElementById("n-err");
+  document.getElementById("add-open").addEventListener("click",function(){af.hidden=false;err.hidden=true;document.getElementById("n-name").focus();});
+  document.getElementById("add-cancel").addEventListener("click",function(){af.hidden=true;af.reset();});
+  af.addEventListener("submit",function(e){e.preventDefault();
+    var g=function(id){return document.getElementById(id).value.trim()},name=g("n-name"),who=g("n-who"),w=Math.round(+g("n-w")||0),rule=g("n-rule");
+    var bad=!name?"Poné un nombre para la etapa.":!who?"Indicá quién es responsable de cargar el resultado.":(w<0||w>100)?"El peso tiene que estar entre 0 y 100.":!rule?"Escribí la regla que define quién sigue.":STG.some(function(s){return s.name.toLowerCase()===name.toLowerCase()})?"Ya existe una etapa con ese nombre.":"";
+    if(bad){err.textContent=bad;err.hidden=false;return;}
+    var after=STG.findIndex(function(s){return s.id===g("n-pos")}),id="n"+(++seq);
+    STG.splice(Math.max(firstMov(),after+1),0,{id:id,name:name,who:who,type:g("n-type"),w:w,rule:rule,st:"pend",isNew:true});
+    note("Nueva etapa “"+name+"” en la posición "+(STG.findIndex(function(s){return s.id===id})+1)+(w?" con "+w+"% de peso":" (filtro sin puntaje)"));
+    af.reset();af.hidden=true;renderRules(id);
+    toast(w?"Etapa agregada. Ajustá los pesos para que vuelvan a sumar 100% antes de guardar.":"Etapa agregada como filtro. Guardá la versión para aplicarla.");});
+  document.getElementById("rules-reset").addEventListener("click",function(){STG=clone(STG0);CHG=[];renderRules();toast("Se descartaron los cambios. Vuelve a regir la versión "+ver+".");});
+  document.getElementById("rules-save").addEventListener("click",function(){ver++;STG.forEach(function(s){delete s.isNew});STG0=clone(STG);var n=CHG.length;CHG=[];
+    document.getElementById("ver-sub").textContent="Versión "+ver+" · guardada hoy por Gerencia ESENTIA. El orden de mérito se recalculó y el cambio quedó en la auditoría.";
+    renderRules();toast("Versión "+ver+" guardada con "+n+" cambio"+(n===1?"":"s")+". Se recalculó el orden de mérito.");});
+  renderRules();
   // Navegación
   var navs=document.querySelectorAll(".nav"),scr=document.querySelectorAll(".screen");
   function show(k){scr.forEach(function(s){s.hidden=s.dataset.screen!==k});navs.forEach(function(b){b.setAttribute("aria-current",b.dataset.s===k?"true":"false")});}
