@@ -124,6 +124,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8rem;bac
 .price .v small{font-size:1rem;font-weight:700;opacity:.85;letter-spacing:0}
 .price p{font-size:.92rem;opacity:.92}
 .pay{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.pay.two{grid-template-columns:repeat(2,1fr)}
+.inc .mini{align-content:start}
 .pay div{background:rgba(255,255,255,.14);border-radius:12px;padding:12px;display:grid;gap:2px}
 .pay b{font-size:1.15rem;font-weight:900}
 .pay span{font-size:.76rem;opacity:.9}
@@ -144,10 +146,6 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8rem;bac
 .inc .no li::before{content:"–";position:absolute;left:4px;color:var(--muted);font-weight:900}
 .inc h4{font-size:.95rem;font-weight:800;margin-bottom:10px}
 .note{font-size:.82rem;color:var(--muted);margin-top:14px}
-/* Preguntas */
-ol.q{margin:0;padding:0;list-style:none;counter-reset:q;display:grid;gap:12px;max-width:820px}
-ol.q li{counter-increment:q;display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;align-items:start;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:16px 18px}
-ol.q li::before{content:counter(q);width:32px;height:32px;border-radius:50%;background:var(--grad);color:#fff;font-weight:800;display:grid;place-items:center;font-size:.9rem}
 /* Cierre */
 .cta-end{background:var(--dark);color:#fff;border-radius:24px;padding:44px 36px;display:grid;gap:16px;position:relative;overflow:hidden}
 .cta-end::after{content:"";position:absolute;right:-80px;top:-80px;width:260px;height:260px;border-radius:50%;background:var(--grad);opacity:.35}
@@ -156,6 +154,7 @@ ol.q li::before{content:counter(q);width:32px;height:32px;border-radius:50%;back
 .cta-end p{color:rgba(255,255,255,.75);max-width:620px}
 .contact{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:.92rem}
 .contact span{user-select:all;color:#fff;font-weight:700}
+.cta-end .valid{font-size:.88rem;color:rgba(255,255,255,.7);border-top:1px solid rgba(255,255,255,.15);padding-top:14px;max-width:none}
 footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center}
 @media (max-width:900px){.plan{grid-template-columns:1fr 1fr}.inv{grid-template-columns:1fr}}
 @media (max-width:640px){
@@ -252,33 +251,24 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center}
 <section class="alt" id="inversion"><div class="container">
   <div class="head"><span class="tag">07 · Inversión</span><h2 class="title">Inversión <span class="grad-text">del proyecto</span></h2><p class="sub">Valores en dólares estadounidenses, sin IVA. Precio cerrado para el alcance descripto en esta propuesta.</p></div>
   <div class="inv">
-    <div class="price num"><span class="l">Implementación · pago único</span><span class="v">USD 13.650</span><p>Desarrollo de los seis módulos, importación de la base de HR, plantillas para proveedores, pruebas con datos reales, capacitación y manual de uso.</p>
-      <div class="pay"><div><b>USD 5.460</b><span>40% al aprobar la propuesta</span></div><div><b>USD 4.095</b><span>30% al entregar la beta (etapa 3)</span></div><div><b>USD 4.095</b><span>30% al pasar a producción</span></div></div></div>
+    <div class="price num"><span class="l">Implementación · dos pagos</span><span class="v">USD 850</span><p>Desarrollo de los módulos de la plataforma, importación de la base de HR, plantillas para proveedores, pruebas con datos reales, capacitación y manual de uso.</p>
+      <div class="pay two"><div><b>USD 510</b><span>60% al inicio del proyecto</span></div><div><b>USD 340</b><span>40% restante al finalizar</span></div></div></div>
     <div class="side-inv">
-      <div class="mini num"><span class="l">Mensual · mientras dure el concurso</span><span class="v">USD 350 <small>/ mes</small></span>
-        <div class="lines"><div><span>Infraestructura: hosting, base de datos, respaldos diarios, archivos y correo</span><b>USD 70</b></div><div><span>Soporte y ajustes: 8 horas mensuales</span><b>USD 280</b></div></div></div>
-      <div class="mini num"><span class="l">Opcionales</span>
-        <div class="lines"><div><span>Integración directa con la API de Hiring Room, si el Banco la habilita</span><b>USD 840</b></div><div><span>Configuración para un nuevo concurso</span><b>USD 3.500</b></div><div><span>Hora adicional fuera de alcance</span><b>USD 35</b></div></div></div>
+      <div class="mini num"><span class="l">Mensual · mientras dure el concurso</span><span class="v">USD 170 <small>/ mes</small></span>
+        <div class="lines"><div><span>Infraestructura: hosting, base de datos, respaldos diarios, archivos y correo</span><b>USD 70</b></div><div><span>Soporte y ajustes</span><b>USD 100</b></div></div></div>
     </div>
   </div>
   <div class="inc">
     <div class="mini yes"><h4>Incluye</h4><ul><li>Los módulos descriptos en la sección 04, tal como se ven en la demo</li><li>Hasta 5 plantillas de proveedores y 10 usuarios</li><li>Migración de la base inicial de Hiring Room</li><li>2 sesiones de capacitación y manual de uso</li><li>Garantía de 60 días sobre errores de funcionamiento</li></ul></div>
-    <div class="mini no"><h4>No incluye</h4><ul><li>Carga manual de resultados de proveedores</li><li>Cambios de reglas o etapas luego de aprobada la etapa 1 (se cotizan aparte)</li><li>Auditoría de seguridad externa (pentest)</li><li>Licencias de software de terceros que ESENTIA ya utilice</li></ul></div>
+    <div class="mini no"><h4>No incluye</h4><ul><li>Integración directa con la API de Hiring Room (se cotiza aparte, si el Banco la habilita)</li><li>Configuración para un nuevo concurso (se cotiza aparte)</li><li>Horas adicionales fuera del alcance de esta propuesta</li><li>Carga manual de resultados de proveedores</li><li>Cambios de reglas o etapas luego de aprobada la etapa 1 (se cotizan aparte)</li><li>Auditoría de seguridad externa (pentest)</li><li>Licencias de software de terceros que ESENTIA ya utilice</li></ul></div>
   </div>
-  <p class="note">Validez de la propuesta: 30 días. Precio sujeto a confirmar el alcance en el relevamiento de la semana 1.</p>
+  <p class="note">Precio sujeto a confirmar el alcance en el relevamiento de la etapa 1.</p>
 </div></section>
 
 <section><div class="container">
-  <div class="head"><span class="tag">08 · Próximos pasos</span><h2 class="title">Preguntas para <span class="grad-text">arrancar</span></h2></div>
-  <ol class="q">
-    <li>¿Las ponderaciones de la Base Madre (35 / 20 / 15 / 20 / 10) y el corte de 70 en el examen UNC son definitivos o pueden cambiar durante el concurso?</li>
-    <li>¿El orden de mérito se arma por vacante, por localidad o por sucursal?</li>
-    <li>Si una persona se postuló a dos vacantes, ¿rinde un solo examen UNC que vale para ambas?</li>
-    <li>¿El Banco accederá directamente a la plataforma o recibirá reportes exportados por ESENTIA?</li>
-    <li>¿En qué formato envían hoy la UNC y las consultoras sus resultados? Con un ejemplo de cada uno armamos las plantillas.</li>
-  </ol>
-  <div class="cta-end" style="margin-top:48px"><span class="tag" style="color:#F472B6">Quick Consultant</span><h2 class="title">¿Avanzamos con el <span class="grad-text">relevamiento</span>?</h2><p>Con la aprobación de la propuesta coordinamos la primera reunión de trabajo y en una semana tienen la base de HR cargada en la plataforma.</p>
-    <div class="contact"><span>WhatsApp +54 9 351 334-4814</span><span>instagram.com/quickconsultant</span></div></div>
+  <div class="cta-end"><span class="tag" style="color:#F472B6">Quick Consultant</span><h2 class="title">¿<span class="grad-text">Avanzamos</span>?</h2><p>Con la aprobación de la propuesta coordinamos la primera reunión de trabajo y en una semana tienen la base de HR cargada en la plataforma.</p>
+    <div class="contact"><a class="btn btn-p" href="https://www.quickconsultant.com.ar" target="_blank" rel="noopener">www.quickconsultant.com.ar</a></div>
+    <p class="valid">Propuesta válida por 15 días corridos a partir del envío de la propuesta.</p></div>
 </div></section>
 
 <footer>Quick Consultant · Transformación digital · Propuesta preparada para ESENTIA Recursos Humanos · Octubre 2026</footer>
