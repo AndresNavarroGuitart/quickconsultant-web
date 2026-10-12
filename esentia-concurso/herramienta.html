@@ -269,6 +269,17 @@ body{padding:0;display:flex;flex-direction:column}
 .chg{margin:0;padding-left:18px;font-size:13px;display:grid;gap:4px}
 @media (max-width:640px){.fgrid .wide{grid-column:auto}}
 [hidden]{display:none!important}
+/* ficha dentro de postulantes */
+.crumb{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;font-size:13px}
+.back{all:unset;cursor:pointer;font-weight:700;color:var(--brand);padding:6px 10px;border-radius:6px;border:1px solid var(--line);background:var(--paper)}
+.back:hover{border-color:var(--brand)}
+.back:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.cpath{color:var(--muted)}
+.pn{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.pn .ib{margin:0}
+.dt tr.click td:first-child b{color:var(--ink)}
+.dt tr.click:hover td:first-child b{color:var(--brand);text-decoration:underline}
+.open-hint{font-size:11px;color:var(--muted)}
 /* tablero */
 .cov td{vertical-align:middle}
 .cov th{white-space:normal;vertical-align:bottom;line-height:1.3}
@@ -438,7 +449,6 @@ textarea.fin{resize:vertical;line-height:1.45}
       <div class="proj"><b>Concurso Bancor 2026</b>Cierre de inscripción: 30/09/2026</div>
       <button class="nav" data-s="dash" aria-current="true"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></svg>Tablero</button>
       <button class="nav" data-s="list"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6M16 5.5a3 3 0 0 1 0 5.6M18 14.6c1.4.7 2.3 2.2 2.6 4.4"/></svg>Postulantes</button>
-      <button class="nav" data-s="ficha"><svg viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Ficha</button>
       <button class="nav" data-s="load"><svg viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M4.5 15v4.5h15V15"/></svg>Cargas de terceros</button>
       <button class="nav" data-s="rules"><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h9M5 18h5"/><circle cx="17.5" cy="16.5" r="2.5"/></svg>Etapas y reglas</button>
       <button class="nav" data-s="sec"><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>Seguridad y auditoría</button>
@@ -498,7 +508,7 @@ textarea.fin{resize:vertical;line-height:1.45}
 
     <!-- POSTULANTES -->
     <div class="screen" data-screen="list" hidden>
-      <div class="bar"><div><h3>Postulantes</h3><span class="sub">Vista de lectura. Las notas se modifican solo con una carga o una corrección autorizada.</span></div>
+      <div class="bar"><div><h3>Postulantes</h3><span class="sub">Tocá un postulante para abrir su ficha: recorrido por etapas, estados, observaciones e historial.</span></div>
         <div class="filters"><input class="search" id="q" placeholder="Buscar por nombre o DNI" aria-label="Buscar postulante"><select class="sel" id="f-st" aria-label="Estado"><option value="">Todos los estados</option><option value="cur">En carrera</option><option value="out">Excluidos</option></select><button class="btn ghost" type="button" id="exp">Exportar a Excel</button></div></div>
       <div class="tbl-scroll"><table class="dt num" id="tbl"><thead><tr><th>Postulante</th><th>Vacante · Localidad</th><th>Etapa actual</th><th class="r">UNC</th><th class="r">Assess.</th><th class="r">Psico</th><th class="r">Entrev.</th><th class="r">Score</th><th class="r">Mérito</th></tr></thead><tbody></tbody></table></div>
       <span class="foot">Mostrando 10 de 4.812 · <span class="lock">🔒</span> etapa cerrada, el valor no se puede editar · Datos de ejemplo</span>
@@ -506,6 +516,8 @@ textarea.fin{resize:vertical;line-height:1.45}
 
     <!-- FICHA -->
     <div class="screen" data-screen="ficha" hidden>
+      <div class="crumb"><button class="back" type="button" id="f-back">← Postulantes</button><span class="cpath" id="f-path"></span>
+        <span class="pn"><button class="ib" type="button" id="f-prev" aria-label="Postulante anterior">‹</button><span id="f-pos" class="num"></span><button class="ib" type="button" id="f-next" aria-label="Postulante siguiente">›</button></span></div>
       <div class="person"><div><span class="eyebrow">Ficha del postulante</span><h4 id="p-name">Martina Ledesma</h4><span class="id" id="p-id">DNI 38.***.214 · Cajero / Tesorero · Córdoba Capital · ID HR 5fa977…cb</span></div>
         <div class="score"><span class="big num" id="p-score">84,6</span><small id="p-pos">Score parcial · posición 3 de 61</small></div></div>
       <div class="ficha">
@@ -760,13 +772,14 @@ textarea.fin{resize:vertical;line-height:1.45}
   var mask=function(d){return d.slice(0,2)+".***."+d.slice(-3)},UPD={};
   var tb=document.querySelector("#tbl tbody"),q=document.getElementById("q"),fs=document.getElementById("f-st");
   var n=function(v){return v==null?'<span class="lock">—</span>':v.toLocaleString("es-AR",{minimumFractionDigits:1,maximumFractionDigits:1})};
-  function render(){var t=(q.value||"").toLowerCase(),s=fs.value;tb.innerHTML="";
+  var VIS=[];
+  function render(){var t=(q.value||"").toLowerCase(),s=fs.value;tb.innerHTML="";VIS=[];
     P.forEach(function(p,i){if(s&&p[4]!==s)return;if(t&&(p[0]+" "+p[1]+" "+mask(p[1])).toLowerCase().replace(/\./g,"").indexOf(t.replace(/\./g,""))<0)return;
-      var tr=document.createElement("tr");tr.className="click"+(UPD[p[1]]?" upd":"");tr.tabIndex=0;
+      var tr=document.createElement("tr");tr.className="click"+(UPD[p[1]]?" upd":"");tr.dataset.dni=p[1];tr.title="Abrir la ficha de "+p[0];tr.tabIndex=0;
       tr.innerHTML='<td class="nm"><b>'+p[0]+'</b><small>DNI '+mask(p[1])+(UPD[p[1]]?' <span class="newb">Actualizado por carga</span>':'')+'</small></td><td>'+p[2]+'<br><small style="color:var(--muted)">'+p[3]+'</small></td><td><span class="chip '+p[4]+'">'+p[5]+'</span></td><td class="r">'+n(p[6])+(p[6]!=null?' <span class="lock">🔒</span>':'')+'</td><td class="r">'+n(p[7])+'</td><td class="r">'+n(p[8])+'</td><td class="r">'+n(p[11])+'</td><td class="r"><b>'+n(p[9])+'</b></td><td class="r">'+(p[10]?p[10]+"°":'<span class="lock">—</span>')+'</td>';
       var open=function(){openFicha(p)};
       tr.addEventListener("click",open);tr.addEventListener("keydown",function(e){if(e.key==="Enter")open()});
-      tb.appendChild(tr);});}
+      VIS.push(p);tb.appendChild(tr);});}
   // Ficha editable: estado y observación por etapa + observación general
   var ST_NAMES=["Inscripción","Requisitos y check documental","Examen técnico UNC · 35%","Assessment · 20%","Psicotécnico · 15%","Entrevista de línea · 20%","Antecedentes · 10%"];
   var ST_SHORT=["Inscripción","Requisitos","Examen UNC","Assessment","Psicotécnico","Entrevista de línea","Antecedentes"];
@@ -813,7 +826,15 @@ textarea.fin{resize:vertical;line-height:1.45}
     gv.innerHTML=S.gen?'<div class="obs big"><p>'+esc(S.gen.t)+'</p><small>'+esc(S.gen.m)+'</small></div><button class="btn ghost" type="button" id="gen-edit">Editar observación</button>':'<p class="cap">Todavía no hay observaciones generales sobre este postulante.</p><button class="btn ghost" type="button" id="gen-edit">+ Agregar observación</button>';
     document.getElementById("plog").innerHTML=S.log.map(function(x){return"<div>"+esc(x.t)+"<small>"+esc(x.m)+"</small></div>"}).join("");
     if(editing>=0){var se=document.getElementById("es-"+editing);if(se)se.focus();}}
-  function openFicha(p){cur=p;editing=-1;editGen=false;show("ficha");drawFicha();}
+  function openFicha(p){cur=p;editing=-1;editGen=false;show("ficha");drawFicha();drawCrumb();var m=document.querySelector(".main");if(m)m.scrollTop=0;}
+  function drawCrumb(){var L=VIS.indexOf(cur)>=0?VIS:P,i=L.indexOf(cur);
+    document.getElementById("f-path").textContent="/ "+cur[0];
+    document.getElementById("f-pos").textContent=(i+1)+" de "+L.length+(L===VIS&&VIS.length<P.length?" (filtrados)":"");
+    document.getElementById("f-prev").disabled=i<=0;document.getElementById("f-next").disabled=i>=L.length-1;}
+  document.getElementById("f-back").addEventListener("click",function(){show("list");var r=document.querySelector('#tbl tbody tr.click[data-dni="'+cur[1]+'"]');if(r)r.focus();});
+  document.getElementById("f-prev").addEventListener("click",function(){var L=VIS.indexOf(cur)>=0?VIS:P,i=L.indexOf(cur);if(i>0)openFicha(L[i-1]);});
+  document.getElementById("f-next").addEventListener("click",function(){var L=VIS.indexOf(cur)>=0?VIS:P,i=L.indexOf(cur);if(i<L.length-1)openFicha(L[i+1]);});
+  document.addEventListener("keydown",function(e){var fs2=document.querySelector('[data-screen="ficha"]');if(fs2.hidden||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;if(e.key==="Escape")document.getElementById("f-back").click();});
   var tlEl=document.getElementById("tl");
   tlEl.addEventListener("click",function(e){var b=e.target.closest("[data-ed]");if(b){var i=+b.dataset.ed;editing=editing===i?-1:i;drawFicha();return;}
     if(e.target.closest("[data-cancel]")){editing=-1;drawFicha();}});
@@ -1144,7 +1165,7 @@ textarea.fin{resize:vertical;line-height:1.45}
   drawCU();drawUsers();fillAuditFilters();drawAudit();
   // Navegación
   var navs=document.querySelectorAll(".nav"),scr=document.querySelectorAll(".screen");
-  function show(k){scr.forEach(function(s){s.hidden=s.dataset.screen!==k});navs.forEach(function(b){b.setAttribute("aria-current",b.dataset.s===k?"true":"false")});}
+  function show(k){scr.forEach(function(s){s.hidden=s.dataset.screen!==k});var nk=k==="ficha"?"list":k;navs.forEach(function(b){b.setAttribute("aria-current",b.dataset.s===nk?"true":"false")});}
   navs.forEach(function(b){b.addEventListener("click",function(){show(b.dataset.s)})});
   openFicha(P[0]);show("dash");
 })();
