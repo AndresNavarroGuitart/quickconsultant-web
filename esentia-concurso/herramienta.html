@@ -269,6 +269,25 @@ body{padding:0;display:flex;flex-direction:column}
 .chg{margin:0;padding-left:18px;font-size:13px;display:grid;gap:4px}
 @media (max-width:640px){.fgrid .wide{grid-column:auto}}
 [hidden]{display:none!important}
+.col{display:grid;gap:16px;align-content:start;min-width:0}
+.tbody{min-width:0}
+.ti .res{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.eb{all:unset;cursor:pointer;font-size:12px;font-weight:700;color:var(--brand);padding:2px 4px;border-radius:4px}
+.eb:hover{text-decoration:underline}
+.eb:focus-visible{outline:2px solid var(--brand)}
+.ti.open .tt{color:var(--brand)}
+.obs{margin-top:8px;border-left:3px solid var(--brand);background:var(--tint);padding:8px 10px;border-radius:0 6px 6px 0;font-size:13px;display:grid;gap:2px}
+.obs small{color:var(--muted);font-size:11.5px}
+.obs.big{font-size:14px;margin-top:0}
+.obsf{display:grid;gap:10px;margin-top:10px}
+.ste{background:var(--brand-soft);border-radius:6px;padding:12px}
+.fgrid2{display:grid;grid-template-columns:minmax(140px,180px) minmax(0,1fr);gap:10px}
+.fgrid2 label{display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted);align-content:start;min-width:0}
+textarea.fin{resize:vertical;line-height:1.45}
+.hint{font-size:12px;color:var(--muted)}
+.estado-gen{font-size:11.5px}
+@media (max-width:640px){.fgrid2{grid-template-columns:1fr}}
+
 .fgrid label,.fgrid .fin{min-width:0}
 .main>.screen{min-width:0}
 @media (max-width:820px){body{display:block}.app{min-height:0}.main{overflow:visible;padding:16px}}
@@ -337,7 +356,13 @@ body{padding:0;display:flex;flex-direction:column}
         <div class="score"><span class="big num" id="p-score">84,6</span><small id="p-pos">Score parcial · posición 3 de 61</small></div></div>
       <div class="ficha">
         <div class="panel"><h4>Recorrido por etapas</h4><div class="tl" id="tl"></div></div>
-        <div class="panel"><h4>Historial de cambios</h4><div class="log" id="plog"></div><span class="foot">Para responder al Banco: este historial se exporta con la ficha.</span></div>
+        <div class="col">
+          <div class="panel"><div class="wtop"><h4>Observación general</h4><span class="estado-gen" id="p-state"></span></div>
+            <div id="gen-view"></div>
+            <form id="gen-form" class="obsf" novalidate hidden><label for="gen-txt" class="sr">Observación general</label><textarea id="gen-txt" class="fin" rows="4" maxlength="600" placeholder="Ej.: Pidió reprogramar la entrevista por viaje laboral. Prioridad para Sucursal Centro."></textarea><div class="filters"><button class="btn" type="submit">Guardar observación</button><button class="btn ghost" type="button" id="gen-cancel">Cancelar</button></div></form>
+          </div>
+          <div class="panel"><h4>Historial de cambios</h4><div class="log" id="plog"></div><span class="foot">Para responder al Banco: este historial se exporta con la ficha.</span></div>
+        </div>
       </div>
     </div>
 
@@ -458,34 +483,75 @@ body{padding:0;display:flex;flex-direction:column}
       var open=function(){openFicha(p)};
       tr.addEventListener("click",open);tr.addEventListener("keydown",function(e){if(e.key==="Enter")open()});
       tb.appendChild(tr);});}
-  function openFicha(p){show("ficha");
+  // Ficha editable: estado y observación por etapa + observación general
+  var ST_NAMES=["Inscripción","Requisitos y check documental","Examen técnico UNC · 35%","Assessment · 20%","Psicotécnico · 15%","Entrevista de línea · 20%","Antecedentes · 10%"];
+  var ST_SHORT=["Inscripción","Requisitos","Examen UNC","Assessment","Psicotécnico","Entrevista de línea","Antecedentes"];
+  var ST_SRC=["Hiring Room · export 30/09/2026","Secundario · Residencia en zona · Incompatibilidad estatal","UNC · UNC_resultados_T04.xlsx","Consultora Pedemonte · 06/10/2026","Consultoras psico · 08/10/2026","Gerente de sucursal + RRHH Bancor · agendada semana del 13/10","Nosis / referencias"];
+  var OKL=["Completa","Cumple","Aprobado","Aprobado","Apto","Aprobada","Favorable"],BADL=["—","No cumple","Desaprobado","Desaprobado","No apto","Desaprobada","Desfavorable"];
+  var lab=function(i,s){return{ok:OKL[i],fail:BADL[i],aus:"Ausente",pend:"Pendiente",wait:"Sin iniciar",na:"No aplica"}[s]};
+  var FS={},cur=null,editing=-1,editGen=false;
+  var now=function(){var d=new Date();return"hoy "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")};
+  function stateOf(p){if(FS[p[1]])return FS[p[1]];
+    var why=p[5],out=p[4]==="out",at=/Requisitos/.test(why)?1:/UNC/.test(why)?2:/Assessment/.test(why)?3:/Psico/.test(why)?4:5;
+    var sc=[null,null,p[6],p[7],p[8],null,null],st=[],L=[{t:"Alta desde Hiring Room",m:"30/09 19:00 · Importación inicial"}];
+    for(var i=0;i<7;i++)st.push(i<at?"ok":i===at?(out?(/Ausente/.test(why)?"aus":"fail"):"pend"):(out?"na":"wait"));
+    if(p[6]!=null)L.unshift({t:"Nota UNC cargada: "+n(p[6]),m:"02/10 10:47 · Carga “UNC_resultados_T04.xlsx”"});
+    if(p[7]!=null)L.unshift({t:"Assessment cargado: "+n(p[7]),m:"06/10 12:02 · Carga “Pedemonte_assessment.xlsx”"});
+    if(p[8]!=null)L.unshift({t:"Dictamen psicotécnico cargado: "+(at===4&&out?"No apto":"Apto, "+n(p[8])),m:"08/10 18:20 · Carga “Psico_lote3.xlsx”"});
+    if(out)L.unshift({t:"Excluido en "+why.split(" · ")[0]+": "+(why.split(" · ")[1]||""),m:"Regla aplicada automáticamente · motivo fundado registrado"});
+    return FS[p[1]]={st:st,sc:sc,obs:[null,null,null,null,null,null,null],gen:null,log:L};}
+  function sync(p,S){ // actualiza el estado del postulante en el listado
+    var f=S.st.findIndex(function(s){return s==="fail"||s==="aus"});
+    if(f>=0){p[4]="out";p[5]=ST_SHORT[f]+" · "+lab(f,S.st[f]);}
+    else{var q=S.st.findIndex(function(s){return s==="pend"||s==="wait"});p[4]="cur";p[5]=q<0?"Etapas completas":ST_SHORT[q];}}
+  function chipFor(i,s){var c={ok:"ok",fail:"out",aus:"out",pend:"cur",wait:"warn",na:"warn"}[s];return'<span class="chip '+c+'">'+lab(i,s)+'</span>';}
+  function drawFicha(){var p=cur,S=stateOf(p),out=p[4]==="out";
     document.getElementById("p-name").textContent=p[0];
     document.getElementById("p-id").textContent="DNI "+p[1]+" · "+p[2]+" · "+p[3];
-    document.getElementById("p-score").textContent=p[9]==null?"—":n(p[9]);
-    document.getElementById("p-pos").textContent=p[10]?"Score parcial · posición "+p[10]+" en su vacante y localidad":"Excluido · sin posición en el orden de mérito";
-    var out=p[4]==="out",why=p[5],motivo=why.split(" · ")[1]||"",S=[
-      ["Inscripción","Hiring Room · export 30/09/2026",null],
-      ["Requisitos y check documental","Secundario · Residencia en zona · Incompatibilidad estatal",null],
-      ["Examen técnico UNC · 35%","UNC · UNC_resultados_T04.xlsx",p[6]],
-      ["Assessment · 20%","Consultora Pedemonte · 06/10/2026",p[7]],
-      ["Psicotécnico · 15%","Consultoras psico · 08/10/2026",p[8]],
-      ["Entrevista de línea · 20%","Gerente de sucursal + RRHH Bancor · agendada semana del 13/10",null],
-      ["Antecedentes · 10%","Nosis / referencias",null]];
-    var at=/Requisitos/.test(why)?1:/UNC/.test(why)?2:/Assessment/.test(why)?3:/Psico/.test(why)?4:5;
-    var h="";S.forEach(function(s,i){var st,res,c,src=s[1];
-      if(i<at){c="var(--ok)";st='<span class="dot full">✓</span>';res=s[2]!=null?'<b class="num">'+n(s[2])+'</b>'+(i===4?"Apto":"Aprobado"):(i===1?"Cumple":"Completa");}
-      else if(i===at&&out){c="var(--out)";st='<span class="dot full">✕</span>';res=(s[2]!=null?'<b class="num">'+n(s[2])+'</b>':'')+'<span class="chip out">'+motivo+'</span>';}
-      else if(i===at){c="var(--brand)";st='<span class="dot">'+(i+1)+'</span>';res='<span class="chip cur">Pendiente</span>';}
-      else{c="var(--line)";st='<span class="dot">'+(i+1)+'</span>';res="—";src=out?"No aplica: excluido en una etapa anterior":"Se habilita al aprobar la etapa anterior";}
-      h+='<div class="ti" style="--c:'+c+'">'+st+'<div><span class="tt">'+s[0]+'</span><br><span class="src">'+src+'</span></div><div class="res">'+res+'</div></div>';});
+    document.getElementById("p-score").textContent=out||p[9]==null?"—":n(p[9]);
+    document.getElementById("p-pos").textContent=!out&&p[10]?"Score parcial · posición "+p[10]+" en su vacante y localidad":"Excluido · sin posición en el orden de mérito";
+    var pe=document.getElementById("p-state");pe.className="chip "+(out?"out":"cur");pe.textContent=out?"Excluido":"En carrera";
+    var h="";S.st.forEach(function(s,i){
+      var c={ok:"var(--ok)",fail:"var(--out)",aus:"var(--out)",pend:"var(--brand)",wait:"var(--line)",na:"var(--line)"}[s];
+      var dot=s==="ok"?'<span class="dot full">✓</span>':(s==="fail"||s==="aus")?'<span class="dot full">✕</span>':'<span class="dot">'+(i+1)+'</span>';
+      var src=s==="na"?"No aplica: excluido en una etapa anterior":s==="wait"?"Se habilita al aprobar la etapa anterior":ST_SRC[i];
+      var res=(S.sc[i]!=null&&s!=="na"&&s!=="wait"?'<b class="num">'+n(S.sc[i])+'</b>':'')+chipFor(i,s)+(i>0?'<button class="eb" type="button" data-ed="'+i+'" aria-label="Editar '+ST_NAMES[i]+'">'+(editing===i?"Cerrar":"Editar")+'</button>':'');
+      var ob=S.obs[i]?'<div class="obs"><p>'+esc(S.obs[i].t)+'</p><small>'+esc(S.obs[i].m)+'</small></div>':'';
+      var ed=editing===i?'<form class="obsf ste" data-form="'+i+'" novalidate><div class="fgrid2"><label for="es-'+i+'">Estado<select id="es-'+i+'" class="fin">'+
+        ["ok","fail","aus","pend"].filter(function(k){return !(k==="aus"&&(i===1))}).map(function(k){return'<option value="'+k+'"'+(k===s?" selected":"")+'>'+lab(i,k)+'</option>'}).join("")+'</select></label>'+
+        '<label for="eo-'+i+'">Observación de la etapa<textarea id="eo-'+i+'" class="fin" rows="3" maxlength="400" placeholder="Motivo del cambio o comentario sobre esta etapa">'+(S.obs[i]?esc(S.obs[i].t):"")+'</textarea></label></div>'+
+        '<p class="ferr" id="ee-'+i+'" hidden></p><p class="hint">Si cambiás el estado, la observación es obligatoria: queda como motivo en la auditoría.'+((s==="ok"||s==="pend")?' Marcar Desaprobado o Ausente excluye al postulante de las etapas siguientes.':' Volver a Aprobado reincorpora al postulante y habilita la etapa siguiente.')+'</p>'+
+        '<div class="filters"><button class="btn" type="submit">Guardar</button><button class="btn ghost" type="button" data-cancel>Cancelar</button></div></form>':'';
+      h+='<div class="ti'+(editing===i?" open":"")+'" style="--c:'+c+'">'+dot+'<div class="tbody"><span class="tt">'+ST_NAMES[i]+'</span><br><span class="src">'+src+'</span>'+ob+ed+'</div><div class="res">'+res+'</div></div>';});
     document.getElementById("tl").innerHTML=h;
-    var L=[["Alta desde Hiring Room","30/09 19:00 · Importación inicial"]];
-    if(p[6]!=null)L.unshift(["Nota UNC cargada: "+n(p[6]),"02/10 10:47 · Carga “UNC_resultados_T04.xlsx”"]);
-    if(p[7]!=null)L.unshift(["Assessment cargado: "+n(p[7]),"06/10 12:02 · Carga “Pedemonte_assessment.xlsx”"]);
-    if(p[8]!=null)L.unshift(["Dictamen psicotécnico cargado: "+(at===4&&out?"No apto":"Apto, "+n(p[8])),"08/10 18:20 · Carga “Psico_lote3.xlsx”"]);
-    if(out)L.unshift(["Excluido en "+why.split(" · ")[0]+": "+motivo,"Regla aplicada automáticamente · motivo fundado registrado"]);
-    document.getElementById("plog").innerHTML=L.map(function(x){return"<div>"+x[0]+"<small>"+x[1]+"</small></div>"}).join("");
-  }
+    var gv=document.getElementById("gen-view"),gf=document.getElementById("gen-form");
+    gf.hidden=!editGen;gv.hidden=editGen;
+    gv.innerHTML=S.gen?'<div class="obs big"><p>'+esc(S.gen.t)+'</p><small>'+esc(S.gen.m)+'</small></div><button class="btn ghost" type="button" id="gen-edit">Editar observación</button>':'<p class="cap">Todavía no hay observaciones generales sobre este postulante.</p><button class="btn ghost" type="button" id="gen-edit">+ Agregar observación</button>';
+    document.getElementById("plog").innerHTML=S.log.map(function(x){return"<div>"+esc(x.t)+"<small>"+esc(x.m)+"</small></div>"}).join("");
+    if(editing>=0){var se=document.getElementById("es-"+editing);if(se)se.focus();}}
+  function openFicha(p){cur=p;editing=-1;editGen=false;show("ficha");drawFicha();}
+  var tlEl=document.getElementById("tl");
+  tlEl.addEventListener("click",function(e){var b=e.target.closest("[data-ed]");if(b){var i=+b.dataset.ed;editing=editing===i?-1:i;drawFicha();return;}
+    if(e.target.closest("[data-cancel]")){editing=-1;drawFicha();}});
+  tlEl.addEventListener("submit",function(e){e.preventDefault();var f=e.target,i=+f.dataset.form,S=stateOf(cur);
+    var ns=document.getElementById("es-"+i).value,ot=document.getElementById("eo-"+i).value.trim(),er=document.getElementById("ee-"+i),old=S.st[i];
+    var prevObs=S.obs[i]?S.obs[i].t:"";
+    if(ns!==old&&!ot){er.textContent="Escribí una observación que explique el cambio de estado.";er.hidden=false;document.getElementById("eo-"+i).focus();return;}
+    if(ns===old&&ot===prevObs){editing=-1;drawFicha();return;}
+    var m=now()+" · Gerencia ESENTIA";
+    if(ns!==old){S.st[i]=ns;
+      for(var k=i+1;k<7;k++)S.st[k]=(ns==="fail"||ns==="aus")?"na":(k===i+1&&ns==="ok")?"pend":"wait";
+      S.log.unshift({t:ST_SHORT[i]+": "+lab(i,old)+" → "+lab(i,ns),m:m+" · Motivo: "+ot});
+      var wasOut=cur[4]==="out";sync(cur,S);
+      toast(cur[4]==="out"&&!wasOut?cur[0]+" queda fuera del concurso desde "+ST_SHORT[i]+". El cambio quedó en la auditoría.":wasOut&&cur[4]==="cur"?cur[0]+" vuelve a estar en carrera: se habilitó "+cur[5]+".":"Estado de "+ST_SHORT[i]+" actualizado.");}
+    else{S.log.unshift({t:"Observación en "+ST_SHORT[i],m:m});toast("Observación guardada en "+ST_SHORT[i]+".");}
+    S.obs[i]=ot?{t:ot,m:m}:null;editing=-1;drawFicha();render();});
+  document.getElementById("gen-view").addEventListener("click",function(e){if(e.target.id!=="gen-edit")return;editGen=true;var S=stateOf(cur);drawFicha();var ta=document.getElementById("gen-txt");ta.value=S.gen?S.gen.t:"";ta.focus();});
+  document.getElementById("gen-cancel").addEventListener("click",function(){editGen=false;drawFicha();});
+  document.getElementById("gen-form").addEventListener("submit",function(e){e.preventDefault();var S=stateOf(cur),v=document.getElementById("gen-txt").value.trim(),m=now()+" · Gerencia ESENTIA";
+    if((S.gen?S.gen.t:"")===v){editGen=false;drawFicha();return;}
+    S.log.unshift({t:v?(S.gen?"Observación general editada":"Observación general agregada"):"Observación general eliminada",m:m});
+    S.gen=v?{t:v,m:m}:null;editGen=false;drawFicha();toast(v?"Observación general guardada.":"Se eliminó la observación general.");});
   q.addEventListener("input",render);fs.addEventListener("change",render);render();
   // Acciones de la demo
   var to=document.getElementById("toast"),tt;
