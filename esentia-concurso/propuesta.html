@@ -105,6 +105,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8rem;bac
 .tcap .btn{justify-self:start;margin-top:6px}
 @media (max-width:900px){.tour{grid-template-columns:1fr}}
 /* Plan */
+.dur{margin-top:20px;display:flex;align-items:center;gap:16px;border-radius:16px;padding:18px 22px;background:var(--grad-soft);border:1px solid var(--border)}
+.dur b{display:block;font-size:1.15rem;font-weight:900;letter-spacing:-.01em}
+.dur span{font-size:.9rem;color:var(--muted)}
+.dico{flex:none;width:46px;height:46px;border-radius:50%;background:var(--grad);display:grid;place-items:center}
+.dico svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round}
 .plan{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
 .wk{border-radius:16px;border:1px solid var(--border);background:var(--white);padding:20px;display:grid;gap:8px;align-content:start}
 .wk .n{font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--pink)}
@@ -170,7 +175,7 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center}
   <h1>Una sola base para el Concurso Bancor, <span class="grad-text">al día en cada etapa</span></h1>
   <p class="sub">Gestión integral de postulantes para ESENTIA RH: desde el export de Hiring Room hasta el orden de mérito, con las notas de la UNC y las consultoras integradas, permisos por rol y trazabilidad de cada dato.</p>
   <div class="ctas"><a class="btn btn-p" href="herramienta.html" target="_blank" rel="noopener">Ver la herramienta demo →</a><a class="btn btn-s" href="#inversion">Ver la inversión</a></div>
-  <div class="facts num"><div><b>10</b><span>etapas del concurso</span></div><div><b>5</b><span>etapas que ponderan</span></div><div><b>4+</b><span>proveedores que cargan datos</span></div><div><b>5 semanas</b><span>a la primera versión operativa</span></div></div>
+  <div class="facts num"><div><b>10</b><span>etapas del concurso</span></div><div><b>5</b><span>etapas que ponderan</span></div><div><b>4+</b><span>proveedores que cargan datos</span></div><div><b>3–4 semanas</b><span>a la primera versión operativa</span></div></div>
 </div></header>
 
 <section class="alt"><div class="container">
@@ -233,21 +238,22 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center}
 </div></section>
 
 <section><div class="container">
-  <div class="head"><span class="tag">06 · Plan de trabajo</span><h2 class="title">Cinco semanas a la <span class="grad-text">primera versión operativa</span></h2></div>
+  <div class="head"><span class="tag">06 · Plan de trabajo</span><h2 class="title">Cinco etapas hasta la <span class="grad-text">primera versión operativa</span></h2></div>
   <div class="plan">
-    <div class="wk"><span class="n">Semana 1</span><h4>Relevamiento y base</h4><ul><li>Reglas, pesos y cortes definitivos</li><li>Modelo de datos con DNI como clave</li><li>Importador del export de Hiring Room</li></ul><span class="out">Base cargada desde HR</span></div>
-    <div class="wk"><span class="n">Semana 2</span><h4>Cargas y reglas</h4><ul><li>Asistente de cargas con cruce por DNI</li><li>Detección de desvíos y plantillas</li><li>Editor de etapas, pesos y cortes</li></ul><span class="out">Primera carga UNC de prueba</span></div>
-    <div class="wk"><span class="n">Semana 3</span><h4>Postulantes y tablero</h4><ul><li>Listado y ficha editable</li><li>Observaciones e historial</li><li>Tablero de gestión de búsquedas</li></ul><span class="out">Versión beta para ESENTIA</span></div>
-    <div class="wk"><span class="n">Semana 4</span><h4>Seguridad y reportes</h4><ul><li>ABM de usuarios, roles y segundo factor</li><li>Registro de actividad</li><li>Exportaciones para el Banco</li></ul><span class="out">Accesos para proveedores</span></div>
-    <div class="wk"><span class="n">Semana 5</span><h4>Puesta en marcha</h4><ul><li>Pruebas con datos reales</li><li>Ajustes finales</li><li>Capacitación y manual</li></ul><span class="out">Plataforma en producción</span></div>
+    <div class="wk"><span class="n">Etapa 1</span><h4>Relevamiento y base</h4><ul><li>Reglas, pesos y cortes definitivos</li><li>Modelo de datos con DNI como clave</li><li>Importador del export de Hiring Room</li></ul><span class="out">Base cargada desde HR</span></div>
+    <div class="wk"><span class="n">Etapa 2</span><h4>Cargas y reglas</h4><ul><li>Asistente de cargas con cruce por DNI</li><li>Detección de desvíos y plantillas</li><li>Editor de etapas, pesos y cortes</li></ul><span class="out">Primera carga UNC de prueba</span></div>
+    <div class="wk"><span class="n">Etapa 3</span><h4>Postulantes y tablero</h4><ul><li>Listado y ficha editable</li><li>Observaciones e historial</li><li>Tablero de gestión de búsquedas</li></ul><span class="out">Versión beta para ESENTIA</span></div>
+    <div class="wk"><span class="n">Etapa 4</span><h4>Seguridad y reportes</h4><ul><li>ABM de usuarios, roles y segundo factor</li><li>Registro de actividad</li><li>Exportaciones para el Banco</li></ul><span class="out">Accesos para proveedores</span></div>
+    <div class="wk"><span class="n">Etapa 5</span><h4>Puesta en marcha</h4><ul><li>Pruebas con datos reales</li><li>Ajustes finales</li><li>Capacitación y manual</li></ul><span class="out">Plataforma en producción</span></div>
   </div>
+  <div class="dur"><span class="dico"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2.5h6"/></svg></span><div><b>Duración total estimada: 3 a 4 semanas de trabajo</b><span>Algunas etapas avanzan en paralelo: mientras ESENTIA valida una, se construye la siguiente.</span></div></div>
 </div></section>
 
 <section class="alt" id="inversion"><div class="container">
   <div class="head"><span class="tag">07 · Inversión</span><h2 class="title">Inversión <span class="grad-text">del proyecto</span></h2><p class="sub">Valores en dólares estadounidenses, sin IVA. Precio cerrado para el alcance descripto en esta propuesta.</p></div>
   <div class="inv">
     <div class="price num"><span class="l">Implementación · pago único</span><span class="v">USD 13.650</span><p>Desarrollo de los seis módulos, importación de la base de HR, plantillas para proveedores, pruebas con datos reales, capacitación y manual de uso.</p>
-      <div class="pay"><div><b>USD 5.460</b><span>40% al aprobar la propuesta</span></div><div><b>USD 4.095</b><span>30% al entregar la beta (semana 3)</span></div><div><b>USD 4.095</b><span>30% al pasar a producción</span></div></div></div>
+      <div class="pay"><div><b>USD 5.460</b><span>40% al aprobar la propuesta</span></div><div><b>USD 4.095</b><span>30% al entregar la beta (etapa 3)</span></div><div><b>USD 4.095</b><span>30% al pasar a producción</span></div></div></div>
     <div class="side-inv">
       <div class="mini num"><span class="l">Mensual · mientras dure el concurso</span><span class="v">USD 350 <small>/ mes</small></span>
         <div class="lines"><div><span>Infraestructura: hosting, base de datos, respaldos diarios, archivos y correo</span><b>USD 70</b></div><div><span>Soporte y ajustes: 8 horas mensuales</span><b>USD 280</b></div></div></div>
@@ -257,7 +263,7 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center}
   </div>
   <div class="inc">
     <div class="mini yes"><h4>Incluye</h4><ul><li>Los módulos descriptos en la sección 04, tal como se ven en la demo</li><li>Hasta 5 plantillas de proveedores y 10 usuarios</li><li>Migración de la base inicial de Hiring Room</li><li>2 sesiones de capacitación y manual de uso</li><li>Garantía de 60 días sobre errores de funcionamiento</li></ul></div>
-    <div class="mini no"><h4>No incluye</h4><ul><li>Carga manual de resultados de proveedores</li><li>Cambios de reglas o etapas luego de aprobada la semana 1 (se cotizan aparte)</li><li>Auditoría de seguridad externa (pentest)</li><li>Licencias de software de terceros que ESENTIA ya utilice</li></ul></div>
+    <div class="mini no"><h4>No incluye</h4><ul><li>Carga manual de resultados de proveedores</li><li>Cambios de reglas o etapas luego de aprobada la etapa 1 (se cotizan aparte)</li><li>Auditoría de seguridad externa (pentest)</li><li>Licencias de software de terceros que ESENTIA ya utilice</li></ul></div>
   </div>
   <p class="note">Validez de la propuesta: 30 días. Precio sujeto a confirmar el alcance en el relevamiento de la semana 1.</p>
 </div></section>
