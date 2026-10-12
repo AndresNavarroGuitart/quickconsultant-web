@@ -124,7 +124,7 @@ ol.q{margin:0;padding-left:22px;display:grid;gap:8px;max-width:760px}
 .fr .fill{position:absolute;inset:0 auto 0 0;background:var(--brand);border-radius:2px}
 .fr.cur .fill{background:repeating-linear-gradient(135deg,var(--brand) 0 6px,#E8476F 6px 12px)}
 .fr .out{font-size:11px;color:var(--muted);grid-column:2/4}
-.fr .val{text-align:right;font-weight:700}
+.fr .fval{text-align:right;font-weight:700}
 /* Histograma */
 .hist{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;height:170px;align-items:end;position:relative;border-bottom:1px solid var(--ink);padding-top:16px}
 .hb{background:var(--out);border-radius:2px 2px 0 0;position:relative}
@@ -269,6 +269,57 @@ body{padding:0;display:flex;flex-direction:column}
 .chg{margin:0;padding-left:18px;font-size:13px;display:grid;gap:4px}
 @media (max-width:640px){.fgrid .wide{grid-column:auto}}
 [hidden]{display:none!important}
+/* tablero */
+.fbar{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;padding:12px 14px;background:var(--tint);border:1px solid var(--line);border-radius:8px}
+.fgroup{display:grid;gap:6px}
+.flab{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dlab{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.pres{display:inline-flex;flex-wrap:wrap;gap:4px}
+.pr{all:unset;cursor:pointer;font-size:12px;font-weight:700;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.pr[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.pr:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.fchip{font-size:12.5px;color:var(--brand);background:var(--brand-soft);border-radius:6px;padding:7px 12px;justify-self:start}
+.panels.three{grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
+.gauge{display:grid;justify-items:center;gap:0}
+.gauge svg{width:100%;max-width:280px;height:auto;display:block}
+.gauge .gv{font-family:var(--f-display);font-size:40px;font-weight:600;line-height:1;margin-top:-6px}
+.gauge .gc{font-size:12.5px;color:var(--muted);text-align:center}
+.gauge .gc b{color:var(--ink)}
+.blist{display:grid;gap:0;font-size:12.5px}
+.bl{all:unset;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:6px 6px;border-radius:5px;border-top:1px solid var(--line)}
+.bl:hover{background:var(--tint)}
+.bl[aria-pressed="true"]{background:var(--brand-soft)}
+.bl:focus-visible{outline:2px solid var(--brand)}
+.bl small{color:var(--muted)}
+.gend{display:grid;gap:12px}
+.grow{display:grid;gap:4px}
+.grow .gl{display:flex;justify-content:space-between;font-size:12.5px}
+.grow .gl span{color:var(--muted)}
+.gbar{display:flex;gap:2px;height:22px}
+.gbar div{border-radius:3px;min-width:3px}
+.glegend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--ink)}
+.glegend span{display:inline-flex;align-items:center;gap:6px}
+.glegend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.glegend i.hatch{background:repeating-linear-gradient(135deg,var(--brand) 0 2px,var(--brand-soft) 2px 5px);border:1px solid var(--brand)}
+.glegend i.dash{height:0;border-top:2px dashed var(--ink);border-radius:0}
+.glegend b{font-variant-numeric:tabular-nums}
+.pjx{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:20px;align-items:start}
+.projc{display:grid;gap:8px;min-width:0}
+.projs{display:grid;gap:12px}
+.pst .l{font-size:12px;color:var(--muted)}
+.pst .v{font-family:var(--f-display);font-size:26px;font-weight:600;line-height:1.1}
+.pbar{display:flex;height:14px;gap:2px}
+.pbar div{border-radius:3px}
+.chartbox{position:relative;min-width:0}
+.chartbox svg{width:100%;height:auto;display:block;overflow:visible}
+.chartbox text{font-family:var(--f-body);fill:var(--muted);font-size:11px}
+.fr{grid-template-columns:150px minmax(0,1fr) 54px}
+.fr .pct{grid-column:2/4;font-size:11.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px}
+.fr .pct b{color:var(--ink)}
+.fr .pct .dn{color:var(--brand)}
+#tt{position:fixed;z-index:20;pointer-events:none;background:var(--ink);color:#fff;font-size:12px;line-height:1.4;padding:7px 10px;border-radius:6px;max-width:260px;box-shadow:0 8px 20px -8px rgba(0,0,0,.4)}
+[data-tip]{cursor:default}
+@media (max-width:900px){.pjx{grid-template-columns:1fr}}
 /* cargas */
 /* seguridad */
 .side .who label{display:block;font-size:11px;margin-bottom:4px}
@@ -386,21 +437,36 @@ textarea.fin{resize:vertical;line-height:1.45}
 
     <!-- TABLERO -->
     <div class="screen" data-screen="dash">
-      <div class="bar"><div><h3>Tablero del concurso</h3><span class="sub">Actualizado hoy 09:42 · última carga: Entrevistas de línea (Bancor)</span></div>
-        <div class="filters"><select class="sel" id="f-vac" aria-label="Vacante"><option>Todas las vacantes</option><option>Cajero / Tesorero</option><option>Ejecutivo de Cuentas</option><option>Oficial de Negocios PyME</option><option>Asistente Administrativo</option></select><select class="sel" id="f-loc" aria-label="Localidad"><option>Todas las localidades</option><option>Córdoba Capital</option><option>Villa María</option><option>Río Cuarto</option></select><span class="sample">Datos de ejemplo</span></div></div>
-      <div class="kpis">
-        <div class="kpi"><span class="l">Inscriptos (HR)</span><span class="v num">4.812</span><span class="d">4.390 personas únicas</span></div>
-        <div class="kpi hl"><span class="l">Siguen en carrera</span><span class="v num">598</span><span class="d">12,4% de los inscriptos</span></div>
-        <div class="kpi"><span class="l">Excluidos</span><span class="v num">4.214</span><span class="d">con motivo fundado</span></div>
-        <div class="kpi"><span class="l">Aprobación examen UNC</span><span class="v num">37,8%</span><span class="d">1.288 de 3.410 presentes</span></div>
-        <div class="kpi"><span class="l">Etapa en curso</span><span class="v num">214 / 598</span><span class="d">Entrevistas de línea hechas</span></div>
+      <div class="bar"><div><h3>Tablero del concurso</h3><span class="sub">Hoy 12/10/2026 · última carga: Entrevistas de línea (Bancor) 09:40</span></div><span class="sample">Datos de ejemplo</span></div>
+      <div class="fbar">
+        <div class="fgroup"><span class="flab">Fecha de postulación</span>
+          <div class="filters"><label class="dlab" for="d-from">Desde<input type="date" id="d-from" class="sel" min="2026-09-01" max="2026-09-30" value="2026-09-01"></label><label class="dlab" for="d-to">Hasta<input type="date" id="d-to" class="sel" min="2026-09-01" max="2026-09-30" value="2026-09-30"></label>
+          <div class="pres" role="group" aria-label="Rangos rápidos"><button type="button" class="pr" data-pr="all" aria-pressed="true">Toda la inscripción</button><button type="button" class="pr" data-pr="w1" aria-pressed="false">1.ª semana</button><button type="button" class="pr" data-pr="m" aria-pressed="false">Mitad</button><button type="button" class="pr" data-pr="wl" aria-pressed="false">Última semana</button></div></div></div>
+        <div class="fgroup"><span class="flab">Búsqueda y localidad</span><div class="filters"><select class="sel" id="f-vac" aria-label="Vacante"><option>Todas las vacantes</option><option>Cajero / Tesorero</option><option>Ejecutivo de Cuentas</option><option>Oficial de Negocios PyME</option><option>Asistente Administrativo</option></select><select class="sel" id="f-loc" aria-label="Localidad"><option>Todas las localidades</option><option>Córdoba Capital</option><option>Villa María</option><option>Río Cuarto</option></select></div></div>
       </div>
+      <p class="fchip" id="d-chip" hidden></p>
+      <div class="kpis" id="kpis"></div>
+
+      <div class="panels three">
+        <div class="panel"><div class="wtop"><h4>Plazo del concurso</h4><span class="chip" id="g1-st"></span></div><span class="cap">90 días desde la apertura de la inscripción.</span><div class="gauge" id="g1"></div></div>
+        <div class="panel"><div class="wtop"><h4>Plazo de la búsqueda</h4><span class="chip" id="g2-st"></span></div><label class="sr" for="g2-sel">Búsqueda</label><select class="sel" id="g2-sel"></select><div class="gauge" id="g2"></div><div class="blist" id="g2-list"></div></div>
+        <div class="panel"><h4>Postulantes por género</h4><span class="cap" id="gen-cap"></span><div class="gend" id="gend"></div><div class="glegend" id="gen-leg"></div></div>
+      </div>
+
+      <div class="panel"><div class="wtop"><h4>Entrevistas de línea: proyección por día vs. contrataciones</h4><span class="cap">Días hábiles · las entrevistas tienen que terminar el 06/11 para llegar a antecedentes y propuestas</span></div>
+        <div class="pjx">
+          <div class="projc"><div class="chartbox" id="projc"></div><div class="glegend"><span><i style="background:var(--brand)"></i>Entrevistas hechas</span><span><i class="hatch"></i>Entrevistas a hacer (proyección)</span><span><i class="dash"></i>Ritmo necesario</span></div></div>
+          <div class="projs" id="projs"></div>
+        </div></div>
+
+      <div class="panel"><div class="wtop"><h4>Postulantes por día</h4><span class="cap" id="daily-cap"></span></div><div class="chartbox" id="daily"></div></div>
+
       <div class="panels">
-        <div class="panel"><h4>Embudo por etapa</h4><span class="cap">Postulaciones que llegan a cada etapa y cuántas quedan afuera en ella.</span><div class="fun" id="funnel"></div></div>
-        <div class="panel"><h4>Notas del examen técnico UNC</h4><span class="cap">Distribución de 3.410 presentes. Corte mínimo: 70 puntos.</span>
+        <div class="panel"><h4>Embudo por etapa</h4><span class="cap">Cuántas postulaciones llegan a cada etapa, qué porcentaje del total representan y cuánto pasa de la etapa anterior.</span><div class="fun" id="funnel"></div></div>
+        <div class="panel"><h4>Notas del examen técnico UNC</h4><span class="cap" id="hist-cap"></span>
           <div class="hist" id="hist"><div class="cut"><b>Corte 70</b></div></div>
           <div class="hx num"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span><span>60</span><span>70</span><span>80</span><span>90</span></div>
-          <span class="cap">Promedio 58,6 · Mediana 61 · Ausentes 550 (13,9%)</span></div>
+          <span class="cap">Promedio 58,6 · Mediana 61 · Ausentes 13,9%</span></div>
       </div>
       <div class="panels">
         <div class="panel"><h4>Postulaciones por vacante y localidad</h4><div class="tbl-scroll"><table class="heat num" id="heat"></table></div></div>
@@ -539,28 +605,120 @@ textarea.fin{resize:vertical;line-height:1.45}
     </div>
   </div>
 <div class="toast" id="toast" role="status" hidden></div>
+<div id="tt" role="tooltip" hidden></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 (function(){
-  // Embudo
-  var F=[["Inscriptos (HR)",4812,0],["Requisitos y documental",3960,852],["Presentes examen UNC",3410,550],["Aprobados UNC (≥70)",1288,2122],["Aprobados assessment",742,546],["Aptos psicotécnico",598,144],["Entrevista de línea",598,0,1]];
-  var fe=document.getElementById("funnel"),max=F[0][1];
-  F.forEach(function(r){var d=document.createElement("div");d.className="fr"+(r[3]?" cur":"");
-    d.innerHTML='<span>'+r[0]+'</span><span class="track"><span class="fill" style="width:'+(r[1]/max*100).toFixed(2)+'%"></span></span><span class="val num">'+r[1].toLocaleString("es-AR")+'</span>'+(r[2]?'<span class="out num">−'+r[2].toLocaleString("es-AR")+' quedan afuera en esta etapa</span>':(r[3]?'<span class="out">En curso: 214 realizadas, 384 por agendar</span>':''));
-    fe.appendChild(d);});
-  // Histograma
-  var H=[22,61,140,262,412,568,657,640,470,178],hm=Math.max.apply(null,H),he=document.getElementById("hist");
-  H.forEach(function(v,i){var b=document.createElement("div");b.className="hb"+(i>=7?" pass":"");b.style.height=(v/hm*100)+"%";b.innerHTML='<span class="num">'+v+'</span>';b.title=(i*10)+"–"+(i*10+10)+": "+v;he.appendChild(b);});
-  // Heatmap
-  var L=["Córdoba Cap.","Villa María","Río Cuarto","San Francisco","V. Carlos Paz","Bell Ville"];
-  var V=[["Cajero / Tesorero",[1240,310,345,198,221,112]],["Ejecutivo de Cuentas",[620,140,165,90,96,49]],["Oficial PyME",[305,88,102,61,37,30]],["Asistente Adm.",[380,52,70,38,41,22]]];
-  var fmt=function(n){return n.toLocaleString("es-AR")};
-  var h='<thead><tr><th>Vacante</th>'+L.map(function(l){return"<th>"+l+"</th>"}).join("")+'<th>Total</th></tr></thead><tbody>';
-  var tot=[0,0,0,0,0,0];
-  V.forEach(function(r){var s=0;h+="<tr><td>"+r[0]+"</td>";r[1].forEach(function(v,i){s+=v;tot[i]+=v;var a=Math.max(.06,v/1240*.85);h+='<td class="c'+(a>.5?' dk':'')+'" style="--a:'+a.toFixed(3)+'">'+fmt(v)+"</td>"});h+="<td><b>"+fmt(s)+"</b></td></tr>";});
-  h+='<tr class="tot"><td>Total</td>'+tot.map(function(v){return"<td>"+fmt(v)+"</td>"}).join("")+"<td>"+fmt(tot.reduce(function(a,b){return a+b},0))+"</td></tr></tbody>";
-  document.getElementById("heat").innerHTML=h;
+  // ===== Tablero =====
+  var fmt=function(n){return Math.round(n).toLocaleString("es-AR")},pc=function(x,d){return(x*100).toLocaleString("es-AR",{minimumFractionDigits:d==null?1:d,maximumFractionDigits:d==null?1:d})+"%"};
+  var DAY=864e5,TODAY=new Date(2026,9,12),D0=new Date(2026,8,1);
+  var dd=function(d){return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")};
+  var diff=function(a,b){return Math.round((b-a)/DAY)};
+  var addD=function(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n)};
+  // inscripción diaria 01/09–30/09 (ejemplo): pico de apertura, baja en fines de semana, repunte al cierre
+  var INS=(function(){var w=[],s=0;for(var i=0;i<30;i++){var d=addD(D0,i),we=d.getDay()===0||d.getDay()===6;var v=(we?.55:1)*(1+1.7*Math.exp(-i/3)+1.3*Math.exp(-(29-i)/2.4))*(1+.08*Math.sin(i*1.7));w.push(v);s+=v;}
+    var out=w.map(function(v){return Math.round(v/s*4812)}),tot=out.reduce(function(a,b){return a+b},0);out[29]+=4812-tot;return out;})();
+  var R={a:0,b:29};
+  // ---- tooltip compartido
+  var TT=document.getElementById("tt");
+  document.addEventListener("mouseover",function(e){var el=e.target.closest&&e.target.closest("[data-tip]");if(!el){TT.hidden=true;return;}TT.innerHTML=el.getAttribute("data-tip");TT.hidden=false;});
+  document.addEventListener("mousemove",function(e){if(TT.hidden)return;var x=e.clientX+14,y=e.clientY+14,w=TT.offsetWidth,h=TT.offsetHeight;if(x+w>innerWidth-8)x=e.clientX-w-14;if(y+h>innerHeight-8)y=e.clientY-h-14;TT.style.left=x+"px";TT.style.top=y+"px";});
+  // ---- relojes
+  function arc(cx,cy,r,p0,p1){var a0=Math.PI*(1-p0),a1=Math.PI*(1-p1);return"M"+(cx+r*Math.cos(a0)).toFixed(2)+" "+(cy-r*Math.sin(a0)).toFixed(2)+" A"+r+" "+r+" 0 0 1 "+(cx+r*Math.cos(a1)).toFixed(2)+" "+(cy-r*Math.sin(a1)).toFixed(2);}
+  var ZONES=[[0,.6,"#3E9B6B","En plazo"],[.6,.85,"#D9A21B","Atención"],[.85,1,"#DB013E","Crítico"]];
+  function gauge(el,o){var p=Math.max(0,Math.min(1,o.el/o.total)),cx=140,cy=128,r=96,g=.006,an=Math.PI*(1-p);
+    var s='<svg viewBox="0 0 280 160" role="img" aria-label="'+o.aria+'">';
+    ZONES.forEach(function(z,k){s+='<path d="'+arc(cx,cy,r,z[0]+(k?g:0),z[1]-(k<2?g:0))+'" fill="none" stroke="'+z[2]+'" stroke-width="24" data-tip="'+z[3]+': días '+Math.round(z[0]*o.total)+' a '+Math.round(z[1]*o.total)+'"/>';});
+    var tx=cx+(r+26)*Math.cos(an),ty=cy-(r+26)*Math.sin(an),nx=cx+(r+10)*Math.cos(an),ny=cy-(r+10)*Math.sin(an);
+    s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+nx.toFixed(1)+'" y2="'+ny.toFixed(1)+'" stroke="var(--ink)" stroke-width="7" stroke-linecap="round"/><circle cx="'+cx+'" cy="'+cy+'" r="11" fill="var(--ink)"/><circle cx="'+cx+'" cy="'+cy+'" r="4" fill="var(--paper)"/>';
+    s+='<text x="'+tx.toFixed(1)+'" y="'+(ty+4).toFixed(1)+'" text-anchor="'+(an>Math.PI*.6?"end":an<Math.PI*.4?"start":"middle")+'" style="font-size:12.5px;font-weight:700;fill:var(--ink)">'+o.el+' días</text>';
+    s+='<text x="'+(cx-r)+'" y="'+(cy+20)+'" text-anchor="middle" style="font-size:11px;fill:var(--muted)">0</text><text x="'+(cx+r)+'" y="'+(cy+20)+'" text-anchor="middle" style="font-size:11px;fill:var(--muted)">'+o.total+'</text></svg>';
+    var rem=Math.max(0,o.total-o.el);
+    el.innerHTML=s+'<span class="gv num">'+rem+' días</span><span class="gc">faltan para finalizar · <b>día '+o.el+' de '+o.total+'</b><br>'+o.cap+'</span>';
+    var z=ZONES.find(function(z){return p<=z[1]})||ZONES[2];return{p:p,z:z};}
+  function gaugeChip(id,res){var e=document.getElementById(id),k=res.z[3];e.className="chip "+(k==="En plazo"?"ok":k==="Atención"?"warn":"cur");e.textContent=k;}
+  var BUS=[{n:"Cajero / Tesorero",ini:new Date(2026,8,1),pl:75,pu:40,cu:6},{n:"Ejecutivo de Cuentas",ini:new Date(2026,8,8),pl:70,pu:15,cu:2},{n:"Oficial de Negocios PyME",ini:new Date(2026,8,15),pl:45,pu:8,cu:1},{n:"Asistente Administrativo",ini:new Date(2026,8,1),pl:60,pu:12,cu:0}];
+  var g2=document.getElementById("g2-sel");g2.innerHTML=BUS.map(function(b,i){return'<option value="'+i+'">'+b.n+'</option>'}).join("");g2.value="2";
+  function drawGauges(){var el1=diff(D0,TODAY);gaugeChip("g1-st",gauge(document.getElementById("g1"),{total:90,el:el1,cap:"Inicio 01/09 · fin "+dd(addD(D0,90))+"/2026",aria:"Concurso: día "+el1+" de 90"}));
+    var b=BUS[+g2.value],e2=diff(b.ini,TODAY);gaugeChip("g2-st",gauge(document.getElementById("g2"),{total:b.pl,el:e2,cap:"Inicio "+dd(b.ini)+" · fin "+dd(addD(b.ini,b.pl))+" · "+b.cu+" de "+b.pu+" puestos cubiertos",aria:b.n+": día "+e2+" de "+b.pl}));
+    document.getElementById("g2-list").innerHTML=BUS.map(function(x,i){var r=x.pl-diff(x.ini,TODAY),p=diff(x.ini,TODAY)/x.pl,z=ZONES.find(function(z){return p<=z[1]})||ZONES[2];return'<button type="button" class="bl" data-b="'+i+'" aria-pressed="'+(i===+g2.value)+'"><span>'+x.n+'<br><small>'+x.cu+'/'+x.pu+' puestos</small></span><b class="num">'+r+' d</b><span class="chip '+(z[3]==="En plazo"?"ok":z[3]==="Atención"?"warn":"cur")+'">'+z[3]+'</span></button>'}).join("");}
+  g2.addEventListener("change",drawGauges);
+  document.getElementById("g2-list").addEventListener("click",function(e){var b=e.target.closest("[data-b]");if(!b)return;g2.value=b.dataset.b;drawGauges();});
+  // ---- proyección de entrevistas
+  function drawProj(){var real=[18,24,27,29,31,28,30,27],rd=["01/10","02/10","05/10","06/10","07/10","08/10","09/10","12/10"];
+    var done=real.reduce(function(a,b){return a+b},0),pend=598-done,fut=[],d=addD(TODAY,1),end=new Date(2026,10,6);
+    while(d<=end){if(d.getDay()%6)fut.push(dd(d));d=addD(d,1);}
+    var need=pend/fut.length,per=fut.map(function(_,k){return Math.floor(pend/fut.length)+(k<pend%fut.length?1:0)});
+    var all=real.map(function(v,k){return{v:v,l:rd[k],r:1}}).concat(per.map(function(v,k){return{v:v,l:fut[k],r:0}}));
+    var W=640,H=200,L=30,B=26,T=10,max=40,bw=(W-L)/all.length,y=function(v){return T+(H-T-B)*(1-v/max)};
+    var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Entrevistas por día hábil: hechas y proyectadas">';
+    [0,10,20,30,40].forEach(function(v){s+='<line x1="'+L+'" x2="'+W+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--line)" stroke-width="1"/><text x="'+(L-6)+'" y="'+(y(v)+4)+'" text-anchor="end">'+v+'</text>';});
+    s+='<defs><pattern id="hp" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="var(--brand-soft)"/><rect width="2" height="5" fill="var(--brand)"/></pattern></defs>';
+    all.forEach(function(o,k){var x=L+k*bw+2,w=bw-4,yy=y(o.v);s+='<g data-tip="'+(o.r?"<b>"+o.l+"</b> · "+o.v+" entrevistas hechas":"<b>"+o.l+"</b> · "+o.v+" entrevistas a hacer (proyección)")+'"><rect x="'+(x-2)+'" y="'+T+'" width="'+(w+4)+'" height="'+(H-T-B)+'" fill="transparent"/><rect x="'+x.toFixed(1)+'" y="'+yy.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+(H-B-yy).toFixed(1)+'" rx="2" fill="'+(o.r?"var(--brand)":"url(#hp)")+'"'+(o.r?"":' stroke="var(--brand)" stroke-width="1"')+'/></g>';
+      if(k%4===0||k===all.length-1)s+='<text x="'+(x+w/2).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle">'+o.l+'</text>';});
+    var xt=L+real.length*bw;s+='<line x1="'+xt.toFixed(1)+'" x2="'+xt.toFixed(1)+'" y1="'+T+'" y2="'+(H-B)+'" stroke="var(--ink)" stroke-width="1"/><text x="'+(xt+4).toFixed(1)+'" y="'+(T+10)+'" style="fill:var(--ink);font-weight:700">Hoy</text>';
+    s+='<line x1="'+L+'" x2="'+W+'" y1="'+y(need).toFixed(1)+'" y2="'+y(need).toFixed(1)+'" stroke="var(--ink)" stroke-width="2" stroke-dasharray="6 4"/><text x="'+(W-2)+'" y="'+(y(need)-6).toFixed(1)+'" text-anchor="end" style="fill:var(--ink);font-weight:700">Necesario: '+need.toLocaleString("es-AR",{maximumFractionDigits:1})+' por día</text></svg>';
+    document.getElementById("projc").innerHTML=s;
+    var pace=done/real.length,pu=75,cu=BUS.reduce(function(a,b){return a+b.cu},0),fa=pu-cu,apr=.68,cand=Math.round(pend*apr);
+    document.getElementById("projs").innerHTML='<div class="pst"><span class="l">Ritmo actual vs. necesario</span><div class="v num">'+pace.toLocaleString("es-AR",{maximumFractionDigits:1})+' / '+need.toLocaleString("es-AR",{maximumFractionDigits:1})+'</div><span class="chip '+(pace>=need?"ok":"warn")+'">'+(pace>=need?"Se llega con el ritmo actual":"Hay que acelerar")+'</span></div>'+
+      '<div class="pst"><span class="l">Entrevistas: '+done+' hechas · '+pend+' por hacer en '+fut.length+' días hábiles</span></div>'+
+      '<div class="pst"><span class="l">Contratados actuales vs. faltantes</span><div class="v num">'+cu+' <small style="font-size:14px;color:var(--muted)">de '+pu+' puestos</small></div><div class="pbar" data-tip="'+cu+' contratados · '+fa+' faltan"><div style="flex:'+cu+';background:var(--ok)"></div><div style="flex:'+fa+';background:var(--out-soft)"></div></div><div class="glegend"><span><i style="background:var(--ok)"></i>Contratados <b>'+cu+'</b></span><span><i style="background:var(--out-soft);border:1px solid var(--line)"></i>Faltan <b>'+fa+'</b></span></div></div>'+
+      '<p class="hint">Proyección: '+pend+' entrevistas × '+pc(apr,0)+' de aprobación ≈ <b>'+cand+' candidatos</b> para '+fa+' puestos (cobertura '+(cand/fa).toLocaleString("es-AR",{maximumFractionDigits:1})+'×).</p>';}
+  // ---- postulantes por día
+  function drawDaily(){var W=960,H=236,L=34,B=26,T=22,mx=Math.max.apply(null,INS),top=Math.ceil(mx/100)*100,y=function(v){return T+(H-T-B)*(1-v/top)},bw=(W-L)/30;
+    var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Postulantes por día de inscripción">';
+    for(var v=0;v<=top;v+=100)s+='<line x1="'+L+'" x2="'+W+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--line)"/><text x="'+(L-6)+'" y="'+(y(v)+4)+'" text-anchor="end">'+v+'</text>';
+    var pk=INS.indexOf(mx);
+    INS.forEach(function(v,i){var d=addD(D0,i),inR=i>=R.a&&i<=R.b,x=L+i*bw+1.5,w=bw-3,yy=y(v),we=d.getDay()===0||d.getDay()===6;
+      s+='<g data-tip="<b>'+["dom","lun","mar","mié","jue","vie","sáb"][d.getDay()]+' '+dd(d)+'</b> · '+fmt(v)+' postulantes'+(inR?"":" (fuera del filtro)")+'"><rect x="'+(x-1.5)+'" y="'+T+'" width="'+bw+'" height="'+(H-T-B)+'" fill="transparent"/><rect x="'+x.toFixed(1)+'" y="'+yy.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+(H-B-yy).toFixed(1)+'" rx="2" fill="'+(inR?"var(--brand)":"var(--out-soft)")+'"'+(we&&inR?' opacity=".7"':"")+'/></g>';
+      if(i%5===0||i===29)s+='<text x="'+(x+w/2).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle">'+dd(d)+'</text>';});
+    s+='<text x="'+(L+pk*bw+2).toFixed(1)+'" y="'+(y(mx)-5).toFixed(1)+'" style="fill:var(--ink);font-weight:700">Pico: '+fmt(mx)+' ('+dd(addD(D0,pk))+')</text></svg>';
+    document.getElementById("daily").innerHTML=s;
+    var sel=INS.slice(R.a,R.b+1).reduce(function(a,b){return a+b},0),n=R.b-R.a+1;
+    document.getElementById("daily-cap").textContent=fmt(sel)+" postulantes en "+n+" día"+(n>1?"s":"")+" · promedio "+fmt(sel/n)+" por día · los fines de semana se ven más claros";}
+  // ---- KPIs, embudo, género, notas y vacante × localidad (escalados por el rango de fechas)
+  var F=[["Inscriptos (HR)",4812],["Requisitos y documental",3960],["Presentes examen UNC",3410],["Aprobados UNC (≥70)",1288],["Aprobados assessment",742],["Aptos psicotécnico",598],["Entrevista de línea (en curso)",598]];
+  var HB=[22,61,140,262,412,568,657,640,470,178];
+  var L6=["Córdoba Cap.","Villa María","Río Cuarto","San Francisco","V. Carlos Paz","Bell Ville"];
+  var V4=[["Cajero / Tesorero",[1240,310,345,198,221,112]],["Ejecutivo de Cuentas",[620,140,165,90,96,49]],["Oficial PyME",[305,88,102,61,37,30]],["Asistente Adm.",[380,52,70,38,41,22]]];
+  var GEN=[["Mujer","#008C9E",.519],["Hombre","#5B4FA8",.459],["No especifica","#B7741A",.022]],GEN_C=[322,268,8];
+  function drawStats(){var tot=INS.slice(R.a,R.b+1).reduce(function(a,b){return a+b},0),f=tot/4812,sc=function(v){return Math.round(v*f)};
+    var full=R.a===0&&R.b===29,chip=document.getElementById("d-chip");chip.hidden=full;
+    if(!full)chip.textContent="Filtrado por fecha de postulación: "+dd(addD(D0,R.a))+" al "+dd(addD(D0,R.b))+" · "+fmt(tot)+" de 4.812 inscriptos ("+pc(f)+"). Los relojes y la proyección no dependen de este filtro.";
+    var car=sc(598),pres=sc(3410),apr=sc(1288);
+    document.getElementById("kpis").innerHTML=[["Inscriptos (HR)",fmt(tot),fmt(tot*.912)+" personas únicas"],["Siguen en carrera",fmt(car),pc(car/tot)+" de los inscriptos",1],["Excluidos",fmt(tot-car),"con motivo fundado"],["Aprobación examen UNC",pc(1288/3410),fmt(apr)+" de "+fmt(pres)+" presentes"],["Etapa en curso",sc(214)+" / "+fmt(car),"Entrevistas de línea hechas"]].map(function(k){return'<div class="kpi'+(k[3]?" hl":"")+'"><span class="l">'+k[0]+'</span><span class="v num">'+k[1]+'</span><span class="d">'+k[2]+'</span></div>'}).join("");
+    // embudo con %
+    var fe=document.getElementById("funnel"),F0=sc(F[0][1]);fe.innerHTML="";
+    F.forEach(function(r,i){var v=sc(r[1]),prev=i?sc(F[i-1][1]):v,cur=i===F.length-1,out=prev-v,d=document.createElement("div");d.className="fr"+(cur?" cur":"");
+      d.innerHTML='<span>'+r[0]+'</span><span class="track" data-tip="<b>'+r[0]+'</b><br>'+fmt(v)+' postulaciones · '+pc(v/F0)+' de los inscriptos'+(i&&!cur?'<br>Pasa '+pc(v/prev)+' de la etapa anterior':'')+'"><span class="fill" style="width:'+(v/F0*100).toFixed(2)+'%"></span></span><span class="fval num">'+fmt(v)+'</span>'+
+        '<span class="pct num"><span><b>'+pc(v/F0)+'</b> del total</span>'+(i&&!cur?'<span>pasa <b>'+pc(v/prev)+'</b> de la anterior</span><span class="dn">−'+fmt(out)+' ('+pc(out/prev)+') quedan afuera</span>':cur?'<span>214 realizadas · 384 por agendar</span>':'')+'</span>';
+      fe.appendChild(d);});
+    // género
+    var gi=GEN.map(function(g){return Math.round(tot*g[2])});gi[0]=tot-gi[1]-gi[2];
+    var row=function(lab,arr){var s=arr.reduce(function(a,b){return a+b},0);return'<div class="grow"><div class="gl"><b>'+lab+'</b><span class="num">'+fmt(s)+'</span></div><div class="gbar">'+arr.map(function(v,k){return'<div style="flex:'+v+';background:'+GEN[k][1]+'" data-tip="<b>'+GEN[k][0]+'</b> · '+fmt(v)+' ('+pc(v/s)+')"></div>'}).join("")+'</div></div>';};
+    document.getElementById("gend").innerHTML=row("Inscriptos",gi)+row("Siguen en carrera",GEN_C.map(function(v){return Math.round(v*f)}));
+    document.getElementById("gen-leg").innerHTML=GEN.map(function(g,k){return'<span><i style="background:'+g[1]+'"></i>'+g[0]+' <b>'+fmt(gi[k])+'</b> · '+pc(gi[k]/tot)+'</span>'}).join("");
+    document.getElementById("gen-cap").textContent="Según lo declarado en Hiring Room. Mujer · Hombre · No especifica.";
+    // notas UNC
+    var he=document.getElementById("hist"),hb=HB.map(sc),hm=Math.max.apply(null,hb)||1;he.querySelectorAll(".hb").forEach(function(x){x.remove()});
+    hb.forEach(function(v,i){var b=document.createElement("div");b.className="hb"+(i>=7?" pass":"");b.style.height=(v/hm*100)+"%";b.innerHTML='<span class="num">'+v+'</span>';b.setAttribute("data-tip","Notas "+(i*10)+"–"+(i*10+10)+": <b>"+fmt(v)+"</b> postulantes"+(i>=7?" · aprobados":" · no alcanzan el corte"));he.appendChild(b);});
+    document.getElementById("hist-cap").textContent="Distribución de "+fmt(pres)+" presentes. Corte mínimo: 70 puntos.";
+    // vacante × localidad
+    var h='<thead><tr><th>Vacante</th>'+L6.map(function(l){return"<th>"+l+"</th>"}).join("")+'<th>Total</th></tr></thead><tbody>',tt=[0,0,0,0,0,0];
+    V4.forEach(function(r){var s=0;h+="<tr><td>"+r[0]+"</td>";r[1].forEach(function(v0,i){var v=sc(v0);s+=v;tt[i]+=v;var a=Math.max(.06,v0/1240*.85);h+='<td class="c'+(a>.5?' dk':'')+'" style="--a:'+a.toFixed(3)+'" data-tip="<b>'+r[0]+'</b> · '+L6[i]+'<br>'+fmt(v)+' postulaciones">'+fmt(v)+"</td>"});h+="<td><b>"+fmt(s)+"</b></td></tr>";});
+    h+='<tr class="tot"><td>Total</td>'+tt.map(function(v){return"<td>"+fmt(v)+"</td>"}).join("")+"<td>"+fmt(tt.reduce(function(a,b){return a+b},0))+"</td></tr></tbody>";
+    document.getElementById("heat").innerHTML=h;var fv=document.getElementById("f-vac");if(fv)fv.dispatchEvent(new Event("change"));}
+  // ---- filtro de fechas
+  var dF=document.getElementById("d-from"),dT=document.getElementById("d-to");
+  var iso=function(i){var d=addD(D0,i);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+  var idx=function(v){var p=v.split("-");return diff(D0,new Date(+p[0],+p[1]-1,+p[2]))};
+  function setRange(a,b,pr){R.a=Math.max(0,Math.min(29,a));R.b=Math.max(R.a,Math.min(29,b));dF.value=iso(R.a);dT.value=iso(R.b);
+    document.querySelectorAll(".pr").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.pr===pr?"true":"false")});drawDaily();drawStats();}
+  var PR={all:[0,29],w1:[0,6],m:[10,19],wl:[23,29]};
+  document.querySelector(".pres").addEventListener("click",function(e){var b=e.target.closest("[data-pr]");if(!b)return;var r=PR[b.dataset.pr];setRange(r[0],r[1],b.dataset.pr);});
+  [dF,dT].forEach(function(inp){inp.addEventListener("change",function(){if(!dF.value||!dT.value)return;var a=idx(dF.value),b=idx(dT.value);if(a>b){var x=a;a=b;b=x;}var pr=Object.keys(PR).find(function(k){return PR[k][0]===a&&PR[k][1]===b})||"";setRange(a,b,pr);});});
+  drawGauges();drawProj();drawDaily();drawStats();
   // Postulantes (ficticios)
   var P=[
     ["Martina Ledesma","38512214","Cajero / Tesorero","Córdoba Capital","cur","Entrevista de línea",88.5,82,85,84.6,3,null,null],
@@ -661,7 +819,7 @@ textarea.fin{resize:vertical;line-height:1.45}
   function toast(m){to.textContent=m;to.hidden=false;clearTimeout(tt);tt=setTimeout(function(){to.hidden=true},3800);}
   document.getElementById("exp").addEventListener("click",function(){audit("Postulantes","Exportación a Excel","Vista filtrada: "+document.querySelectorAll("#tbl tbody tr.click").length+" filas"+(q.value?" · búsqueda “"+q.value+"”":"")+" · marca de agua con usuario y fecha");toast("En la versión real se descarga un Excel con la vista filtrada, marcado con tu usuario y la fecha.")});
   document.querySelectorAll(".act").forEach(function(a){a.setAttribute("role","button");a.tabIndex=0;a.style.cursor="pointer";a.addEventListener("click",function(){toast(a.textContent+": "+a.previousElementSibling.firstChild.textContent.trim())})});
-  document.getElementById("f-vac").addEventListener("change",function(){var v=this.selectedIndex;document.querySelectorAll("#heat tbody tr").forEach(function(r,i){r.style.opacity=(!v||i===v-1||r.classList.contains("tot"))?1:.25})});
+  document.getElementById("f-vac").addEventListener("change",function(){var v=this.selectedIndex;if(v){var g=document.getElementById("g2-sel");if(g.value!==String(v-1)){g.value=String(v-1);g.dispatchEvent(new Event("change"));}}document.querySelectorAll("#heat tbody tr").forEach(function(r,i){r.style.opacity=(!v||i===v-1||r.classList.contains("tot"))?1:.25})});
   // Etapas y reglas: editor
   var STG0=[
     {id:"req",name:"Requisitos y check documental",who:"ESENTIA",type:"Sí / No",w:0,rule:"3 preguntas excluyentes en “Sí”",st:"closed"},
