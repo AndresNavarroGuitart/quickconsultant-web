@@ -1,0 +1,1176 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Concurso Bancor · ESENTIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap">
+<style>
+/* Layout: documento de propuesta (columna de lectura) + maqueta de la app en un marco con barra lateral.
+   Estética única clara, alineada a la marca ESENTIA: blanco, gris grafito y el carmín del logo. */
+:root{
+  --brand:#DB013E;        /* carmín del logo */
+  --brand-soft:#FBE6EC;
+  --ink:#3B3A3F;          /* grafito del logotipo */
+  --muted:#7C7780;
+  --line:#E9E4E7;
+  --paper:#FFFFFF;
+  --tint:#F8F6F7;
+  --ok:#1E8A5A; --ok-soft:#E3F3EB;
+  --warn:#B97800; --warn-soft:#FBF0D9;
+  --out:#8E8790; --out-soft:#EFECEE;
+  --f-display:"Jura","Trebuchet MS",sans-serif;
+  --f-body:"Nunito Sans","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;padding-inline:16px;padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:500;text-wrap:balance;margin:0;color:var(--ink)}
+p{margin:0}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1180px;margin-inline:auto}
+.prose{max-width:760px}
+/* Encabezado */
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-block:28px 22px;border-bottom:1px solid var(--line)}
+.top img{height:54px;width:auto}
+.top .meta{text-align:right;font-size:13px;color:var(--muted)}
+.top .meta b{display:block;color:var(--ink);font-family:var(--f-display);font-size:17px;font-weight:600;letter-spacing:.02em}
+.eyebrow{font-family:var(--f-display);text-transform:uppercase;letter-spacing:.16em;font-size:12px;color:var(--brand);font-weight:600}
+.hero{padding-block:48px 28px;display:grid;gap:14px}
+.hero h1{font-size:clamp(30px,4.4vw,46px);font-weight:400;line-height:1.1;letter-spacing:-.01em}
+.hero h1 em{font-style:normal;color:var(--brand)}
+.hero p{font-size:18px;color:var(--muted);max-width:680px}
+section.block{padding-block:36px;border-top:1px solid var(--line);display:grid;gap:20px}
+section.block>h2{font-size:28px}
+.lede{font-size:16px;max-width:720px}
+/* Puntos del brief */
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.pt{border:1px solid var(--line);border-radius:6px;padding:18px;display:grid;gap:8px;align-content:start;min-width:0}
+.pt .k{font-family:var(--f-display);font-size:13px;color:var(--brand);font-weight:600;letter-spacing:.06em}
+.pt h3{font-size:19px}
+.pt p{font-size:14px;color:var(--muted)}
+.pt .imp{font-size:14px;color:var(--ink);border-top:1px dashed var(--line);padding-top:8px}
+.pt .imp b{color:var(--brand)}
+/* Hallazgos */
+.finds{display:grid;gap:0;border-top:1px solid var(--line)}
+.find{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;padding-block:14px;border-bottom:1px solid var(--line)}
+.find .what{font-weight:600}
+.find .what small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.find .so{font-size:14px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;background:var(--tint);padding:1px 5px;border-radius:3px}
+/* Flujo del concurso */
+.flow-scroll{overflow-x:auto;padding-bottom:6px}
+.flow{display:grid;grid-template-columns:repeat(10,minmax(108px,1fr));gap:0;min-width:1080px}
+.st{position:relative;padding:14px 12px 14px 14px;border-top:3px solid var(--line);display:grid;gap:4px;align-content:start}
+.st.w{border-top-color:var(--brand)}
+.st.f{border-top-color:var(--ink)}
+.st .n{font-family:var(--f-display);font-size:12px;color:var(--muted);letter-spacing:.08em}
+.st .t{font-weight:700;font-size:14px;line-height:1.25}
+.st .who{font-size:12px;color:var(--muted)}
+.st .wt{font-family:var(--f-display);font-size:22px;color:var(--brand);font-weight:600;line-height:1}
+.st .ct{font-size:12px}
+.legend{display:flex;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:18px;height:3px;margin-right:6px;vertical-align:middle;background:var(--sw)}
+/* Comparativa */
+.tbl-scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+.cmp th,.cmp td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top}
+.cmp th{font-family:var(--f-display);font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--muted)}
+.cmp td:first-child{font-weight:600;width:22%}
+.cmp .rec{background:var(--brand-soft)}
+.cmp th.rec{color:var(--brand)}
+.reco{border-left:3px solid var(--brand);padding:14px 18px;background:var(--tint);max-width:820px}
+.reco b{color:var(--brand)}
+ol.q{margin:0;padding-left:22px;display:grid;gap:8px;max-width:760px}
+/* ===== Maqueta de la app ===== */
+.app{border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 18px 50px -24px rgba(59,58,63,.35);display:grid;grid-template-columns:220px minmax(0,1fr);min-height:720px;background:var(--paper)}
+.side{background:var(--tint);border-right:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:4px}
+.side img{width:132px;margin:2px 8px 4px}
+.side .proj{font-size:12px;color:var(--muted);margin:0 8px 14px;line-height:1.35}
+.side .proj b{color:var(--ink);display:block;font-size:13px}
+.nav{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:6px;font-size:14px;color:var(--ink)}
+.nav:hover{background:var(--paper)}
+.nav:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.nav[aria-current="true"]{background:var(--paper);color:var(--brand);font-weight:700;box-shadow:inset 3px 0 0 var(--brand)}
+.nav svg{width:17px;height:17px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7}
+.side .who{margin-top:auto;border-top:1px solid var(--line);padding:12px 8px 0;font-size:12px;color:var(--muted)}
+.side .who b{display:block;color:var(--ink);font-size:13px}
+.main{padding:22px 26px 28px;display:grid;gap:18px;align-content:start;min-width:0}
+.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:end;justify-content:space-between}
+.bar h3{font-size:24px}
+.bar .sub{font-size:13px;color:var(--muted)}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.sel{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:6px;padding:6px 10px;background:var(--paper);color:var(--ink)}
+.btn{font:inherit;font-size:13px;font-weight:700;border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:6px;padding:7px 14px;cursor:pointer}
+.btn.ghost{background:var(--paper);color:var(--brand)}
+.btn:focus-visible,.sel:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.sample{font-size:11px;font-family:var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--warn);background:var(--warn-soft);padding:3px 8px;border-radius:3px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:grid;gap:2px}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--f-display);font-size:28px;font-weight:600;line-height:1.15}
+.kpi .d{font-size:12px;color:var(--muted)}
+.kpi.hl .v{color:var(--brand)}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
+.panel{border:1px solid var(--line);border-radius:6px;padding:16px;display:grid;gap:12px;align-content:start;min-width:0}
+.panel h4{font-size:16px;font-weight:600}
+.panel .cap{font-size:12px;color:var(--muted)}
+/* Embudo */
+.fun{display:grid;gap:7px}
+.fr{display:grid;grid-template-columns:150px minmax(0,1fr) 54px;gap:10px;align-items:center;font-size:13px}
+.fr .track{height:18px;background:var(--tint);border-radius:2px;position:relative}
+.fr .fill{position:absolute;inset:0 auto 0 0;background:var(--brand);border-radius:2px}
+.fr.cur .fill{background:repeating-linear-gradient(135deg,var(--brand) 0 6px,#E8476F 6px 12px)}
+.fr .out{font-size:11px;color:var(--muted);grid-column:2/4}
+.fr .fval{text-align:right;font-weight:700}
+/* Histograma */
+.hist{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;height:170px;align-items:end;position:relative;border-bottom:1px solid var(--ink);padding-top:16px}
+.hb{background:var(--out);border-radius:2px 2px 0 0;position:relative}
+.hb.pass{background:var(--brand)}
+.hb span{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted);margin-bottom:2px}
+.hx{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;font-size:10px;color:var(--muted);text-align:center}
+.cut{position:absolute;top:0;bottom:-6px;left:70%;border-left:2px dashed var(--ink)}
+.cut b{position:absolute;top:-2px;left:6px;font-size:11px;white-space:nowrap;background:var(--paper);padding:0 3px}
+/* Heatmap */
+.heat th,.heat td{padding:6px 8px;font-size:12.5px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.heat th{font-weight:600;color:var(--muted);font-size:11.5px}
+.heat td:first-child,.heat th:first-child{text-align:left}
+.heat td.c{background:color-mix(in srgb,var(--brand) calc(var(--a)*100%),var(--paper))}
+.heat td.c.dk{color:#fff}
+.heat tr.tot td{font-weight:700;border-top:1px solid var(--ink)}
+/* Alertas */
+.alerts{display:grid;gap:0}
+.al{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:12px;align-items:start;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+.al:last-child{border-bottom:0}
+.al i{width:8px;height:8px;border-radius:50%;margin-top:6px;background:var(--c)}
+.al small{display:block;color:var(--muted)}
+.al .act{font-weight:700;color:var(--brand);font-size:12px;white-space:nowrap}
+/* Chips */
+.chip{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.out{background:var(--out-soft);color:var(--out);text-decoration:line-through}
+.chip.cur{background:var(--brand-soft);color:var(--brand)}
+/* Tabla postulantes */
+.dt th,.dt td{padding:9px 10px;font-size:13px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.dt th{font-size:11.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;background:var(--tint)}
+.dt td.r,.dt th.r{text-align:right}
+.dt tr.click{cursor:pointer}
+.dt tr.click:hover td{background:var(--tint)}
+.dt .lock{color:var(--muted);font-size:11px}
+.dt .nm b{display:block}
+.dt .nm small{color:var(--muted)}
+.search{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:6px;padding:7px 12px;min-width:min(260px,100%);color:var(--ink);background:var(--paper)}
+/* Ficha */
+.ficha{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px}
+.person{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:6px;padding:16px}
+.person h4{font-size:22px}
+.person .id{font-size:13px;color:var(--muted)}
+.score{text-align:center;display:grid;gap:0}
+.score .big{font-family:var(--f-display);font-size:40px;color:var(--brand);font-weight:600;line-height:1}
+.score small{font-size:12px;color:var(--muted)}
+.tl{display:grid;gap:0;position:relative}
+.ti{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:12px;padding-bottom:14px;position:relative}
+.ti::before{content:"";position:absolute;left:10px;top:18px;bottom:0;border-left:2px solid var(--line)}
+.ti:last-child::before{display:none}
+.ti .dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--c);background:var(--paper);display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--c);position:relative;z-index:1}
+.ti .dot.full{background:var(--c);color:#fff}
+.ti .tt{font-weight:700;font-size:14px}
+.ti .src{font-size:12px;color:var(--muted)}
+.ti .res{text-align:right;font-size:13px}
+.ti .res b{font-family:var(--f-display);font-size:18px;display:block}
+.log{display:grid;gap:0;font-size:12.5px}
+.log div{padding:8px 0;border-bottom:1px solid var(--line)}
+.log small{display:block;color:var(--muted)}
+/* Cargas */
+.steps{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.stp{flex:1 1 140px;padding:10px 14px;font-size:13px;border-right:1px solid var(--line);color:var(--muted)}
+.stp:last-child{border-right:0}
+.stp b{display:block;font-family:var(--f-display);font-size:12px;letter-spacing:.08em}
+.stp.done{color:var(--ink)}
+.stp.done b{color:var(--ok)}
+.stp.now{background:var(--brand-soft);color:var(--ink)}
+.stp.now b{color:var(--brand)}
+.val{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.vc{border-radius:6px;padding:12px;background:var(--bg);display:grid;gap:2px}
+.vc .v{font-family:var(--f-display);font-size:26px;font-weight:600;color:var(--fg)}
+.vc .l{font-size:12px;color:var(--ink)}
+.file{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;border:1px dashed var(--muted);border-radius:6px;padding:12px 14px;font-size:13px}
+.file b{font-family:ui-monospace,Menlo,monospace;font-size:12.5px}
+/* Reglas y seguridad */
+.wbar{display:flex;height:14px;border-radius:2px;overflow:hidden;gap:2px}
+.wbar div{background:var(--brand);opacity:var(--o)}
+.mx th,.mx td{padding:8px 10px;font-size:13px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+.mx td:first-child,.mx th:first-child{text-align:left}
+.mx th{font-size:11.5px;color:var(--muted)}
+.y{color:var(--ok);font-weight:700}
+.p{color:var(--warn);font-weight:700}
+.x{color:var(--out)}
+.foot{font-size:12px;color:var(--muted)}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr}
+  .side{flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid var(--line)}
+  .side img,.side .proj,.side .who{display:none}
+  .nav{padding:7px 9px;font-size:13px}
+  .main{padding:16px}
+  .ficha{grid-template-columns:1fr}
+  .find{grid-template-columns:1fr;gap:6px}
+  .fr{grid-template-columns:110px minmax(0,1fr) 46px}
+  .panels{grid-template-columns:minmax(0,1fr)}
+  .top .meta{text-align:left}
+}
+@media (prefers-reduced-motion:no-preference){.screen{animation:in .25s ease}}
+@keyframes in{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
+/* Herramienta a pantalla completa */
+html,body{height:100%}
+body{padding:0;display:flex;flex-direction:column}
+.demo{background:var(--ink);color:#fff;font-size:12px;text-align:center;padding:6px 16px;font-family:var(--f-display);letter-spacing:.06em}
+.app{border:0;border-radius:0;box-shadow:none;flex:1;min-height:0}
+.main{overflow:auto;padding:24px 32px 32px}
+.side{overflow:auto}
+.toast{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:#fff;padding:12px 16px;border-radius:6px;font-size:13px;max-width:min(380px,calc(100% - 40px));box-shadow:0 10px 30px -10px rgba(0,0,0,.4)}
+.btn:disabled{opacity:.6;cursor:default}
+.wtop{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
+.wsum{font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:999px}
+.wsum.ok{background:var(--ok-soft);color:var(--ok)}
+.wsum.bad{background:var(--warn-soft);color:var(--warn)}
+.wbar div{min-width:2px}
+.wleg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted)}
+.wleg span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--brand);opacity:var(--o);margin-right:6px;vertical-align:-1px}
+.addf{border-color:var(--brand);background:var(--brand-soft)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.fgrid label{display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted)}
+.fgrid label small{font-weight:400}
+.fgrid .wide{grid-column:span 2}
+.fin{font:inherit;font-size:13px;font-weight:400;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:7px 10px;width:100%}
+.fin:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.ferr{font-size:13px;color:var(--brand);font-weight:700}
+.rules td{vertical-align:middle}
+.rules .hcol{width:28px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.grip{cursor:grab;color:var(--muted);font-size:16px;user-select:none;padding:0 2px}
+.rules tr.lockd td{color:var(--muted)}
+.rules tr.dragging{opacity:.35}
+.rules tr.drop-before td{box-shadow:inset 0 2px 0 var(--brand)}
+.rules tr.drop-after td{box-shadow:inset 0 -2px 0 var(--brand)}
+.rules tr.isnew td:nth-child(3) b::after{content:"Nueva";margin-left:8px;font-size:10px;font-weight:700;color:var(--brand);background:var(--brand-soft);padding:1px 6px;border-radius:999px;vertical-align:1px}
+.rules tr.flash td{animation:flash 1.2s ease}
+@keyframes flash{from{background:var(--brand-soft)}to{background:transparent}}
+.cin{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:5px;padding:4px 6px;color:var(--ink);background:var(--paper)}
+.cin.w{width:58px;text-align:right}
+.cin.rl{width:100%;min-width:200px}
+.cin:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.ib{all:unset;cursor:pointer;width:26px;height:26px;border-radius:5px;display:inline-grid;place-items:center;color:var(--ink);border:1px solid var(--line);font-size:12px;margin-left:4px;background:var(--paper)}
+.ib:hover{border-color:var(--brand);color:var(--brand)}
+.ib:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.ib[disabled]{opacity:.3;cursor:default;border-color:var(--line);color:var(--muted)}
+.chg{margin:0;padding-left:18px;font-size:13px;display:grid;gap:4px}
+@media (max-width:640px){.fgrid .wide{grid-column:auto}}
+[hidden]{display:none!important}
+/* ficha dentro de postulantes */
+.crumb{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;font-size:13px}
+.back{all:unset;cursor:pointer;font-weight:700;color:var(--brand);padding:6px 10px;border-radius:6px;border:1px solid var(--line);background:var(--paper)}
+.back:hover{border-color:var(--brand)}
+.back:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.cpath{color:var(--muted)}
+.pn{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.pn .ib{margin:0}
+.dt tr.click td:first-child b{color:var(--ink)}
+.dt tr.click:hover td:first-child b{color:var(--brand);text-decoration:underline}
+.open-hint{font-size:11px;color:var(--muted)}
+/* tablero */
+.cov td{vertical-align:middle}
+.cov th{white-space:normal;vertical-align:bottom;line-height:1.3}
+.cov td:first-child{white-space:normal}
+.cov tbody tr{cursor:pointer}
+.cov tbody tr:hover td{background:var(--tint)}
+.cov tbody tr.sel td{background:var(--brand-soft)}
+.cov tr.tot td{font-weight:700;border-top:1px solid var(--ink);cursor:default;background:transparent}
+.cbar{display:flex;align-items:center;gap:8px;min-width:120px}
+.cbar .tr{flex:1;height:10px;background:var(--out-soft);border-radius:3px;overflow:hidden}
+.cbar .tr div{height:100%;background:var(--ok);border-radius:3px}
+.cbar span{font-size:12px;width:40px;text-align:right}
+.ratio.lo{color:var(--brand);font-weight:700}
+.fbar{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;padding:12px 14px;background:var(--tint);border:1px solid var(--line);border-radius:8px}
+.fgroup{display:grid;gap:6px}
+.flab{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dlab{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.pres{display:inline-flex;flex-wrap:wrap;gap:4px}
+.pr{all:unset;cursor:pointer;font-size:12px;font-weight:700;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.pr[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.pr:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.fchip{font-size:12.5px;color:var(--brand);background:var(--brand-soft);border-radius:6px;padding:7px 12px;justify-self:start}
+.panels.three{grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
+.gauge{display:grid;justify-items:center;gap:0}
+.gauge svg{width:100%;max-width:280px;height:auto;display:block}
+.gauge .gv{font-family:var(--f-display);font-size:40px;font-weight:600;line-height:1;margin-top:-6px}
+.gauge .gc{font-size:12.5px;color:var(--muted);text-align:center}
+.gauge .gc b{color:var(--ink)}
+.blist{display:grid;gap:0;font-size:12.5px}
+.bl{all:unset;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:6px 6px;border-radius:5px;border-top:1px solid var(--line)}
+.bl:hover{background:var(--tint)}
+.bl[aria-pressed="true"]{background:var(--brand-soft)}
+.bl:focus-visible{outline:2px solid var(--brand)}
+.bl small{color:var(--muted)}
+.gend{display:grid;gap:12px}
+.grow{display:grid;gap:4px}
+.grow .gl{display:flex;justify-content:space-between;font-size:12.5px}
+.grow .gl span{color:var(--muted)}
+.gbar{display:flex;gap:2px;height:22px}
+.gbar div{border-radius:3px;min-width:3px}
+.glegend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--ink)}
+.glegend span{display:inline-flex;align-items:center;gap:6px}
+.glegend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.glegend i.hatch{background:repeating-linear-gradient(135deg,var(--brand) 0 2px,var(--brand-soft) 2px 5px);border:1px solid var(--brand)}
+.glegend i.dash{height:0;border-top:2px dashed var(--ink);border-radius:0}
+.glegend b{font-variant-numeric:tabular-nums}
+.pjx{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:20px;align-items:start}
+.projc{display:grid;gap:8px;min-width:0}
+.projs{display:grid;gap:12px}
+.pst .l{font-size:12px;color:var(--muted)}
+.pst .v{font-family:var(--f-display);font-size:26px;font-weight:600;line-height:1.1}
+.pbar{display:flex;height:14px;gap:2px}
+.pbar div{border-radius:3px}
+.chartbox{position:relative;min-width:0}
+.chartbox svg{width:100%;height:auto;display:block;overflow:visible}
+.chartbox text{font-family:var(--f-body);fill:var(--muted);font-size:11px}
+.fr{grid-template-columns:150px minmax(0,1fr) 54px}
+.fr .pct{grid-column:2/4;font-size:11.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px}
+.fr .pct b{color:var(--ink)}
+.fr .pct .dn{color:var(--brand)}
+#tt{position:fixed;z-index:20;pointer-events:none;background:var(--ink);color:#fff;font-size:12px;line-height:1.4;padding:7px 10px;border-radius:6px;max-width:260px;box-shadow:0 8px 20px -8px rgba(0,0,0,.4)}
+[data-tip]{cursor:default}
+@media (max-width:900px){.pjx{grid-template-columns:1fr}}
+/* cargas */
+/* seguridad */
+.side .who label{display:block;font-size:11px;margin-bottom:4px}
+.side .who .sel{width:100%;margin-bottom:4px;font-weight:700}
+.side .who #cu-role{display:block}
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;background:var(--tint);border:1px solid var(--line);border-radius:8px;justify-self:start}
+.sg{all:unset;cursor:pointer;padding:7px 14px;border-radius:6px;font-size:13px;font-weight:700;color:var(--muted)}
+.sg[aria-selected="true"]{background:var(--paper);color:var(--brand);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.sg:focus-visible{outline:2px solid var(--brand)}
+.sgp{display:grid;gap:14px;min-width:0}
+.ustats{display:flex;flex-wrap:wrap;gap:8px}
+.ustats span{font-size:12.5px;background:var(--tint);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+.ustats b{font-family:var(--f-display);font-size:14px}
+.note{font-size:13px;background:var(--warn-soft);color:var(--warn);border-radius:6px;padding:10px 12px}
+.rchip{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--rb);color:var(--rf);white-space:nowrap}
+.users td{vertical-align:middle}
+.users tr.inact td{color:var(--muted)}
+.users tr.me td:first-child b::after{content:"Vos";margin-left:6px;font-size:10px;color:var(--brand);background:var(--brand-soft);padding:1px 6px;border-radius:999px}
+.users .acts{white-space:nowrap;text-align:right}
+.users .acts .eb{margin-left:6px}
+.users .acts .eb[disabled]{opacity:.35;cursor:default;text-decoration:none}
+.users tr.confirm td{background:var(--brand-soft);white-space:normal}
+.audit td{vertical-align:top}
+.audit td.det{white-space:normal;min-width:260px;max-width:420px}
+.audit .ip{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--muted)}
+.audit tr.fresh td{animation:flash 1.6s ease}
+.afil{align-items:center}
+.users td,.audit td{white-space:normal}
+.users td:nth-child(6),.audit td:first-child{white-space:nowrap}
+.stk{display:grid;gap:3px;justify-items:start}
+.stk small{font-size:11px;color:var(--muted)}
+.users .acts{white-space:normal;min-width:118px}
+.users .acts .eb{display:block;margin:2px 0 2px auto;text-align:right}
+.audit td.det{min-width:220px}
+
+
+.stp span{display:block}
+.stp.done{cursor:default}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.tc{all:unset;box-sizing:border-box;cursor:pointer;border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:6px;align-content:start;background:var(--paper)}
+.tc:hover{border-color:var(--brand);box-shadow:0 6px 18px -12px rgba(219,1,62,.6)}
+.tc:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.tc b{font-size:14px}
+.tc .who{font-size:12px;color:var(--muted)}
+.tc .need{font-size:12px;font-weight:700;color:var(--brand)}
+.tc .need.zero{color:var(--muted);font-weight:400}
+.cols{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.colchips{display:flex;flex-wrap:wrap;gap:6px}
+.colchips code{background:var(--tint);border:1px solid var(--line);font-size:12px}
+.colchips code.req{border-color:var(--brand);color:var(--brand)}
+.drop{display:grid;gap:4px;place-items:center;text-align:center;border:2px dashed var(--line);border-radius:10px;padding:28px 16px;cursor:pointer;background:var(--tint)}
+.drop:hover,.drop.over{border-color:var(--brand);background:var(--brand-soft)}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.drop:focus-within{outline:2px solid var(--brand);outline-offset:2px}
+.drop span{font-size:12px;color:var(--muted)}
+.orrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:13px;color:var(--muted)}
+.vc.f{all:unset;box-sizing:border-box;cursor:pointer;border-radius:6px;padding:12px;background:var(--bg);display:grid;gap:2px;border:2px solid transparent}
+.vc.f[aria-pressed="true"]{border-color:var(--fg)}
+.vc.f:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.vc .s{font-size:11px;color:var(--muted)}
+.prev td{vertical-align:middle}
+.prev tr.e td{background:color-mix(in srgb,var(--brand-soft) 55%,var(--paper))}
+.dt td.dev{font-size:12.5px;white-space:normal;min-width:200px;max-width:320px}
+.dev.e{color:var(--brand);font-weight:700}
+.dev.w{color:var(--warn);font-weight:700}
+.dev.i{color:var(--muted)}
+.dev.o{color:var(--ok)}
+.prev input[type=checkbox]{width:16px;height:16px;accent-color:var(--brand)}
+.okhead{display:flex;gap:12px;align-items:center}
+.okico{width:36px;height:36px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.newb{font-size:10px;font-weight:700;color:var(--ok);background:var(--ok-soft);padding:1px 6px;border-radius:999px;margin-left:4px}
+.dt tr.upd td{background:color-mix(in srgb,var(--ok-soft) 60%,var(--paper))}
+.col{display:grid;gap:16px;align-content:start;min-width:0}
+.tbody{min-width:0}
+.ti .res{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.eb{all:unset;cursor:pointer;font-size:12px;font-weight:700;color:var(--brand);padding:2px 4px;border-radius:4px}
+.eb:hover{text-decoration:underline}
+.eb:focus-visible{outline:2px solid var(--brand)}
+.ti.open .tt{color:var(--brand)}
+.obs{margin-top:8px;border-left:3px solid var(--brand);background:var(--tint);padding:8px 10px;border-radius:0 6px 6px 0;font-size:13px;display:grid;gap:2px}
+.obs small{color:var(--muted);font-size:11.5px}
+.obs.big{font-size:14px;margin-top:0}
+.obsf{display:grid;gap:10px;margin-top:10px}
+.ste{background:var(--brand-soft);border-radius:6px;padding:12px}
+.fgrid2{display:grid;grid-template-columns:minmax(140px,180px) minmax(0,1fr);gap:10px}
+.fgrid2 label{display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted);align-content:start;min-width:0}
+textarea.fin{resize:vertical;line-height:1.45}
+.hint{font-size:12px;color:var(--muted)}
+.estado-gen{font-size:11.5px}
+@media (max-width:640px){.fgrid2{grid-template-columns:1fr}}
+
+.fgrid label,.fgrid .fin{min-width:0}
+.main>.screen{min-width:0}
+@media (max-width:820px){body{display:block}.app{min-height:0}.main{overflow:visible;padding:16px}}
+</style>
+</head>
+<body>
+
+
+<div class="demo">Demo con datos de ejemplo · Concurso ficticio de 4.812 inscriptos · Ninguna persona es real</div>
+<div class="app" id="app">
+    <aside class="side">
+      <img src="assets/logo-esentia.webp" alt="ESENTIA">
+      <div class="proj"><b>Concurso Bancor 2026</b>Cierre de inscripción: 30/09/2026</div>
+      <button class="nav" data-s="dash" aria-current="true"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></svg>Tablero</button>
+      <button class="nav" data-s="list"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6M16 5.5a3 3 0 0 1 0 5.6M18 14.6c1.4.7 2.3 2.2 2.6 4.4"/></svg>Postulantes</button>
+      <button class="nav" data-s="load"><svg viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M4.5 15v4.5h15V15"/></svg>Cargas de terceros</button>
+      <button class="nav" data-s="rules"><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h9M5 18h5"/><circle cx="17.5" cy="16.5" r="2.5"/></svg>Etapas y reglas</button>
+      <button class="nav" data-s="sec"><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>Seguridad y auditoría</button>
+      <div class="who"><label for="cu-sel">Usuario activo (demo)</label><select id="cu-sel" class="sel"></select><span id="cu-role"></span></div>
+    </aside>
+
+    <div class="main">
+
+    <!-- TABLERO -->
+    <div class="screen" data-screen="dash">
+      <div class="bar"><div><h3>Tablero de gestión de búsquedas</h3><span class="sub">Hoy 12/10/2026 · última carga: Entrevistas de línea (Bancor) 09:40</span></div><span class="sample">Datos de ejemplo</span></div>
+      <div class="fbar">
+        <div class="fgroup"><span class="flab">Fecha de postulación</span>
+          <div class="filters"><label class="dlab" for="d-from">Desde<input type="date" id="d-from" class="sel" min="2026-09-01" max="2026-09-30" value="2026-09-01"></label><label class="dlab" for="d-to">Hasta<input type="date" id="d-to" class="sel" min="2026-09-01" max="2026-09-30" value="2026-09-30"></label>
+          <div class="pres" role="group" aria-label="Rangos rápidos"><button type="button" class="pr" data-pr="all" aria-pressed="true">Toda la inscripción</button><button type="button" class="pr" data-pr="w1" aria-pressed="false">1.ª semana</button><button type="button" class="pr" data-pr="m" aria-pressed="false">Mitad</button><button type="button" class="pr" data-pr="wl" aria-pressed="false">Última semana</button></div></div></div>
+        <div class="fgroup"><span class="flab">Búsqueda y localidad</span><div class="filters"><select class="sel" id="f-vac" aria-label="Vacante"><option>Todas las vacantes</option><option>Cajero / Tesorero</option><option>Ejecutivo de Cuentas</option><option>Oficial de Negocios PyME</option><option>Asistente Administrativo</option></select><select class="sel" id="f-loc" aria-label="Localidad"><option>Todas las localidades</option><option>Córdoba Capital</option><option>Villa María</option><option>Río Cuarto</option></select></div></div>
+      </div>
+      <p class="fchip" id="d-chip" hidden></p>
+      <div class="kpis" id="kpis"></div>
+
+      <div class="panels three">
+        <div class="panel"><div class="wtop"><h4>Plazo del concurso</h4><span class="chip" id="g1-st"></span></div><span class="cap">90 días desde la apertura de la inscripción.</span><div class="gauge" id="g1"></div></div>
+        <div class="panel"><div class="wtop"><h4>Plazo de la búsqueda</h4><span class="chip" id="g2-st"></span></div><label class="sr" for="g2-sel">Búsqueda</label><select class="sel" id="g2-sel"></select><div class="gauge" id="g2"></div><div class="blist" id="g2-list"></div></div>
+        <div class="panel"><h4>Postulantes por género</h4><span class="cap" id="gen-cap"></span><div class="gend" id="gend"></div><div class="glegend" id="gen-leg"></div></div>
+      </div>
+
+      <div class="panel"><div class="wtop"><h4>Búsquedas por puesto</h4><span class="cap">Puestos a cubrir, cubiertos y entrevistados al día de hoy · no depende del filtro de fechas</span></div>
+        <div class="tbl-scroll"><table class="dt num cov"><thead><tr><th>Puesto</th><th class="r">Búsquedas abiertas</th><th class="r">Puestos a cubrir</th><th class="r">Cubiertos</th><th class="r">Faltan</th><th>Cobertura</th><th class="r">Entrevistados</th><th class="r">Entrevistados por faltante</th></tr></thead><tbody id="cov-body"></tbody></table></div>
+        <span class="foot">Búsquedas abiertas = sucursales o localidades con vacantes para ese puesto. Hacé clic en un puesto para verlo en el reloj de plazo.</span></div>
+
+      <div class="panel"><div class="wtop"><h4>Entrevistas de línea: proyección por día vs. contrataciones</h4><span class="cap">Días hábiles · las entrevistas tienen que terminar el 06/11 para llegar a antecedentes y propuestas</span></div>
+        <div class="pjx">
+          <div class="projc"><div class="chartbox" id="projc"></div><div class="glegend"><span><i style="background:var(--brand)"></i>Entrevistas hechas</span><span><i class="hatch"></i>Entrevistas a hacer (proyección)</span><span><i class="dash"></i>Ritmo necesario</span></div></div>
+          <div class="projs" id="projs"></div>
+        </div></div>
+
+      <div class="panel"><div class="wtop"><h4>Postulantes por día</h4><span class="cap" id="daily-cap"></span></div><div class="chartbox" id="daily"></div></div>
+
+      <div class="panels">
+        <div class="panel"><h4>Embudo por etapa</h4><span class="cap">Cuántas postulaciones llegan a cada etapa, qué porcentaje del total representan y cuánto pasa de la etapa anterior.</span><div class="fun" id="funnel"></div></div>
+        <div class="panel"><h4>Notas del examen técnico UNC</h4><span class="cap" id="hist-cap"></span>
+          <div class="hist" id="hist"><div class="cut"><b>Corte 70</b></div></div>
+          <div class="hx num"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span><span>60</span><span>70</span><span>80</span><span>90</span></div>
+          <span class="cap">Promedio 58,6 · Mediana 61 · Ausentes 13,9%</span></div>
+      </div>
+      <div class="panels">
+        <div class="panel"><h4>Postulaciones por vacante y localidad</h4><div class="tbl-scroll"><table class="heat num" id="heat"></table></div></div>
+        <div class="panel"><h4>Pendientes para hoy</h4><div class="alerts">
+          <div class="al" style="--c:var(--warn)"><i></i><div>UNC · Turno 05 sin resultados<small>Vence 14/10 · 412 postulantes esperando nota</small></div><span class="act">Avisar</span></div>
+          <div class="al" style="--c:var(--brand)"><i></i><div>3 DNI de Consultora Pedemonte no existen en la base<small>Carga del 11/10 retenida hasta revisar</small></div><span class="act">Revisar</span></div>
+          <div class="al" style="--c:var(--warn)"><i></i><div>Consulta del Banco: postulantes de Villa María en psicotécnico<small>Pedido de M. Ferreyra, Bancor RRHH</small></div><span class="act">Exportar</span></div>
+          <div class="al" style="--c:var(--ok)"><i></i><div>Psicotécnico cerrado y bloqueado<small>598 aptos · 144 no aptos · 10/10 por Gerencia</small></div><span class="act">Ver</span></div>
+          <div class="al" style="--c:var(--muted)"><i></i><div>422 personas con 2 o más vacantes<small>El examen UNC se aplica una vez por DNI</small></div><span class="act">Ver</span></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- POSTULANTES -->
+    <div class="screen" data-screen="list" hidden>
+      <div class="bar"><div><h3>Postulantes</h3><span class="sub">Tocá un postulante para abrir su ficha: recorrido por etapas, estados, observaciones e historial.</span></div>
+        <div class="filters"><input class="search" id="q" placeholder="Buscar por nombre o DNI" aria-label="Buscar postulante"><select class="sel" id="f-st" aria-label="Estado"><option value="">Todos los estados</option><option value="cur">En carrera</option><option value="out">Excluidos</option></select><button class="btn ghost" type="button" id="exp">Exportar a Excel</button></div></div>
+      <div class="tbl-scroll"><table class="dt num" id="tbl"><thead><tr><th>Postulante</th><th>Vacante · Localidad</th><th>Etapa actual</th><th class="r">UNC</th><th class="r">Assess.</th><th class="r">Psico</th><th class="r">Entrev.</th><th class="r">Score</th><th class="r">Mérito</th></tr></thead><tbody></tbody></table></div>
+      <span class="foot">Mostrando 10 de 4.812 · <span class="lock">🔒</span> etapa cerrada, el valor no se puede editar · Datos de ejemplo</span>
+    </div>
+
+    <!-- FICHA -->
+    <div class="screen" data-screen="ficha" hidden>
+      <div class="crumb"><button class="back" type="button" id="f-back">← Postulantes</button><span class="cpath" id="f-path"></span>
+        <span class="pn"><button class="ib" type="button" id="f-prev" aria-label="Postulante anterior">‹</button><span id="f-pos" class="num"></span><button class="ib" type="button" id="f-next" aria-label="Postulante siguiente">›</button></span></div>
+      <div class="person"><div><span class="eyebrow">Ficha del postulante</span><h4 id="p-name">Martina Ledesma</h4><span class="id" id="p-id">DNI 38.***.214 · Cajero / Tesorero · Córdoba Capital · ID HR 5fa977…cb</span></div>
+        <div class="score"><span class="big num" id="p-score">84,6</span><small id="p-pos">Score parcial · posición 3 de 61</small></div></div>
+      <div class="ficha">
+        <div class="panel"><h4>Recorrido por etapas</h4><div class="tl" id="tl"></div></div>
+        <div class="col">
+          <div class="panel"><div class="wtop"><h4>Observación general</h4><span class="estado-gen" id="p-state"></span></div>
+            <div id="gen-view"></div>
+            <form id="gen-form" class="obsf" novalidate hidden><label for="gen-txt" class="sr">Observación general</label><textarea id="gen-txt" class="fin" rows="4" maxlength="600" placeholder="Ej.: Pidió reprogramar la entrevista por viaje laboral. Prioridad para Sucursal Centro."></textarea><div class="filters"><button class="btn" type="submit">Guardar observación</button><button class="btn ghost" type="button" id="gen-cancel">Cancelar</button></div></form>
+          </div>
+          <div class="panel"><h4>Historial de cambios</h4><div class="log" id="plog"></div><span class="foot">Para responder al Banco: este historial se exporta con la ficha.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARGAS -->
+    <div class="screen" data-screen="load" hidden>
+      <div class="bar"><div><h3>Cargas de terceros</h3><span class="sub">Cada resultado se cruza por DNI con la base del concurso. Nada se aplica sin tu confirmación.</span></div><button class="btn" type="button" id="newload">Nueva carga</button></div>
+      <div class="steps" id="ld-steps"><div class="stp" data-n="1"><b>1 · TERCERO</b><span>Qué resultados cargás</span></div><div class="stp" data-n="2"><b>2 · ARCHIVO</b><span>Excel o CSV del proveedor</span></div><div class="stp" data-n="3"><b>3 · PREVIEW Y DESVÍOS</b><span>Cruce por DNI</span></div><div class="stp" data-n="4"><b>4 · APLICAR</b><span>Impacta en postulantes</span></div></div>
+
+      <div class="panel ldp" id="ld-1"><h4>¿Qué resultados vas a cargar?</h4><span class="cap">Elegí el tercero. Cada uno tiene una plantilla con columnas fijas; la columna DNI es obligatoria en todas.</span><div class="tgrid" id="tgrid"></div></div>
+
+      <div class="panel ldp" id="ld-2" hidden>
+        <div class="wtop"><h4 id="ld2-title">Subí el archivo</h4><button class="eb" type="button" data-back="1">← Cambiar tercero</button></div>
+        <div class="cols"><span class="cap">Columnas que tiene que traer el archivo:</span><div id="ld2-cols" class="colchips"></div><button class="eb" type="button" id="copy-cols">Copiar encabezados</button></div>
+        <label class="drop" for="ld-file" id="drop"><input type="file" id="ld-file" accept=".xlsx,.xls,.csv"><b>Elegí un archivo o arrastralo acá</b><span>Formatos: .xlsx, .xls o .csv · la primera fila tiene que ser el encabezado</span></label>
+        <div class="orrow"><span>¿No tenés un archivo a mano?</span><button class="btn ghost" type="button" id="ld-sample">Usar archivo de ejemplo</button></div>
+        <p class="ferr" id="ld2-err" hidden></p>
+      </div>
+
+      <div class="ldp" id="ld-3" hidden>
+        <div class="file"><span id="ld3-file"></span><button class="eb" type="button" data-back="2">← Subir otro archivo</button></div>
+        <div class="val num" id="ld3-cards"></div>
+        <div class="tbl-scroll"><table class="dt num prev"><thead><tr><th>Fila</th><th>DNI en archivo</th><th>Postulante</th><th>Dato recibido</th><th>Resultado</th><th>Desvío detectado</th><th class="r">Aplicar</th></tr></thead><tbody id="ld3-body"></tbody></table></div>
+        <p class="hint">Las filas con aviso se aplican solo si las marcás. Las filas con error no se aplican: devolvelas al proveedor para que las corrija.</p>
+        <div class="filters"><button class="btn" type="button" id="ld-apply"></button><button class="btn ghost" type="button" id="ld-return">Devolver errores al proveedor</button><button class="btn ghost" type="button" data-back="1">Cancelar carga</button></div>
+      </div>
+
+      <div class="panel ldp" id="ld-4" hidden>
+        <div class="okhead"><span class="okico">✓</span><div><h4 id="ld4-title"></h4><span class="cap" id="ld4-sub"></span></div></div>
+        <div class="tbl-scroll"><table class="dt num"><thead><tr><th>Postulante</th><th>Etapa</th><th>Valor aplicado</th><th>Nuevo estado</th><th></th></tr></thead><tbody id="ld4-body"></tbody></table></div>
+        <div class="filters"><button class="btn" type="button" id="ld-golist">Ver en Postulantes</button><button class="btn ghost" type="button" data-back="1">Hacer otra carga</button></div>
+      </div>
+
+      <div class="panel"><h4>Cargas recientes</h4><div class="tbl-scroll"><table class="dt num"><thead><tr><th>Fecha</th><th>Tercero</th><th>Archivo</th><th class="r">Filas</th><th class="r">Aplicadas</th><th class="r">Con error</th><th>Usuario</th></tr></thead><tbody id="ld-hist"></tbody></table></div></div>
+    </div>
+
+    <!-- REGLAS -->
+    <div class="screen" data-screen="rules" hidden>
+      <div class="bar"><div><h3>Etapas y reglas</h3><span class="sub" id="ver-sub">Versión 3 · aprobada por Gerencia el 28/09/2026. Cambiarla recalcula el orden de mérito y queda registrado.</span></div>
+        <div class="filters"><button class="btn ghost" type="button" id="add-open">+ Agregar etapa</button><button class="btn" type="button" id="rules-save" disabled>Guardar versión 4</button></div></div>
+      <div class="panel"><div class="wtop"><h4>Ponderación del score global</h4><span class="wsum" id="wsum"></span></div><div class="wbar" id="wbar"></div><div class="wleg" id="wleg"></div></div>
+      <form class="panel addf" id="addf" hidden novalidate>
+        <h4>Nueva etapa</h4>
+        <div class="fgrid">
+          <label for="n-name">Nombre de la etapa<input id="n-name" class="fin" placeholder="Ej.: Prueba de inglés" maxlength="60"></label>
+          <label for="n-who">Responsable<input id="n-who" class="fin" placeholder="Ej.: Instituto de idiomas" maxlength="40"></label>
+          <label for="n-type">Tipo de resultado<select id="n-type" class="fin"><option>Nota 0–100</option><option>Puntaje 0–100</option><option>Sí / No</option><option>Dictamen</option></select></label>
+          <label for="n-w">Peso en el score (%)<input id="n-w" class="fin" type="number" min="0" max="100" step="1" value="0"><small>0 = filtro sin puntaje</small></label>
+          <label for="n-rule" class="wide">Regla para seguir<input id="n-rule" class="fin" placeholder="Ej.: Nivel B1 o superior" maxlength="80"></label>
+          <label for="n-pos" class="wide">Ubicarla después de<select id="n-pos" class="fin"></select></label>
+        </div>
+        <p class="ferr" id="n-err" hidden></p>
+        <div class="filters"><button class="btn" type="submit">Agregar etapa</button><button class="btn ghost" type="button" id="add-cancel">Cancelar</button></div>
+      </form>
+      <div class="tbl-scroll"><table class="dt num rules"><thead><tr><th class="hcol"><span class="sr">Mover</span></th><th>#</th><th>Etapa</th><th>Responsable</th><th>Tipo de resultado</th><th class="r">Peso</th><th>Regla para seguir</th><th>Estado</th><th class="r">Orden</th></tr></thead><tbody id="rules-body"></tbody></table></div>
+      <div class="panel" id="pending" hidden><h4>Cambios sin guardar</h4><ul class="chg" id="chg"></ul><div class="filters"><button class="btn ghost" type="button" id="rules-reset">Descartar cambios</button></div></div>
+      <span class="foot">Arrastrá las etapas desde ⠿ o usá las flechas. Las etapas cerradas quedan fijas y congelan sus resultados; el orden de mérito siempre va al final. Reabrir una etapa exige motivo y aprobación de la Gerencia.</span>
+    </div>
+
+    <!-- SEGURIDAD -->
+    <div class="screen" data-screen="sec" hidden>
+      <div class="bar"><div><h3>Seguridad y auditoría</h3><span class="sub">Usuarios con acceso, permisos por rol y registro de todo lo que pasa en la herramienta. Datos personales protegidos según Ley 25.326.</span></div></div>
+      <div class="seg" role="tablist" aria-label="Secciones de seguridad"><button type="button" role="tab" class="sg" data-sg="users" aria-selected="true">Usuarios y roles</button><button type="button" role="tab" class="sg" data-sg="audit" aria-selected="false">Registro de actividad</button><button type="button" role="tab" class="sg" data-sg="perm" aria-selected="false">Permisos por rol</button></div>
+
+      <div class="sgp" data-sgp="users">
+        <div class="bar"><div class="ustats" id="u-stats"></div><button class="btn" type="button" id="u-new">+ Nuevo usuario</button></div>
+        <p class="note" id="u-ro" hidden>Estás usando la herramienta con un rol sin permiso de administración: podés ver los usuarios pero no darlos de alta, modificarlos ni darlos de baja.</p>
+        <form class="panel addf" id="u-form" hidden novalidate>
+          <h4 id="u-form-t">Nuevo usuario</h4>
+          <div class="fgrid">
+            <label for="u-name">Nombre y apellido<input id="u-name" class="fin" maxlength="60" placeholder="Ej.: Laura Castro"></label>
+            <label for="u-mail">Email<input id="u-mail" class="fin" type="email" maxlength="80" placeholder="nombre@empresa.com"></label>
+            <label for="u-role">Rol<select id="u-role" class="fin"></select><small id="u-role-d"></small></label>
+            <label for="u-org">Organización<input id="u-org" class="fin" maxlength="50" placeholder="Ej.: ESENTIA, UNC, Bancor"></label>
+            <label for="u-scope">Alcance<select id="u-scope" class="fin"></select></label>
+          </div>
+          <p class="ferr" id="u-err" hidden></p>
+          <p class="hint" id="u-hint">Al crear el usuario se le envía una invitación por email para definir su contraseña y activar el segundo factor.</p>
+          <div class="filters"><button class="btn" type="submit" id="u-submit">Crear usuario</button><button class="btn ghost" type="button" id="u-cancel">Cancelar</button></div>
+        </form>
+        <div class="tbl-scroll"><table class="dt num users"><thead><tr><th>Usuario</th><th>Rol</th><th>Organización</th><th>Alcance</th><th>Estado</th><th>Último acceso</th><th class="r">Acciones</th></tr></thead><tbody id="u-body"></tbody></table></div>
+      </div>
+
+      <div class="sgp" data-sgp="audit" hidden>
+        <div class="filters afil"><select class="sel" id="a-user" aria-label="Filtrar por usuario"></select><select class="sel" id="a-mod" aria-label="Filtrar por módulo"></select><input class="search" id="a-q" placeholder="Buscar en el detalle (DNI, archivo, nombre…)" aria-label="Buscar en el registro"><button class="btn ghost" type="button" id="a-exp">Exportar registro</button></div>
+        <span class="cap" id="a-count"></span>
+        <div class="tbl-scroll"><table class="dt num audit"><thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Módulo</th><th>Acción</th><th>Detalle</th><th>Origen</th></tr></thead><tbody id="a-body"></tbody></table></div>
+        <span class="foot">El registro no se puede editar ni borrar desde la herramienta. Se conserva aunque el usuario sea dado de baja.</span>
+      </div>
+
+      <div class="sgp" data-sgp="perm" hidden>
+        <div class="panel"><h4>Qué puede hacer cada rol</h4><div class="tbl-scroll"><table class="mx"><thead><tr><th>Rol</th><th>Ver datos personales</th><th>Cargar resultados</th><th>Corregir estados</th><th>Reglas</th><th>Usuarios</th><th>Exportar</th></tr></thead><tbody>
+          <tr><td>Gerencia ESENTIA</td><td class="y">Sí</td><td class="y">Todas</td><td class="y">Sí, aprueba</td><td class="y">Sí</td><td class="y">ABM</td><td class="y">Sí</td></tr>
+          <tr><td>Analista ESENTIA</td><td class="y">Sí</td><td class="y">Todas</td><td class="p">Solicita</td><td class="x">No</td><td class="x">Solo ver</td><td class="p">Con registro</td></tr>
+          <tr><td>Proveedor UNC</td><td class="p">Solo DNI y turno</td><td class="p">Examen técnico</td><td class="x">No</td><td class="x">No</td><td class="x">No</td><td class="x">No</td></tr>
+          <tr><td>Consultora</td><td class="p">Sus asignados</td><td class="p">Su etapa</td><td class="x">No</td><td class="x">No</td><td class="x">No</td><td class="x">No</td></tr>
+          <tr><td>Bancor</td><td class="p">Finalistas</td><td class="p">Entrevista</td><td class="x">No</td><td class="x">No</td><td class="x">No</td><td class="p">Indicadores</td></tr>
+        </tbody></table></div></div>
+        <div class="panel"><h4>Otras protecciones</h4><span class="cap">Ingreso con usuario personal y segundo factor · Bloqueo tras 5 intentos fallidos · Cierre de sesión por inactividad a los 30 minutos · Respaldo diario con restauración a cualquier fecha · Cada exportación lleva marca de agua con usuario y fecha · Excel original de Hiring Room guardado sin cambios como evidencia.</span></div>
+      </div>
+    </div>
+
+    </div>
+  </div>
+<div class="toast" id="toast" role="status" hidden></div>
+<div id="tt" role="tooltip" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+(function(){
+  // ===== Tablero =====
+  var fmt=function(n){return Math.round(n).toLocaleString("es-AR")},pc=function(x,d){return(x*100).toLocaleString("es-AR",{minimumFractionDigits:d==null?1:d,maximumFractionDigits:d==null?1:d})+"%"};
+  var DAY=864e5,TODAY=new Date(2026,9,12),D0=new Date(2026,8,1);
+  var dd=function(d){return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")};
+  var diff=function(a,b){return Math.round((b-a)/DAY)};
+  var addD=function(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n)};
+  // inscripción diaria 01/09–30/09 (ejemplo): pico de apertura, baja en fines de semana, repunte al cierre
+  var INS=(function(){var w=[],s=0;for(var i=0;i<30;i++){var d=addD(D0,i),we=d.getDay()===0||d.getDay()===6;var v=(we?.55:1)*(1+1.7*Math.exp(-i/3)+1.3*Math.exp(-(29-i)/2.4))*(1+.08*Math.sin(i*1.7));w.push(v);s+=v;}
+    var out=w.map(function(v){return Math.round(v/s*4812)}),tot=out.reduce(function(a,b){return a+b},0);out[29]+=4812-tot;return out;})();
+  var R={a:0,b:29};
+  // ---- tooltip compartido
+  var TT=document.getElementById("tt");
+  document.addEventListener("mouseover",function(e){var el=e.target.closest&&e.target.closest("[data-tip]");if(!el){TT.hidden=true;return;}TT.innerHTML=el.getAttribute("data-tip");TT.hidden=false;});
+  document.addEventListener("mousemove",function(e){if(TT.hidden)return;var x=e.clientX+14,y=e.clientY+14,w=TT.offsetWidth,h=TT.offsetHeight;if(x+w>innerWidth-8)x=e.clientX-w-14;if(y+h>innerHeight-8)y=e.clientY-h-14;TT.style.left=x+"px";TT.style.top=y+"px";});
+  // ---- relojes
+  function arc(cx,cy,r,p0,p1){var a0=Math.PI*(1-p0),a1=Math.PI*(1-p1);return"M"+(cx+r*Math.cos(a0)).toFixed(2)+" "+(cy-r*Math.sin(a0)).toFixed(2)+" A"+r+" "+r+" 0 0 1 "+(cx+r*Math.cos(a1)).toFixed(2)+" "+(cy-r*Math.sin(a1)).toFixed(2);}
+  var ZONES=[[0,.6,"#3E9B6B","En plazo"],[.6,.85,"#D9A21B","Atención"],[.85,1,"#DB013E","Crítico"]];
+  function gauge(el,o){var p=Math.max(0,Math.min(1,o.el/o.total)),cx=140,cy=128,r=96,g=.006,an=Math.PI*(1-p);
+    var s='<svg viewBox="0 0 280 160" role="img" aria-label="'+o.aria+'">';
+    ZONES.forEach(function(z,k){s+='<path d="'+arc(cx,cy,r,z[0]+(k?g:0),z[1]-(k<2?g:0))+'" fill="none" stroke="'+z[2]+'" stroke-width="24" data-tip="'+z[3]+': días '+Math.round(z[0]*o.total)+' a '+Math.round(z[1]*o.total)+'"/>';});
+    var tx=cx+(r+26)*Math.cos(an),ty=cy-(r+26)*Math.sin(an),nx=cx+(r+10)*Math.cos(an),ny=cy-(r+10)*Math.sin(an);
+    s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+nx.toFixed(1)+'" y2="'+ny.toFixed(1)+'" stroke="var(--ink)" stroke-width="7" stroke-linecap="round"/><circle cx="'+cx+'" cy="'+cy+'" r="11" fill="var(--ink)"/><circle cx="'+cx+'" cy="'+cy+'" r="4" fill="var(--paper)"/>';
+    s+='<text x="'+tx.toFixed(1)+'" y="'+(ty+4).toFixed(1)+'" text-anchor="'+(an>Math.PI*.6?"end":an<Math.PI*.4?"start":"middle")+'" style="font-size:12.5px;font-weight:700;fill:var(--ink)">'+o.el+' días</text>';
+    s+='<text x="'+(cx-r)+'" y="'+(cy+20)+'" text-anchor="middle" style="font-size:11px;fill:var(--muted)">0</text><text x="'+(cx+r)+'" y="'+(cy+20)+'" text-anchor="middle" style="font-size:11px;fill:var(--muted)">'+o.total+'</text></svg>';
+    var rem=Math.max(0,o.total-o.el);
+    el.innerHTML=s+'<span class="gv num">'+rem+' días</span><span class="gc">faltan para finalizar · <b>día '+o.el+' de '+o.total+'</b><br>'+o.cap+'</span>';
+    var z=ZONES.find(function(z){return p<=z[1]})||ZONES[2];return{p:p,z:z};}
+  function gaugeChip(id,res){var e=document.getElementById(id),k=res.z[3];e.className="chip "+(k==="En plazo"?"ok":k==="Atención"?"warn":"cur");e.textContent=k;}
+  var BUS=[{n:"Cajero / Tesorero",ini:new Date(2026,8,1),pl:75,pu:40,cu:6,bq:6,en:112},{n:"Ejecutivo de Cuentas",ini:new Date(2026,8,8),pl:70,pu:15,cu:2,bq:6,en:54},{n:"Oficial de Negocios PyME",ini:new Date(2026,8,15),pl:45,pu:8,cu:1,bq:4,en:21},{n:"Asistente Administrativo",ini:new Date(2026,8,1),pl:60,pu:12,cu:0,bq:3,en:27}];
+  var g2=document.getElementById("g2-sel");g2.innerHTML=BUS.map(function(b,i){return'<option value="'+i+'">'+b.n+'</option>'}).join("");g2.value="2";
+  function drawGauges(){var el1=diff(D0,TODAY);gaugeChip("g1-st",gauge(document.getElementById("g1"),{total:90,el:el1,cap:"Inicio 01/09 · fin "+dd(addD(D0,90))+"/2026",aria:"Concurso: día "+el1+" de 90"}));
+    var b=BUS[+g2.value],e2=diff(b.ini,TODAY);gaugeChip("g2-st",gauge(document.getElementById("g2"),{total:b.pl,el:e2,cap:"Inicio "+dd(b.ini)+" · fin "+dd(addD(b.ini,b.pl))+" · "+b.cu+" de "+b.pu+" puestos cubiertos",aria:b.n+": día "+e2+" de "+b.pl}));
+    document.getElementById("g2-list").innerHTML=BUS.map(function(x,i){var r=x.pl-diff(x.ini,TODAY),p=diff(x.ini,TODAY)/x.pl,z=ZONES.find(function(z){return p<=z[1]})||ZONES[2];return'<button type="button" class="bl" data-b="'+i+'" aria-pressed="'+(i===+g2.value)+'"><span>'+x.n+'<br><small>'+x.cu+'/'+x.pu+' puestos</small></span><b class="num">'+r+' d</b><span class="chip '+(z[3]==="En plazo"?"ok":z[3]==="Atención"?"warn":"cur")+'">'+z[3]+'</span></button>'}).join("");}
+  function drawCov(){var sel=+g2.value,T={bq:0,pu:0,cu:0,en:0};
+    var row=function(b,i){var fa=b.pu-b.cu,c=b.cu/b.pu,r=fa?b.en/fa:0;
+      return'<tr'+(i!=null?' data-b="'+i+'" class="'+(i===sel?"sel":"")+'" tabindex="0"':' class="tot"')+'><td>'+(i!=null?'<b>'+b.n+'</b>':'Total')+'</td><td class="r">'+b.bq+'</td><td class="r">'+b.pu+'</td><td class="r">'+b.cu+'</td><td class="r"><b>'+fa+'</b></td>'+
+        '<td><div class="cbar" data-tip="'+b.cu+' de '+b.pu+' puestos cubiertos ('+pc(c)+')"><div class="tr"><div style="width:'+(c*100).toFixed(1)+'%"></div></div><span>'+pc(c,0)+'</span></div></td>'+
+        '<td class="r">'+fmt(b.en)+'</td><td class="r"><span class="ratio'+(fa&&r<3?" lo":"")+'"'+(fa&&r<3?' data-tip="Menos de 3 entrevistados por puesto faltante: conviene sumar candidatos"':'')+'>'+(fa?r.toLocaleString("es-AR",{maximumFractionDigits:1}):"—")+'</span></td></tr>';};
+    var h=BUS.map(function(b,i){T.bq+=b.bq;T.pu+=b.pu;T.cu+=b.cu;T.en+=b.en;return row(b,i)}).join("");
+    document.getElementById("cov-body").innerHTML=h+row(T,null);}
+  document.getElementById("cov-body").addEventListener("click",function(e){var tr=e.target.closest("tr[data-b]");if(!tr)return;g2.value=tr.dataset.b;drawGauges();drawCov();});
+  document.getElementById("cov-body").addEventListener("keydown",function(e){if(e.key!=="Enter")return;var tr=e.target.closest("tr[data-b]");if(!tr)return;g2.value=tr.dataset.b;drawGauges();drawCov();});
+  g2.addEventListener("change",function(){drawGauges();drawCov();});
+  document.getElementById("g2-list").addEventListener("click",function(e){var b=e.target.closest("[data-b]");if(!b)return;g2.value=b.dataset.b;drawGauges();drawCov();});
+  // ---- proyección de entrevistas
+  function drawProj(){var real=[18,24,27,29,31,28,30,27],rd=["01/10","02/10","05/10","06/10","07/10","08/10","09/10","12/10"];
+    var done=real.reduce(function(a,b){return a+b},0),pend=598-done,fut=[],d=addD(TODAY,1),end=new Date(2026,10,6);
+    while(d<=end){if(d.getDay()%6)fut.push(dd(d));d=addD(d,1);}
+    var need=pend/fut.length,per=fut.map(function(_,k){return Math.floor(pend/fut.length)+(k<pend%fut.length?1:0)});
+    var all=real.map(function(v,k){return{v:v,l:rd[k],r:1}}).concat(per.map(function(v,k){return{v:v,l:fut[k],r:0}}));
+    var W=640,H=200,L=30,B=26,T=10,max=40,bw=(W-L)/all.length,y=function(v){return T+(H-T-B)*(1-v/max)};
+    var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Entrevistas por día hábil: hechas y proyectadas">';
+    [0,10,20,30,40].forEach(function(v){s+='<line x1="'+L+'" x2="'+W+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--line)" stroke-width="1"/><text x="'+(L-6)+'" y="'+(y(v)+4)+'" text-anchor="end">'+v+'</text>';});
+    s+='<defs><pattern id="hp" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="var(--brand-soft)"/><rect width="2" height="5" fill="var(--brand)"/></pattern></defs>';
+    all.forEach(function(o,k){var x=L+k*bw+2,w=bw-4,yy=y(o.v);s+='<g data-tip="'+(o.r?"<b>"+o.l+"</b> · "+o.v+" entrevistas hechas":"<b>"+o.l+"</b> · "+o.v+" entrevistas a hacer (proyección)")+'"><rect x="'+(x-2)+'" y="'+T+'" width="'+(w+4)+'" height="'+(H-T-B)+'" fill="transparent"/><rect x="'+x.toFixed(1)+'" y="'+yy.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+(H-B-yy).toFixed(1)+'" rx="2" fill="'+(o.r?"var(--brand)":"url(#hp)")+'"'+(o.r?"":' stroke="var(--brand)" stroke-width="1"')+'/></g>';
+      if(k%4===0||k===all.length-1)s+='<text x="'+(x+w/2).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle">'+o.l+'</text>';});
+    var xt=L+real.length*bw;s+='<line x1="'+xt.toFixed(1)+'" x2="'+xt.toFixed(1)+'" y1="'+T+'" y2="'+(H-B)+'" stroke="var(--ink)" stroke-width="1"/><text x="'+(xt+4).toFixed(1)+'" y="'+(T+10)+'" style="fill:var(--ink);font-weight:700">Hoy</text>';
+    s+='<line x1="'+L+'" x2="'+W+'" y1="'+y(need).toFixed(1)+'" y2="'+y(need).toFixed(1)+'" stroke="var(--ink)" stroke-width="2" stroke-dasharray="6 4"/><text x="'+(W-2)+'" y="'+(y(need)-6).toFixed(1)+'" text-anchor="end" style="fill:var(--ink);font-weight:700">Necesario: '+need.toLocaleString("es-AR",{maximumFractionDigits:1})+' por día</text></svg>';
+    document.getElementById("projc").innerHTML=s;
+    var pace=done/real.length,pu=75,cu=BUS.reduce(function(a,b){return a+b.cu},0),fa=pu-cu,apr=.68,cand=Math.round(pend*apr);
+    document.getElementById("projs").innerHTML='<div class="pst"><span class="l">Ritmo actual vs. necesario</span><div class="v num">'+pace.toLocaleString("es-AR",{maximumFractionDigits:1})+' / '+need.toLocaleString("es-AR",{maximumFractionDigits:1})+'</div><span class="chip '+(pace>=need?"ok":"warn")+'">'+(pace>=need?"Se llega con el ritmo actual":"Hay que acelerar")+'</span></div>'+
+      '<div class="pst"><span class="l">Entrevistas: '+done+' hechas · '+pend+' por hacer en '+fut.length+' días hábiles</span></div>'+
+      '<div class="pst"><span class="l">Contratados actuales vs. faltantes</span><div class="v num">'+cu+' <small style="font-size:14px;color:var(--muted)">de '+pu+' puestos</small></div><div class="pbar" data-tip="'+cu+' contratados · '+fa+' faltan"><div style="flex:'+cu+';background:var(--ok)"></div><div style="flex:'+fa+';background:var(--out-soft)"></div></div><div class="glegend"><span><i style="background:var(--ok)"></i>Contratados <b>'+cu+'</b></span><span><i style="background:var(--out-soft);border:1px solid var(--line)"></i>Faltan <b>'+fa+'</b></span></div></div>'+
+      '<p class="hint">Proyección: '+pend+' entrevistas × '+pc(apr,0)+' de aprobación ≈ <b>'+cand+' candidatos</b> para '+fa+' puestos (cobertura '+(cand/fa).toLocaleString("es-AR",{maximumFractionDigits:1})+'×).</p>';}
+  // ---- postulantes por día
+  function drawDaily(){var W=960,H=236,L=34,B=26,T=22,mx=Math.max.apply(null,INS),top=Math.ceil(mx/100)*100,y=function(v){return T+(H-T-B)*(1-v/top)},bw=(W-L)/30;
+    var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Postulantes por día de inscripción">';
+    for(var v=0;v<=top;v+=100)s+='<line x1="'+L+'" x2="'+W+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--line)"/><text x="'+(L-6)+'" y="'+(y(v)+4)+'" text-anchor="end">'+v+'</text>';
+    var pk=INS.indexOf(mx);
+    INS.forEach(function(v,i){var d=addD(D0,i),inR=i>=R.a&&i<=R.b,x=L+i*bw+1.5,w=bw-3,yy=y(v),we=d.getDay()===0||d.getDay()===6;
+      s+='<g data-tip="<b>'+["dom","lun","mar","mié","jue","vie","sáb"][d.getDay()]+' '+dd(d)+'</b> · '+fmt(v)+' postulantes'+(inR?"":" (fuera del filtro)")+'"><rect x="'+(x-1.5)+'" y="'+T+'" width="'+bw+'" height="'+(H-T-B)+'" fill="transparent"/><rect x="'+x.toFixed(1)+'" y="'+yy.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+(H-B-yy).toFixed(1)+'" rx="2" fill="'+(inR?"var(--brand)":"var(--out-soft)")+'"'+(we&&inR?' opacity=".7"':"")+'/></g>';
+      if(i%5===0||i===29)s+='<text x="'+(x+w/2).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle">'+dd(d)+'</text>';});
+    s+='<text x="'+(L+pk*bw+2).toFixed(1)+'" y="'+(y(mx)-5).toFixed(1)+'" style="fill:var(--ink);font-weight:700">Pico: '+fmt(mx)+' ('+dd(addD(D0,pk))+')</text></svg>';
+    document.getElementById("daily").innerHTML=s;
+    var sel=INS.slice(R.a,R.b+1).reduce(function(a,b){return a+b},0),n=R.b-R.a+1;
+    document.getElementById("daily-cap").textContent=fmt(sel)+" postulantes en "+n+" día"+(n>1?"s":"")+" · promedio "+fmt(sel/n)+" por día · los fines de semana se ven más claros";}
+  // ---- KPIs, embudo, género, notas y vacante × localidad (escalados por el rango de fechas)
+  var F=[["Inscriptos (HR)",4812],["Requisitos y documental",3960],["Presentes examen UNC",3410],["Aprobados UNC (≥70)",1288],["Aprobados assessment",742],["Aptos psicotécnico",598],["Entrevista de línea (en curso)",598]];
+  var HB=[22,61,140,262,412,568,657,640,470,178];
+  var L6=["Córdoba Cap.","Villa María","Río Cuarto","San Francisco","V. Carlos Paz","Bell Ville"];
+  var V4=[["Cajero / Tesorero",[1240,310,345,198,221,112]],["Ejecutivo de Cuentas",[620,140,165,90,96,49]],["Oficial PyME",[305,88,102,61,37,30]],["Asistente Adm.",[380,52,70,38,41,22]]];
+  var GEN=[["Mujer","#008C9E",.519],["Hombre","#5B4FA8",.459],["No especifica","#B7741A",.022]],GEN_C=[322,268,8];
+  function drawStats(){var tot=INS.slice(R.a,R.b+1).reduce(function(a,b){return a+b},0),f=tot/4812,sc=function(v){return Math.round(v*f)};
+    var full=R.a===0&&R.b===29,chip=document.getElementById("d-chip");chip.hidden=full;
+    if(!full)chip.textContent="Filtrado por fecha de postulación: "+dd(addD(D0,R.a))+" al "+dd(addD(D0,R.b))+" · "+fmt(tot)+" de 4.812 inscriptos ("+pc(f)+"). Los relojes y la proyección no dependen de este filtro.";
+    var car=sc(598),pres=sc(3410),apr=sc(1288);
+    document.getElementById("kpis").innerHTML=[["Inscriptos (HR)",fmt(tot),fmt(tot*.912)+" personas únicas"],["Siguen en carrera",fmt(car),pc(car/tot)+" de los inscriptos",1],["Excluidos",fmt(tot-car),"con motivo fundado"],["Aprobación examen UNC",pc(1288/3410),fmt(apr)+" de "+fmt(pres)+" presentes"],["Etapa en curso",sc(214)+" / "+fmt(car),"Entrevistas de línea hechas"]].map(function(k){return'<div class="kpi'+(k[3]?" hl":"")+'"><span class="l">'+k[0]+'</span><span class="v num">'+k[1]+'</span><span class="d">'+k[2]+'</span></div>'}).join("");
+    // embudo con %
+    var fe=document.getElementById("funnel"),F0=sc(F[0][1]);fe.innerHTML="";
+    F.forEach(function(r,i){var v=sc(r[1]),prev=i?sc(F[i-1][1]):v,cur=i===F.length-1,out=prev-v,d=document.createElement("div");d.className="fr"+(cur?" cur":"");
+      d.innerHTML='<span>'+r[0]+'</span><span class="track" data-tip="<b>'+r[0]+'</b><br>'+fmt(v)+' postulaciones · '+pc(v/F0)+' de los inscriptos'+(i&&!cur?'<br>Pasa '+pc(v/prev)+' de la etapa anterior':'')+'"><span class="fill" style="width:'+(v/F0*100).toFixed(2)+'%"></span></span><span class="fval num">'+fmt(v)+'</span>'+
+        '<span class="pct num"><span><b>'+pc(v/F0)+'</b> del total</span>'+(i&&!cur?'<span>pasa <b>'+pc(v/prev)+'</b> de la anterior</span><span class="dn">−'+fmt(out)+' ('+pc(out/prev)+') quedan afuera</span>':cur?'<span>214 realizadas · 384 por agendar</span>':'')+'</span>';
+      fe.appendChild(d);});
+    // género
+    var gi=GEN.map(function(g){return Math.round(tot*g[2])});gi[0]=tot-gi[1]-gi[2];
+    var row=function(lab,arr){var s=arr.reduce(function(a,b){return a+b},0);return'<div class="grow"><div class="gl"><b>'+lab+'</b><span class="num">'+fmt(s)+'</span></div><div class="gbar">'+arr.map(function(v,k){return'<div style="flex:'+v+';background:'+GEN[k][1]+'" data-tip="<b>'+GEN[k][0]+'</b> · '+fmt(v)+' ('+pc(v/s)+')"></div>'}).join("")+'</div></div>';};
+    document.getElementById("gend").innerHTML=row("Inscriptos",gi)+row("Siguen en carrera",GEN_C.map(function(v){return Math.round(v*f)}));
+    document.getElementById("gen-leg").innerHTML=GEN.map(function(g,k){return'<span><i style="background:'+g[1]+'"></i>'+g[0]+' <b>'+fmt(gi[k])+'</b> · '+pc(gi[k]/tot)+'</span>'}).join("");
+    document.getElementById("gen-cap").textContent="Según lo declarado en Hiring Room. Mujer · Hombre · No especifica.";
+    // notas UNC
+    var he=document.getElementById("hist"),hb=HB.map(sc),hm=Math.max.apply(null,hb)||1;he.querySelectorAll(".hb").forEach(function(x){x.remove()});
+    hb.forEach(function(v,i){var b=document.createElement("div");b.className="hb"+(i>=7?" pass":"");b.style.height=(v/hm*100)+"%";b.innerHTML='<span class="num">'+v+'</span>';b.setAttribute("data-tip","Notas "+(i*10)+"–"+(i*10+10)+": <b>"+fmt(v)+"</b> postulantes"+(i>=7?" · aprobados":" · no alcanzan el corte"));he.appendChild(b);});
+    document.getElementById("hist-cap").textContent="Distribución de "+fmt(pres)+" presentes. Corte mínimo: 70 puntos.";
+    // vacante × localidad
+    var h='<thead><tr><th>Vacante</th>'+L6.map(function(l){return"<th>"+l+"</th>"}).join("")+'<th>Total</th></tr></thead><tbody>',tt=[0,0,0,0,0,0];
+    V4.forEach(function(r){var s=0;h+="<tr><td>"+r[0]+"</td>";r[1].forEach(function(v0,i){var v=sc(v0);s+=v;tt[i]+=v;var a=Math.max(.06,v0/1240*.85);h+='<td class="c'+(a>.5?' dk':'')+'" style="--a:'+a.toFixed(3)+'" data-tip="<b>'+r[0]+'</b> · '+L6[i]+'<br>'+fmt(v)+' postulaciones">'+fmt(v)+"</td>"});h+="<td><b>"+fmt(s)+"</b></td></tr>";});
+    h+='<tr class="tot"><td>Total</td>'+tt.map(function(v){return"<td>"+fmt(v)+"</td>"}).join("")+"<td>"+fmt(tt.reduce(function(a,b){return a+b},0))+"</td></tr></tbody>";
+    document.getElementById("heat").innerHTML=h;var fv=document.getElementById("f-vac");if(fv)fv.dispatchEvent(new Event("change"));}
+  // ---- filtro de fechas
+  var dF=document.getElementById("d-from"),dT=document.getElementById("d-to");
+  var iso=function(i){var d=addD(D0,i);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+  var idx=function(v){var p=v.split("-");return diff(D0,new Date(+p[0],+p[1]-1,+p[2]))};
+  function setRange(a,b,pr){R.a=Math.max(0,Math.min(29,a));R.b=Math.max(R.a,Math.min(29,b));dF.value=iso(R.a);dT.value=iso(R.b);
+    document.querySelectorAll(".pr").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.pr===pr?"true":"false")});drawDaily();drawStats();}
+  var PR={all:[0,29],w1:[0,6],m:[10,19],wl:[23,29]};
+  document.querySelector(".pres").addEventListener("click",function(e){var b=e.target.closest("[data-pr]");if(!b)return;var r=PR[b.dataset.pr];setRange(r[0],r[1],b.dataset.pr);});
+  [dF,dT].forEach(function(inp){inp.addEventListener("change",function(){if(!dF.value||!dT.value)return;var a=idx(dF.value),b=idx(dT.value);if(a>b){var x=a;a=b;b=x;}var pr=Object.keys(PR).find(function(k){return PR[k][0]===a&&PR[k][1]===b})||"";setRange(a,b,pr);});});
+  drawGauges();drawCov();drawProj();drawDaily();drawStats();
+  // Postulantes (ficticios)
+  var P=[
+    ["Martina Ledesma","38512214","Cajero / Tesorero","Córdoba Capital","cur","Entrevista de línea",88.5,82,85,84.6,3,null,null],
+    ["Joaquín Bustos","37640905","Ejecutivo de Cuentas","Río Cuarto","cur","Entrevista de línea",91,78,80,84.2,1,null,null],
+    ["Camila Ferrero","40118330","Cajero / Tesorero","Villa María","cur","Entrevista de línea",79.5,85,90,83.1,2,null,null],
+    ["Lucas Giménez","35277871","Oficial PyME","Córdoba Capital","cur","Entrevista de línea",76,74,72,74.4,9,null,null],
+    ["Sofía Paredes","39804016","Asistente Adm.","San Francisco","out","Psicotécnico · No apto",84,70,null,null,null,null,null],
+    ["Tomás Villarreal","36955448","Cajero / Tesorero","V. Carlos Paz","out","Assessment · 52 < 60",73,52,null,null,null,null,null],
+    ["Valentina Ríos","41230762","Ejecutivo de Cuentas","Córdoba Capital","out","Examen UNC · 54 < 70",54,null,null,null,null,null,null],
+    ["Nicolás Acosta","34601193","Cajero / Tesorero","Bell Ville","out","Examen UNC · Ausente",null,null,null,null,null,null,null],
+    ["Florencia Quiroga","38749587","Oficial PyME","Río Cuarto","out","Requisitos · Residencia",null,null,null,null,null,null,null],
+    ["Agustín Moyano","37388250","Asistente Adm.","Villa María","cur","Entrevista de línea",82,80,78,80.6,4,null,null]];
+  // p: 0 nombre, 1 DNI, 2 vacante, 3 localidad, 4 estado, 5 etapa, 6 UNC, 7 assessment, 8 psico, 9 score, 10 mérito, 11 entrevista, 12 antecedentes
+  var mask=function(d){return d.slice(0,2)+".***."+d.slice(-3)},UPD={};
+  var tb=document.querySelector("#tbl tbody"),q=document.getElementById("q"),fs=document.getElementById("f-st");
+  var n=function(v){return v==null?'<span class="lock">—</span>':v.toLocaleString("es-AR",{minimumFractionDigits:1,maximumFractionDigits:1})};
+  var VIS=[];
+  function render(){var t=(q.value||"").toLowerCase(),s=fs.value;tb.innerHTML="";VIS=[];
+    P.forEach(function(p,i){if(s&&p[4]!==s)return;if(t&&(p[0]+" "+p[1]+" "+mask(p[1])).toLowerCase().replace(/\./g,"").indexOf(t.replace(/\./g,""))<0)return;
+      var tr=document.createElement("tr");tr.className="click"+(UPD[p[1]]?" upd":"");tr.dataset.dni=p[1];tr.title="Abrir la ficha de "+p[0];tr.tabIndex=0;
+      tr.innerHTML='<td class="nm"><b>'+p[0]+'</b><small>DNI '+mask(p[1])+(UPD[p[1]]?' <span class="newb">Actualizado por carga</span>':'')+'</small></td><td>'+p[2]+'<br><small style="color:var(--muted)">'+p[3]+'</small></td><td><span class="chip '+p[4]+'">'+p[5]+'</span></td><td class="r">'+n(p[6])+(p[6]!=null?' <span class="lock">🔒</span>':'')+'</td><td class="r">'+n(p[7])+'</td><td class="r">'+n(p[8])+'</td><td class="r">'+n(p[11])+'</td><td class="r"><b>'+n(p[9])+'</b></td><td class="r">'+(p[10]?p[10]+"°":'<span class="lock">—</span>')+'</td>';
+      var open=function(){openFicha(p)};
+      tr.addEventListener("click",open);tr.addEventListener("keydown",function(e){if(e.key==="Enter")open()});
+      VIS.push(p);tb.appendChild(tr);});}
+  // Ficha editable: estado y observación por etapa + observación general
+  var ST_NAMES=["Inscripción","Requisitos y check documental","Examen técnico UNC · 35%","Assessment · 20%","Psicotécnico · 15%","Entrevista de línea · 20%","Antecedentes · 10%"];
+  var ST_SHORT=["Inscripción","Requisitos","Examen UNC","Assessment","Psicotécnico","Entrevista de línea","Antecedentes"];
+  var ST_SRC=["Hiring Room · export 30/09/2026","Secundario · Residencia en zona · Incompatibilidad estatal","UNC · UNC_resultados_T04.xlsx","Consultora Pedemonte · 06/10/2026","Consultoras psico · 08/10/2026","Gerente de sucursal + RRHH Bancor · agendada semana del 13/10","Nosis / referencias"];
+  var OKL=["Completa","Cumple","Aprobado","Aprobado","Apto","Aprobada","Favorable"],BADL=["—","No cumple","Desaprobado","Desaprobado","No apto","Desaprobada","Desfavorable"];
+  var lab=function(i,s){return{ok:OKL[i],fail:BADL[i],aus:"Ausente",pend:"Pendiente",wait:"Sin iniciar",na:"No aplica"}[s]};
+  var FS={},cur=null,editing=-1,editGen=false;
+  var now=function(){var d=new Date();return"hoy "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")};
+  function stateOf(p){if(FS[p[1]])return FS[p[1]];
+    var why=p[5],out=p[4]==="out",at=/Requisitos/.test(why)?1:/UNC/.test(why)?2:/Assessment/.test(why)?3:/Psico/.test(why)?4:5;
+    var sc=[null,null,p[6],p[7],p[8],p[11],p[12]],st=[],L=[{t:"Alta desde Hiring Room",m:"30/09 19:00 · Importación inicial"}];
+    for(var i=0;i<7;i++)st.push(i<at?"ok":i===at?(out?(/Ausente/.test(why)?"aus":"fail"):"pend"):(out?"na":"wait"));
+    if(p[6]!=null)L.unshift({t:"Nota UNC cargada: "+n(p[6]),m:"02/10 10:47 · Carga “UNC_resultados_T04.xlsx”"});
+    if(p[7]!=null)L.unshift({t:"Assessment cargado: "+n(p[7]),m:"06/10 12:02 · Carga “Pedemonte_assessment.xlsx”"});
+    if(p[8]!=null)L.unshift({t:"Dictamen psicotécnico cargado: "+(at===4&&out?"No apto":"Apto, "+n(p[8])),m:"08/10 18:20 · Carga “Psico_lote3.xlsx”"});
+    if(out)L.unshift({t:"Excluido en "+why.split(" · ")[0]+": "+(why.split(" · ")[1]||""),m:"Regla aplicada automáticamente · motivo fundado registrado"});
+    return FS[p[1]]={st:st,sc:sc,obs:[null,null,null,null,null,null,null],gen:null,log:L};}
+  function sync(p,S){ // actualiza el estado del postulante en el listado
+    var f=S.st.findIndex(function(s){return s==="fail"||s==="aus"});
+    if(f>=0){p[4]="out";p[5]=ST_SHORT[f]+" · "+lab(f,S.st[f]);}
+    else{var q=S.st.findIndex(function(s){return s==="pend"||s==="wait"});p[4]="cur";p[5]=q<0?"Etapas completas":ST_SHORT[q];}}
+  function chipFor(i,s){var c={ok:"ok",fail:"out",aus:"out",pend:"cur",wait:"warn",na:"warn"}[s];return'<span class="chip '+c+'">'+lab(i,s)+'</span>';}
+  function drawFicha(){var p=cur,S=stateOf(p),out=p[4]==="out";
+    document.getElementById("p-name").textContent=p[0];
+    document.getElementById("p-id").textContent="DNI "+mask(p[1])+" · "+p[2]+" · "+p[3];
+    document.getElementById("p-score").textContent=out||p[9]==null?"—":n(p[9]);
+    document.getElementById("p-pos").textContent=!out&&p[10]?"Score parcial · posición "+p[10]+" en su vacante y localidad":"Excluido · sin posición en el orden de mérito";
+    var pe=document.getElementById("p-state");pe.className="chip "+(out?"out":"cur");pe.textContent=out?"Excluido":"En carrera";
+    var h="";S.st.forEach(function(s,i){
+      var c={ok:"var(--ok)",fail:"var(--out)",aus:"var(--out)",pend:"var(--brand)",wait:"var(--line)",na:"var(--line)"}[s];
+      var dot=s==="ok"?'<span class="dot full">✓</span>':(s==="fail"||s==="aus")?'<span class="dot full">✕</span>':'<span class="dot">'+(i+1)+'</span>';
+      var src=s==="na"?"No aplica: excluido en una etapa anterior":s==="wait"?"Se habilita al aprobar la etapa anterior":ST_SRC[i];
+      var res=(S.sc[i]!=null&&s!=="na"&&s!=="wait"?'<b class="num">'+n(S.sc[i])+'</b>':'')+chipFor(i,s)+(i>0?'<button class="eb" type="button" data-ed="'+i+'" aria-label="Editar '+ST_NAMES[i]+'">'+(editing===i?"Cerrar":"Editar")+'</button>':'');
+      var ob=S.obs[i]?'<div class="obs"><p>'+esc(S.obs[i].t)+'</p><small>'+esc(S.obs[i].m)+'</small></div>':'';
+      var ed=editing===i?'<form class="obsf ste" data-form="'+i+'" novalidate><div class="fgrid2"><label for="es-'+i+'">Estado<select id="es-'+i+'" class="fin">'+
+        ["ok","fail","aus","pend"].filter(function(k){return !(k==="aus"&&(i===1))}).map(function(k){return'<option value="'+k+'"'+(k===s?" selected":"")+'>'+lab(i,k)+'</option>'}).join("")+'</select></label>'+
+        '<label for="eo-'+i+'">Observación de la etapa<textarea id="eo-'+i+'" class="fin" rows="3" maxlength="400" placeholder="Motivo del cambio o comentario sobre esta etapa">'+(S.obs[i]?esc(S.obs[i].t):"")+'</textarea></label></div>'+
+        '<p class="ferr" id="ee-'+i+'" hidden></p><p class="hint">Si cambiás el estado, la observación es obligatoria: queda como motivo en la auditoría.'+((s==="ok"||s==="pend")?' Marcar Desaprobado o Ausente excluye al postulante de las etapas siguientes.':' Volver a Aprobado reincorpora al postulante y habilita la etapa siguiente.')+'</p>'+
+        '<div class="filters"><button class="btn" type="submit">Guardar</button><button class="btn ghost" type="button" data-cancel>Cancelar</button></div></form>':'';
+      h+='<div class="ti'+(editing===i?" open":"")+'" style="--c:'+c+'">'+dot+'<div class="tbody"><span class="tt">'+ST_NAMES[i]+'</span><br><span class="src">'+src+'</span>'+ob+ed+'</div><div class="res">'+res+'</div></div>';});
+    document.getElementById("tl").innerHTML=h;
+    var gv=document.getElementById("gen-view"),gf=document.getElementById("gen-form");
+    gf.hidden=!editGen;gv.hidden=editGen;
+    gv.innerHTML=S.gen?'<div class="obs big"><p>'+esc(S.gen.t)+'</p><small>'+esc(S.gen.m)+'</small></div><button class="btn ghost" type="button" id="gen-edit">Editar observación</button>':'<p class="cap">Todavía no hay observaciones generales sobre este postulante.</p><button class="btn ghost" type="button" id="gen-edit">+ Agregar observación</button>';
+    document.getElementById("plog").innerHTML=S.log.map(function(x){return"<div>"+esc(x.t)+"<small>"+esc(x.m)+"</small></div>"}).join("");
+    if(editing>=0){var se=document.getElementById("es-"+editing);if(se)se.focus();}}
+  function openFicha(p){cur=p;editing=-1;editGen=false;show("ficha");drawFicha();drawCrumb();var m=document.querySelector(".main");if(m)m.scrollTop=0;}
+  function drawCrumb(){var L=VIS.indexOf(cur)>=0?VIS:P,i=L.indexOf(cur);
+    document.getElementById("f-path").textContent="/ "+cur[0];
+    document.getElementById("f-pos").textContent=(i+1)+" de "+L.length+(L===VIS&&VIS.length<P.length?" (filtrados)":"");
+    document.getElementById("f-prev").disabled=i<=0;document.getElementById("f-next").disabled=i>=L.length-1;}
+  document.getElementById("f-back").addEventListener("click",function(){show("list");var r=document.querySelector('#tbl tbody tr.click[data-dni="'+cur[1]+'"]');if(r)r.focus();});
+  document.getElementById("f-prev").addEventListener("click",function(){var L=VIS.indexOf(cur)>=0?VIS:P,i=L.indexOf(cur);if(i>0)openFicha(L[i-1]);});
+  document.getElementById("f-next").addEventListener("click",function(){var L=VIS.indexOf(cur)>=0?VIS:P,i=L.indexOf(cur);if(i<L.length-1)openFicha(L[i+1]);});
+  document.addEventListener("keydown",function(e){var fs2=document.querySelector('[data-screen="ficha"]');if(fs2.hidden||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;if(e.key==="Escape")document.getElementById("f-back").click();});
+  var tlEl=document.getElementById("tl");
+  tlEl.addEventListener("click",function(e){var b=e.target.closest("[data-ed]");if(b){var i=+b.dataset.ed;editing=editing===i?-1:i;drawFicha();return;}
+    if(e.target.closest("[data-cancel]")){editing=-1;drawFicha();}});
+  tlEl.addEventListener("submit",function(e){e.preventDefault();var f=e.target,i=+f.dataset.form,S=stateOf(cur);
+    var ns=document.getElementById("es-"+i).value,ot=document.getElementById("eo-"+i).value.trim(),er=document.getElementById("ee-"+i),old=S.st[i];
+    var prevObs=S.obs[i]?S.obs[i].t:"";
+    if(ns!==old&&!ot){er.textContent="Escribí una observación que explique el cambio de estado.";er.hidden=false;document.getElementById("eo-"+i).focus();return;}
+    if(ns===old&&ot===prevObs){editing=-1;drawFicha();return;}
+    var m=now()+" · "+uname();
+    if(ns!==old){S.st[i]=ns;
+      for(var k=i+1;k<7;k++)S.st[k]=(ns==="fail"||ns==="aus")?"na":(k===i+1&&ns==="ok")?"pend":"wait";
+      S.log.unshift({t:ST_SHORT[i]+": "+lab(i,old)+" → "+lab(i,ns),m:m+" · Motivo: "+ot});
+      audit("Ficha","Cambio de estado",cur[0]+" (DNI "+mask(cur[1])+") · "+ST_SHORT[i]+": "+lab(i,old)+" → "+lab(i,ns)+" · Motivo: "+ot);
+      var wasOut=cur[4]==="out";sync(cur,S);
+      toast(cur[4]==="out"&&!wasOut?cur[0]+" queda fuera del concurso desde "+ST_SHORT[i]+". El cambio quedó en la auditoría.":wasOut&&cur[4]==="cur"?cur[0]+" vuelve a estar en carrera: se habilitó "+cur[5]+".":"Estado de "+ST_SHORT[i]+" actualizado.");}
+    else{S.log.unshift({t:"Observación en "+ST_SHORT[i],m:m});audit("Ficha","Observación de etapa",cur[0]+" (DNI "+mask(cur[1])+") · "+ST_SHORT[i]+": “"+ot+"”");toast("Observación guardada en "+ST_SHORT[i]+".");}
+    S.obs[i]=ot?{t:ot,m:m}:null;editing=-1;drawFicha();render();});
+  document.getElementById("gen-view").addEventListener("click",function(e){if(e.target.id!=="gen-edit")return;editGen=true;var S=stateOf(cur);drawFicha();var ta=document.getElementById("gen-txt");ta.value=S.gen?S.gen.t:"";ta.focus();});
+  document.getElementById("gen-cancel").addEventListener("click",function(){editGen=false;drawFicha();});
+  document.getElementById("gen-form").addEventListener("submit",function(e){e.preventDefault();var S=stateOf(cur),v=document.getElementById("gen-txt").value.trim(),m=now()+" · "+uname();
+    if((S.gen?S.gen.t:"")===v){editGen=false;drawFicha();return;}
+    S.log.unshift({t:v?(S.gen?"Observación general editada":"Observación general agregada"):"Observación general eliminada",m:m});
+    audit("Ficha","Observación general",cur[0]+" (DNI "+mask(cur[1])+") · "+(v?"“"+v+"”":"eliminada"));
+    S.gen=v?{t:v,m:m}:null;editGen=false;drawFicha();toast(v?"Observación general guardada.":"Se eliminó la observación general.");});
+  q.addEventListener("input",render);fs.addEventListener("change",render);render();
+  // Acciones de la demo
+  var to=document.getElementById("toast"),tt;
+  function toast(m){to.textContent=m;to.hidden=false;clearTimeout(tt);tt=setTimeout(function(){to.hidden=true},3800);}
+  document.getElementById("exp").addEventListener("click",function(){audit("Postulantes","Exportación a Excel","Vista filtrada: "+document.querySelectorAll("#tbl tbody tr.click").length+" filas"+(q.value?" · búsqueda “"+q.value+"”":"")+" · marca de agua con usuario y fecha");toast("En la versión real se descarga un Excel con la vista filtrada, marcado con tu usuario y la fecha.")});
+  document.querySelectorAll(".act").forEach(function(a){a.setAttribute("role","button");a.tabIndex=0;a.style.cursor="pointer";a.addEventListener("click",function(){toast(a.textContent+": "+a.previousElementSibling.firstChild.textContent.trim())})});
+  document.getElementById("f-vac").addEventListener("change",function(){var v=this.selectedIndex;if(v){var g=document.getElementById("g2-sel");if(g.value!==String(v-1)){g.value=String(v-1);g.dispatchEvent(new Event("change"));}}document.querySelectorAll("#heat tbody tr").forEach(function(r,i){r.style.opacity=(!v||i===v-1||r.classList.contains("tot"))?1:.25})});
+  // Etapas y reglas: editor
+  var STG0=[
+    {id:"req",name:"Requisitos y check documental",who:"ESENTIA",type:"Sí / No",w:0,rule:"3 preguntas excluyentes en “Sí”",st:"closed"},
+    {id:"unc",name:"Examen técnico",who:"UNC",type:"Nota 0–100",w:35,rule:"Presente y nota ≥ 70",st:"closed"},
+    {id:"ass",name:"Assessment",who:"Consultora externa",type:"Puntaje 0–100",w:20,rule:"Puntaje ≥ 60",st:"closed"},
+    {id:"psi",name:"Psicotécnico",who:"Consultoras psico",type:"Dictamen + puntaje",w:15,rule:"Dictamen “Apto”",st:"closed"},
+    {id:"ent",name:"Entrevista de línea",who:"Bancor",type:"Calificación 0–100",w:20,rule:"Calificación ≥ 65",st:"cur"},
+    {id:"ant",name:"Antecedentes",who:"Nosis / ESENTIA",type:"Score + validaciones",w:10,rule:"Sin deudas y referencias favorables",st:"pend"},
+    {id:"mer",name:"Orden de mérito",who:"Automático",type:"Posición",w:0,rule:"Por vacante y localidad, desempate por nota UNC",st:"pend",end:true}];
+  var clone=function(a){return a.map(function(s){return Object.assign({},s)})};
+  var STG=clone(STG0),CHG=[],ver=3,seq=0,dragId=null;
+  var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+  var firstMov=function(){var i=0;while(i<STG.length&&STG[i].st==="closed")i++;return i};
+  var lastMov=function(){return STG.length-2};
+  var movable=function(s){return s.st!=="closed"&&!s.end};
+  var stChip={closed:'<span class="chip ok">🔒 Cerrada</span>',cur:'<span class="chip cur">En curso</span>',pend:'<span class="chip warn">Pendiente</span>'};
+  function note(m){CHG.push(m);}
+  function renderRules(flashId){
+    var tb=document.getElementById("rules-body"),fm=firstMov(),lm=lastMov();
+    tb.innerHTML=STG.map(function(s,i){var mv=movable(s),ed=s.st!=="closed"&&!s.end;
+      return '<tr data-id="'+s.id+'" class="'+(mv?"":"lockd ")+(s.isNew?"isnew ":"")+(s.id===flashId?"flash":"")+'"'+(mv?' draggable="true"':'')+'>'+
+      '<td>'+(mv?'<span class="grip" title="Arrastrar para reordenar" aria-hidden="true">⠿</span>':'<span class="lock" title="'+(s.end?"Siempre al final":"Etapa cerrada")+'">🔒</span>')+'</td>'+
+      '<td>'+(i+1)+'</td><td><b>'+esc(s.name)+'</b></td><td>'+esc(s.who)+'</td><td>'+esc(s.type)+'</td>'+
+      '<td class="r">'+(ed?'<input class="cin w" id="w-'+s.id+'" type="number" min="0" max="100" step="1" value="'+s.w+'" aria-label="Peso de '+esc(s.name)+'">%':(s.w?s.w+"%":"—"))+'</td>'+
+      '<td>'+(ed?'<input class="cin rl" id="r-'+s.id+'" value="'+esc(s.rule)+'" aria-label="Regla de '+esc(s.name)+'">':esc(s.rule))+'</td>'+
+      '<td>'+stChip[s.st]+'</td>'+
+      '<td class="r" style="white-space:nowrap">'+(mv?'<button class="ib" type="button" data-mv="-1" aria-label="Subir '+esc(s.name)+'"'+(i<=fm?" disabled":"")+'>▲</button><button class="ib" type="button" data-mv="1" aria-label="Bajar '+esc(s.name)+'"'+(i>=lm?" disabled":"")+'>▼</button>'+(s.st==="pend"?'<button class="ib" type="button" data-del aria-label="Quitar '+esc(s.name)+'">✕</button>':''):'<span class="lock">'+(s.end?"Fija al final":"Fija")+'</span>')+'</td></tr>';}).join("");
+    // pesos
+    var ws=STG.filter(function(s){return s.w>0}),sum=ws.reduce(function(a,s){return a+s.w},0),n=ws.length;
+    var op=function(k){return n<2?1:(1-k*(0.72/(n-1))).toFixed(2)};
+    document.getElementById("wbar").innerHTML=ws.map(function(s,k){return'<div style="flex:'+s.w+';--o:'+op(k)+'" title="'+esc(s.name)+' '+s.w+'%"></div>'}).join("");
+    document.getElementById("wleg").innerHTML=ws.map(function(s,k){return'<span style="--o:'+op(k)+'">'+esc(s.name)+' '+s.w+'%</span>'}).join("");
+    var wsEl=document.getElementById("wsum");wsEl.className="wsum "+(sum===100?"ok":"bad");
+    wsEl.textContent=sum===100?"Suman 100% ✓":"Suman "+sum+"% · "+(sum<100?"faltan "+(100-sum):"sobran "+(sum-100))+" puntos para guardar";
+    // posición en el formulario
+    var ps=document.getElementById("n-pos"),keep=ps.value;
+    ps.innerHTML=STG.slice(fm-1>=0?fm-1:0,STG.length-1).map(function(s){return'<option value="'+s.id+'">'+esc(s.name)+'</option>'}).join("");
+    if(keep&&ps.querySelector('option[value="'+keep+'"]'))ps.value=keep;else ps.value=STG[STG.length-2].id;
+    // cambios
+    var dirty=CHG.length>0;document.getElementById("pending").hidden=!dirty;
+    document.getElementById("chg").innerHTML=CHG.map(function(c){return"<li>"+esc(c)+"</li>"}).join("");
+    var sv=document.getElementById("rules-save");sv.disabled=!dirty||sum!==100;sv.textContent="Guardar versión "+(ver+1);
+    sv.title=sum!==100?"Los pesos tienen que sumar 100%":"";
+  }
+  function moveTo(id,to){var from=STG.findIndex(function(s){return s.id===id});if(from<0)return;
+    to=Math.max(firstMov(),Math.min(lastMov(),to));if(to===from)return;
+    var s=STG.splice(from,1)[0];STG.splice(to,0,s);note("“"+s.name+"” pasó de la posición "+(from+1)+" a la "+(to+1));renderRules(id);}
+  var rb=document.getElementById("rules-body");
+  rb.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;var id=b.closest("tr").dataset.id,i=STG.findIndex(function(s){return s.id===id});
+    if(b.dataset.mv){moveTo(id,i+parseInt(b.dataset.mv,10));var nb=rb.querySelector('tr[data-id="'+id+'"] button[data-mv="'+b.dataset.mv+'"]');if(nb&&!nb.disabled)nb.focus();}
+    else if(b.hasAttribute("data-del")){var s=STG.splice(i,1)[0];note("Se quitó la etapa “"+s.name+"”"+(s.w?" ("+s.w+"% a redistribuir)":""));renderRules();}});
+  rb.addEventListener("change",function(e){var el=e.target,id=el.closest("tr").dataset.id,s=STG.find(function(x){return x.id===id});
+    if(el.classList.contains("w")){var v=Math.max(0,Math.min(100,Math.round(+el.value||0)));if(v!==s.w){note("Peso de “"+s.name+"”: "+s.w+"% → "+v+"%");s.w=v;}renderRules();}
+    else{var r=el.value.trim();if(r&&r!==s.rule){note("Regla de “"+s.name+"”: "+r);s.rule=r;renderRules();}}});
+  rb.addEventListener("dragstart",function(e){var tr=e.target.closest("tr");if(!tr||!tr.draggable)return;dragId=tr.dataset.id;tr.classList.add("dragging");e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",dragId)}catch(x){}});
+  rb.addEventListener("dragend",function(){dragId=null;rb.querySelectorAll("tr").forEach(function(r){r.classList.remove("dragging","drop-before","drop-after")})});
+  rb.addEventListener("dragover",function(e){if(!dragId)return;var tr=e.target.closest("tr");if(!tr)return;var i=STG.findIndex(function(s){return s.id===tr.dataset.id});
+    if(i<firstMov()-1||i>lastMov())return;e.preventDefault();var r=tr.getBoundingClientRect(),after=e.clientY>r.top+r.height/2;
+    rb.querySelectorAll("tr").forEach(function(x){x.classList.remove("drop-before","drop-after")});tr.classList.add(after?"drop-after":"drop-before");});
+  rb.addEventListener("drop",function(e){if(!dragId)return;e.preventDefault();var tr=e.target.closest("tr");if(!tr)return;
+    var from=STG.findIndex(function(s){return s.id===dragId}),i=STG.findIndex(function(s){return s.id===tr.dataset.id}),r=tr.getBoundingClientRect(),after=e.clientY>r.top+r.height/2;
+    var to=i+(after?1:0);if(from<to)to--;moveTo(dragId,to);});
+  var af=document.getElementById("addf"),err=document.getElementById("n-err");
+  document.getElementById("add-open").addEventListener("click",function(){af.hidden=false;err.hidden=true;document.getElementById("n-name").focus();});
+  document.getElementById("add-cancel").addEventListener("click",function(){af.hidden=true;af.reset();});
+  af.addEventListener("submit",function(e){e.preventDefault();
+    var g=function(id){return document.getElementById(id).value.trim()},name=g("n-name"),who=g("n-who"),w=Math.round(+g("n-w")||0),rule=g("n-rule");
+    var bad=!name?"Poné un nombre para la etapa.":!who?"Indicá quién es responsable de cargar el resultado.":(w<0||w>100)?"El peso tiene que estar entre 0 y 100.":!rule?"Escribí la regla que define quién sigue.":STG.some(function(s){return s.name.toLowerCase()===name.toLowerCase()})?"Ya existe una etapa con ese nombre.":"";
+    if(bad){err.textContent=bad;err.hidden=false;return;}
+    var after=STG.findIndex(function(s){return s.id===g("n-pos")}),id="n"+(++seq);
+    STG.splice(Math.max(firstMov(),after+1),0,{id:id,name:name,who:who,type:g("n-type"),w:w,rule:rule,st:"pend",isNew:true});
+    note("Nueva etapa “"+name+"” en la posición "+(STG.findIndex(function(s){return s.id===id})+1)+(w?" con "+w+"% de peso":" (filtro sin puntaje)"));
+    af.reset();af.hidden=true;renderRules(id);
+    toast(w?"Etapa agregada. Ajustá los pesos para que vuelvan a sumar 100% antes de guardar.":"Etapa agregada como filtro. Guardá la versión para aplicarla.");});
+  document.getElementById("rules-reset").addEventListener("click",function(){audit("Etapas y reglas","Cambios descartados",CHG.length+" cambio(s) sin guardar descartados · sigue la versión "+ver);STG=clone(STG0);CHG=[];renderRules();toast("Se descartaron los cambios. Vuelve a regir la versión "+ver+".");});
+  document.getElementById("rules-save").addEventListener("click",function(){audit("Etapas y reglas","Nueva versión de reglas","Versión "+(ver+1)+": "+CHG.join(" · "));ver++;STG.forEach(function(s){delete s.isNew});STG0=clone(STG);var n=CHG.length;CHG=[];
+    document.getElementById("ver-sub").textContent="Versión "+ver+" · guardada hoy por "+uname()+". El orden de mérito se recalculó y el cambio quedó en la auditoría.";
+    renderRules();toast("Versión "+ver+" guardada con "+n+" cambio"+(n===1?"":"s")+". Se recalculó el orden de mérito.");});
+  renderRules();
+  // Cargas de terceros: tercero → archivo → preview por DNI → aplicar
+  var NUM=function(v){var s=String(v==null?"":v).trim().replace(",",".");if(s==="")return{err:"Sin valor"};var x=Number(s);if(isNaN(x))return{err:"Valor no numérico: “"+String(v).trim()+"”"};if(x<0||x>100)return{err:"Fuera de rango (0–100): "+String(v).trim()};return{v:Math.round(x*10)/10};};
+  var norm=function(s){return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").trim()};
+  var TYPES=[
+    {k:"unc",who:"UNC",name:"Examen técnico",stage:2,col:6,cols:["DNI","Turno","Asistencia","Nota"],req:["DNI","Nota"],file:"UNC_resultados_turno06.xlsx",
+     map:{dni:["dni","documento"],a:["asistencia"],v:["nota","puntaje","calificacion"]},
+     ev:function(r){if(/aus/i.test(r.a||""))return{res:"aus",txt:"Ausente"};var x=NUM(r.v);if(x.err)return x;return{score:x.v,res:x.v>=70?"ok":"fail",txt:"Nota "+n(x.v)};},
+     mk:function(d,v){return{"DNI":d,"Turno":"UNC-TURNO-06","Asistencia":v==="Ausente"?"Ausente":"Presente","Nota":v==="Ausente"?"":v}},vals:[78,52,91,84,73]},
+    {k:"ass",who:"Consultora Pedemonte",name:"Assessment",stage:3,col:7,cols:["DNI","Consultor","Puntaje","Estado"],req:["DNI","Puntaje"],file:"Pedemonte_assessment_lote4.xlsx",
+     map:{dni:["dni","documento"],v:["puntaje","nota","score"]},
+     ev:function(r){var x=NUM(r.v);if(x.err)return x;return{score:x.v,res:x.v>=60?"ok":"fail",txt:"Puntaje "+n(x.v)};},
+     mk:function(d,v){return{"DNI":d,"Consultor":"Lic. P. Herrera","Puntaje":v,"Estado":""}},vals:[76,48,82,70,66]},
+    {k:"psi",who:"Consultoras psico",name:"Psicotécnico",stage:4,col:8,cols:["DNI","Fecha","Dictamen","Puntaje"],req:["DNI","Dictamen"],file:"Psico_lote5.xlsx",
+     map:{dni:["dni","documento"],d:["dictamen","resultado"],v:["puntaje"]},
+     ev:function(r){var d=norm(r.d||"");if(!d)return{err:"Sin dictamen"};var res=/no apto/.test(d)?"fail":/apto/.test(d)?"ok":null;if(!res)return{err:"Dictamen no válido: “"+r.d+"” (Apto / No apto)"};var x=String(r.v||"").trim()?NUM(r.v):{v:null};if(x.err)return x;return{score:x.v,res:res,txt:(res==="ok"?"Apto":"No apto")+(x.v!=null?" · "+n(x.v):"")};},
+     mk:function(d,v){return{"DNI":d,"Fecha":"12/10/2026","Dictamen":v[0],"Puntaje":v[1]}},vals:[["Apto",81],["No apto",44],["Apto",88],["Apto",76],["Apto",70]]},
+    {k:"ent",who:"Bancor",name:"Entrevista de línea",stage:5,col:11,cols:["DNI","Entrevistadores","Fecha","Calificación"],req:["DNI","Calificación"],file:"Bancor_entrevistas_semana2.xlsx",
+     map:{dni:["dni","documento"],v:["calificacion","nota","puntaje"]},
+     ev:function(r){if(/aus/i.test(String(r.v||"")))return{res:"aus",txt:"Ausente"};var x=NUM(r.v);if(x.err)return x;return{score:x.v,res:x.v>=65?"ok":"fail",txt:"Calificación "+n(x.v)};},
+     mk:function(d,v){return{"DNI":d,"Entrevistadores":"Gerente Suc. + RRHH","Fecha":"12/10/2026","Calificación":v}},vals:[78,58,86,"7O",74]},
+    {k:"ant",who:"Nosis / referencias",name:"Antecedentes",stage:6,col:12,cols:["DNI","Score Nosis","Referencias","Puntaje"],req:["DNI","Referencias"],file:"Antecedentes_lote1.xlsx",
+     map:{dni:["dni","documento"],d:["referencia","dictamen"],v:["puntaje"]},
+     ev:function(r){var d=norm(r.d||"");var res=/desfav/.test(d)?"fail":/favor/.test(d)?"ok":null;if(!res)return{err:"Referencias no válidas: “"+(r.d||"")+"” (Favorable / Desfavorable)"};var x=String(r.v||"").trim()?NUM(r.v):{v:null};if(x.err)return x;return{score:x.v,res:res,txt:(res==="ok"?"Favorable":"Desfavorable")+(x.v!=null?" · "+n(x.v):"")};},
+     mk:function(d,v){return{"DNI":d,"Score Nosis":"Verde","Referencias":v[0],"Puntaje":v[1]}},vals:[["Favorable",90],["Desfavorable",35],["Favorable",80],["Favorable",85],["Favorable",75]]}];
+  var LD={step:1,type:null,file:"",rows:[],filter:"all"},HIST=[
+    ["Hoy 09:40","Bancor · Entrevista de línea","Bancor_entrevistas_semana1.xlsx",38,38,0,"bancor.rrhh"],
+    ["11/10 17:02","Consultora Pedemonte · Assessment","Pedemonte_assessment_lote3.xlsx",214,211,3,"a.perez"],
+    ["10/10 18:20","Consultoras psico · Psicotécnico","Psico_lote4.xlsx",742,742,0,"m.rossi"],
+    ["02/10 10:47","UNC · Examen técnico","UNC_resultados_T04.xlsx",862,855,7,"unc.examenes"]];
+  var $=function(id){return document.getElementById(id)};
+  function ldStep(s){LD.step=s;[1,2,3,4].forEach(function(k){$("ld-"+k).hidden=k!==s;});
+    document.querySelectorAll("#ld-steps .stp").forEach(function(e){var k=+e.dataset.n;e.className="stp"+(k<s?" done":k===s?" now":"");e.querySelector("b").textContent=e.querySelector("b").textContent.replace(" ✓","")+(k<s?" ✓":"");});
+    var sv=document.querySelector(".main");if(sv)sv.scrollTop=0;}
+  function drawTypes(){$("tgrid").innerHTML=TYPES.map(function(T,ix){var nn=P.filter(function(p){return stateOf(p).st[T.stage]==="pend"}).length;
+    return'<button class="tc" type="button" data-t="'+ix+'"><b>'+T.who+'</b><span class="who">'+T.name+' · etapa '+(T.stage+1)+'</span><span class="who">Columnas: '+T.cols.join(", ")+'</span><span class="need'+(nn?"":" zero")+'">'+(nn?nn+" postulante"+(nn>1?"s":"")+" esperando resultado":"Nadie pendiente: solo correcciones")+'</span></button>';}).join("");}
+  function drawHist(){$("ld-hist").innerHTML=HIST.map(function(h){return"<tr><td>"+h[0]+"</td><td>"+esc(h[1])+"</td><td><code>"+esc(h[2])+"</code></td><td class='r'>"+h[3]+"</td><td class='r'>"+h[4]+"</td><td class='r'>"+(h[5]?'<span class="dev e">'+h[5]+"</span>":"0")+"</td><td>"+h[6]+"</td></tr>"}).join("");}
+  $("tgrid").addEventListener("click",function(e){var b=e.target.closest("[data-t]");if(!b)return;LD.type=TYPES[+b.dataset.t];
+    $("ld2-title").textContent="Subí el archivo de "+LD.type.who+" · "+LD.type.name;
+    $("ld2-cols").innerHTML=LD.type.cols.map(function(c){return'<code class="'+(LD.type.req.indexOf(c)>=0?"req":"")+'">'+c+'</code>'}).join("")+'<span class="cap">en rojo, obligatorias</span>';
+    $("ld2-err").hidden=true;$("ld-file").value="";ldStep(2);});
+  $("copy-cols").addEventListener("click",function(){var s=LD.type.cols.join("\t");var ok=function(){toast("Encabezados copiados. Pegalos en la primera fila del Excel.")};
+    try{navigator.clipboard.writeText(s).then(ok,function(){toast("Encabezados: "+LD.type.cols.join(" · "))})}catch(x){toast("Encabezados: "+LD.type.cols.join(" · "))}});
+  // archivo real
+  function readFile(f){var er=$("ld2-err");er.hidden=true;if(!f)return;
+    if(!/\.(xlsx|xls|csv)$/i.test(f.name)){er.textContent="El archivo tiene que ser .xlsx, .xls o .csv.";er.hidden=false;return;}
+    if(/\.csv$/i.test(f.name)){var rc=new FileReader();rc.onload=function(){var rows=parseCSV(String(rc.result));if(!rows.length){er.textContent="El archivo no tiene filas debajo del encabezado.";er.hidden=false;return;}analyze(rows,f.name,2);};rc.readAsText(f);return;}
+    if(typeof XLSX==="undefined"){er.textContent="No se pudo cargar el lector de Excel. Guardá el archivo como CSV o probá con el archivo de ejemplo.";er.hidden=false;return;}
+    var rd=new FileReader();rd.onload=function(){try{var wb=XLSX.read(new Uint8Array(rd.result),{type:"array"});var ws=wb.Sheets[wb.SheetNames[0]];
+      var rows=XLSX.utils.sheet_to_json(ws,{defval:"",raw:false});if(!rows.length){er.textContent="El archivo no tiene filas debajo del encabezado.";er.hidden=false;return;}
+      analyze(rows,f.name,2);}catch(x){er.textContent="No pudimos leer el archivo. Revisá que no esté protegido con contraseña.";er.hidden=false;}};
+    rd.readAsArrayBuffer(f);}
+  function parseCSV(s){s=s.replace(/^\uFEFF/,"");var first=s.split(/\r?\n/)[0]||"",sep=(first.split(";").length>first.split(",").length)?";":",";
+    var out=[],row=[],cell="",q=false;for(var k=0;k<s.length;k++){var ch=s[k];
+      if(q){if(ch==='"'){if(s[k+1]==='"'){cell+='"';k++;}else q=false;}else cell+=ch;}
+      else if(ch==='"')q=true;else if(ch===sep){row.push(cell);cell="";}else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&s[k+1]==="\n")k++;row.push(cell);out.push(row);row=[];cell="";}else cell+=ch;}
+    if(cell!==""||row.length){row.push(cell);out.push(row);}
+    out=out.filter(function(r){return r.some(function(c){return String(c).trim()!==""})});if(out.length<2)return[];
+    var h=out[0].map(function(x){return x.trim()});return out.slice(1).map(function(r){var o={};h.forEach(function(k,j){o[k]=r[j]==null?"":r[j]});return o;});}
+  $("ld-file").addEventListener("change",function(){readFile(this.files[0])});
+  var dz=$("drop");["dragover","dragenter"].forEach(function(ev){dz.addEventListener(ev,function(e){e.preventDefault();dz.classList.add("over")})});
+  ["dragleave","drop"].forEach(function(ev){dz.addEventListener(ev,function(e){e.preventDefault();dz.classList.remove("over")})});
+  dz.addEventListener("drop",function(e){var f=e.dataTransfer&&e.dataTransfer.files[0];readFile(f)});
+  // archivo de ejemplo armado con el estado actual de la base
+  $("ld-sample").addEventListener("click",function(){var T=LD.type,i=T.stage,rows=[],V=T.vals;
+    var E=P.filter(function(p){return stateOf(p).st[i]==="pend"});
+    E.forEach(function(p,k){var v=V[k%V.length];rows.push(T.mk(k===E.length-1?p[1].replace(/(\d{2})(\d{3})(\d{3})/,"$1.$2.$3"):p[1],v));});
+    if(E.length>=3)rows.push(T.mk(E[0][1],V[2]));
+    var done=P.filter(function(p){var s=stateOf(p).st[i];return s==="ok"||s==="fail"||s==="aus"});
+    if(done[0]){var s0=stateOf(done[0]).sc[i];rows.push(T.mk(done[0][1],typeof V[0]==="object"?[stateOf(done[0]).st[i]==="ok"?"Apto":"No apto",s0]:(s0==null?"Ausente":s0)));}
+    if(done[1]){var s1=stateOf(done[1]).sc[i];rows.push(T.mk(done[1][1],typeof V[0]==="object"?["Apto",s1==null?75:Math.min(100,s1+6)]:(s1==null?72:Math.min(99,s1+4))));}
+    var ex=P.find(function(p){return stateOf(p).st[i]==="na"});if(ex)rows.push(T.mk(ex[1],V[0]));
+    rows.push(T.mk("30111222",V[0]));
+    rows.push(T.mk("S/D",V[2]));
+    var used=rows.map(function(r){return String(r.DNI).replace(/\D/g,"")}),oq=P.find(function(p){var s=stateOf(p).st[i];return used.indexOf(p[1])<0&&s!=="na"&&s!=="wait"});
+    if(oq)rows.push(T.mk(oq[1],typeof V[0]==="object"?[V[0][0],"885"]:"885"));
+    analyze(rows,T.file,2);});
+  function analyze(raw,fname,first){var T=LD.type,i=T.stage,heads=Object.keys(raw[0]||{});
+    var find=function(keys){return heads.find(function(h){var x=norm(h);return keys.some(function(k){return x.indexOf(k)>=0})})};
+    var H={};Object.keys(T.map).forEach(function(f){H[f]=find(T.map[f])});
+    var miss=[];if(!H.dni)miss.push("DNI");if(!H.v&&!H.d)miss.push(T.req[1]);if(T.map.d&&!H.d)miss.push(T.req[1]);
+    if(miss.length){var er=$("ld2-err");er.textContent="Al archivo le falta la columna "+miss.filter(function(x,k,a){return a.indexOf(x)===k}).join(" y ")+". Encabezados encontrados: "+(heads.join(", ")||"ninguno")+".";er.hidden=false;ldStep(2);return;}
+    var byDni={},rows=raw.map(function(r,k){var o={fila:k+first,raw:String(r[H.dni]).trim()},src={};Object.keys(H).forEach(function(f){if(H[f])src[f]=r[H[f]]});
+      o.dni=o.raw.replace(/\D/g,"");o.norm=o.dni!==o.raw&&o.dni.length>=7;(byDni[o.dni]=byDni[o.dni]||[]).push(o);o.src=src;return o;});
+    rows.forEach(function(o){var e=T.ev(o.src);o.txt=e.txt||String(o.src.v!=null&&o.src.v!==""?o.src.v:(o.src.d||"—"));
+      if(o.dni.length<7||o.dni.length>8){o.k="e";o.msg="DNI inválido: “"+o.raw+"”";return;}
+      if(byDni[o.dni].length>1){o.k="e";o.msg="DNI repetido en el archivo (filas "+byDni[o.dni].map(function(x){return x.fila}).join(" y ")+")";}
+      o.p=P.find(function(p){return p[1]===o.dni});
+      if(o.k)return;
+      if(!o.p){o.k="e";o.msg="El DNI no está en la base del concurso";return;}
+      if(e.err){o.k="e";o.msg=e.err;return;}
+      o.res=e.res;o.score=e.score;var S=stateOf(o.p),cs=S.st[i];
+      if(cs==="na"){var f=S.st.findIndex(function(s){return s==="fail"||s==="aus"});o.k="e";o.msg="Excluido en "+ST_SHORT[f]+": no corresponde cargarle esta etapa";return;}
+      if(cs==="wait"){o.k="e";o.msg="Todavía no llegó a esta etapa";return;}
+      if(cs==="pend"){o.k="o";o.msg="Coincide por DNI"+(o.norm?" (DNI normalizado sin puntos)":"");o.on=true;return;}
+      if(cs===o.res&&S.sc[i]===o.score){o.k="i";o.msg="Sin cambios: ya tiene este resultado";return;}
+      o.k="w";o.on=false;o.msg="Ya tiene resultado: "+(S.sc[i]!=null?n(S.sc[i])+" · ":"")+lab(i,cs)+" → se reemplaza"+(cs!==o.res?" y cambia su estado":"");});
+    audit("Cargas","Archivo subido para validación",fname+" · "+T.who+" → "+T.name+" · "+rows.length+" filas · "+rows.filter(function(r){return r.k==="e"}).length+" con error");
+    LD.rows=rows;LD.file=fname;LD.filter="all";drawPreview();ldStep(3);}
+  var KINDS=[["all","Todas las filas","var(--tint)","var(--ink)"],["o","Listas para aplicar","var(--ok-soft)","var(--ok)"],["w","Con aviso","var(--warn-soft)","var(--warn)"],["e","Con error","var(--brand-soft)","var(--brand)"],["i","Sin cambios","var(--out-soft)","var(--ink)"]];
+  function drawPreview(){var R=LD.rows,c=function(k){return k==="all"?R.length:R.filter(function(r){return r.k===k}).length};
+    $("ld3-file").innerHTML='<b>'+esc(LD.file)+'</b> · '+R.length+' filas · '+LD.type.who+' → '+LD.type.name+' · cruce por DNI';
+    $("ld3-cards").innerHTML=KINDS.map(function(K){return'<button type="button" class="vc f" data-f="'+K[0]+'" aria-pressed="'+(LD.filter===K[0])+'" style="--bg:'+K[2]+';--fg:'+K[3]+'"><span class="v">'+c(K[0])+'</span><span class="l">'+K[1]+'</span></button>'}).join("");
+    var ic={o:"✓ ",w:"⚠ ",e:"✕ ",i:"= "};
+    $("ld3-body").innerHTML=R.filter(function(r){return LD.filter==="all"||r.k===LD.filter}).map(function(r){var ix=R.indexOf(r);
+      return'<tr class="'+(r.k==="e"?"e":"")+'"><td>'+r.fila+'</td><td><code>'+esc(r.raw||"(vacío)")+'</code></td><td>'+(r.p?'<b>'+esc(r.p[0])+'</b><br><small style="color:var(--muted)">'+esc(r.p[2])+'</small>':'<span class="lock">—</span>')+'</td><td>'+esc(r.txt)+'</td><td>'+(r.res&&r.k!=="e"?chipFor(LD.type.stage,r.res):'<span class="lock">—</span>')+'</td><td class="dev '+r.k+'">'+ic[r.k]+esc(r.msg)+'</td><td class="r">'+(r.k==="o"?'<input type="checkbox" checked disabled aria-label="Se aplica">':r.k==="w"?'<input type="checkbox" data-row="'+ix+'"'+(r.on?" checked":"")+' aria-label="Aplicar reemplazo fila '+r.fila+'">':'<span class="lock">No</span>')+'</td></tr>';}).join("")||'<tr><td colspan="7" class="cap">No hay filas en este grupo.</td></tr>';
+    var nApply=R.filter(function(r){return r.on}).length,ba=$("ld-apply");ba.disabled=!nApply;ba.textContent=nApply?"Aplicar "+nApply+" resultado"+(nApply>1?"s":""):"No hay filas para aplicar";
+    $("ld-return").hidden=!c("e");}
+  $("ld3-cards").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;LD.filter=b.dataset.f;drawPreview();});
+  $("ld3-body").addEventListener("change",function(e){var x=e.target.dataset.row;if(x==null)return;LD.rows[+x].on=e.target.checked;drawPreview();});
+  $("ld-return").addEventListener("click",function(){var n2=LD.rows.filter(function(r){return r.k==="e"}).length;audit("Cargas","Errores devueltos al proveedor",LD.file+" · "+n2+" fila(s) enviadas a "+LD.type.who);toast("Se envió a "+LD.type.who+" el detalle de "+n2+" fila"+(n2>1?"s":"")+" con error para corregir y reenviar.");});
+  var W5={2:35,3:20,4:15,5:20,6:10};
+  $("ld-apply").addEventListener("click",function(){var T=LD.type,i=T.stage,ap=LD.rows.filter(function(r){return r.on}),m=now()+" · Carga “"+LD.file+"” · "+T.who;UPD={};
+    ap.forEach(function(r){var p=r.p,S=stateOf(p),old=S.st[i];S.st[i]=r.res;S.sc[i]=r.score==null?null:r.score;
+      for(var k=i+1;k<7;k++){if(r.res!=="ok")S.st[k]="na";else if(S.st[k]==="na"||S.st[k]==="wait")S.st[k]=(k===i+1)?"pend":"wait";}
+      p[T.col]=S.sc[i];S.log.unshift({t:ST_SHORT[i]+(old==="pend"?" cargado: ":" reemplazado: ")+(r.score!=null?n(r.score)+" · ":"")+lab(i,r.res),m:m});
+      sync(p,S);
+      if(p[4]==="out"){p[9]=null;p[10]=null;}else{var sw=0,sv=0;for(var j=2;j<7;j++)if(S.sc[j]!=null&&S.st[j]==="ok"){sw+=W5[j];sv+=W5[j]*S.sc[j];}p[9]=sw?Math.round(sv/sw*10)/10:null;}
+      UPD[p[1]]=1;r.after=p[4]==="out"?'<span class="chip out">'+esc(p[5])+'</span>':'<span class="chip cur">'+esc(p[5])+'</span>';});
+    var ne=LD.rows.filter(function(r){return r.k==="e"}).length;
+    audit("Cargas","Carga aplicada",LD.file+" · "+T.who+" → "+T.name+" · "+ap.length+" aplicada(s), "+ne+" con error · "+ap.map(function(r){return r.p[0]+" "+lab(i,r.res)}).join(", "));
+    HIST.unshift(["Hoy "+now().slice(4),T.who+" · "+T.name,LD.file,LD.rows.length,ap.length,ne,CU.user]);
+    $("ld4-title").textContent="Se aplicaron "+ap.length+" resultado"+(ap.length>1?"s":"")+" de "+T.who+" en "+T.name;
+    $("ld4-sub").textContent=(ne?ne+" fila"+(ne>1?"s":"")+" con error quedaron fuera. ":"")+"Cada cambio quedó en el historial de la ficha y en la auditoría.";
+    $("ld4-body").innerHTML=ap.map(function(r){return'<tr><td><b>'+esc(r.p[0])+'</b><br><small style="color:var(--muted)">DNI '+mask(r.p[1])+'</small></td><td>'+T.name+'</td><td>'+esc(r.txt)+' · '+chipFor(i,r.res)+'</td><td>'+r.after+'</td><td class="r"><button class="eb" type="button" data-open="'+r.p[1]+'">Ver ficha</button></td></tr>'}).join("");
+    drawHist();drawTypes();render();ldStep(4);toast("Listo: "+ap.length+" postulantes actualizados en la base.");});
+  $("ld4-body").addEventListener("click",function(e){var b=e.target.closest("[data-open]");if(b)openFicha(P.find(function(p){return p[1]===b.dataset.open}));});
+  $("ld-golist").addEventListener("click",function(){show("list");});
+  document.querySelector('[data-screen="load"]').addEventListener("click",function(e){var b=e.target.closest("[data-back]");if(!b)return;var s=+b.dataset.back;if(s===1){drawTypes();}if(s===2)$("ld-file").value="";ldStep(s);});
+  $("newload").addEventListener("click",function(){drawTypes();ldStep(1);var f=document.querySelector("#tgrid .tc");if(f)f.focus();});
+  drawTypes();drawHist();ldStep(1);
+  // Seguridad: usuarios (ABM), usuario activo y registro de actividad
+  var ROLES={ger:{n:"Gerencia ESENTIA",d:"Administra todo: usuarios, reglas y correcciones.",rb:"var(--brand-soft)",rf:"var(--brand)",sc:["Todo el concurso"]},
+    ana:{n:"Analista ESENTIA",d:"Carga resultados y consulta. Las correcciones las aprueba Gerencia.",rb:"var(--ok-soft)",rf:"var(--ok)",sc:["Todo el concurso","Solo Red Sucursales","Solo Sucursales Interior"]},
+    unc:{n:"Proveedor UNC",d:"Solo carga notas del examen técnico. Ve DNI y turno.",rb:"var(--warn-soft)",rf:"var(--warn)",sc:["Examen técnico"]},
+    con:{n:"Consultora",d:"Carga resultados de su etapa y ve solo a sus asignados.",rb:"var(--warn-soft)",rf:"var(--warn)",sc:["Assessment","Psicotécnico","Antecedentes"]},
+    ban:{n:"Bancor",d:"Carga entrevistas de línea y ve indicadores y finalistas.",rb:"var(--out-soft)",rf:"var(--ink)",sc:["Entrevista de línea y finalistas"]}};
+  var USERS=[
+    {id:1,name:"Andrea Gómez",mail:"a.gomez@esentiarh.com",user:"a.gomez",role:"ger",org:"ESENTIA",scope:"Todo el concurso",mfa:true,on:true,last:"Hoy 08:12",ip:"181.28.114.20"},
+    {id:2,name:"Aldana Pérez",mail:"a.perez@esentiarh.com",user:"a.perez",role:"ana",org:"ESENTIA",scope:"Todo el concurso",mfa:true,on:true,last:"Hoy 09:05",ip:"181.28.114.37"},
+    {id:3,name:"Marcos Díaz",mail:"unc.examenes@unc.edu.ar",user:"unc.examenes",role:"unc",org:"UNC",scope:"Examen técnico",mfa:true,on:true,last:"Hoy 08:55",ip:"200.16.16.91"},
+    {id:4,name:"Paula Herrera",mail:"p.herrera@pedemonte.com.ar",user:"p.herrera",role:"con",org:"Consultora Pedemonte",scope:"Assessment",mfa:true,on:true,last:"11/10 17:02",ip:"190.210.44.8"},
+    {id:5,name:"María Rossi",mail:"m.rossi@psicoconsult.com.ar",user:"m.rossi",role:"con",org:"Psico Consult",scope:"Psicotécnico",mfa:true,on:true,last:"10/10 18:20",ip:"190.17.82.140"},
+    {id:6,name:"Martín Ferreyra",mail:"m.ferreyra@bancor.com.ar",user:"bancor.rrhh",role:"ban",org:"Bancor RRHH",scope:"Entrevista de línea y finalistas",mfa:true,on:true,last:"Hoy 09:40",ip:"200.45.170.12"},
+    {id:7,name:"Julián Soria",mail:"j.soria@esentiarh.com",user:"j.soria",role:"ana",org:"ESENTIA",scope:"Solo Sucursales Interior",mfa:false,on:false,last:"25/09 10:00",ip:"181.28.114.52"}];
+  var uid=8,CU=USERS[0],uEdit=null,uDel=null;
+  var uname=function(){return CU.name+" ("+ROLES[CU.role].n+")"};
+  var stamp=function(){var d=new Date();return"Hoy "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")+":"+String(d.getSeconds()).padStart(2,"0")};
+  var AUD=[
+    ["Hoy 09:40:12",6,"Cargas","Carga aplicada","Bancor_entrevistas_semana1.xlsx · Bancor → Entrevista de línea · 38 aplicada(s), 0 con error"],
+    ["Hoy 09:05:41",2,"Acceso","Inicio de sesión","Navegador Chrome · segundo factor verificado"],
+    ["Hoy 08:55:03",3,"Cargas","Archivo subido para validación","UNC_resultados_turno05.xlsx · UNC → Examen técnico · 418 filas · 6 con error"],
+    ["Hoy 08:12:19",1,"Acceso","Inicio de sesión","Navegador Edge · segundo factor verificado"],
+    ["11/10 17:30:55",2,"Postulantes","Exportación a Excel","“Psicotécnico Villa María” para Bancor · 46 filas · marca de agua con usuario y fecha"],
+    ["11/10 17:02:30",4,"Cargas","Carga aplicada","Pedemonte_assessment_lote3.xlsx · Consultora Pedemonte → Assessment · 211 aplicada(s), 3 con error"],
+    ["11/10 16:05:08",1,"Ficha","Cambio de estado","Martina Ledesma (DNI 38.***.214) · Nota UNC 85,5 → 88,5 · Motivo: fe de erratas UNC, nota 1873"],
+    ["10/10 19:12:44",1,"Etapas y reglas","Etapa cerrada","Psicotécnico cerrada y bloqueada · 598 aptos, 144 no aptos"],
+    ["10/10 18:20:16",5,"Cargas","Carga aplicada","Psico_lote4.xlsx · Consultoras psico → Psicotécnico · 742 aplicada(s), 0 con error"],
+    ["03/10 11:00:02",1,"Usuarios","Alta de usuario","María Rossi · m.rossi@psicoconsult.com.ar · Consultora · Psicotécnico"],
+    ["28/09 15:30:27",1,"Etapas y reglas","Nueva versión de reglas","Versión 3 aprobada · pesos 35/20/15/20/10 · corte UNC 70"],
+    ["25/09 10:00:51",1,"Usuarios","Desactivación de usuario","Julián Soria · Motivo: licencia"]].map(function(a){return{ts:a[0],uid:a[1],mod:a[2],acc:a[3],det:a[4]}});
+  var freshN=0;
+  function audit(mod,acc,det){AUD.unshift({ts:stamp(),uid:CU.id,mod:mod,acc:acc,det:det});freshN++;CU.last="Hoy "+stamp().slice(4,9);if(!$("a-body").closest(".sgp").hidden)drawAudit();drawUsers();}
+  var U=function(id){return USERS.find(function(u){return u.id===id})};
+  var isAdmin=function(){return CU.role==="ger"};
+  function drawCU(){var s=$("cu-sel");s.innerHTML=USERS.filter(function(u){return u.on}).map(function(u){return'<option value="'+u.id+'"'+(u.id===CU.id?" selected":"")+'>'+esc(u.name)+'</option>'}).join("");
+    $("cu-role").textContent="Rol: "+ROLES[CU.role].n;}
+  function drawUsers(){var act=USERS.filter(function(u){return u.on}).length,pend=USERS.filter(function(u){return !u.mfa}).length,adm=isAdmin();
+    $("u-stats").innerHTML=(function(){var pl=function(k,s,p){return'<span><b>'+k+'</b> '+(k===1?s:p)+'</span>'};return pl(USERS.length,"usuario","usuarios")+pl(act,"activo","activos")+pl(USERS.length-act,"inactivo","inactivos")+pl(pend,"con segundo factor pendiente","con segundo factor pendiente");})();
+    $("u-ro").hidden=adm;$("u-new").disabled=!adm;if(!adm)$("u-form").hidden=true;
+    $("u-body").innerHTML=USERS.map(function(u){var R=ROLES[u.role],me=u.id===CU.id;
+      var row='<tr data-u="'+u.id+'" class="'+(u.on?"":"inact ")+(me?"me":"")+'"><td><b>'+esc(u.name)+'</b><br><small style="color:var(--muted)">'+esc(u.mail)+' · '+esc(u.user)+'</small></td><td><span class="rchip" style="--rb:'+R.rb+';--rf:'+R.rf+'">'+R.n+'</span></td><td>'+esc(u.org)+'</td><td>'+esc(u.scope)+'</td><td><div class="stk">'+(u.on?'<span class="chip ok">Activo</span>':'<span class="chip out">Inactivo</span>')+(u.mfa?'<small>2FA activo</small>':'<span class="chip warn">2FA pendiente</span>')+'</div></td><td>'+esc(u.last)+'</td>'+
+        '<td class="acts">'+(adm?'<button class="eb" type="button" data-ua="edit">Editar</button><button class="eb" type="button" data-ua="tog"'+(me?' disabled title="No podés desactivar tu propio usuario"':'')+'>'+(u.on?"Desactivar":"Reactivar")+'</button>'+(u.mfa?'':'<button class="eb" type="button" data-ua="inv">Reenviar invitación</button>')+'<button class="eb" type="button" data-ua="del"'+(me?' disabled title="No podés eliminar tu propio usuario"':'')+'>Eliminar</button>':'<span class="lock">Solo lectura</span>')+'</td></tr>';
+      if(uDel===u.id)row+='<tr class="confirm"><td colspan="7"><div class="filters" style="align-items:center"><span><b>¿Eliminar a '+esc(u.name)+'?</b> Pierde el acceso de inmediato. Su actividad queda en el registro.</span><button class="btn" type="button" data-ua="delok" data-id="'+u.id+'">Eliminar usuario</button><button class="btn ghost" type="button" data-ua="delno">Cancelar</button></div></td></tr>';
+      return row;}).join("");}
+  function fillRoleSel(role,scope){$("u-role").innerHTML=Object.keys(ROLES).map(function(k){return'<option value="'+k+'"'+(k===role?" selected":"")+'>'+ROLES[k].n+'</option>'}).join("");
+    var R=ROLES[$("u-role").value];$("u-role-d").textContent=R.d;$("u-scope").innerHTML=R.sc.map(function(s){return'<option'+(s===scope?" selected":"")+'>'+s+'</option>'}).join("");}
+  $("u-role").addEventListener("change",function(){fillRoleSel(this.value);if(this.value!=="con"&&this.value!=="ana"&&!$("u-org").value)$("u-org").value={ger:"ESENTIA",unc:"UNC",ban:"Bancor RRHH"}[this.value]||"";});
+  function openUForm(u){uEdit=u||null;var f=$("u-form");f.hidden=false;$("u-err").hidden=true;
+    $("u-form-t").textContent=u?"Editar usuario · "+u.name:"Nuevo usuario";$("u-submit").textContent=u?"Guardar cambios":"Crear usuario";$("u-hint").hidden=!!u;
+    $("u-name").value=u?u.name:"";$("u-mail").value=u?u.mail:"";$("u-org").value=u?u.org:"";fillRoleSel(u?u.role:"ana",u?u.scope:null);$("u-name").focus();}
+  $("u-new").addEventListener("click",function(){openUForm(null)});
+  $("u-cancel").addEventListener("click",function(){$("u-form").hidden=true;uEdit=null;});
+  $("u-form").addEventListener("submit",function(e){e.preventDefault();var g=function(id){return $(id).value.trim()},name=g("u-name"),mail=g("u-mail").toLowerCase(),role=g("u-role"),org=g("u-org"),scope=g("u-scope"),er=$("u-err");
+    var bad=!name?"Escribí el nombre y apellido.":!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)?"El email no tiene un formato válido.":USERS.some(function(u){return u.mail===mail&&u!==uEdit})?"Ya existe un usuario con ese email.":!org?"Indicá la organización.":"";
+    if(bad){er.textContent=bad;er.hidden=false;return;}
+    if(uEdit){var ch=[];if(uEdit.name!==name)ch.push("nombre: "+uEdit.name+" → "+name);if(uEdit.mail!==mail)ch.push("email: "+uEdit.mail+" → "+mail);if(uEdit.role!==role)ch.push("rol: "+ROLES[uEdit.role].n+" → "+ROLES[role].n);if(uEdit.org!==org)ch.push("organización: "+uEdit.org+" → "+org);if(uEdit.scope!==scope)ch.push("alcance: "+uEdit.scope+" → "+scope);
+      if(!ch.length){$("u-form").hidden=true;uEdit=null;return;}
+      Object.assign(uEdit,{name:name,mail:mail,role:role,org:org,scope:scope});audit("Usuarios","Modificación de usuario",name+" · "+ch.join(" · "));toast("Se guardaron los cambios de "+name+".");}
+    else{var u={id:uid++,name:name,mail:mail,user:mail.split("@")[0],role:role,org:org,scope:scope,mfa:false,on:true,last:"Nunca",ip:"—"};USERS.push(u);NAMES[u.id]=u;
+      audit("Usuarios","Alta de usuario",name+" · "+mail+" · "+ROLES[role].n+" · "+scope);toast("Se creó el usuario de "+name+" y se le envió la invitación a "+mail+".");}
+    $("u-form").hidden=true;uEdit=null;drawUsers();drawCU();fillAuditFilters();});
+  $("u-body").addEventListener("click",function(e){var b=e.target.closest("[data-ua]");if(!b||b.disabled)return;var a=b.dataset.ua,tr=b.closest("tr[data-u]"),u=tr?U(+tr.dataset.u):null;
+    if(a==="edit")openUForm(u);
+    else if(a==="tog"){u.on=!u.on;audit("Usuarios",u.on?"Reactivación de usuario":"Desactivación de usuario",u.name+" · "+ROLES[u.role].n);toast(u.on?u.name+" puede volver a ingresar.":u.name+" ya no puede ingresar. Sus datos y su actividad se conservan.");drawUsers();drawCU();}
+    else if(a==="inv"){audit("Usuarios","Invitación reenviada",u.name+" · "+u.mail);toast("Se reenvió la invitación a "+u.mail+".");}
+    else if(a==="del"){uDel=u.id;drawUsers();}
+    else if(a==="delno"){uDel=null;drawUsers();}
+    else if(a==="delok"){var d=U(+b.dataset.id);USERS=USERS.filter(function(x){return x!==d});uDel=null;audit("Usuarios","Baja de usuario",d.name+" · "+d.mail+" · "+ROLES[d.role].n);toast("Se eliminó el usuario de "+d.name+".");drawUsers();drawCU();}});
+  $("cu-sel").addEventListener("change",function(){CU=U(+this.value);drawCU();audit("Acceso","Inicio de sesión","Cambio de usuario en la demo · segundo factor verificado");drawUsers();toast("Ahora usás la herramienta como "+CU.name+" ("+ROLES[CU.role].n+"). Todo lo que hagas queda registrado a su nombre.");});
+  // registro
+  var AU_ALL=[];
+  function fillAuditFilters(){var su=$("a-user").value,sm=$("a-mod").value;
+    var ids=[];AUD.forEach(function(a){if(ids.indexOf(a.uid)<0)ids.push(a.uid)});USERS.forEach(function(u){if(ids.indexOf(u.id)<0)ids.push(u.id)});
+    AU_ALL=ids;$("a-user").innerHTML='<option value="">Todos los usuarios</option>'+ids.map(function(id){var u=U(id);return'<option value="'+id+'">'+(u?esc(u.name):"Usuario eliminado #"+id)+'</option>'}).join("");$("a-user").value=su;
+    var mods=["Acceso","Ficha","Cargas","Postulantes","Etapas y reglas","Usuarios"];$("a-mod").innerHTML='<option value="">Todos los módulos</option>'+mods.map(function(m){return"<option>"+m+"</option>"}).join("");$("a-mod").value=sm;}
+  var NAMES={};USERS.forEach(function(u){NAMES[u.id]=u});
+  function drawAudit(){var fu=$("a-user").value,fm=$("a-mod").value,fq=norm($("a-q").value||"");
+    var L=AUD.filter(function(a){return(!fu||a.uid===+fu)&&(!fm||a.mod===fm)&&(!fq||norm(a.det+" "+a.acc).indexOf(fq)>=0)});
+    $("a-count").textContent="Mostrando "+L.length+" de "+AUD.length+" eventos";
+    $("a-body").innerHTML=L.map(function(a,k){var u=U(a.uid)||NAMES[a.uid],R=u?ROLES[u.role]:null;
+      return'<tr class="'+(k<freshN&&!fu&&!fm&&!fq?"fresh":"")+'"><td>'+a.ts+'</td><td><b>'+(u?esc(u.name):"—")+'</b><br><small style="color:var(--muted)">'+(u?esc(u.user):"")+(R?' · '+R.n:"")+(u&&!U(a.uid)?" · eliminado":"")+'</small></td><td>'+a.mod+'</td><td>'+esc(a.acc)+'</td><td class="det">'+esc(a.det)+'</td><td class="ip">'+(u?u.ip:"—")+'</td></tr>'}).join("")||'<tr><td colspan="6" class="cap">No hay eventos con esos filtros.</td></tr>';
+    freshN=0;}
+  ["a-user","a-mod"].forEach(function(id){$(id).addEventListener("change",drawAudit)});$("a-q").addEventListener("input",drawAudit);
+  $("a-exp").addEventListener("click",function(){var nrows=$("a-body").querySelectorAll("tr").length;audit("Usuarios","Exportación del registro de actividad",nrows+" eventos exportados");toast("En la versión real se descarga el registro filtrado en Excel, firmado con tu usuario.");});
+  document.querySelector(".seg").addEventListener("click",function(e){var b=e.target.closest("[data-sg]");if(!b)return;
+    document.querySelectorAll(".sg").forEach(function(x){x.setAttribute("aria-selected",x===b?"true":"false")});
+    document.querySelectorAll(".sgp").forEach(function(p){p.hidden=p.dataset.sgp!==b.dataset.sg});if(b.dataset.sg==="audit"){fillAuditFilters();drawAudit();}});
+  drawCU();drawUsers();fillAuditFilters();drawAudit();
+  // Navegación
+  var navs=document.querySelectorAll(".nav"),scr=document.querySelectorAll(".screen");
+  function show(k){scr.forEach(function(s){s.hidden=s.dataset.screen!==k});var nk=k==="ficha"?"list":k;navs.forEach(function(b){b.setAttribute("aria-current",b.dataset.s===nk?"true":"false")});}
+  navs.forEach(function(b){b.addEventListener("click",function(){show(b.dataset.s)})});
+  openFicha(P[0]);show("dash");
+})();
+</script>
+
+</body>
+</html>
