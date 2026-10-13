@@ -176,6 +176,16 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center;d
 .steps b em{position:absolute;left:0;top:0;font-style:normal;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;border:1.6px solid var(--purple);color:var(--purple);font-size:.75rem;font-weight:900;background:var(--white)}
 .wf-scroll{overflow-x:auto;padding-bottom:8px}
 .wf{display:block;width:100%;min-width:900px;height:auto}
+.verif{margin-top:28px;display:grid;gap:18px;border:1px solid var(--border);border-radius:20px;padding:26px;background:var(--white)}
+.vhead{display:grid;gap:8px}
+.vhead h3{font-size:1.25rem;font-weight:800}
+.vhead p{font-size:.95rem;color:var(--muted);max-width:760px}
+.vsteps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.vsteps .wk{background:var(--light)}
+.vprep{display:grid;gap:12px}
+.vprep h4{font-size:1rem;font-weight:800}
+.vprep .qlist li{font-size:.93rem}
+@media (max-width:760px){.vsteps{grid-template-columns:1fr}.verif{padding:20px}}
 .badge{justify-self:start;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--purple);background:var(--grad-soft);border:1px solid rgba(123,45,139,.25);border-radius:100px;padding:3px 10px}
 .qlist{margin:0;padding:0;list-style:none;display:grid;gap:12px;max-width:820px}
 .qlist li{position:relative;padding-left:26px;font-size:1rem;color:var(--muted)}
@@ -266,13 +276,31 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center;d
 <section class="alt"><div class="container">
   <div class="head"><span class="tag">05 · Plan de trabajo</span><h2 class="title">Cinco etapas hasta la <span class="grad-text">puesta en marcha</span></h2></div>
   <div class="plan">
-    <div class="wk"><span class="n">Etapa 1</span><h4>Relevamiento y número</h4><ul><li>Bases, reglamento e instructivo de HR</li><li>Alta del número de WhatsApp en Wati</li><li>Inicio de la verificación en Meta</li></ul><span class="out">Número en verificación</span></div>
+    <div class="wk"><span class="n">Etapa 1</span><h4>Relevamiento y número</h4><ul><li>Bases, reglamento e instructivo de HR</li><li>Alta del número de WhatsApp en Wati</li><li>Inicio de la verificación en Meta desde Wati</li></ul><span class="out">Número en verificación</span></div>
     <div class="wk"><span class="n">Etapa 2</span><h4>Contenidos y flujo</h4><ul><li>Preguntas frecuentes por puesto</li><li>Diseño del menú y las derivaciones</li><li>Textos para aprobar</li></ul><span class="out">Textos aprobados por ESENTIA y el Banco</span></div>
     <div class="wk"><span class="n">Etapa 3</span><h4>Bot, IA y bandeja</h4><ul><li>Configuración del bot en Wati</li><li>Carga de las bases en el asistente IA</li><li>Bandeja, colas y respuestas rápidas</li></ul><span class="out">Versión de prueba</span></div>
     <div class="wk"><span class="n">Etapa 4</span><h4>Pruebas</h4><ul><li>Set de 150 preguntas reales</li><li>Validación con ESENTIA y el Banco</li><li>Ajustes de respuestas y derivación</li></ul><span class="out">Respuestas validadas</span></div>
     <div class="wk"><span class="n">Etapa 5</span><h4>Puesta en marcha</h4><ul><li>Capacitación de agentes y manual</li><li>Salida 48–72 h antes de la publicación</li><li>Soporte durante la inscripción</li></ul><span class="out">Mesa de Ayuda en producción</span></div>
   </div>
   <div class="dur"><span class="dico"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2.5h6"/></svg></span><div><b>Duración estimada: 4 a 5 semanas hasta la salida</b><span>El plazo depende de la verificación del número en Meta, que se inicia el primer día. Si ya existe un número verificado, se puede reducir a 3 o 4 semanas.</span></div></div>
+  <div class="verif">
+    <div class="vhead"><span class="badge">A través de Wati</span><h3>Alta y verificación del número en Meta</h3><p>Todo el trámite se hace desde Wati, que es proveedor oficial de WhatsApp. Quick Consultant conecta la cuenta de Meta del titular dentro de Wati y gestiona cada paso desde la plataforma; Meta revisa y aprueba. No hace falta contratar a otro proveedor ni hacer gestiones por fuera.</p></div>
+    <div class="vsteps">
+      <div class="wk"><span class="n">Paso 1 · en Wati</span><h4>Alta del número</h4><ul><li>Número nuevo o que no esté activo en la app de WhatsApp</li><li>Confirmación con código por SMS o llamada</li></ul><span class="out">Minutos</span></div>
+      <div class="wk"><span class="n">Paso 2 · en Wati</span><h4>Verificación de la empresa</h4><ul><li>Wati envía a Meta la documentación del titular</li><li>Los datos tienen que coincidir exactamente con los documentos</li></ul><span class="out">2 a 4 días hábiles</span></div>
+      <div class="wk"><span class="n">Paso 3 · en Wati</span><h4>Aprobación del nombre visible</h4><ul><li>Es el nombre que ve el postulante en WhatsApp</li><li>Tiene que coincidir con la marca y los documentos del titular</li></ul><span class="out">En el día, con la empresa verificada</span></div>
+    </div>
+    <div class="vprep"><h4>Qué tiene que preparar el titular (ESENTIA o el Banco)</h4>
+      <ul class="qlist">
+        <li><b>Cuenta de Meta Business:</b> creada o existente, con acceso de administrador para conectarla a Wati.</li>
+        <li><b>Documentación legal:</b> razón social, CUIT y un comprobante de domicilio a nombre de la empresa.</li>
+        <li><b>Sitio web con dominio propio:</b> donde figuren la razón social o la marca.</li>
+        <li><b>Número de teléfono:</b> nuevo o liberado de la app de WhatsApp.</li>
+        <li><b>Nombre visible:</b> por ejemplo “ESENTIA RH” si el titular es ESENTIA. Un nombre genérico como “Concurso Bancor” puede ser rechazado si no coincide con los documentos.</li>
+      </ul>
+      <p class="note">El alta completa lleva de 3 a 10 días hábiles según la documentación, por eso se inicia el primer día del proyecto. La insignia de cuenta oficial es un trámite aparte, a criterio de Meta, y no forma parte de esta propuesta.</p>
+    </div>
+  </div>
 </div></section>
 
 <section id="inversion"><div class="container">
