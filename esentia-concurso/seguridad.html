@@ -96,6 +96,7 @@ tr{break-inside:avoid}
 .check li{padding-left:28px;position:relative;font-size:14px}
 .check li::before{content:"✓";position:absolute;left:0;top:0;width:20px;height:20px;border-radius:50%;background:var(--ok-soft);color:var(--ok);font-weight:900;font-size:12px;display:grid;place-items:center}
 .pend li::before{content:"?";background:var(--warn-soft);color:var(--warn)}
+.sum{font-size:16px;font-weight:600;line-height:1.55;padding:16px 20px;border-radius:14px;background:var(--soft);border:1px solid var(--border);border-left:4px solid var(--pink)}
 footer{padding:26px 0 40px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);text-align:center;display:grid;gap:3px}
 @media (max-width:720px){
   .page{padding:0 16px}.cover h1{font-size:32px}
@@ -110,6 +111,7 @@ footer{padding:26px 0 40px;border-top:1px solid var(--border);font-size:12px;col
   .gloss{grid-template-columns:repeat(3,1fr);gap:6px 18px}
   .gloss div{font-size:12px}
   .cover{padding:24px 0 28px}
+  .sum{font-size:13.5px;padding:14px 18px}
   .keep{break-inside:avoid}
   h2,.tag,.lead{break-after:avoid}
   .check li,.gloss div{break-inside:avoid}
@@ -213,26 +215,8 @@ footer{padding:26px 0 40px;border-top:1px solid var(--border);font-size:12px;col
   <div class="note"><b>Tecnologías de la aplicación:</b> Next.js y React (pantallas), TypeScript (código con controles de tipos), PostgreSQL (base de datos), Prisma (consultas seguras a la base), Supabase Auth (inicio de sesión con doble llave) y reglas de acceso por fila en la base de datos. Todo es tecnología ampliamente usada en el mundo y con actualizaciones de seguridad permanentes.</div>
 </section>
 
-<section class="keep">
-  <span class="tag">03 · Quién puede ver qué</span>
-  <h2>Tres niveles de acceso</h2>
-  <div class="tbl"><table>
-    <thead><tr><th></th><th>Admin<br><span style="font-weight:600;text-transform:none;letter-spacing:0">Gerencia ESENTIA</span></th><th>Operador<br><span style="font-weight:600;text-transform:none;letter-spacing:0">Analistas ESENTIA</span></th><th>Externo<br><span style="font-weight:600;text-transform:none;letter-spacing:0">UNC, consultoras, Bancor</span></th></tr></thead>
-    <tbody>
-      <tr><td><b>Datos personales completos</b></td><td>Sí</td><td>Sí</td><td>No: solo DNI, nombre, vacante y localidad</td></tr>
-      <tr><td><b>Postulantes que ve</b></td><td>Todos</td><td>Todos</td><td>Solo los de su etapa</td></tr>
-      <tr><td><b>Cargar resultados</b></td><td>Sí</td><td>Sí</td><td>Solo de su etapa, y un Operador revisa antes de aplicar</td></tr>
-      <tr><td><b>Exportar a Excel</b></td><td>Sí, con registro</td><td>Sí, con registro</td><td>No</td></tr>
-      <tr><td><b>Cambiar reglas y etapas</b></td><td>Sí</td><td>No</td><td>No</td></tr>
-      <tr><td><b>Administrar usuarios</b></td><td>Sí</td><td>No</td><td>No</td></tr>
-      <tr><td><b>Vencimiento del acceso</b></td><td>Fin del concurso</td><td>Fin del concurso</td><td>Al cerrar su etapa</td></tr>
-    </tbody>
-  </table></div>
-  <p class="cap">Estos permisos los controla la propia base de datos, no solo las pantallas. Aunque alguien intente manipular la página, el sistema no le entrega información fuera de su nivel.</p>
-</section>
-
 <section>
-  <span class="tag">04 · Frente a los ataques</span>
+  <span class="tag">03 · Frente a los ataques</span>
   <h2>Qué hacemos ante cada amenaza</h2>
   <p class="lead">Estos son los ataques más frecuentes contra plataformas como esta y la protección que tiene cada uno.</p>
   <div class="threats">
@@ -250,7 +234,7 @@ footer{padding:26px 0 40px;border-top:1px solid var(--border);font-size:12px;col
 </section>
 
 <section class="keep">
-  <span class="tag">05 · Si algo pasa</span>
+  <span class="tag">04 · Si algo pasa</span>
   <h2>Plan de respuesta ante incidentes</h2>
   <div class="steps">
     <div class="st"><span class="n">PASO 1</span><b>Detectar</b><span>Alertas automáticas por ingresos extraños, descargas masivas o intentos de acceso indebido.</span><span class="t">Al instante</span></div>
@@ -262,7 +246,7 @@ footer{padding:26px 0 40px;border-top:1px solid var(--border);font-size:12px;col
 </section>
 
 <section class="keep">
-  <span class="tag">06 · Normativa</span>
+  <span class="tag">05 · Normativa</span>
   <h2>Marco legal y contractual</h2>
   <div class="tbl"><table>
     <tbody>
@@ -275,18 +259,7 @@ footer{padding:26px 0 40px;border-top:1px solid var(--border);font-size:12px;col
 </section>
 
 <section class="keep">
-  <span class="tag">07 · Responsabilidad compartida</span>
-  <h2>Qué le toca a cada uno</h2>
-  <div class="cols3">
-    <div class="box"><h3>Quick Consultant</h3><ul><li>Construir y mantener la plataforma segura.</li><li>Vigilar alertas y actualizaciones.</li><li>Respaldos y plan de incidentes.</li><li>Borrado al cierre del concurso.</li></ul></div>
-    <div class="box"><h3>ESENTIA</h3><ul><li>Pedir altas y bajas de usuarios a tiempo.</li><li>No compartir usuarios ni códigos.</li><li>Cuidar los Excel descargados: no reenviarlos por canales no autorizados.</li><li>Inscribir la base ante la AAIP.</li></ul></div>
-    <div class="box"><h3>Bancor y proveedores</h3><ul><li>Proteger los datos en Hiring Room y en sus propios sistemas.</li><li>Usar solo las plantillas acordadas.</li><li>Avisar de inmediato si sospechan que una cuenta fue usada por otra persona.</li></ul></div>
-  </div>
-  <div class="note">Una vez que un archivo se descarga de la plataforma, queda fuera de nuestro control. Por eso las descargas son limitadas, quedan marcadas con nombre y fecha y se registran.</div>
-</section>
-
-<section class="keep">
-  <span class="tag">08 · Cómo lo verificamos</span>
+  <span class="tag">06 · Cómo lo verificamos</span>
   <h2>Controles antes y durante el concurso</h2>
   <ul class="check">
     <li>Revisión de la plataforma contra la lista de controles OWASP ASVS nivel 2, un estándar internacional para aplicaciones web.</li>
@@ -298,7 +271,7 @@ footer{padding:26px 0 40px;border-top:1px solid var(--border);font-size:12px;col
 </section>
 
 <section class="keep">
-  <span class="tag">09 · Para definir</span>
+  <span class="tag">07 · Para definir</span>
   <h2>Decisiones pendientes</h2>
   <ul class="check pend">
     <li>¿Bancor acepta que los datos se guarden en São Paulo, Brasil, o exige otra ubicación?</li>
@@ -308,7 +281,7 @@ footer{padding:26px 0 40px;border-top:1px solid var(--border);font-size:12px;col
   </ul>
 </section>
 
-<section>
+<section class="keep">
   <span class="tag">Glosario</span>
   <h2>Palabras técnicas, en simple</h2>
   <div class="gloss">
@@ -322,6 +295,11 @@ footer{padding:26px 0 40px;border-top:1px solid var(--border);font-size:12px;col
     <div><b>SOC 2 e ISO 27001</b><span>Certificaciones internacionales que acreditan que un proveedor tiene controles de seguridad auditados.</span></div>
     <div><b>Registro de actividad</b><span>Un historial de todo lo que pasa en la plataforma: quién, qué y cuándo. No se puede modificar.</span></div>
   </div>
+</section>
+
+<section class="keep">
+  <span class="tag">Resumen</span>
+  <div class="sum">Guardamos solo los datos necesarios, cifrados y en centros de datos certificados. Cada persona entra con doble llave, ve solo lo que su rol permite y todo queda registrado. Ante un incidente actuamos en minutos, con copias diarias y aviso a ESENTIA y Bancor en 24 horas.</div>
 </section>
 
 <footer>
