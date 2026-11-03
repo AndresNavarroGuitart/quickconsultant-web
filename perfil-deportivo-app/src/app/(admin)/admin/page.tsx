@@ -44,6 +44,9 @@ export default async function AdminOverviewPage() {
   // no tienen perfiles/partidos que consultar, así que no pueden evaluarse
   // en ningún embudo. Se excluyen de las 3 métricas de abajo.
   const activeUsers = users.filter((u) => !u.deletedAt);
+  // Server Component: se recalcula en cada request (es lo que se busca), no
+  // en cada re-render del cliente como asume esta regla.
+  // eslint-disable-next-line react-hooks/purity
   const now = Date.now();
 
   // --- Embudo de activación --------------------------------------------
