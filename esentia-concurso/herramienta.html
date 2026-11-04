@@ -437,6 +437,26 @@ textarea.fin{resize:vertical;line-height:1.45}
 
 .fgrid label,.fgrid .fin{min-width:0}
 .main>.screen{min-width:0}
+/* Pipeline y ponderación */
+.pipe{display:flex;gap:6px;list-style:none;margin:0;padding:0;min-width:900px}
+.pipe li{flex:1}
+.pipe button{all:unset;box-sizing:border-box;cursor:pointer;display:grid;width:100%;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:12px;background:var(--paper)}
+.pipe button span{white-space:nowrap}
+.pipe button b{font-family:var(--f-display);font-size:19px;line-height:1.1}
+.pipe button:hover{border-color:var(--brand)}
+.pipe button:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.pipe button.rej{background:var(--brand-soft);color:var(--brand);border-color:var(--brand-soft)}
+.pipe button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.pipe button.all[aria-pressed="true"]{background:var(--ink);border-color:var(--ink)}
+.cmpd .r{text-align:right}
+#p-pond td.k{white-space:normal}
+.opt{display:inline-flex;align-items:center;gap:4px;margin:2px 12px 2px 0;font-size:12.5px;white-space:nowrap}
+.opt small{color:var(--muted)}
+.rules td{white-space:normal}
+.flowc{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px}
+.flowc span.vchip{background:var(--paper)}
+.flowc .hr{border-color:var(--warn);color:var(--warn)}
+.flowc .pl{border-color:var(--brand);color:var(--brand)}
 /* Colaboradores duplicados */
 .dupt td{vertical-align:middle}
 .dupt th,.dupt td{white-space:normal}
@@ -502,7 +522,7 @@ textarea.fin{resize:vertical;line-height:1.45}
         <div class="fgroup"><span class="flab">Fecha de postulación</span>
           <div class="filters"><label class="dlab" for="d-from">Desde<input type="date" id="d-from" class="sel" min="2026-09-01" max="2026-09-30" value="2026-09-01"></label><label class="dlab" for="d-to">Hasta<input type="date" id="d-to" class="sel" min="2026-09-01" max="2026-09-30" value="2026-09-30"></label>
           <div class="pres" role="group" aria-label="Rangos rápidos"><button type="button" class="pr" data-pr="all" aria-pressed="true">Toda la inscripción</button><button type="button" class="pr" data-pr="w1" aria-pressed="false">1.ª semana</button><button type="button" class="pr" data-pr="m" aria-pressed="false">Mitad</button><button type="button" class="pr" data-pr="wl" aria-pressed="false">Última semana</button></div></div></div>
-        <div class="fgroup"><span class="flab">Búsqueda y localidad</span><div class="filters"><select class="sel" id="f-vac" aria-label="Vacante"><option>Todas las vacantes</option><option>Cajero / Tesorero</option><option>Ejecutivo de Cuentas</option><option>Oficial de Negocios PyME</option><option>Asistente Administrativo</option></select><select class="sel" id="f-loc" aria-label="Localidad"><option>Todas las localidades</option><option>Córdoba Capital</option><option>Villa María</option><option>Río Cuarto</option></select></div></div>
+        <div class="fgroup"><span class="flab">Búsqueda y localidad</span><div class="filters"><select class="sel" id="f-vac" aria-label="Vacante"><option>Todas las vacantes</option><option>Cajero de Sucursal</option><option>Tesorero de Sucursal</option><option>Ejecutivo de Atención al Cliente</option></select><select class="sel" id="f-loc" aria-label="Localidad"><option>Todas las localidades</option><option>Córdoba Capital</option><option>Villa María</option><option>Río Cuarto</option></select></div></div>
       </div>
       <p class="fchip" id="d-chip" hidden></p>
       <div class="kpis" id="kpis"></div>
@@ -528,7 +548,7 @@ textarea.fin{resize:vertical;line-height:1.45}
       <div class="panels">
         <div class="panel"><h4>Embudo por etapa</h4><span class="cap">Cuántas postulaciones llegan a cada etapa, qué porcentaje del total representan y cuánto pasa de la etapa anterior.</span><div class="fun" id="funnel"></div></div>
         <div class="panel"><h4>Notas del examen técnico UNC</h4><span class="cap" id="hist-cap"></span>
-          <div class="hist" id="hist"><div class="cut"><b>Corte 70</b></div></div>
+          <div class="hist" id="hist"><div class="cut" style="left:60%"><b>Corte 60</b></div></div>
           <div class="hx num"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span><span>60</span><span>70</span><span>80</span><span>90</span></div>
           <span class="cap">Promedio 58,6 · Mediana 61 · Ausentes 13,9%</span></div>
       </div>
@@ -537,8 +557,9 @@ textarea.fin{resize:vertical;line-height:1.45}
         <div class="panel"><h4>Pendientes para hoy</h4><div class="alerts">
           <div class="al" style="--c:var(--warn)"><i></i><div>UNC · Turno 05 sin resultados<small>Vence 14/10 · 412 postulantes esperando nota</small></div><span class="act">Avisar</span></div>
           <div class="al" style="--c:var(--brand)"><i></i><div>3 DNI de Consultora Pedemonte no existen en la base<small>Carga del 11/10 retenida hasta revisar</small></div><span class="act">Revisar</span></div>
+          <div class="al" style="--c:var(--ok)"><i></i><div>Base de empleados del Banco aplicada<small>412 postulantes son colaboradores de Bancor · 08/10</small></div><span class="act">Ver</span></div>
           <div class="al" style="--c:var(--warn)"><i></i><div>Consulta del Banco: postulantes de Villa María en psicotécnico<small>Pedido de M. Ferreyra, Bancor RRHH</small></div><span class="act">Exportar</span></div>
-          <div class="al" style="--c:var(--ok)"><i></i><div>Psicotécnico cerrado y bloqueado<small>598 aptos · 144 no aptos · 10/10 por Gerencia</small></div><span class="act">Ver</span></div>
+          <div class="al" style="--c:var(--ok)"><i></i><div>Psicotécnico cerrado y bloqueado<small>742 con A, B o C · 378 con D (excluidos) · 10/10 por Gerencia</small></div><span class="act">Ver</span></div>
           <div class="al" style="--c:var(--brand)"><i></i><div>7 posibles colaboradores duplicados<small>1 conflicto de DNI · 1 caso elevado al Banco esperando respuesta</small></div><span class="act" role="button" tabindex="0" id="al-dup" style="cursor:pointer">Revisar</span></div>
         </div></div>
       </div>
@@ -546,21 +567,23 @@ textarea.fin{resize:vertical;line-height:1.45}
 
     <!-- POSTULANTES -->
     <div class="screen" data-screen="list" hidden>
-      <div class="bar"><div><h3>Postulantes</h3><span class="sub">Tocá un postulante para abrir su ficha: recorrido por etapas, estados, observaciones e historial.</span></div>
-        <div class="filters"><input class="search" id="q" placeholder="Buscar por nombre o DNI" aria-label="Buscar postulante"><select class="sel" id="f-st" aria-label="Estado"><option value="">Todos los estados</option><option value="cur">En carrera</option><option value="out">Excluidos</option></select><button class="btn ghost" type="button" id="exp">Exportar a Excel</button></div></div>
-      <div class="tbl-scroll"><table class="dt num" id="tbl"><thead><tr><th>Postulante</th><th>Vacante · Localidad</th><th>Etapa actual</th><th class="r">UNC</th><th class="r">Assess.</th><th class="r">Psico</th><th class="r">Entrev.</th><th class="r">Score</th><th class="r">Mérito</th></tr></thead><tbody></tbody></table></div>
-      <span class="foot">Mostrando 10 de 4.812 · <span class="lock">🔒</span> etapa cerrada, el valor no se puede editar · Datos de ejemplo</span>
+      <div class="bar"><div><h3>Postulantes</h3><span class="sub">Pipeline del concurso: Hiring Room maneja hasta En revisión; desde Examen, la plataforma. Tocá un postulante para abrir su ficha.</span></div><button class="btn ghost" type="button" id="exp">Exportar a Excel</button></div>
+      <nav class="tbl-scroll" aria-label="Pipeline"><ol class="pipe" id="pipe"></ol></nav>
+      <div class="filters"><input class="search" id="q" placeholder="Buscar por nombre o DNI" aria-label="Buscar postulante"><select class="sel" id="f-vacl" aria-label="Vacante"></select><select class="sel" id="f-emp" aria-label="Colaborador del Banco"><option value="">Colaborador Bancor: todos</option><option value="true">Colaborador Bancor</option><option value="false">No colaborador</option><option value="null">Sin verificar</option></select><select class="sel" id="f-exp" aria-label="Experiencia"><option value="">Experiencia: todas</option><option value="CUMPLE">Cumple 3 años</option><option value="NO_CUMPLE">No cumple</option><option value="A_REVISAR">A revisar</option></select></div>
+      <div class="tbl-scroll"><table class="dt num" id="tbl"><thead><tr><th>Postulante</th><th>Vacante · Localidad</th><th>Etapa</th><th>Experiencia</th><th>Banco</th><th class="r">UNC</th><th class="r">Psico</th><th class="r">Entrev.</th><th class="r">Score</th><th class="r">Mérito</th></tr></thead><tbody></tbody></table></div>
+      <span class="foot">Mostrando una muestra de 15 de 4.812 · <span class="lock">🔒</span> etapa cerrada, el valor no se puede editar · Score = puntos × peso de cada etapa según el perfil de la vacante · Datos de ejemplo</span>
     </div>
 
     <!-- FICHA -->
     <div class="screen" data-screen="ficha" hidden>
       <div class="crumb"><button class="back" type="button" id="f-back">← Postulantes</button><span class="cpath" id="f-path"></span>
         <span class="pn"><button class="ib" type="button" id="f-prev" aria-label="Postulante anterior">‹</button><span id="f-pos" class="num"></span><button class="ib" type="button" id="f-next" aria-label="Postulante siguiente">›</button></span></div>
-      <div class="person"><div><span class="eyebrow">Ficha del postulante</span><h4 id="p-name">Martina Ledesma</h4><span class="id" id="p-id">DNI 38.***.214 · Cajero / Tesorero · Córdoba Capital · ID HR 5fa977…cb</span></div>
-        <div class="score"><span class="big num" id="p-score">84,6</span><small id="p-pos">Score parcial · posición 3 de 61</small></div></div>
+      <div class="person"><div><span class="eyebrow">Ficha del postulante</span><h4 id="p-name">Martina Ledesma</h4><span class="id" id="p-id"></span><div class="vchips" id="p-tags" style="margin-top:6px"></div></div>
+        <div class="score"><span class="big num" id="p-score">—</span><small id="p-pos"></small></div></div>
       <div class="ficha">
         <div class="panel"><h4>Recorrido por etapas</h4><div class="tl" id="tl"></div></div>
         <div class="col">
+          <div class="panel"><div class="wtop"><h4>Ponderación</h4><span class="cap" id="p-perfil"></span></div><div class="tbl-scroll"><table class="cmpd"><thead><tr><th>Etapa · peso</th><th>Resultado</th><th class="r">Puntos</th><th class="r">Puntaje</th></tr></thead><tbody id="p-pond"></tbody></table></div><span class="foot" id="p-pond-f"></span></div>
           <div class="panel"><div class="wtop"><h4>Observación general</h4><span class="estado-gen" id="p-state"></span></div>
             <div id="gen-view"></div>
             <form id="gen-form" class="obsf" novalidate hidden><label for="gen-txt" class="sr">Observación general</label><textarea id="gen-txt" class="fin" rows="4" maxlength="600" placeholder="Ej.: Pidió reprogramar la entrevista por viaje laboral. Prioridad para Sucursal Centro."></textarea><div class="filters"><button class="btn" type="submit">Guardar observación</button><button class="btn ghost" type="button" id="gen-cancel">Cancelar</button></div></form>
@@ -615,25 +638,17 @@ textarea.fin{resize:vertical;line-height:1.45}
 
     <!-- REGLAS -->
     <div class="screen" data-screen="rules" hidden>
-      <div class="bar"><div><h3>Etapas y reglas</h3><span class="sub" id="ver-sub">Versión 3 · aprobada por Gerencia el 28/09/2026. Cambiarla recalcula el orden de mérito y queda registrado.</span></div>
-        <div class="filters"><button class="btn ghost" type="button" id="add-open">+ Agregar etapa</button><button class="btn" type="button" id="rules-save" disabled>Guardar versión 4</button></div></div>
-      <div class="panel"><div class="wtop"><h4>Ponderación del score global</h4><span class="wsum" id="wsum"></span></div><div class="wbar" id="wbar"></div><div class="wleg" id="wleg"></div></div>
-      <form class="panel addf" id="addf" hidden novalidate>
-        <h4>Nueva etapa</h4>
-        <div class="fgrid">
-          <label for="n-name">Nombre de la etapa<input id="n-name" class="fin" placeholder="Ej.: Prueba de inglés" maxlength="60"></label>
-          <label for="n-who">Responsable<input id="n-who" class="fin" placeholder="Ej.: Instituto de idiomas" maxlength="40"></label>
-          <label for="n-type">Tipo de resultado<select id="n-type" class="fin"><option>Nota 0–100</option><option>Puntaje 0–100</option><option>Sí / No</option><option>Dictamen</option></select></label>
-          <label for="n-w">Peso en el score (%)<input id="n-w" class="fin" type="number" min="0" max="100" step="1" value="0"><small>0 = filtro sin puntaje</small></label>
-          <label for="n-rule" class="wide">Regla para seguir<input id="n-rule" class="fin" placeholder="Ej.: Nivel B1 o superior" maxlength="80"></label>
-          <label for="n-pos" class="wide">Ubicarla después de<select id="n-pos" class="fin"></select></label>
-        </div>
-        <p class="ferr" id="n-err" hidden></p>
-        <div class="filters"><button class="btn" type="submit">Agregar etapa</button><button class="btn ghost" type="button" id="add-cancel">Cancelar</button></div>
-      </form>
-      <div class="tbl-scroll"><table class="dt num rules"><thead><tr><th class="hcol"><span class="sr">Mover</span></th><th>#</th><th>Etapa</th><th>Responsable</th><th>Tipo de resultado</th><th class="r">Peso</th><th>Regla para seguir</th><th>Estado</th><th class="r">Orden</th></tr></thead><tbody id="rules-body"></tbody></table></div>
-      <div class="panel" id="pending" hidden><h4>Cambios sin guardar</h4><ul class="chg" id="chg"></ul><div class="filters"><button class="btn ghost" type="button" id="rules-reset">Descartar cambios</button></div></div>
-      <span class="foot">Arrastrá las etapas desde ⠿ o usá las flechas. Las etapas cerradas quedan fijas y congelan sus resultados; el orden de mérito siempre va al final. Reabrir una etapa exige motivo y aprobación de la Gerencia.</span>
+      <div class="bar"><div><h3>Etapas y reglas</h3><span class="sub" id="ver-sub">Versión 3 · aprobada por Gerencia el 28/09/2026. Cambiarla recalcula los scores y el orden de mérito, y queda registrado.</span></div></div>
+      <div class="panels">
+        <div class="panel"><h4>Requisito primario de admisión</h4><span class="cap">Experiencia en el rol en entidades bancarias: <b>mínimo 3 años</b>. Se toma de la respuesta del formulario de Hiring Room: Cumple, No cumple o A revisar (si la respuesta es ambigua). No rechaza solo: lo confirma una persona.</span>
+          <h4>Requisitos secundarios</h4><span class="cap">Examen UNC: 60 o más sobre 100 · Psicotécnico: A, B o C (la D queda excluida) · Estudios afines: deseables · Entrevista de línea: A, B, C o D.</span></div>
+        <div class="panel"><h4>Pipeline del concurso</h4><div class="flowc"><span class="vchip hr">Leads</span>→<span class="vchip hr">Nuevo</span>→<span class="vchip hr">En revisión</span>→<span class="vchip pl">Examen</span>→<span class="vchip pl">Assessment</span>→<span class="vchip pl">Psico</span>→<span class="vchip pl">Entrevista</span>→<span class="vchip pl">Ofrecido</span>→<span class="vchip pl">Contratado</span></div><span class="cap">En naranja, las etapas que maneja Hiring Room; en rojo, las que maneja la plataforma. <b>Rechazados</b> no es una etapa: se llega desde cualquiera y se conserva dónde quedó.</span>
+          <h4>Colaborador del Banco</h4><span class="cap">Surge de la base de empleados que comparte Bancor (se carga en Cargas de terceros). Define la antigüedad en el Banco; quien no es colaborador suma 0.</span></div>
+      </div>
+      <p class="note" id="r-ro" hidden>Solo Gerencia ESENTIA puede modificar la ponderación. Con tu rol la ves, pero no la cambiás.</p>
+      <div id="perfiles" style="display:grid;gap:16px"></div>
+      <div class="panel" id="pending" hidden><h4>Cambios sin guardar</h4><ul class="chg" id="chg"></ul><label for="r-mot" class="fgrid" style="display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted)">Motivo del cambio (obligatorio, queda en el historial de reglas)<input id="r-mot" class="fin" maxlength="200" placeholder="Ej.: Ajuste pedido por Bancor RRHH"></label><p class="ferr" id="r-err" hidden>Escribí el motivo del cambio.</p><div class="filters"><button class="btn" type="button" id="rules-save" disabled>Guardar versión 4</button><button class="btn ghost" type="button" id="rules-reset">Descartar cambios</button></div></div>
+      <span class="foot">Puntaje de cada etapa = puntos × peso (ej.: nota 80 en Cajero = 80 × 45% = 36). El score máximo es 100. Si falta un resultado, el score queda parcial.</span>
     </div>
 
     <!-- SEGURIDAD -->
@@ -715,8 +730,8 @@ textarea.fin{resize:vertical;line-height:1.45}
     el.innerHTML=s+'<span class="gv num">'+rem+' días</span><span class="gc">faltan para finalizar · <b>día '+o.el+' de '+o.total+'</b><br>'+o.cap+'</span>';
     var z=ZONES.find(function(z){return p<=z[1]})||ZONES[2];return{p:p,z:z};}
   function gaugeChip(id,res){var e=document.getElementById(id),k=res.z[3];e.className="chip "+(k==="En plazo"?"ok":k==="Atención"?"warn":"cur");e.textContent=k;}
-  var BUS=[{n:"Cajero / Tesorero",ini:new Date(2026,8,1),pl:75,pu:40,cu:6,bq:6,en:112},{n:"Ejecutivo de Cuentas",ini:new Date(2026,8,8),pl:70,pu:15,cu:2,bq:6,en:54},{n:"Oficial de Negocios PyME",ini:new Date(2026,8,15),pl:45,pu:8,cu:1,bq:4,en:21},{n:"Asistente Administrativo",ini:new Date(2026,8,1),pl:60,pu:12,cu:0,bq:3,en:27}];
-  var g2=document.getElementById("g2-sel");g2.innerHTML=BUS.map(function(b,i){return'<option value="'+i+'">'+b.n+'</option>'}).join("");g2.value="2";
+  var BUS=[{n:"Cajero de Sucursal",ini:new Date(2026,8,1),pl:75,pu:30,cu:5,bq:6,en:118},{n:"Tesorero de Sucursal",ini:new Date(2026,8,1),pl:75,pu:15,cu:2,bq:6,en:57},{n:"Ejecutivo de Atención al Cliente",ini:new Date(2026,8,8),pl:70,pu:20,cu:3,bq:6,en:39}];
+  var g2=document.getElementById("g2-sel");g2.innerHTML=BUS.map(function(b,i){return'<option value="'+i+'">'+b.n+'</option>'}).join("");g2.value="1";
   function drawGauges(){var el1=diff(D0,TODAY);gaugeChip("g1-st",gauge(document.getElementById("g1"),{total:90,el:el1,cap:"Inicio 01/09 · fin "+dd(addD(D0,90))+"/2026",aria:"Concurso: día "+el1+" de 90"}));
     var b=BUS[+g2.value],e2=diff(b.ini,TODAY);gaugeChip("g2-st",gauge(document.getElementById("g2"),{total:b.pl,el:e2,cap:"Inicio "+dd(b.ini)+" · fin "+dd(addD(b.ini,b.pl))+" · "+b.cu+" de "+b.pu+" puestos cubiertos",aria:b.n+": día "+e2+" de "+b.pl}));
     document.getElementById("g2-list").innerHTML=BUS.map(function(x,i){var r=x.pl-diff(x.ini,TODAY),p=diff(x.ini,TODAY)/x.pl,z=ZONES.find(function(z){return p<=z[1]})||ZONES[2];return'<button type="button" class="bl" data-b="'+i+'" aria-pressed="'+(i===+g2.value)+'"><span>'+x.n+'<br><small>'+x.cu+'/'+x.pu+' puestos</small></span><b class="num">'+r+' d</b><span class="chip '+(z[3]==="En plazo"?"ok":z[3]==="Atención"?"warn":"cur")+'">'+z[3]+'</span></button>'}).join("");}
@@ -733,7 +748,7 @@ textarea.fin{resize:vertical;line-height:1.45}
   document.getElementById("g2-list").addEventListener("click",function(e){var b=e.target.closest("[data-b]");if(!b)return;g2.value=b.dataset.b;drawGauges();drawCov();});
   // ---- proyección de entrevistas
   function drawProj(){var real=[18,24,27,29,31,28,30,27],rd=["01/10","02/10","05/10","06/10","07/10","08/10","09/10","12/10"];
-    var done=real.reduce(function(a,b){return a+b},0),pend=598-done,fut=[],d=addD(TODAY,1),end=new Date(2026,10,6);
+    var done=real.reduce(function(a,b){return a+b},0),pend=742-done,fut=[],d=addD(TODAY,1),end=new Date(2026,10,6);
     while(d<=end){if(d.getDay()%6)fut.push(dd(d));d=addD(d,1);}
     var need=pend/fut.length,per=fut.map(function(_,k){return Math.floor(pend/fut.length)+(k<pend%fut.length?1:0)});
     var all=real.map(function(v,k){return{v:v,l:rd[k],r:1}}).concat(per.map(function(v,k){return{v:v,l:fut[k],r:0}}));
@@ -746,7 +761,7 @@ textarea.fin{resize:vertical;line-height:1.45}
     var xt=L+real.length*bw;s+='<line x1="'+xt.toFixed(1)+'" x2="'+xt.toFixed(1)+'" y1="'+T+'" y2="'+(H-B)+'" stroke="var(--ink)" stroke-width="1"/><text x="'+(xt+4).toFixed(1)+'" y="'+(T+10)+'" style="fill:var(--ink);font-weight:700">Hoy</text>';
     s+='<line x1="'+L+'" x2="'+W+'" y1="'+y(need).toFixed(1)+'" y2="'+y(need).toFixed(1)+'" stroke="var(--ink)" stroke-width="2" stroke-dasharray="6 4"/><text x="'+(W-2)+'" y="'+(y(need)-6).toFixed(1)+'" text-anchor="end" style="fill:var(--ink);font-weight:700">Necesario: '+need.toLocaleString("es-AR",{maximumFractionDigits:1})+' por día</text></svg>';
     document.getElementById("projc").innerHTML=s;
-    var pace=done/real.length,pu=75,cu=BUS.reduce(function(a,b){return a+b.cu},0),fa=pu-cu,apr=.68,cand=Math.round(pend*apr);
+    var pace=done/real.length,pu=BUS.reduce(function(a,b){return a+b.pu},0),cu=BUS.reduce(function(a,b){return a+b.cu},0),fa=pu-cu,apr=.68,cand=Math.round(pend*apr);
     document.getElementById("projs").innerHTML='<div class="pst"><span class="l">Ritmo actual vs. necesario</span><div class="v num">'+pace.toLocaleString("es-AR",{maximumFractionDigits:1})+' / '+need.toLocaleString("es-AR",{maximumFractionDigits:1})+'</div><span class="chip '+(pace>=need?"ok":"warn")+'">'+(pace>=need?"Se llega con el ritmo actual":"Hay que acelerar")+'</span></div>'+
       '<div class="pst"><span class="l">Entrevistas: '+done+' hechas · '+pend+' por hacer en '+fut.length+' días hábiles</span></div>'+
       '<div class="pst"><span class="l">Contratados actuales vs. faltantes</span><div class="v num">'+cu+' <small style="font-size:14px;color:var(--muted)">de '+pu+' puestos</small></div><div class="pbar" data-tip="'+cu+' contratados · '+fa+' faltan"><div style="flex:'+cu+';background:var(--ok)"></div><div style="flex:'+fa+';background:var(--out-soft)"></div></div><div class="glegend"><span><i style="background:var(--ok)"></i>Contratados <b>'+cu+'</b></span><span><i style="background:var(--out-soft);border:1px solid var(--line)"></i>Faltan <b>'+fa+'</b></span></div></div>'+
@@ -764,21 +779,21 @@ textarea.fin{resize:vertical;line-height:1.45}
     var sel=INS.slice(R.a,R.b+1).reduce(function(a,b){return a+b},0),n=R.b-R.a+1;
     document.getElementById("daily-cap").textContent=fmt(sel)+" postulantes en "+n+" día"+(n>1?"s":"")+" · promedio "+fmt(sel/n)+" por día · los fines de semana se ven más claros";}
   // ---- KPIs, embudo, género, notas y vacante × localidad (escalados por el rango de fechas)
-  var F=[["Inscriptos (HR)",4812],["Requisitos y documental",3960],["Presentes examen UNC",3410],["Aprobados UNC (≥70)",1288],["Aprobados assessment",742],["Aptos psicotécnico",598],["Entrevista de línea (en curso)",598]];
+  var F=[["Inscriptos (Hiring Room)",4812],["Cumplen 3 años de experiencia",3960],["Presentes examen UNC",3410],["Aprobados UNC (60 o más)",1945],["Aptos assessment",1120],["Psicotécnico A, B o C",742],["Entrevista de línea (en curso)",742]];
   var HB=[22,61,140,262,412,568,657,640,470,178];
   var L6=["Córdoba Cap.","Villa María","Río Cuarto","San Francisco","V. Carlos Paz","Bell Ville"];
-  var V4=[["Cajero / Tesorero",[1240,310,345,198,221,112]],["Ejecutivo de Cuentas",[620,140,165,90,96,49]],["Oficial PyME",[305,88,102,61,37,30]],["Asistente Adm.",[380,52,70,38,41,22]]];
-  var GEN=[["Mujer","#008C9E",.519],["Hombre","#5B4FA8",.459],["No especifica","#B7741A",.022]],GEN_C=[322,268,8];
+  var V4=[["Cajero de Sucursal",[1240,310,345,198,221,112]],["Tesorero de Sucursal",[520,120,140,80,90,40]],["Ejecutivo de Atención al Cliente",[745,160,185,111,117,78]]];
+  var GEN=[["Mujer","#008C9E",.519],["Hombre","#5B4FA8",.459],["No especifica","#B7741A",.022]],GEN_C=[399,333,10];
   function drawStats(){var tot=INS.slice(R.a,R.b+1).reduce(function(a,b){return a+b},0),f=tot/4812,sc=function(v){return Math.round(v*f)};
     var full=R.a===0&&R.b===29,chip=document.getElementById("d-chip");chip.hidden=full;
     if(!full)chip.textContent="Filtrado por fecha de postulación: "+dd(addD(D0,R.a))+" al "+dd(addD(D0,R.b))+" · "+fmt(tot)+" de 4.812 inscriptos ("+pc(f)+"). Los relojes y la proyección no dependen de este filtro.";
-    var car=sc(598),pres=sc(3410),apr=sc(1288);
-    document.getElementById("kpis").innerHTML=[["Inscriptos (HR)",fmt(tot),fmt(tot*.912)+" personas únicas"],["Siguen en carrera",fmt(car),pc(car/tot)+" de los inscriptos",1],["Excluidos",fmt(tot-car),"con motivo fundado"],["Aprobación examen UNC",pc(1288/3410),fmt(apr)+" de "+fmt(pres)+" presentes"],["Etapa en curso",sc(214)+" / "+fmt(car),"Entrevistas de línea hechas"]].map(function(k){return'<div class="kpi'+(k[3]?" hl":"")+'"><span class="l">'+k[0]+'</span><span class="v num">'+k[1]+'</span><span class="d">'+k[2]+'</span></div>'}).join("");
+    var car=sc(742),pres=sc(3410),apr=sc(1945);
+    document.getElementById("kpis").innerHTML=[["Inscriptos (HR)",fmt(tot),fmt(tot*.912)+" personas únicas"],["Siguen en carrera",fmt(car),pc(car/tot)+" de los inscriptos",1],["Excluidos",fmt(tot-car),"con motivo fundado"],["Aprobación examen UNC",pc(1945/3410),fmt(apr)+" de "+fmt(pres)+" presentes (60 o más)"],["Etapa en curso",sc(214)+" / "+fmt(car),"Entrevistas de línea hechas"]].map(function(k){return'<div class="kpi'+(k[3]?" hl":"")+'"><span class="l">'+k[0]+'</span><span class="v num">'+k[1]+'</span><span class="d">'+k[2]+'</span></div>'}).join("");
     // embudo con %
     var fe=document.getElementById("funnel"),F0=sc(F[0][1]);fe.innerHTML="";
     F.forEach(function(r,i){var v=sc(r[1]),prev=i?sc(F[i-1][1]):v,cur=i===F.length-1,out=prev-v,d=document.createElement("div");d.className="fr"+(cur?" cur":"");
       d.innerHTML='<span>'+r[0]+'</span><span class="track" data-tip="<b>'+r[0]+'</b><br>'+fmt(v)+' postulaciones · '+pc(v/F0)+' de los inscriptos'+(i&&!cur?'<br>Pasa '+pc(v/prev)+' de la etapa anterior':'')+'"><span class="fill" style="width:'+(v/F0*100).toFixed(2)+'%"></span></span><span class="fval num">'+fmt(v)+'</span>'+
-        '<span class="pct num"><span><b>'+pc(v/F0)+'</b> del total</span>'+(i&&!cur?'<span>pasa <b>'+pc(v/prev)+'</b> de la anterior</span><span class="dn">−'+fmt(out)+' ('+pc(out/prev)+') quedan afuera</span>':cur?'<span>214 realizadas · 384 por agendar</span>':'')+'</span>';
+        '<span class="pct num"><span><b>'+pc(v/F0)+'</b> del total</span>'+(i&&!cur?'<span>pasa <b>'+pc(v/prev)+'</b> de la anterior</span><span class="dn">−'+fmt(out)+' ('+pc(out/prev)+') quedan afuera</span>':cur?'<span>214 realizadas · 528 por agendar</span>':'')+'</span>';
       fe.appendChild(d);});
     // género
     var gi=GEN.map(function(g){return Math.round(tot*g[2])});gi[0]=tot-gi[1]-gi[2];
@@ -788,8 +803,8 @@ textarea.fin{resize:vertical;line-height:1.45}
     document.getElementById("gen-cap").textContent="Según lo declarado en Hiring Room. Mujer · Hombre · No especifica.";
     // notas UNC
     var he=document.getElementById("hist"),hb=HB.map(sc),hm=Math.max.apply(null,hb)||1;he.querySelectorAll(".hb").forEach(function(x){x.remove()});
-    hb.forEach(function(v,i){var b=document.createElement("div");b.className="hb"+(i>=7?" pass":"");b.style.height=(v/hm*100)+"%";b.innerHTML='<span class="num">'+v+'</span>';b.setAttribute("data-tip","Notas "+(i*10)+"–"+(i*10+10)+": <b>"+fmt(v)+"</b> postulantes"+(i>=7?" · aprobados":" · no alcanzan el corte"));he.appendChild(b);});
-    document.getElementById("hist-cap").textContent="Distribución de "+fmt(pres)+" presentes. Corte mínimo: 70 puntos.";
+    hb.forEach(function(v,i){var b=document.createElement("div");b.className="hb"+(i>=6?" pass":"");b.style.height=(v/hm*100)+"%";b.innerHTML='<span class="num">'+v+'</span>';b.setAttribute("data-tip","Notas "+(i*10)+"–"+(i*10+10)+": <b>"+fmt(v)+"</b> postulantes"+(i>=6?" · aprobados":" · no alcanzan el corte"));he.appendChild(b);});
+    document.getElementById("hist-cap").textContent="Distribución de "+fmt(pres)+" presentes. Corte mínimo: 60 puntos (menos de 60 excluye).";
     // vacante × localidad
     var h='<thead><tr><th>Vacante</th>'+L6.map(function(l){return"<th>"+l+"</th>"}).join("")+'<th>Total</th></tr></thead><tbody>',tt=[0,0,0,0,0,0];
     V4.forEach(function(r){var s=0;h+="<tr><td>"+r[0]+"</td>";r[1].forEach(function(v0,i){var v=sc(v0);s+=v;tt[i]+=v;var a=Math.max(.06,v0/1240*.85);h+='<td class="c'+(a>.5?' dk':'')+'" style="--a:'+a.toFixed(3)+'" data-tip="<b>'+r[0]+'</b> · '+L6[i]+'<br>'+fmt(v)+' postulaciones">'+fmt(v)+"</td>"});h+="<td><b>"+fmt(s)+"</b></td></tr>";});
@@ -805,82 +820,131 @@ textarea.fin{resize:vertical;line-height:1.45}
   document.querySelector(".pres").addEventListener("click",function(e){var b=e.target.closest("[data-pr]");if(!b)return;var r=PR[b.dataset.pr];setRange(r[0],r[1],b.dataset.pr);});
   [dF,dT].forEach(function(inp){inp.addEventListener("change",function(){if(!dF.value||!dT.value)return;var a=idx(dF.value),b=idx(dT.value);if(a>b){var x=a;a=b;b=x;}var pr=Object.keys(PR).find(function(k){return PR[k][0]===a&&PR[k][1]===b})||"";setRange(a,b,pr);});});
   drawGauges();drawCov();drawProj();drawDaily();drawStats();
-  // Postulantes (ficticios)
+  // Postulantes (ficticios) con las vacantes, el pipeline y la ponderación del concurso
+  var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+  var VAC=["Cajero de Sucursal","Tesorero de Sucursal","Ejecutivo de Atención al Cliente"];
+  var mkPerf=function(n,w){return{n:n,w:w,corte:60,psi:{A:100,B:90,C:70},psiExcl:["D"],form:{UNIVERSITARIA:100,TERCIARIA:80,SECUNDARIA:60},ent:{A:100,B:90,C:70,D:0},tramos:[80,90,100]}};
+  var PERF={ct:mkPerf("Cajero y Tesorero",{unc:45,psi:20,form:5,ant:15,ent:15}),eac:mkPerf("Ejecutivo de Atención al Cliente",{unc:45,psi:20,form:10,ant:15,ent:10})};
+  var TRAMOS=[[3,false,"de 3 a 6 años"],[6,true,"más de 6 hasta 9 años"],[9,true,"más de 9 años"]];
+  var perfilDe=function(p){return p.v===2?PERF.eac:PERF.ct};
+  var NF={UNIVERSITARIA:"Universitaria",TERCIARIA:"Terciaria",SECUNDARIA:"Secundaria"};
+  var PIPE=[["LEAD","Leads"],["REJ","Rechazados"],["NUEVO","Nuevo"],["EN_REVISION","En revisión"],["EXAMEN","Examen"],["ASSESSMENT","Assessment"],["PSICO","Psico"],["ENTREVISTA","Entrevista"],["OFRECIDO","Ofrecido"],["CONTRATADO","Contratado"]];
+  var PIPE_N={};PIPE.forEach(function(x){PIPE_N[x[0]]=x[1]});
+  var MAS="Tengo más de 3 años de experiencia en el ejercicio del rol en una entidad bancaria";
+  var mk=function(n,d,v,loc,o){return Object.assign({n:n,d:d,v:v,loc:loc,hr:null,exp:"CUMPLE",expTxt:MAS,form:null,formTit:"",emp:null,leg:null,ing:null,unc:null,ass:null,psi:null,ent:null,fin:null},o)};
   var P=[
-    ["Martina Ledesma","38512214","Cajero / Tesorero","Córdoba Capital","cur","Entrevista de línea",88.5,82,85,84.6,3,null,null],
-    ["Joaquín Bustos","37640905","Ejecutivo de Cuentas","Río Cuarto","cur","Entrevista de línea",91,78,80,84.2,1,null,null],
-    ["Camila Ferrero","40118330","Cajero / Tesorero","Villa María","cur","Entrevista de línea",79.5,85,90,83.1,2,null,null],
-    ["Lucas Giménez","35277871","Oficial PyME","Córdoba Capital","cur","Entrevista de línea",76,74,72,74.4,9,null,null],
-    ["Sofía Paredes","39804016","Asistente Adm.","San Francisco","out","Psicotécnico · No apto",84,70,null,null,null,null,null],
-    ["Tomás Villarreal","36955448","Cajero / Tesorero","V. Carlos Paz","out","Assessment · 52 < 60",73,52,null,null,null,null,null],
-    ["Valentina Ríos","41230762","Ejecutivo de Cuentas","Córdoba Capital","out","Examen UNC · 54 < 70",54,null,null,null,null,null,null],
-    ["Nicolás Acosta","34601193","Cajero / Tesorero","Bell Ville","out","Examen UNC · Ausente",null,null,null,null,null,null,null],
-    ["Florencia Quiroga","38749587","Oficial PyME","Río Cuarto","out","Requisitos · Residencia",null,null,null,null,null,null,null],
-    ["Agustín Moyano","37388250","Asistente Adm.","Villa María","cur","Entrevista de línea",82,80,78,80.6,4,null,null]];
-  // p: 0 nombre, 1 DNI, 2 vacante, 3 localidad, 4 estado, 5 etapa, 6 UNC, 7 assessment, 8 psico, 9 score, 10 mérito, 11 entrevista, 12 antecedentes
+    mk("Martina Ledesma","38512214",0,"Córdoba Capital",{form:"UNIVERSITARIA",formTit:"Licenciatura en Administración · UNC",emp:true,leg:"20811",ing:"12/03/2016",unc:90,ass:"ok",psi:"A",ent:"B"}),
+    mk("Joaquín Bustos","37640905",2,"Río Cuarto",{form:"TERCIARIA",formTit:"Tecnicatura en Gestión Bancaria · Instituto Superior",emp:false,unc:90,ass:"ok",psi:"B"}),
+    mk("Camila Ferrero","40118330",1,"Villa María",{form:"UNIVERSITARIA",formTit:"Contador Público · UNVM",emp:true,leg:"23140",ing:"01/08/2019",unc:80,ass:"ok",psi:"A"}),
+    mk("Lucas Giménez","35277871",2,"Córdoba Capital",{form:"SECUNDARIA",formTit:"Bachiller en Economía · IPEM 12",emp:true,leg:"19077",ing:"05/02/2013",unc:70,ass:"ok",psi:"C",ent:"A",fin:"CONTRATADO"}),
+    mk("Agustín Moyano","37388250",1,"Villa María",{form:"TERCIARIA",formTit:"Tecnicatura en Administración · ISFD",emp:true,leg:"22408",ing:"03/11/2020",unc:80,ass:"ok",psi:"B"}),
+    mk("Sofía Paredes","39804016",0,"San Francisco",{form:"UNIVERSITARIA",formTit:"Licenciatura en Economía · UNC",emp:false,unc:80,ass:"ok",psi:"D"}),
+    mk("Tomás Villarreal","36955448",1,"V. Carlos Paz",{form:"TERCIARIA",formTit:"Analista Contable · Instituto Superior",emp:false,unc:70,ass:"fail"}),
+    mk("Valentina Ríos","41230762",2,"Córdoba Capital",{form:"UNIVERSITARIA",formTit:"Licenciatura en Comunicación · UNC",unc:54}),
+    mk("Nicolás Acosta","34601193",0,"Bell Ville",{form:"SECUNDARIA",formTit:"Perito Mercantil · IPEM 279",emp:true,leg:"21544",ing:"10/04/2018",unc:"aus"}),
+    mk("Rocío Funes","38907421",1,"Córdoba Capital",{form:"UNIVERSITARIA",formTit:"Licenciatura en Administración · UCC",emp:true,leg:"21077",ing:"20/09/2017",unc:100,ass:"ok"}),
+    mk("Ignacio Sosa","36410258",2,"San Francisco",{form:"TERCIARIA",formTit:"Tecnicatura en Gestión Bancaria",emp:false,unc:60}),
+    mk("Paula Medina","40556120",1,"Río Cuarto",{form:"UNIVERSITARIA",formTit:"Licenciatura en Administración · UNRC",emp:false}),
+    mk("Florencia Quiroga","38749587",2,"Río Cuarto",{exp:"NO_CUMPLE",expTxt:"Tengo menos de 3 años de experiencia en el ejercicio del rol",form:"TERCIARIA",formTit:"Tecnicatura en Gestión Comercial"}),
+    mk("Micaela Torres","39321556",0,"Córdoba Capital",{hr:"NUEVO",exp:"A_REVISAR",expTxt:"Tengo entre 1 y 3 años de experiencia en el rol",form:"UNIVERSITARIA",formTit:"Licenciatura en Economía · UCC"}),
+    mk("Bruno Castro","42011873",2,"Villa María",{hr:"LEAD",exp:null,expTxt:"",form:null})];
   var mask=function(d){return d.slice(0,2)+".***."+d.slice(-3)},UPD={};
-  var tb=document.querySelector("#tbl tbody"),q=document.getElementById("q"),fs=document.getElementById("f-st");
-  var n=function(v){return v==null?'<span class="lock">—</span>':v.toLocaleString("es-AR",{minimumFractionDigits:1,maximumFractionDigits:1})};
-  var VIS=[];
-  function render(){var t=(q.value||"").toLowerCase(),s=fs.value;tb.innerHTML="";VIS=[];
-    P.forEach(function(p,i){if(s&&p[4]!==s)return;if(t&&(p[0]+" "+p[1]+" "+mask(p[1])).toLowerCase().replace(/\./g,"").indexOf(t.replace(/\./g,""))<0)return;
-      var tr=document.createElement("tr");tr.className="click"+(UPD[p[1]]?" upd":"");tr.dataset.dni=p[1];tr.title="Abrir la ficha de "+p[0];tr.tabIndex=0;
-      tr.innerHTML='<td class="nm"><b>'+p[0]+'</b><small>DNI '+mask(p[1])+(UPD[p[1]]?' <span class="newb">Actualizado por carga</span>':'')+'</small></td><td>'+p[2]+'<br><small style="color:var(--muted)">'+p[3]+'</small></td><td><span class="chip '+p[4]+'">'+p[5]+'</span></td><td class="r">'+n(p[6])+(p[6]!=null?' <span class="lock">🔒</span>':'')+'</td><td class="r">'+n(p[7])+'</td><td class="r">'+n(p[8])+'</td><td class="r">'+n(p[11])+'</td><td class="r"><b>'+n(p[9])+'</b></td><td class="r">'+(p[10]?p[10]+"°":'<span class="lock">—</span>')+'</td>';
-      var open=function(){openFicha(p)};
-      tr.addEventListener("click",open);tr.addEventListener("keydown",function(e){if(e.key==="Enter")open()});
-      VIS.push(p);tb.appendChild(tr);});}
-  // Ficha editable: estado y observación por etapa + observación general
-  var ST_NAMES=["Inscripción","Requisitos y check documental","Examen técnico UNC · 35%","Assessment · 20%","Psicotécnico · 15%","Entrevista de línea · 20%","Antecedentes · 10%"];
-  var ST_SHORT=["Inscripción","Requisitos","Examen UNC","Assessment","Psicotécnico","Entrevista de línea","Antecedentes"];
-  var ST_SRC=["Hiring Room · export 30/09/2026","Secundario · Residencia en zona · Incompatibilidad estatal","UNC · UNC_resultados_T04.xlsx","Consultora Pedemonte · 06/10/2026","Consultoras psico · 08/10/2026","Gerente de sucursal + RRHH Bancor · agendada semana del 13/10","Nosis / referencias"];
-  var OKL=["Completa","Cumple","Aprobado","Aprobado","Apto","Aprobada","Favorable"],BADL=["—","No cumple","Desaprobado","Desaprobado","No apto","Desaprobada","Desfavorable"];
-  var lab=function(i,s){return{ok:OKL[i],fail:BADL[i],aus:"Ausente",pend:"Pendiente",wait:"Sin iniciar",na:"No aplica"}[s]};
+  var n=function(v){return v==null?'<span class="lock">—</span>':typeof v!=="number"?esc(v):v.toLocaleString("es-AR",{minimumFractionDigits:1,maximumFractionDigits:1})};
+  var nf=function(x){return String(Math.round(x*100)/100).replace(".",",")};
+  function antig(p){if(p.emp!==true)return p.emp===false?0:null;if(!p.ing)return null;var a=p.ing.split("/"),f=new Date(+a[2],+a[1]-1,+a[0]);return Math.max(0,(TODAY-f)/(365.25*DAY));}
+  function ptsAnt(F,a){var pts=0;TRAMOS.forEach(function(t,k){if(t[1]?a>t[0]:a>=t[0])pts=F.tramos[k]});return pts;}
+  // Ficha: estado por etapa
+  var ST_SHORT=["Inscripción","Requisitos","Examen UNC","Assessment","Psicotécnico","Entrevista de línea"];
+  var stName=function(i,p){var F=perfilDe(p);return["Inscripción","Requisito primario: 3 años de experiencia en el rol","Examen técnico UNC · "+F.w.unc+"%","Assessment · filtro sin peso","Psicotécnico · "+F.w.psi+"%","Entrevista de línea · "+F.w.ent+"%"][i]};
+  var stSrc=function(i,p){return["Hiring Room · export 30/09/2026",p.expTxt?"Respuesta en Hiring Room: “"+p.expTxt+"”":"Sin respuesta en el formulario de Hiring Room","UNC · UNC_resultados_T04.xlsx · corte 60","Consultora Pedemonte · 06/10/2026","Consultoras psico · 08/10/2026 · la D excluye","Gerente de sucursal + RRHH Bancor · semana del 13/10 · la D suma 0"][i]};
+  var OKL=["Completa","Cumple","Aprobado","Apto","Apto","Realizada"],BADL=["—","No cumple","Desaprobado","No apto","No apto (D)","—"];
+  var lab=function(i,s){return{ok:OKL[i],fail:BADL[i],aus:"Ausente",pend:i===1?"A revisar":"Pendiente",wait:"Sin iniciar",na:"No aplica"}[s]};
+  var PIPE_AT=[null,"EN_REVISION","EXAMEN","ASSESSMENT","PSICO","ENTREVISTA"];
   var FS={},cur=null,editing=-1,editGen=false;
   var now=function(){var d=new Date();return"hoy "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")};
-  function stateOf(p){if(FS[p[1]])return FS[p[1]];
-    var why=p[5],out=p[4]==="out",at=/Requisitos/.test(why)?1:/UNC/.test(why)?2:/Assessment/.test(why)?3:/Psico/.test(why)?4:5;
-    var sc=[null,null,p[6],p[7],p[8],p[11],p[12]],st=[],L=[{t:"Alta desde Hiring Room",m:"30/09 19:00 · Importación inicial"}];
-    for(var i=0;i<7;i++)st.push(i<at?"ok":i===at?(out?(/Ausente/.test(why)?"aus":"fail"):"pend"):(out?"na":"wait"));
-    if(p[6]!=null)L.unshift({t:"Nota UNC cargada: "+n(p[6]),m:"02/10 10:47 · Carga “UNC_resultados_T04.xlsx”"});
-    if(p[7]!=null)L.unshift({t:"Assessment cargado: "+n(p[7]),m:"06/10 12:02 · Carga “Pedemonte_assessment.xlsx”"});
-    if(p[8]!=null)L.unshift({t:"Dictamen psicotécnico cargado: "+(at===4&&out?"No apto":"Apto, "+n(p[8])),m:"08/10 18:20 · Carga “Psico_lote3.xlsx”"});
-    if(out)L.unshift({t:"Excluido en "+why.split(" · ")[0]+": "+(why.split(" · ")[1]||""),m:"Regla aplicada automáticamente · motivo fundado registrado"});
-    return FS[p[1]]={st:st,sc:sc,obs:[null,null,null,null,null,null,null],gen:null,log:L};}
-  function sync(p,S){ // actualiza el estado del postulante en el listado
-    var f=S.st.findIndex(function(s){return s==="fail"||s==="aus"});
-    if(f>=0){p[4]="out";p[5]=ST_SHORT[f]+" · "+lab(f,S.st[f]);}
-    else{var q=S.st.findIndex(function(s){return s==="pend"||s==="wait"});p[4]="cur";p[5]=q<0?"Etapas completas":ST_SHORT[q];}}
+  function stateOf(p){if(FS[p.d])return FS[p.d];var F=perfilDe(p);
+    var R=[["ok",null],[p.exp==="CUMPLE"?"ok":p.exp==="NO_CUMPLE"?"fail":null,null],
+      typeof p.unc==="number"?[p.unc>=F.corte?"ok":"fail",p.unc]:p.unc==="aus"?["aus","aus"]:[null,null],[p.ass,null],
+      p.psi?[F.psiExcl.indexOf(p.psi)>=0?"fail":"ok",p.psi]:[null,null],p.ent==="aus"?["aus","aus"]:p.ent?["ok",p.ent]:[null,null]];
+    if(p.hr)R[1][0]=null;
+    var st=[],sc=[],blk=null;R.forEach(function(x){var s=blk==="out"?"na":blk==="wait"?"wait":(x[0]||"pend");st.push(s);sc.push(blk?null:x[1]);if(!blk&&(s==="fail"||s==="aus"))blk="out";else if(!blk&&s==="pend")blk="wait";});
+    var L=[{t:"Alta desde Hiring Room · "+VAC[p.v],m:"30/09 19:00 · Importación inicial"}];
+    if(p.exp)L.unshift({t:"Requisito de experiencia: "+{CUMPLE:"Cumple",NO_CUMPLE:"No cumple",A_REVISAR:"A revisar"}[p.exp],m:"30/09 19:00 · Respuesta del formulario de Hiring Room"});
+    if(p.emp!=null)L.unshift({t:p.emp?"Colaborador Bancor · legajo "+p.leg:"No figura en la base de empleados del Banco",m:"08/10 11:20 · Carga “Bancor_base_empleados_09-2026.xlsx”"});
+    if(sc[2]!=null)L.unshift({t:"Examen UNC: "+(sc[2]==="aus"?"Ausente":"nota "+n(sc[2])),m:"02/10 10:47 · Carga “UNC_resultados_T04.xlsx”"});
+    if(st[3]==="ok"||st[3]==="fail")L.unshift({t:"Assessment: "+lab(3,st[3]),m:"06/10 12:02 · Carga “Pedemonte_assessment_lote3.xlsx”"});
+    if(sc[4]!=null)L.unshift({t:"Psicotécnico: letra "+sc[4]+(st[4]==="fail"?" · excluye":""),m:"08/10 18:20 · Carga “Psico_lote4.xlsx”"});
+    if(sc[5]!=null)L.unshift({t:"Entrevista de línea: "+(sc[5]==="aus"?"Ausente":"letra "+sc[5]),m:"Hoy 09:40 · Carga “Bancor_entrevistas_semana1.xlsx”"});
+    var f=st.findIndex(function(s){return s==="fail"||s==="aus"});
+    if(f>=0)L.unshift({t:"Rechazado en "+ST_SHORT[f]+": "+lab(f,st[f]),m:"Regla del concurso · motivo registrado"});
+    return FS[p.d]={st:st,sc:sc,obs:[null,null,null,null,null,null],gen:null,log:L};}
+  function pipeOf(p){var S=stateOf(p),f=S.st.findIndex(function(s){return s==="fail"||s==="aus"});
+    if(f>=0)return{k:"REJ",at:f,txt:"Rechazado en "+ST_SHORT[f],det:lab(f,S.st[f])};
+    if(p.hr)return{k:p.hr,txt:PIPE_N[p.hr]};var q=S.st.findIndex(function(s){return s==="pend"});
+    var k=q<0?(p.fin||"OFRECIDO"):PIPE_AT[q];return{k:k,txt:PIPE_N[k]};}
+  function pond(p){var F=perfilDe(p),S=stateOf(p),rows=[],rej=pipeOf(p).k==="REJ";
+    var add=function(k,lab2,val,pts){rows.push({k:k,lab:lab2,val:val,pts:pts,w:F.w[k],sc:pts==null?null:pts*F.w[k]/100})};
+    var u=S.sc[2];add("unc","Examen técnico UNC",u==null?"Pendiente":u==="aus"?"Ausente":"Nota "+nf(u),typeof u==="number"?(u>=F.corte?Math.floor(u/10)*10:0):u==="aus"?0:null);
+    var ps=S.sc[4];add("psi","Psicotécnico",ps?"Letra "+ps:"Pendiente",ps?(F.psiExcl.indexOf(ps)>=0?0:F.psi[ps]):null);
+    add("form","Formación",p.form?NF[p.form]:"Sin identificar",p.form?F.form[p.form]:null);
+    var a=antig(p);add("ant","Antigüedad en el Banco",p.emp===true?(a==null?"Sin fecha de ingreso":nf(Math.floor(a*10)/10)+" años"):p.emp===false?"No es colaborador":"Sin verificar",a==null?null:ptsAnt(F,a));
+    var en=S.sc[5];add("ent","Entrevista de línea",en==null?"Pendiente":en==="aus"?"Ausente":"Letra "+en,en==null?null:en==="aus"?0:F.ent[en]);
+    var falta=rows.filter(function(r){return r.sc==null}),tot=rows.reduce(function(s,r){return s+(r.sc||0)},0);
+    var sinExamen=S.sc[2]==null;return{rows:rows,score:rej||sinExamen?null:Math.round(tot*100)/100,sinExamen:sinExamen,parcial:falta.length>0,falta:falta.map(function(r){return r.lab}),rej:rej,F:F};}
+  function merito(p){var me=pond(p);if(me.score==null)return null;var L=P.filter(function(x){return x.v===p.v&&pond(x).score!=null}).sort(function(a,b){return pond(b).score-pond(a).score});return{pos:L.indexOf(p)+1,de:L.length};}
+  var expChip=function(e){return e==="CUMPLE"?'<span class="chip ok">Cumple</span>':e==="NO_CUMPLE"?'<span class="chip cur">No cumple</span>':'<span class="chip warn">A revisar</span>'};
+  var bancoCell=function(p){var a=antig(p);return p.emp===true?'<span class="chip warn">Colaborador</span><br><small style="color:var(--muted)">'+(a==null?"sin fecha de ingreso":Math.floor(a)+" años · leg. "+esc(p.leg||"—"))+'</small>':p.emp===false?'<span style="color:var(--muted)">No</span>':'<small style="color:var(--muted)">Sin verificar</small>'};
+  var tb=document.querySelector("#tbl tbody"),q=document.getElementById("q"),PSEL="";
+  var fvl=document.getElementById("f-vacl"),fem=document.getElementById("f-emp"),fex=document.getElementById("f-exp");
+  fvl.innerHTML='<option value="">Todas las vacantes</option>'+VAC.map(function(v,i){return'<option value="'+i+'">'+v+'</option>'}).join("");
+  var VIS=[];
+  function render(){var t=(q.value||"").toLowerCase().replace(/\./g,""),fv=fvl.value,fe=fem.value,fx=fex.value;tb.innerHTML="";VIS=[];
+    var base=P.filter(function(p){if(fv!==""&&p.v!==+fv)return false;if(fe&&String(p.emp)!==fe)return false;if(fx&&(p.exp||"A_REVISAR")!==fx)return false;return!t||(p.n+" "+p.d).toLowerCase().indexOf(t)>=0;});
+    var cnt={};base.forEach(function(p){var k=pipeOf(p).k;cnt[k]=(cnt[k]||0)+1});
+    document.getElementById("pipe").innerHTML='<li><button type="button" class="all" data-pk="" aria-pressed="'+(PSEL==="")+'"><span>Todas</span><b class="num">'+base.length+'</b></button></li>'+PIPE.map(function(x){return'<li><button type="button" data-pk="'+x[0]+'"'+(x[0]==="REJ"?' class="rej"':'')+' aria-pressed="'+(PSEL===x[0])+'"><span>'+x[1]+'</span><b class="num">'+(cnt[x[0]]||0)+'</b></button></li>'}).join("");
+    base.forEach(function(p){var pi=pipeOf(p);if(PSEL&&pi.k!==PSEL)return;var S=stateOf(p),po=pond(p),me=merito(p);
+      var tr=document.createElement("tr");tr.className="click"+(UPD[p.d]?" upd":"");tr.dataset.dni=p.d;tr.title="Abrir la ficha de "+p.n;tr.tabIndex=0;
+      var chip=pi.k==="REJ"?'<span class="chip out">'+esc(pi.txt)+'</span><br><small style="color:var(--muted)">'+esc(pi.det)+'</small>':'<span class="chip '+(pi.k==="CONTRATADO"||pi.k==="OFRECIDO"?"ok":"cur")+'">'+esc(pi.txt)+'</span>';
+      tr.innerHTML='<td class="nm"><b>'+esc(p.n)+'</b><small>DNI '+mask(p.d)+(UPD[p.d]?' <span class="newb">Actualizado por carga</span>':'')+'</small></td><td>'+VAC[p.v]+'<br><small style="color:var(--muted)">'+p.loc+'</small></td><td>'+chip+'</td><td>'+expChip(p.exp)+'</td><td>'+bancoCell(p)+'</td>'+
+        '<td class="r">'+(S.sc[2]==="aus"?"Aus.":n(S.sc[2]))+(typeof S.sc[2]==="number"?' <span class="lock">🔒</span>':'')+'</td><td class="r">'+n(S.sc[4])+'</td><td class="r">'+(S.sc[5]==="aus"?"Aus.":n(S.sc[5]))+'</td>'+
+        '<td class="r"><b>'+(po.score==null?'<span class="lock">—</span>':nf(po.score))+'</b>'+(po.score!=null&&po.parcial?'<br><small style="color:var(--muted)">parcial</small>':'')+'</td><td class="r">'+(me?me.pos+"°":'<span class="lock">—</span>')+'</td>';
+      var open=function(){openFicha(p)};tr.addEventListener("click",open);tr.addEventListener("keydown",function(e){if(e.key==="Enter")open()});VIS.push(p);tb.appendChild(tr);});
+    if(!VIS.length)tb.innerHTML='<tr><td colspan="10" style="color:var(--muted)">No hay postulantes con esos filtros.</td></tr>';}
+  document.getElementById("pipe").addEventListener("click",function(e){var b=e.target.closest("[data-pk]");if(!b)return;PSEL=b.dataset.pk;render();});
   function chipFor(i,s){var c={ok:"ok",fail:"out",aus:"out",pend:"cur",wait:"warn",na:"warn"}[s];return'<span class="chip '+c+'">'+lab(i,s)+'</span>';}
-  function drawFicha(){var p=cur,S=stateOf(p),out=p[4]==="out";
-    document.getElementById("p-name").textContent=p[0];
-    document.getElementById("p-id").textContent="DNI "+mask(p[1])+" · "+p[2]+" · "+p[3];
-    document.getElementById("p-score").textContent=out||p[9]==null?"—":n(p[9]);
-    document.getElementById("p-pos").textContent=!out&&p[10]?"Score parcial · posición "+p[10]+" en su vacante y localidad":"Excluido · sin posición en el orden de mérito";
-    var pe=document.getElementById("p-state");pe.className="chip "+(out?"out":"cur");pe.textContent=out?"Excluido":"En carrera";
+  function drawFicha(){var p=cur,S=stateOf(p),po=pond(p),pi=pipeOf(p),me=merito(p),out=pi.k==="REJ";
+    document.getElementById("p-name").textContent=p.n;
+    document.getElementById("p-id").textContent="DNI "+mask(p.d)+" · "+VAC[p.v]+" · "+p.loc;
+    var a=antig(p);document.getElementById("p-tags").innerHTML=expChip(p.exp)+' '+(p.emp===true?'<span class="chip warn">Colaborador Bancor · legajo '+esc(p.leg||"—")+(a!=null?" · "+Math.floor(a)+" años":"")+'</span>':p.emp===false?'<span class="chip ok" style="background:var(--tint);color:var(--ink)">No es colaborador del Banco</span>':'<span class="chip warn">Colaborador: sin verificar</span>')+' <span class="chip ok" style="background:var(--tint);color:var(--ink)">Formación: '+(p.form?NF[p.form]:"sin identificar")+'</span>';
+    document.getElementById("p-score").textContent=po.score==null?"—":nf(po.score);
+    document.getElementById("p-pos").textContent=out?"Rechazado · sin posición en el orden de mérito":po.sinExamen?"Sin score: todavía no rindió el examen UNC":(po.parcial?"Score parcial":"Score final")+(me?" · posición "+me.pos+" de "+me.de+" en "+VAC[p.v]:"");
+    var pe=document.getElementById("p-state");pe.className="chip "+(out?"out":"cur");pe.textContent=pi.txt;
     var h="";S.st.forEach(function(s,i){
       var c={ok:"var(--ok)",fail:"var(--out)",aus:"var(--out)",pend:"var(--brand)",wait:"var(--line)",na:"var(--line)"}[s];
       var dot=s==="ok"?'<span class="dot full">✓</span>':(s==="fail"||s==="aus")?'<span class="dot full">✕</span>':'<span class="dot">'+(i+1)+'</span>';
-      var src=s==="na"?"No aplica: excluido en una etapa anterior":s==="wait"?"Se habilita al aprobar la etapa anterior":ST_SRC[i];
-      var res=(S.sc[i]!=null&&s!=="na"&&s!=="wait"?'<b class="num">'+n(S.sc[i])+'</b>':'')+chipFor(i,s)+(i>0?'<button class="eb" type="button" data-ed="'+i+'" aria-label="Editar '+ST_NAMES[i]+'">'+(editing===i?"Cerrar":"Editar")+'</button>':'');
+      var src=s==="na"?"No aplica: rechazado en una etapa anterior":s==="wait"?"Se habilita al aprobar la etapa anterior":stSrc(i,p);
+      var v=S.sc[i],res=(v!=null&&v!=="aus"&&s!=="na"&&s!=="wait"?'<b class="num">'+n(v)+'</b>':'')+chipFor(i,s)+(i>0?'<button class="eb" type="button" data-ed="'+i+'" aria-label="Editar '+esc(stName(i,p))+'">'+(editing===i?"Cerrar":"Editar")+'</button>':'');
       var ob=S.obs[i]?'<div class="obs"><p>'+esc(S.obs[i].t)+'</p><small>'+esc(S.obs[i].m)+'</small></div>':'';
       var ed=editing===i?'<form class="obsf ste" data-form="'+i+'" novalidate><div class="fgrid2"><label for="es-'+i+'">Estado<select id="es-'+i+'" class="fin">'+
-        ["ok","fail","aus","pend"].filter(function(k){return !(k==="aus"&&(i===1))}).map(function(k){return'<option value="'+k+'"'+(k===s?" selected":"")+'>'+lab(i,k)+'</option>'}).join("")+'</select></label>'+
+        ["ok","fail","aus","pend"].filter(function(k){return !(k==="aus"&&i===1)&&!(k==="fail"&&i===5)}).map(function(k){return'<option value="'+k+'"'+(k===s?" selected":"")+'>'+lab(i,k)+'</option>'}).join("")+'</select></label>'+
         '<label for="eo-'+i+'">Observación de la etapa<textarea id="eo-'+i+'" class="fin" rows="3" maxlength="400" placeholder="Motivo del cambio o comentario sobre esta etapa">'+(S.obs[i]?esc(S.obs[i].t):"")+'</textarea></label></div>'+
-        '<p class="ferr" id="ee-'+i+'" hidden></p><p class="hint">Si cambiás el estado, la observación es obligatoria: queda como motivo en la auditoría.'+((s==="ok"||s==="pend")?' Marcar Desaprobado o Ausente excluye al postulante de las etapas siguientes.':' Volver a Aprobado reincorpora al postulante y habilita la etapa siguiente.')+'</p>'+
+        '<p class="ferr" id="ee-'+i+'" hidden></p><p class="hint">Si cambiás el estado, la observación es obligatoria: queda como motivo en la auditoría.'+((s==="ok"||s==="pend")?' Marcar '+lab(i,"fail")+' o Ausente rechaza al postulante en esta etapa.':' Volver a '+lab(i,"ok")+' reincorpora al postulante y habilita la etapa siguiente.')+'</p>'+
         '<div class="filters"><button class="btn" type="submit">Guardar</button><button class="btn ghost" type="button" data-cancel>Cancelar</button></div></form>':'';
-      h+='<div class="ti'+(editing===i?" open":"")+'" style="--c:'+c+'">'+dot+'<div class="tbody"><span class="tt">'+ST_NAMES[i]+'</span><br><span class="src">'+src+'</span>'+ob+ed+'</div><div class="res">'+res+'</div></div>';});
+      h+='<div class="ti'+(editing===i?" open":"")+'" style="--c:'+c+'">'+dot+'<div class="tbody"><span class="tt">'+esc(stName(i,p))+'</span><br><span class="src">'+esc(src)+'</span>'+ob+ed+'</div><div class="res">'+res+'</div></div>';});
     document.getElementById("tl").innerHTML=h;
-    var gv=document.getElementById("gen-view"),gf=document.getElementById("gen-form");
-    gf.hidden=!editGen;gv.hidden=editGen;
+    document.getElementById("p-perfil").textContent="Perfil "+po.F.n;
+    document.getElementById("p-pond").innerHTML=po.rows.map(function(r){return'<tr><td class="k">'+r.lab+' · '+r.w+'%</td><td>'+esc(r.val)+'</td><td class="r">'+(r.pts==null?"—":nf(r.pts))+'</td><td class="r"><b>'+(r.sc==null?"—":nf(r.sc))+'</b></td></tr>'}).join("")+'<tr><td class="k"><b>Score</b></td><td colspan="2">'+(po.rej?"Rechazado: no entra en el orden de mérito":po.sinExamen?"Se calcula desde el examen UNC":po.parcial?"Parcial · falta "+po.falta.join(", "):"Final")+'</td><td class="r"><b>'+(po.score==null?"—":nf(po.score))+'</b></td></tr>';
+    document.getElementById("p-pond-f").textContent=(p.form?"Formación: "+p.formTit+". ":"Formación: no se identificó el nivel en Hiring Room. ")+(p.emp===true?"Antigüedad según la base de empleados del Banco (ingreso "+(p.ing||"sin fecha")+").":p.emp===false?"No figura en la base de empleados: antigüedad 0.":"Sin verificar contra la base de empleados del Banco.");
+    var gv=document.getElementById("gen-view"),gf=document.getElementById("gen-form");gf.hidden=!editGen;gv.hidden=editGen;
     gv.innerHTML=S.gen?'<div class="obs big"><p>'+esc(S.gen.t)+'</p><small>'+esc(S.gen.m)+'</small></div><button class="btn ghost" type="button" id="gen-edit">Editar observación</button>':'<p class="cap">Todavía no hay observaciones generales sobre este postulante.</p><button class="btn ghost" type="button" id="gen-edit">+ Agregar observación</button>';
     document.getElementById("plog").innerHTML=S.log.map(function(x){return"<div>"+esc(x.t)+"<small>"+esc(x.m)+"</small></div>"}).join("");
     if(editing>=0){var se=document.getElementById("es-"+editing);if(se)se.focus();}}
   function openFicha(p){cur=p;editing=-1;editGen=false;show("ficha");drawFicha();drawCrumb();var m=document.querySelector(".main");if(m)m.scrollTop=0;}
   function drawCrumb(){var L=VIS.indexOf(cur)>=0?VIS:P,i=L.indexOf(cur);
-    document.getElementById("f-path").textContent="/ "+cur[0];
+    document.getElementById("f-path").textContent="/ "+cur.n;
     document.getElementById("f-pos").textContent=(i+1)+" de "+L.length+(L===VIS&&VIS.length<P.length?" (filtrados)":"");
     document.getElementById("f-prev").disabled=i<=0;document.getElementById("f-next").disabled=i>=L.length-1;}
-  document.getElementById("f-back").addEventListener("click",function(){show("list");var r=document.querySelector('#tbl tbody tr.click[data-dni="'+cur[1]+'"]');if(r)r.focus();});
+  document.getElementById("f-back").addEventListener("click",function(){show("list");var r=document.querySelector('#tbl tbody tr.click[data-dni="'+cur.d+'"]');if(r)r.focus();});
   document.getElementById("f-prev").addEventListener("click",function(){var L=VIS.indexOf(cur)>=0?VIS:P,i=L.indexOf(cur);if(i>0)openFicha(L[i-1]);});
   document.getElementById("f-next").addEventListener("click",function(){var L=VIS.indexOf(cur)>=0?VIS:P,i=L.indexOf(cur);if(i<L.length-1)openFicha(L[i+1]);});
   document.addEventListener("keydown",function(e){var fs2=document.querySelector('[data-screen="ficha"]');if(fs2.hidden||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;if(e.key==="Escape")document.getElementById("f-back").click();});
@@ -893,150 +957,113 @@ textarea.fin{resize:vertical;line-height:1.45}
     if(ns!==old&&!ot){er.textContent="Escribí una observación que explique el cambio de estado.";er.hidden=false;document.getElementById("eo-"+i).focus();return;}
     if(ns===old&&ot===prevObs){editing=-1;drawFicha();return;}
     var m=now()+" · "+uname();
-    if(ns!==old){S.st[i]=ns;
-      for(var k=i+1;k<7;k++)S.st[k]=(ns==="fail"||ns==="aus")?"na":(k===i+1&&ns==="ok")?"pend":"wait";
+    if(ns!==old){var was=pipeOf(cur).k==="REJ";S.st[i]=ns;if(i===1)cur.hr=null;
+      for(var k=i+1;k<6;k++)S.st[k]=(ns==="fail"||ns==="aus")?"na":ns==="pend"?"wait":(S.st[k]==="na"||S.st[k]==="wait")?(k===i+1?"pend":"wait"):S.st[k];
       S.log.unshift({t:ST_SHORT[i]+": "+lab(i,old)+" → "+lab(i,ns),m:m+" · Motivo: "+ot});
-      audit("Ficha","Cambio de estado",cur[0]+" (DNI "+mask(cur[1])+") · "+ST_SHORT[i]+": "+lab(i,old)+" → "+lab(i,ns)+" · Motivo: "+ot);
-      var wasOut=cur[4]==="out";sync(cur,S);
-      toast(cur[4]==="out"&&!wasOut?cur[0]+" queda fuera del concurso desde "+ST_SHORT[i]+". El cambio quedó en la auditoría.":wasOut&&cur[4]==="cur"?cur[0]+" vuelve a estar en carrera: se habilitó "+cur[5]+".":"Estado de "+ST_SHORT[i]+" actualizado.");}
-    else{S.log.unshift({t:"Observación en "+ST_SHORT[i],m:m});audit("Ficha","Observación de etapa",cur[0]+" (DNI "+mask(cur[1])+") · "+ST_SHORT[i]+": “"+ot+"”");toast("Observación guardada en "+ST_SHORT[i]+".");}
+      audit("Ficha","Cambio de estado",cur.n+" (DNI "+mask(cur.d)+") · "+ST_SHORT[i]+": "+lab(i,old)+" → "+lab(i,ns)+" · Motivo: "+ot);
+      var pi=pipeOf(cur);toast(pi.k==="REJ"&&!was?cur.n+" pasa a Rechazados desde "+ST_SHORT[i]+". El cambio quedó en la auditoría.":was&&pi.k!=="REJ"?cur.n+" vuelve a estar en carrera: queda en "+pi.txt+".":"Estado de "+ST_SHORT[i]+" actualizado.");}
+    else{S.log.unshift({t:"Observación en "+ST_SHORT[i],m:m});audit("Ficha","Observación de etapa",cur.n+" (DNI "+mask(cur.d)+") · "+ST_SHORT[i]+": “"+ot+"”");toast("Observación guardada en "+ST_SHORT[i]+".");}
     S.obs[i]=ot?{t:ot,m:m}:null;editing=-1;drawFicha();render();});
   document.getElementById("gen-view").addEventListener("click",function(e){if(e.target.id!=="gen-edit")return;editGen=true;var S=stateOf(cur);drawFicha();var ta=document.getElementById("gen-txt");ta.value=S.gen?S.gen.t:"";ta.focus();});
   document.getElementById("gen-cancel").addEventListener("click",function(){editGen=false;drawFicha();});
   document.getElementById("gen-form").addEventListener("submit",function(e){e.preventDefault();var S=stateOf(cur),v=document.getElementById("gen-txt").value.trim(),m=now()+" · "+uname();
     if((S.gen?S.gen.t:"")===v){editGen=false;drawFicha();return;}
     S.log.unshift({t:v?(S.gen?"Observación general editada":"Observación general agregada"):"Observación general eliminada",m:m});
-    audit("Ficha","Observación general",cur[0]+" (DNI "+mask(cur[1])+") · "+(v?"“"+v+"”":"eliminada"));
+    audit("Ficha","Observación general",cur.n+" (DNI "+mask(cur.d)+") · "+(v?"“"+v+"”":"eliminada"));
     S.gen=v?{t:v,m:m}:null;editGen=false;drawFicha();toast(v?"Observación general guardada.":"Se eliminó la observación general.");});
-  q.addEventListener("input",render);fs.addEventListener("change",render);render();
+  [fvl,fem,fex].forEach(function(s){s.addEventListener("change",render)});q.addEventListener("input",render);render();
   // Acciones de la demo
   var to=document.getElementById("toast"),tt;
   function toast(m){to.textContent=m;to.hidden=false;clearTimeout(tt);tt=setTimeout(function(){to.hidden=true},3800);}
-  document.getElementById("exp").addEventListener("click",function(){audit("Postulantes","Exportación a Excel","Vista filtrada: "+document.querySelectorAll("#tbl tbody tr.click").length+" filas"+(q.value?" · búsqueda “"+q.value+"”":"")+" · marca de agua con usuario y fecha");toast("En la versión real se descarga un Excel con la vista filtrada, marcado con tu usuario y la fecha.")});
-  document.querySelectorAll(".act").forEach(function(a){a.setAttribute("role","button");a.tabIndex=0;a.style.cursor="pointer";a.addEventListener("click",function(){toast(a.textContent+": "+a.previousElementSibling.firstChild.textContent.trim())})});
+  document.getElementById("exp").addEventListener("click",function(){audit("Postulantes","Exportación a Excel","Vista filtrada: "+VIS.length+" filas"+(q.value?" · búsqueda “"+q.value+"”":"")+" · marca de agua con usuario y fecha");toast("En la versión real se descarga un Excel con la vista filtrada, marcado con tu usuario y la fecha.")});
+  document.querySelectorAll(".act:not(#al-dup)").forEach(function(a){a.setAttribute("role","button");a.tabIndex=0;a.style.cursor="pointer";a.addEventListener("click",function(){toast(a.textContent+": "+a.previousElementSibling.firstChild.textContent.trim())})});
   document.getElementById("f-vac").addEventListener("change",function(){var v=this.selectedIndex;if(v){var g=document.getElementById("g2-sel");if(g.value!==String(v-1)){g.value=String(v-1);g.dispatchEvent(new Event("change"));}}document.querySelectorAll("#heat tbody tr").forEach(function(r,i){r.style.opacity=(!v||i===v-1||r.classList.contains("tot"))?1:.25})});
-  // Etapas y reglas: editor
-  var STG0=[
-    {id:"req",name:"Requisitos y check documental",who:"ESENTIA",type:"Sí / No",w:0,rule:"3 preguntas excluyentes en “Sí”",st:"closed"},
-    {id:"unc",name:"Examen técnico",who:"UNC",type:"Nota 0–100",w:35,rule:"Presente y nota ≥ 70",st:"closed"},
-    {id:"ass",name:"Assessment",who:"Consultora externa",type:"Puntaje 0–100",w:20,rule:"Puntaje ≥ 60",st:"closed"},
-    {id:"psi",name:"Psicotécnico",who:"Consultoras psico",type:"Dictamen + puntaje",w:15,rule:"Dictamen “Apto”",st:"closed"},
-    {id:"ent",name:"Entrevista de línea",who:"Bancor",type:"Calificación 0–100",w:20,rule:"Calificación ≥ 65",st:"cur"},
-    {id:"ant",name:"Antecedentes",who:"Nosis / ESENTIA",type:"Score + validaciones",w:10,rule:"Sin deudas y referencias favorables",st:"pend"},
-    {id:"mer",name:"Orden de mérito",who:"Automático",type:"Posición",w:0,rule:"Por vacante y localidad, desempate por nota UNC",st:"pend",end:true}];
-  var clone=function(a){return a.map(function(s){return Object.assign({},s)})};
-  var STG=clone(STG0),CHG=[],ver=3,seq=0,dragId=null;
-  var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
-  var firstMov=function(){var i=0;while(i<STG.length&&STG[i].st==="closed")i++;return i};
-  var lastMov=function(){return STG.length-2};
-  var movable=function(s){return s.st!=="closed"&&!s.end};
-  var stChip={closed:'<span class="chip ok">🔒 Cerrada</span>',cur:'<span class="chip cur">En curso</span>',pend:'<span class="chip warn">Pendiente</span>'};
-  function note(m){CHG.push(m);}
-  function renderRules(flashId){
-    var tb=document.getElementById("rules-body"),fm=firstMov(),lm=lastMov();
-    tb.innerHTML=STG.map(function(s,i){var mv=movable(s),ed=s.st!=="closed"&&!s.end;
-      return '<tr data-id="'+s.id+'" class="'+(mv?"":"lockd ")+(s.isNew?"isnew ":"")+(s.id===flashId?"flash":"")+'"'+(mv?' draggable="true"':'')+'>'+
-      '<td>'+(mv?'<span class="grip" title="Arrastrar para reordenar" aria-hidden="true">⠿</span>':'<span class="lock" title="'+(s.end?"Siempre al final":"Etapa cerrada")+'">🔒</span>')+'</td>'+
-      '<td>'+(i+1)+'</td><td><b>'+esc(s.name)+'</b></td><td>'+esc(s.who)+'</td><td>'+esc(s.type)+'</td>'+
-      '<td class="r">'+(ed?'<input class="cin w" id="w-'+s.id+'" type="number" min="0" max="100" step="1" value="'+s.w+'" aria-label="Peso de '+esc(s.name)+'">%':(s.w?s.w+"%":"—"))+'</td>'+
-      '<td>'+(ed?'<input class="cin rl" id="r-'+s.id+'" value="'+esc(s.rule)+'" aria-label="Regla de '+esc(s.name)+'">':esc(s.rule))+'</td>'+
-      '<td>'+stChip[s.st]+'</td>'+
-      '<td class="r" style="white-space:nowrap">'+(mv?'<button class="ib" type="button" data-mv="-1" aria-label="Subir '+esc(s.name)+'"'+(i<=fm?" disabled":"")+'>▲</button><button class="ib" type="button" data-mv="1" aria-label="Bajar '+esc(s.name)+'"'+(i>=lm?" disabled":"")+'>▼</button>'+(s.st==="pend"?'<button class="ib" type="button" data-del aria-label="Quitar '+esc(s.name)+'">✕</button>':''):'<span class="lock">'+(s.end?"Fija al final":"Fija")+'</span>')+'</td></tr>';}).join("");
-    // pesos
-    var ws=STG.filter(function(s){return s.w>0}),sum=ws.reduce(function(a,s){return a+s.w},0),n=ws.length;
-    var op=function(k){return n<2?1:(1-k*(0.72/(n-1))).toFixed(2)};
-    document.getElementById("wbar").innerHTML=ws.map(function(s,k){return'<div style="flex:'+s.w+';--o:'+op(k)+'" title="'+esc(s.name)+' '+s.w+'%"></div>'}).join("");
-    document.getElementById("wleg").innerHTML=ws.map(function(s,k){return'<span style="--o:'+op(k)+'">'+esc(s.name)+' '+s.w+'%</span>'}).join("");
-    var wsEl=document.getElementById("wsum");wsEl.className="wsum "+(sum===100?"ok":"bad");
-    wsEl.textContent=sum===100?"Suman 100% ✓":"Suman "+sum+"% · "+(sum<100?"faltan "+(100-sum):"sobran "+(sum-100))+" puntos para guardar";
-    // posición en el formulario
-    var ps=document.getElementById("n-pos"),keep=ps.value;
-    ps.innerHTML=STG.slice(fm-1>=0?fm-1:0,STG.length-1).map(function(s){return'<option value="'+s.id+'">'+esc(s.name)+'</option>'}).join("");
-    if(keep&&ps.querySelector('option[value="'+keep+'"]'))ps.value=keep;else ps.value=STG[STG.length-2].id;
-    // cambios
-    var dirty=CHG.length>0;document.getElementById("pending").hidden=!dirty;
-    document.getElementById("chg").innerHTML=CHG.map(function(c){return"<li>"+esc(c)+"</li>"}).join("");
-    var sv=document.getElementById("rules-save");sv.disabled=!dirty||sum!==100;sv.textContent="Guardar versión "+(ver+1);
-    sv.title=sum!==100?"Los pesos tienen que sumar 100%":"";
-  }
-  function moveTo(id,to){var from=STG.findIndex(function(s){return s.id===id});if(from<0)return;
-    to=Math.max(firstMov(),Math.min(lastMov(),to));if(to===from)return;
-    var s=STG.splice(from,1)[0];STG.splice(to,0,s);note("“"+s.name+"” pasó de la posición "+(from+1)+" a la "+(to+1));renderRules(id);}
-  var rb=document.getElementById("rules-body");
-  rb.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;var id=b.closest("tr").dataset.id,i=STG.findIndex(function(s){return s.id===id});
-    if(b.dataset.mv){moveTo(id,i+parseInt(b.dataset.mv,10));var nb=rb.querySelector('tr[data-id="'+id+'"] button[data-mv="'+b.dataset.mv+'"]');if(nb&&!nb.disabled)nb.focus();}
-    else if(b.hasAttribute("data-del")){var s=STG.splice(i,1)[0];note("Se quitó la etapa “"+s.name+"”"+(s.w?" ("+s.w+"% a redistribuir)":""));renderRules();}});
-  rb.addEventListener("change",function(e){var el=e.target,id=el.closest("tr").dataset.id,s=STG.find(function(x){return x.id===id});
-    if(el.classList.contains("w")){var v=Math.max(0,Math.min(100,Math.round(+el.value||0)));if(v!==s.w){note("Peso de “"+s.name+"”: "+s.w+"% → "+v+"%");s.w=v;}renderRules();}
-    else{var r=el.value.trim();if(r&&r!==s.rule){note("Regla de “"+s.name+"”: "+r);s.rule=r;renderRules();}}});
-  rb.addEventListener("dragstart",function(e){var tr=e.target.closest("tr");if(!tr||!tr.draggable)return;dragId=tr.dataset.id;tr.classList.add("dragging");e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",dragId)}catch(x){}});
-  rb.addEventListener("dragend",function(){dragId=null;rb.querySelectorAll("tr").forEach(function(r){r.classList.remove("dragging","drop-before","drop-after")})});
-  rb.addEventListener("dragover",function(e){if(!dragId)return;var tr=e.target.closest("tr");if(!tr)return;var i=STG.findIndex(function(s){return s.id===tr.dataset.id});
-    if(i<firstMov()-1||i>lastMov())return;e.preventDefault();var r=tr.getBoundingClientRect(),after=e.clientY>r.top+r.height/2;
-    rb.querySelectorAll("tr").forEach(function(x){x.classList.remove("drop-before","drop-after")});tr.classList.add(after?"drop-after":"drop-before");});
-  rb.addEventListener("drop",function(e){if(!dragId)return;e.preventDefault();var tr=e.target.closest("tr");if(!tr)return;
-    var from=STG.findIndex(function(s){return s.id===dragId}),i=STG.findIndex(function(s){return s.id===tr.dataset.id}),r=tr.getBoundingClientRect(),after=e.clientY>r.top+r.height/2;
-    var to=i+(after?1:0);if(from<to)to--;moveTo(dragId,to);});
-  var af=document.getElementById("addf"),err=document.getElementById("n-err");
-  document.getElementById("add-open").addEventListener("click",function(){af.hidden=false;err.hidden=true;document.getElementById("n-name").focus();});
-  document.getElementById("add-cancel").addEventListener("click",function(){af.hidden=true;af.reset();});
-  af.addEventListener("submit",function(e){e.preventDefault();
-    var g=function(id){return document.getElementById(id).value.trim()},name=g("n-name"),who=g("n-who"),w=Math.round(+g("n-w")||0),rule=g("n-rule");
-    var bad=!name?"Poné un nombre para la etapa.":!who?"Indicá quién es responsable de cargar el resultado.":(w<0||w>100)?"El peso tiene que estar entre 0 y 100.":!rule?"Escribí la regla que define quién sigue.":STG.some(function(s){return s.name.toLowerCase()===name.toLowerCase()})?"Ya existe una etapa con ese nombre.":"";
-    if(bad){err.textContent=bad;err.hidden=false;return;}
-    var after=STG.findIndex(function(s){return s.id===g("n-pos")}),id="n"+(++seq);
-    STG.splice(Math.max(firstMov(),after+1),0,{id:id,name:name,who:who,type:g("n-type"),w:w,rule:rule,st:"pend",isNew:true});
-    note("Nueva etapa “"+name+"” en la posición "+(STG.findIndex(function(s){return s.id===id})+1)+(w?" con "+w+"% de peso":" (filtro sin puntaje)"));
-    af.reset();af.hidden=true;renderRules(id);
-    toast(w?"Etapa agregada. Ajustá los pesos para que vuelvan a sumar 100% antes de guardar.":"Etapa agregada como filtro. Guardá la versión para aplicarla.");});
-  document.getElementById("rules-reset").addEventListener("click",function(){audit("Etapas y reglas","Cambios descartados",CHG.length+" cambio(s) sin guardar descartados · sigue la versión "+ver);STG=clone(STG0);CHG=[];renderRules();toast("Se descartaron los cambios. Vuelve a regir la versión "+ver+".");});
-  document.getElementById("rules-save").addEventListener("click",function(){audit("Etapas y reglas","Nueva versión de reglas","Versión "+(ver+1)+": "+CHG.join(" · "));ver++;STG.forEach(function(s){delete s.isNew});STG0=clone(STG);var n=CHG.length;CHG=[];
-    document.getElementById("ver-sub").textContent="Versión "+ver+" · guardada hoy por "+uname()+". El orden de mérito se recalculó y el cambio quedó en la auditoría.";
-    renderRules();toast("Versión "+ver+" guardada con "+n+" cambio"+(n===1?"":"s")+". Se recalculó el orden de mérito.");});
+  // Etapas y reglas: ponderación por perfil. Solo Gerencia la modifica; cada versión pide motivo.
+  var clonePerf=function(x){return JSON.parse(JSON.stringify(x))};
+  var PERF0=clonePerf(PERF),RCHG=[],ver=3;
+  var FACT=[["unc","Examen técnico UNC"],["psi","Psicotécnico"],["form","Formación"],["ant","Antigüedad en el Banco"],["ent","Entrevista de línea"]];
+  var esGer=function(){return typeof CU==="undefined"||!CU||CU.role==="ger"};
+  var sumW=function(F){return FACT.reduce(function(s,f){return s+F.w[f[0]]},0)};
+  function inp(pf,k,o,v,lbl,dis,suf){return'<label class="opt">'+lbl+' <input class="cin w" type="number" min="0" max="100" step="1" value="'+v+'" data-pf="'+pf+'" data-k="'+k+'" data-o="'+o+'"'+(dis?" disabled":"")+' aria-label="'+esc(lbl||"Peso")+'">'+(suf||"")+'</label>'}
+  function renderRules(){var dis=!esGer(),h="";
+    Object.keys(PERF).forEach(function(pf){var F=PERF[pf],s=sumW(F),vac=pf==="eac"?[VAC[2]]:[VAC[0],VAC[1]];
+      var pz=function(k,pts){return' <small>→ '+nf(pts*F.w[k]/100)+'</small>'};
+      var row=function(k,name,cells,crit){return'<tr><td><b>'+name+'</b><br><small style="color:var(--muted)">'+crit+'</small></td><td class="r" style="white-space:nowrap">'+inp(pf,k,"w",F.w[k],"",dis,"%")+'</td><td>'+cells+'</td></tr>'};
+      h+='<div class="panel"><div class="wtop"><div><h4>Ponderación · '+F.n+'</h4><span class="cap">Vacantes: '+vac.join(", ")+'</span></div><span class="wsum '+(s===100?"ok":"bad")+'">'+(s===100?"Suman 100% ✓":"Suman "+s+"% · tienen que sumar 100")+'</span></div>'+
+        '<div class="wbar">'+FACT.map(function(f,k){return'<div style="flex:'+F.w[f[0]]+';--o:'+(1-k*.17).toFixed(2)+'" title="'+f[1]+' '+F.w[f[0]]+'%"></div>'}).join("")+'</div>'+
+        '<div class="wleg">'+FACT.map(function(f,k){return'<span style="--o:'+(1-k*.17).toFixed(2)+'">'+f[1]+' '+F.w[f[0]]+'%</span>'}).join("")+'</div>'+
+        '<div class="tbl-scroll"><table class="dt num rules"><thead><tr><th>Etapa</th><th class="r">Peso</th><th>Puntos por resultado → puntaje en el score</th></tr></thead><tbody>'+
+        row("unc","Examen técnico UNC",[100,90,80,70,60].map(function(v){return'<span class="opt">'+v+pz("unc",v)+'</span>'}).join("")+inp(pf,"unc","corte",F.corte,"Excluye por debajo de",dis),"Nota por tramos exactos (85 cuenta como 80)")+
+        row("psi","Psicotécnico",["A","B","C"].map(function(l){return inp(pf,"psi",l,F.psi[l],l,dis,pz("psi",F.psi[l]))}).join("")+'<span class="opt"><b>D excluye</b></span>',"A, B o C · D queda excluido")+
+        row("form","Formación",["UNIVERSITARIA","TERCIARIA","SECUNDARIA"].map(function(o){return inp(pf,"form",o,F.form[o],NF[o],dis,pz("form",F.form[o]))}).join(""),"Estudios afines: deseables · nivel según Hiring Room")+
+        row("ant","Antigüedad en el Banco",TRAMOS.map(function(t,k){return inp(pf,"ant",k,F.tramos[k],t[2],dis,pz("ant",F.tramos[k]))}).join("")+'<span class="opt">Menos de 3 años o no colaborador: 0</span>',"Según la base de empleados del Banco")+
+        row("ent","Entrevista de línea",["A","B","C","D"].map(function(l){return inp(pf,"ent",l,F.ent[l],l,dis,pz("ent",F.ent[l]))}).join(""),"A, B, C o D · la D suma 0 y no excluye")+
+        '<tr class="lockd"><td><b>Assessment</b><br><small>Consultora externa</small></td><td class="r">—</td><td>Filtro sin peso: Apto sigue, No apto queda rechazado</td></tr>'+
+        '</tbody></table></div></div>';});
+    document.getElementById("perfiles").innerHTML=h;
+    document.getElementById("r-ro").hidden=!dis;
+    var dirty=RCHG.length>0,ok=Object.keys(PERF).every(function(pf){return sumW(PERF[pf])===100});
+    document.getElementById("pending").hidden=!dirty;document.getElementById("chg").innerHTML=RCHG.map(function(c){return"<li>"+esc(c)+"</li>"}).join("");
+    var sv=document.getElementById("rules-save");sv.disabled=!dirty||!ok;sv.textContent="Guardar versión "+(ver+1);sv.title=ok?"":"Los pesos de cada perfil tienen que sumar 100%";}
+  document.getElementById("perfiles").addEventListener("change",function(e){var el=e.target;if(!el.dataset.pf)return;var F=PERF[el.dataset.pf],k=el.dataset.k,o=el.dataset.o;
+    var v=Math.max(0,Math.min(100,Math.round(+el.value||0))),lbl=FACT.find(function(f){return f[0]===k})[1],old;
+    if(o==="w"){old=F.w[k];F.w[k]=v;}else if(o==="corte"){old=F.corte;F.corte=v;}else if(k==="ant"){old=F.tramos[+o];F.tramos[+o]=v;}else{old=F[k][o];F[k][o]=v;}
+    if(old!==v)RCHG.push(F.n+" · "+lbl+(o==="w"?" peso ":o==="corte"?" corte ":" "+(k==="ant"?TRAMOS[+o][2]:NF[o]||o)+": ")+old+(o==="w"?"%":"")+" → "+v+(o==="w"?"%":""));
+    renderRules();});
+  document.getElementById("rules-reset").addEventListener("click",function(){audit("Etapas y reglas","Cambios descartados",RCHG.length+" cambio(s) sin guardar · sigue la versión "+ver);PERF=clonePerf(PERF0);RCHG=[];renderRules();toast("Se descartaron los cambios. Vuelve a regir la versión "+ver+".");});
+  document.getElementById("rules-save").addEventListener("click",function(){var mot=document.getElementById("r-mot").value.trim(),er=document.getElementById("r-err");
+    if(!mot){er.hidden=false;document.getElementById("r-mot").focus();return;}er.hidden=true;
+    audit("Etapas y reglas","Nueva versión de reglas","Versión "+(ver+1)+" · "+RCHG.join(" · ")+" · Motivo: "+mot);ver++;PERF0=clonePerf(PERF);var k=RCHG.length;RCHG=[];document.getElementById("r-mot").value="";
+    document.getElementById("ver-sub").textContent="Versión "+ver+" · guardada hoy por "+uname()+". Se recalcularon los scores y el orden de mérito.";
+    renderRules();render();toast("Versión "+ver+" guardada con "+k+" cambio"+(k===1?"":"s")+". Se recalcularon los scores.");});
+  document.getElementById("cu-sel").addEventListener("change",function(){setTimeout(renderRules)});
   renderRules();
   // Cargas de terceros: tercero → archivo → preview por DNI → aplicar
   var NUM=function(v){var s=String(v==null?"":v).trim().replace(",",".");if(s==="")return{err:"Sin valor"};var x=Number(s);if(isNaN(x))return{err:"Valor no numérico: “"+String(v).trim()+"”"};if(x<0||x>100)return{err:"Fuera de rango (0–100): "+String(v).trim()};return{v:Math.round(x*10)/10};};
   var norm=function(s){return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").trim()};
+  var letra=function(v,ok,nom){var l=String(v||"").trim().toUpperCase();if(!l)return{err:"Sin "+nom};if(!/^[ABCD]$/.test(l))return{err:nom.charAt(0).toUpperCase()+nom.slice(1)+" no válida: “"+String(v).trim()+"” (A, B, C o D)"};return{l:l}};
   var TYPES=[
-    {k:"unc",who:"UNC",name:"Examen técnico",stage:2,col:6,cols:["DNI","Turno","Asistencia","Nota"],req:["DNI","Nota"],file:"UNC_resultados_turno06.xlsx",
+    {k:"unc",who:"UNC",name:"Examen técnico",stage:2,cols:["DNI","Turno","Asistencia","Nota"],req:["DNI","Nota"],file:"UNC_resultados_turno06.xlsx",
      map:{dni:["dni","documento"],a:["asistencia"],v:["nota","puntaje","calificacion"]},
-     ev:function(r){if(/aus/i.test(r.a||""))return{res:"aus",txt:"Ausente"};var x=NUM(r.v);if(x.err)return x;return{score:x.v,res:x.v>=70?"ok":"fail",txt:"Nota "+n(x.v)};},
-     mk:function(d,v){return{"DNI":d,"Turno":"UNC-TURNO-06","Asistencia":v==="Ausente"?"Ausente":"Presente","Nota":v==="Ausente"?"":v}},vals:[78,52,91,84,73]},
-    {k:"ass",who:"Consultora Pedemonte",name:"Assessment",stage:3,col:7,cols:["DNI","Consultor","Puntaje","Estado"],req:["DNI","Puntaje"],file:"Pedemonte_assessment_lote4.xlsx",
-     map:{dni:["dni","documento"],v:["puntaje","nota","score"]},
-     ev:function(r){var x=NUM(r.v);if(x.err)return x;return{score:x.v,res:x.v>=60?"ok":"fail",txt:"Puntaje "+n(x.v)};},
-     mk:function(d,v){return{"DNI":d,"Consultor":"Lic. P. Herrera","Puntaje":v,"Estado":""}},vals:[76,48,82,70,66]},
-    {k:"psi",who:"Consultoras psico",name:"Psicotécnico",stage:4,col:8,cols:["DNI","Fecha","Dictamen","Puntaje"],req:["DNI","Dictamen"],file:"Psico_lote5.xlsx",
-     map:{dni:["dni","documento"],d:["dictamen","resultado"],v:["puntaje"]},
-     ev:function(r){var d=norm(r.d||"");if(!d)return{err:"Sin dictamen"};var res=/no apto/.test(d)?"fail":/apto/.test(d)?"ok":null;if(!res)return{err:"Dictamen no válido: “"+r.d+"” (Apto / No apto)"};var x=String(r.v||"").trim()?NUM(r.v):{v:null};if(x.err)return x;return{score:x.v,res:res,txt:(res==="ok"?"Apto":"No apto")+(x.v!=null?" · "+n(x.v):"")};},
-     mk:function(d,v){return{"DNI":d,"Fecha":"12/10/2026","Dictamen":v[0],"Puntaje":v[1]}},vals:[["Apto",81],["No apto",44],["Apto",88],["Apto",76],["Apto",70]]},
-    {k:"ent",who:"Bancor",name:"Entrevista de línea",stage:5,col:11,cols:["DNI","Entrevistadores","Fecha","Calificación"],req:["DNI","Calificación"],file:"Bancor_entrevistas_semana2.xlsx",
-     map:{dni:["dni","documento"],v:["calificacion","nota","puntaje"]},
-     ev:function(r){if(/aus/i.test(String(r.v||"")))return{res:"aus",txt:"Ausente"};var x=NUM(r.v);if(x.err)return x;return{score:x.v,res:x.v>=65?"ok":"fail",txt:"Calificación "+n(x.v)};},
-     mk:function(d,v){return{"DNI":d,"Entrevistadores":"Gerente Suc. + RRHH","Fecha":"12/10/2026","Calificación":v}},vals:[78,58,86,"7O",74]},
-    {k:"ant",who:"Nosis / referencias",name:"Antecedentes",stage:6,col:12,cols:["DNI","Score Nosis","Referencias","Puntaje"],req:["DNI","Referencias"],file:"Antecedentes_lote1.xlsx",
-     map:{dni:["dni","documento"],d:["referencia","dictamen"],v:["puntaje"]},
-     ev:function(r){var d=norm(r.d||"");var res=/desfav/.test(d)?"fail":/favor/.test(d)?"ok":null;if(!res)return{err:"Referencias no válidas: “"+(r.d||"")+"” (Favorable / Desfavorable)"};var x=String(r.v||"").trim()?NUM(r.v):{v:null};if(x.err)return x;return{score:x.v,res:res,txt:(res==="ok"?"Favorable":"Desfavorable")+(x.v!=null?" · "+n(x.v):"")};},
-     mk:function(d,v){return{"DNI":d,"Score Nosis":"Verde","Referencias":v[0],"Puntaje":v[1]}},vals:[["Favorable",90],["Desfavorable",35],["Favorable",80],["Favorable",85],["Favorable",75]]}];
-  var LD={step:1,type:null,file:"",rows:[],filter:"all"},HIST=[
+     ev:function(r){if(/aus/i.test(r.a||""))return{res:"aus",score:"aus",txt:"Ausente"};var x=NUM(r.v);if(x.err)return x;return{score:x.v,res:x.v>=PERF.ct.corte?"ok":"fail",txt:"Nota "+n(x.v)+(x.v<PERF.ct.corte?" (menos de "+PERF.ct.corte+")":"")};},
+     mk:function(d,v){return{"DNI":d,"Turno":"UNC-TURNO-06","Asistencia":v==="Ausente"?"Ausente":"Presente","Nota":v==="Ausente"?"":v}},vals:[78,52,91,84,73],
+     raw:function(S){return S.sc[2]==="aus"?"Ausente":S.sc[2]},alt:function(S){return typeof S.sc[2]==="number"?Math.min(100,S.sc[2]+10):72},bad:"885"},
+    {k:"ass",who:"Consultora Pedemonte",name:"Assessment",stage:3,cols:["DNI","Consultor","Dictamen"],req:["DNI","Dictamen"],file:"Pedemonte_assessment_lote4.xlsx",
+     map:{dni:["dni","documento"],d:["dictamen","resultado"]},
+     ev:function(r){var d=norm(r.d||"");if(!d)return{err:"Sin dictamen"};var res=/no apto/.test(d)?"fail":/apto/.test(d)?"ok":null;if(!res)return{err:"Dictamen no válido: “"+r.d+"” (Apto / No apto)"};return{res:res,score:null,txt:res==="ok"?"Apto":"No apto"};},
+     mk:function(d,v){return{"DNI":d,"Consultor":"Lic. P. Herrera","Dictamen":v}},vals:["Apto","No apto","Apto","Apto","Apto"],
+     raw:function(S){return S.st[3]==="ok"?"Apto":"No apto"},alt:function(S){return S.st[3]==="ok"?"No apto":"Apto"},bad:"Revisar"},
+    {k:"psi",who:"Consultoras psico",name:"Psicotécnico",stage:4,cols:["DNI","Fecha","Resultado"],req:["DNI","Resultado"],file:"Psico_lote5.xlsx",
+     map:{dni:["dni","documento"],d:["resultado","letra","dictamen","calificacion"]},
+     ev:function(r){var x=letra(r.d,0,"letra");if(x.err)return x;var ex=PERF.ct.psiExcl.indexOf(x.l)>=0;return{res:ex?"fail":"ok",score:x.l,txt:"Letra "+x.l+(ex?" · excluye":"")};},
+     mk:function(d,v){return{"DNI":d,"Fecha":"12/10/2026","Resultado":v}},vals:["A","D","B","C","A"],
+     raw:function(S){return S.sc[4]},alt:function(S){return S.sc[4]==="A"?"B":"A"},bad:"E"},
+    {k:"ent",who:"Bancor",name:"Entrevista de línea",stage:5,cols:["DNI","Entrevistadores","Fecha","Calificación"],req:["DNI","Calificación"],file:"Bancor_entrevistas_semana2.xlsx",
+     map:{dni:["dni","documento"],d:["calificacion","resultado","letra"]},
+     ev:function(r){if(/^aus/i.test(String(r.d||"").trim()))return{res:"aus",score:"aus",txt:"Ausente"};var x=letra(r.d,0,"calificación");if(x.err)return x;return{res:"ok",score:x.l,txt:"Letra "+x.l+(x.l==="D"?" · suma 0":"")};},
+     mk:function(d,v){return{"DNI":d,"Entrevistadores":"Gerente Suc. + RRHH","Fecha":"12/10/2026","Calificación":v}},vals:["B","A","D","C","A"],
+     raw:function(S){return S.sc[5]==="aus"?"Ausente":S.sc[5]},alt:function(S){return S.sc[5]==="A"?"B":"A"},bad:"E"},
+    {k:"emp",who:"Bancor RRHH",name:"Base de empleados del Banco",stage:-1,cols:["DNI","Legajo","Fecha de ingreso"],req:["DNI"],file:"Bancor_base_empleados_10-2026.xlsx",
+     map:{dni:["dni","documento","cuil"],l:["legajo"],f:["ingreso","alta"]}}];
+  var LD={step:1,type:null,file:"",rows:[],filter:"all",extra:0},HIST=[
     ["Hoy 09:40","Bancor · Entrevista de línea","Bancor_entrevistas_semana1.xlsx",38,38,0,"bancor.rrhh"],
     ["11/10 17:02","Consultora Pedemonte · Assessment","Pedemonte_assessment_lote3.xlsx",214,211,3,"a.perez"],
     ["10/10 18:20","Consultoras psico · Psicotécnico","Psico_lote4.xlsx",742,742,0,"m.rossi"],
+    ["08/10 11:20","Bancor RRHH · Base de empleados","Bancor_base_empleados_09-2026.xlsx",3125,412,0,"a.perez"],
     ["02/10 10:47","UNC · Examen técnico","UNC_resultados_T04.xlsx",862,855,7,"unc.examenes"]];
   var $=function(id){return document.getElementById(id)};
   function ldStep(s){LD.step=s;[1,2,3,4].forEach(function(k){$("ld-"+k).hidden=k!==s;});
     document.querySelectorAll("#ld-steps .stp").forEach(function(e){var k=+e.dataset.n;e.className="stp"+(k<s?" done":k===s?" now":"");e.querySelector("b").textContent=e.querySelector("b").textContent.replace(" ✓","")+(k<s?" ✓":"");});
     var sv=document.querySelector(".main");if(sv)sv.scrollTop=0;}
-  function drawTypes(){$("tgrid").innerHTML=TYPES.map(function(T,ix){var nn=P.filter(function(p){return stateOf(p).st[T.stage]==="pend"}).length;
-    return'<button class="tc" type="button" data-t="'+ix+'"><b>'+T.who+'</b><span class="who">'+T.name+' · etapa '+(T.stage+1)+'</span><span class="who">Columnas: '+T.cols.join(", ")+'</span><span class="need'+(nn?"":" zero")+'">'+(nn?nn+" postulante"+(nn>1?"s":"")+" esperando resultado":"Nadie pendiente: solo correcciones")+'</span></button>';}).join("");}
+  function drawTypes(){$("tgrid").innerHTML=TYPES.map(function(T,ix){var nn=T.k==="emp"?P.filter(function(p){return p.emp==null}).length:P.filter(function(p){return stateOf(p).st[T.stage]==="pend"&&!p.hr}).length;
+    return'<button class="tc" type="button" data-t="'+ix+'"><b>'+T.who+'</b><span class="who">'+(T.k==="emp"?T.name+" · marca a los colaboradores":T.name+" · "+ST_SHORT[T.stage])+'</span><span class="who">Columnas: '+T.cols.join(", ")+'</span><span class="need'+(nn?"":" zero")+'">'+(T.k==="emp"?(nn?nn+" postulante"+(nn>1?"s":"")+" sin verificar":"Todos verificados: se puede actualizar"):nn?nn+" postulante"+(nn>1?"s":"")+" esperando resultado":"Nadie pendiente: solo correcciones")+'</span></button>';}).join("");}
   function drawHist(){$("ld-hist").innerHTML=HIST.map(function(h){return"<tr><td>"+h[0]+"</td><td>"+esc(h[1])+"</td><td><code>"+esc(h[2])+"</code></td><td class='r'>"+h[3]+"</td><td class='r'>"+h[4]+"</td><td class='r'>"+(h[5]?'<span class="dev e">'+h[5]+"</span>":"0")+"</td><td>"+h[6]+"</td></tr>"}).join("");}
   $("tgrid").addEventListener("click",function(e){var b=e.target.closest("[data-t]");if(!b)return;LD.type=TYPES[+b.dataset.t];
     $("ld2-title").textContent="Subí el archivo de "+LD.type.who+" · "+LD.type.name;
-    $("ld2-cols").innerHTML=LD.type.cols.map(function(c){return'<code class="'+(LD.type.req.indexOf(c)>=0?"req":"")+'">'+c+'</code>'}).join("")+'<span class="cap">en rojo, obligatorias</span>';
+    $("ld2-cols").innerHTML=LD.type.cols.map(function(c){return'<code class="'+(LD.type.req.indexOf(c)>=0?"req":"")+'">'+c+'</code>'}).join("")+'<span class="cap">en rojo, obligatorias'+(LD.type.k==="emp"?" · solo se guardan las filas de postulantes":"")+'</span>';
     $("ld2-err").hidden=true;$("ld-file").value="";ldStep(2);});
   $("copy-cols").addEventListener("click",function(){var s=LD.type.cols.join("\t");var ok=function(){toast("Encabezados copiados. Pegalos en la primera fila del Excel.")};
     try{navigator.clipboard.writeText(s).then(ok,function(){toast("Encabezados: "+LD.type.cols.join(" · "))})}catch(x){toast("Encabezados: "+LD.type.cols.join(" · "))}});
-  // archivo real
   function readFile(f){var er=$("ld2-err");er.hidden=true;if(!f)return;
     if(!/\.(xlsx|xls|csv)$/i.test(f.name)){er.textContent="El archivo tiene que ser .xlsx, .xls o .csv.";er.hidden=false;return;}
     if(/\.csv$/i.test(f.name)){var rc=new FileReader();rc.onload=function(){var rows=parseCSV(String(rc.result));if(!rows.length){er.textContent="El archivo no tiene filas debajo del encabezado.";er.hidden=false;return;}analyze(rows,f.name,2);};rc.readAsText(f);return;}
@@ -1045,7 +1072,7 @@ textarea.fin{resize:vertical;line-height:1.45}
       var rows=XLSX.utils.sheet_to_json(ws,{defval:"",raw:false});if(!rows.length){er.textContent="El archivo no tiene filas debajo del encabezado.";er.hidden=false;return;}
       analyze(rows,f.name,2);}catch(x){er.textContent="No pudimos leer el archivo. Revisá que no esté protegido con contraseña.";er.hidden=false;}};
     rd.readAsArrayBuffer(f);}
-  function parseCSV(s){s=s.replace(/^\uFEFF/,"");var first=s.split(/\r?\n/)[0]||"",sep=(first.split(";").length>first.split(",").length)?";":",";
+  function parseCSV(s){s=s.replace(/^﻿/,"");var first=s.split(/\r?\n/)[0]||"",sep=(first.split(";").length>first.split(",").length)?";":",";
     var out=[],row=[],cell="",q=false;for(var k=0;k<s.length;k++){var ch=s[k];
       if(q){if(ch==='"'){if(s[k+1]==='"'){cell+='"';k++;}else q=false;}else cell+=ch;}
       else if(ch==='"')q=true;else if(ch===sep){row.push(cell);cell="";}else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&s[k+1]==="\n")k++;row.push(cell);out.push(row);row=[];cell="";}else cell+=ch;}
@@ -1057,69 +1084,105 @@ textarea.fin{resize:vertical;line-height:1.45}
   ["dragleave","drop"].forEach(function(ev){dz.addEventListener(ev,function(e){e.preventDefault();dz.classList.remove("over")})});
   dz.addEventListener("drop",function(e){var f=e.dataTransfer&&e.dataTransfer.files[0];readFile(f)});
   // archivo de ejemplo armado con el estado actual de la base
-  $("ld-sample").addEventListener("click",function(){var T=LD.type,i=T.stage,rows=[],V=T.vals;
-    var E=P.filter(function(p){return stateOf(p).st[i]==="pend"});
-    E.forEach(function(p,k){var v=V[k%V.length];rows.push(T.mk(k===E.length-1?p[1].replace(/(\d{2})(\d{3})(\d{3})/,"$1.$2.$3"):p[1],v));});
-    if(E.length>=3)rows.push(T.mk(E[0][1],V[2]));
+  $("ld-sample").addEventListener("click",function(){var T=LD.type,i=T.stage,rows=[];
+    if(T.k==="emp"){var emp=function(d,l,f){return{"DNI":d,"Legajo":l,"Fecha de ingreso":f}};
+      P.forEach(function(p,k){if(p.emp===true&&p.d!=="34601193")rows.push(emp(p.d,p.leg,p.ing));});
+      var nuevos=P.filter(function(p){return p.emp!==true}).slice(0,2);nuevos.forEach(function(p,k){rows.push(emp(p.d.replace(/(\d{2})(\d{3})(\d{3})/,"$1.$2.$3"),String(24100+k),k?"15/06/2021":"02/03/2015"));});
+      ["30148223","28977410","33500128","31226054"].forEach(function(d,k){rows.push(emp(d,String(18000+k*37),"0"+(k+1)+"/05/2012"));});
+      rows.push(emp("S/D","25011","10/10/2022"));rows.push(emp("29011448","25012","31/02/2020"));
+      analyze(rows,T.file,2);return;}
+    var V=T.vals,E=P.filter(function(p){return stateOf(p).st[i]==="pend"&&!p.hr});
+    E.forEach(function(p,k){rows.push(T.mk(k===E.length-1?p.d.replace(/(\d{2})(\d{3})(\d{3})/,"$1.$2.$3"):p.d,V[k%V.length]));});
+    if(E.length>=3)rows.push(T.mk(E[0].d,V[2]));
     var done=P.filter(function(p){var s=stateOf(p).st[i];return s==="ok"||s==="fail"||s==="aus"});
-    if(done[0]){var s0=stateOf(done[0]).sc[i];rows.push(T.mk(done[0][1],typeof V[0]==="object"?[stateOf(done[0]).st[i]==="ok"?"Apto":"No apto",s0]:(s0==null?"Ausente":s0)));}
-    if(done[1]){var s1=stateOf(done[1]).sc[i];rows.push(T.mk(done[1][1],typeof V[0]==="object"?["Apto",s1==null?75:Math.min(100,s1+6)]:(s1==null?72:Math.min(99,s1+4))));}
-    var ex=P.find(function(p){return stateOf(p).st[i]==="na"});if(ex)rows.push(T.mk(ex[1],V[0]));
-    rows.push(T.mk("30111222",V[0]));
-    rows.push(T.mk("S/D",V[2]));
-    var used=rows.map(function(r){return String(r.DNI).replace(/\D/g,"")}),oq=P.find(function(p){var s=stateOf(p).st[i];return used.indexOf(p[1])<0&&s!=="na"&&s!=="wait"});
-    if(oq)rows.push(T.mk(oq[1],typeof V[0]==="object"?[V[0][0],"885"]:"885"));
+    if(done[0])rows.push(T.mk(done[0].d,T.raw(stateOf(done[0]))));
+    if(done[1])rows.push(T.mk(done[1].d,T.alt(stateOf(done[1]))));
+    var ex=P.find(function(p){return stateOf(p).st[i]==="na"});if(ex)rows.push(T.mk(ex.d,V[0]));
+    rows.push(T.mk("30111222",V[0]));rows.push(T.mk("S/D",V[2]));
+    var used=rows.map(function(r){return String(r.DNI).replace(/\D/g,"")}),oq=P.find(function(p){var s=stateOf(p).st[i];return used.indexOf(p.d)<0&&s!=="na"&&s!=="wait"});
+    if(oq)rows.push(T.mk(oq.d,T.bad));
     analyze(rows,T.file,2);});
+  function fechaIng(v){var s=String(v==null?"":v).trim();if(!s)return null;var m=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/),d,mo,a;
+    if(m){d=+m[1];mo=+m[2];a=+m[3];}else if((m=s.match(/^(\d{4})-(\d{2})-(\d{2})/))){a=+m[1];mo=+m[2];d=+m[3];}else if(/^\d{4,5}$/.test(s)){var f=new Date(Date.UTC(1899,11,30)+(+s)*864e5);d=f.getUTCDate();mo=f.getUTCMonth()+1;a=f.getUTCFullYear();}else return null;
+    var t=new Date(a,mo-1,d);if(t.getMonth()!==mo-1||t.getDate()!==d||t>TODAY)return null;return String(d).padStart(2,"0")+"/"+String(mo).padStart(2,"0")+"/"+a;}
   function analyze(raw,fname,first){var T=LD.type,i=T.stage,heads=Object.keys(raw[0]||{});
-    var find=function(keys){return heads.find(function(h){var x=norm(h);return keys.some(function(k){return x.indexOf(k)>=0})})};
+    var find=function(keys){return heads.find(function(h){var x=norm(h);return keys.some(function(k){return x.indexOf(k)>=0})&&!/tipo/.test(x)})};
     var H={};Object.keys(T.map).forEach(function(f){H[f]=find(T.map[f])});
-    var miss=[];if(!H.dni)miss.push("DNI");if(!H.v&&!H.d)miss.push(T.req[1]);if(T.map.d&&!H.d)miss.push(T.req[1]);
-    if(miss.length){var er=$("ld2-err");er.textContent="Al archivo le falta la columna "+miss.filter(function(x,k,a){return a.indexOf(x)===k}).join(" y ")+". Encabezados encontrados: "+(heads.join(", ")||"ninguno")+".";er.hidden=false;ldStep(2);return;}
+    var miss=[];if(!H.dni)miss.push("DNI");if(T.k!=="emp"&&((T.map.v&&!H.v)||(T.map.d&&!H.d)))miss.push(T.req[1]);
+    if(miss.length){var er=$("ld2-err");er.textContent="Al archivo le falta la columna "+miss.join(" y ")+". Encabezados encontrados: "+(heads.join(", ")||"ninguno")+".";er.hidden=false;ldStep(2);return;}
     var byDni={},rows=raw.map(function(r,k){var o={fila:k+first,raw:String(r[H.dni]).trim()},src={};Object.keys(H).forEach(function(f){if(H[f])src[f]=r[H[f]]});
-      o.dni=o.raw.replace(/\D/g,"");o.norm=o.dni!==o.raw&&o.dni.length>=7;(byDni[o.dni]=byDni[o.dni]||[]).push(o);o.src=src;return o;});
+      var dg=o.raw.replace(/\D/g,"");o.dni=dg.length===11?dg.slice(2,10):dg;o.norm=o.dni!==o.raw&&o.dni.length>=7;(byDni[o.dni]=byDni[o.dni]||[]).push(o);o.src=src;return o;});
+    if(T.k==="emp"){LD.extra=0;
+      rows.forEach(function(o){var l=String(o.src.l||"").trim(),f=fechaIng(o.src.f);o.leg=l||null;o.ing=f;o.txt=(l?"Legajo "+l:"Sin legajo")+(f?" · ingreso "+f:"");
+        if(o.dni.length<7||o.dni.length>8){o.k="e";o.msg="DNI inválido";o.raw="(no se muestra)";o.txt="—";return;}
+        if(byDni[o.dni].length>1){o.k="e";o.msg="DNI repetido en el archivo";return;}
+        if(String(o.src.f||"").trim()&&!f){o.k="e";o.msg="Fecha de ingreso inválida: no se guarda la fila";o.raw=mask(o.dni);o.txt="—";return;}
+        o.p=P.find(function(p){return p.d===o.dni});
+        if(!o.p){o.k="n";o.msg="No es postulante: la fila no se guarda";o.raw=mask(o.dni);o.txt="—";return;}
+        o.res="emp";if(o.p.emp===true&&o.p.leg===o.leg&&o.p.ing===o.ing){o.k="i";o.msg="Ya figuraba como colaborador, sin cambios";return;}
+        o.k="o";o.on=true;o.msg=o.p.emp===true?"Se actualizan legajo o fecha de ingreso":"Pasa a colaborador Bancor"+(o.norm?" (DNI normalizado)":"");});
+      var en=rows.filter(function(o){return o.p}).map(function(o){return o.p});
+      P.forEach(function(p){if(p.emp===true&&en.indexOf(p)<0)rows.push({fila:"—",raw:mask(p.d),dni:p.d,p:p,k:"w",on:true,res:"no",txt:"No figura en el archivo",msg:"Ya no figura en la base: pasa a no colaborador"});});
+      LD.extra=P.filter(function(p){return p.emp==null&&en.indexOf(p)<0}).length;
+      audit("Cargas","Archivo subido para validación",fname+" · Base de empleados del Banco · "+raw.length+" filas · "+rows.filter(function(r){return r.k==="e"}).length+" con error · "+rows.filter(function(r){return r.k==="n"}).length+" no son postulantes (no se guardan)");
+      LD.rows=rows;LD.file=fname;LD.filter="all";drawPreview();ldStep(3);return;}
     rows.forEach(function(o){var e=T.ev(o.src);o.txt=e.txt||String(o.src.v!=null&&o.src.v!==""?o.src.v:(o.src.d||"—"));
       if(o.dni.length<7||o.dni.length>8){o.k="e";o.msg="DNI inválido: “"+o.raw+"”";return;}
       if(byDni[o.dni].length>1){o.k="e";o.msg="DNI repetido en el archivo (filas "+byDni[o.dni].map(function(x){return x.fila}).join(" y ")+")";}
-      o.p=P.find(function(p){return p[1]===o.dni});
+      o.p=P.find(function(p){return p.d===o.dni});
       if(o.k)return;
       if(!o.p){o.k="e";o.msg="El DNI no está en la base del concurso";return;}
       if(e.err){o.k="e";o.msg=e.err;return;}
       o.res=e.res;o.score=e.score;var S=stateOf(o.p),cs=S.st[i];
-      if(cs==="na"){var f=S.st.findIndex(function(s){return s==="fail"||s==="aus"});o.k="e";o.msg="Excluido en "+ST_SHORT[f]+": no corresponde cargarle esta etapa";return;}
-      if(cs==="wait"){o.k="e";o.msg="Todavía no llegó a esta etapa";return;}
+      if(cs==="na"){var f=S.st.findIndex(function(s){return s==="fail"||s==="aus"});o.k="e";o.msg="Rechazado en "+ST_SHORT[f]+": no corresponde cargarle esta etapa";return;}
+      if(cs==="wait"||o.p.hr){o.k="e";o.msg="Todavía no llegó a esta etapa";return;}
       if(cs==="pend"){o.k="o";o.msg="Coincide por DNI"+(o.norm?" (DNI normalizado sin puntos)":"");o.on=true;return;}
       if(cs===o.res&&S.sc[i]===o.score){o.k="i";o.msg="Sin cambios: ya tiene este resultado";return;}
-      o.k="w";o.on=false;o.msg="Ya tiene resultado: "+(S.sc[i]!=null?n(S.sc[i])+" · ":"")+lab(i,cs)+" → se reemplaza"+(cs!==o.res?" y cambia su estado":"");});
+      o.k="w";o.on=false;o.msg="Ya tiene resultado: "+(S.sc[i]!=null&&S.sc[i]!=="aus"?n(S.sc[i])+" · ":"")+lab(i,cs)+" → se reemplaza"+(cs!==o.res?" y cambia su estado":"");});
     audit("Cargas","Archivo subido para validación",fname+" · "+T.who+" → "+T.name+" · "+rows.length+" filas · "+rows.filter(function(r){return r.k==="e"}).length+" con error");
     LD.rows=rows;LD.file=fname;LD.filter="all";drawPreview();ldStep(3);}
-  var KINDS=[["all","Todas las filas","var(--tint)","var(--ink)"],["o","Listas para aplicar","var(--ok-soft)","var(--ok)"],["w","Con aviso","var(--warn-soft)","var(--warn)"],["e","Con error","var(--brand-soft)","var(--brand)"],["i","Sin cambios","var(--out-soft)","var(--ink)"]];
-  function drawPreview(){var R=LD.rows,c=function(k){return k==="all"?R.length:R.filter(function(r){return r.k===k}).length};
-    $("ld3-file").innerHTML='<b>'+esc(LD.file)+'</b> · '+R.length+' filas · '+LD.type.who+' → '+LD.type.name+' · cruce por DNI';
-    $("ld3-cards").innerHTML=KINDS.map(function(K){return'<button type="button" class="vc f" data-f="'+K[0]+'" aria-pressed="'+(LD.filter===K[0])+'" style="--bg:'+K[2]+';--fg:'+K[3]+'"><span class="v">'+c(K[0])+'</span><span class="l">'+K[1]+'</span></button>'}).join("");
-    var ic={o:"✓ ",w:"⚠ ",e:"✕ ",i:"= "};
+  var KINDS=[["all","Todas las filas","var(--tint)","var(--ink)"],["o","Listas para aplicar","var(--ok-soft)","var(--ok)"],["w","Con aviso","var(--warn-soft)","var(--warn)"],["e","Con error","var(--brand-soft)","var(--brand)"],["i","Sin cambios","var(--out-soft)","var(--ink)"],["n","No son postulantes","var(--out-soft)","var(--muted)"]];
+  var resChip=function(r){return r.res==="emp"?'<span class="chip warn">Colaborador</span>':r.res==="no"?'<span class="chip" style="background:var(--tint)">No colaborador</span>':chipFor(LD.type.stage,r.res)};
+  function drawPreview(){var R=LD.rows,emp=LD.type.k==="emp",c=function(k){return k==="all"?R.length:R.filter(function(r){return r.k===k}).length};
+    $("ld3-file").innerHTML='<b>'+esc(LD.file)+'</b> · '+R.length+' filas · '+LD.type.who+' → '+LD.type.name+' · cruce por DNI'+(emp?' · solo se guardan los postulantes; el archivo no se conserva':'');
+    $("ld3-cards").innerHTML=KINDS.filter(function(K){return K[0]!=="n"||c("n")}).map(function(K){return'<button type="button" class="vc f" data-f="'+K[0]+'" aria-pressed="'+(LD.filter===K[0])+'" style="--bg:'+K[2]+';--fg:'+K[3]+'"><span class="v">'+c(K[0])+'</span><span class="l">'+K[1]+'</span></button>'}).join("");
+    var ic={o:"✓ ",w:"⚠ ",e:"✕ ",i:"= ",n:"· "};
     $("ld3-body").innerHTML=R.filter(function(r){return LD.filter==="all"||r.k===LD.filter}).map(function(r){var ix=R.indexOf(r);
-      return'<tr class="'+(r.k==="e"?"e":"")+'"><td>'+r.fila+'</td><td><code>'+esc(r.raw||"(vacío)")+'</code></td><td>'+(r.p?'<b>'+esc(r.p[0])+'</b><br><small style="color:var(--muted)">'+esc(r.p[2])+'</small>':'<span class="lock">—</span>')+'</td><td>'+esc(r.txt)+'</td><td>'+(r.res&&r.k!=="e"?chipFor(LD.type.stage,r.res):'<span class="lock">—</span>')+'</td><td class="dev '+r.k+'">'+ic[r.k]+esc(r.msg)+'</td><td class="r">'+(r.k==="o"?'<input type="checkbox" checked disabled aria-label="Se aplica">':r.k==="w"?'<input type="checkbox" data-row="'+ix+'"'+(r.on?" checked":"")+' aria-label="Aplicar reemplazo fila '+r.fila+'">':'<span class="lock">No</span>')+'</td></tr>';}).join("")||'<tr><td colspan="7" class="cap">No hay filas en este grupo.</td></tr>';
-    var nApply=R.filter(function(r){return r.on}).length,ba=$("ld-apply");ba.disabled=!nApply;ba.textContent=nApply?"Aplicar "+nApply+" resultado"+(nApply>1?"s":""):"No hay filas para aplicar";
+      return'<tr class="'+(r.k==="e"?"e":"")+'"><td>'+r.fila+'</td><td><code>'+esc(r.raw||"(vacío)")+'</code></td><td>'+(r.p?'<b>'+esc(r.p.n)+'</b><br><small style="color:var(--muted)">'+VAC[r.p.v]+'</small>':'<span class="lock">—</span>')+'</td><td>'+esc(r.txt)+'</td><td>'+(r.res&&r.k!=="e"?resChip(r):'<span class="lock">—</span>')+'</td><td class="dev '+r.k+'">'+ic[r.k]+esc(r.msg)+'</td><td class="r">'+(r.k==="o"?'<input type="checkbox" checked disabled aria-label="Se aplica">':r.k==="w"?'<input type="checkbox" data-row="'+ix+'"'+(r.on?" checked":"")+' aria-label="Aplicar fila '+r.fila+'">':'<span class="lock">No</span>')+'</td></tr>';}).join("")||'<tr><td colspan="7" style="color:var(--muted)">No hay filas de este tipo.</td></tr>';
+    var nApply=R.filter(function(r){return r.on}).length,ba=$("ld-apply");
+    if(emp){ba.disabled=!nApply&&!LD.extra;ba.textContent="Aplicar base: "+nApply+" cambio"+(nApply===1?"":"s")+(LD.extra?" y "+LD.extra+" verificado"+(LD.extra>1?"s":"")+" como no colaborador":"");}
+    else{ba.disabled=!nApply;ba.textContent=nApply?"Aplicar "+nApply+" resultado"+(nApply>1?"s":""):"No hay filas para aplicar";}
     $("ld-return").hidden=!c("e");}
   $("ld3-cards").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;LD.filter=b.dataset.f;drawPreview();});
   $("ld3-body").addEventListener("change",function(e){var x=e.target.dataset.row;if(x==null)return;LD.rows[+x].on=e.target.checked;drawPreview();});
   $("ld-return").addEventListener("click",function(){var n2=LD.rows.filter(function(r){return r.k==="e"}).length;audit("Cargas","Errores devueltos al proveedor",LD.file+" · "+n2+" fila(s) enviadas a "+LD.type.who);toast("Se envió a "+LD.type.who+" el detalle de "+n2+" fila"+(n2>1?"s":"")+" con error para corregir y reenviar.");});
-  var W5={2:35,3:20,4:15,5:20,6:10};
   $("ld-apply").addEventListener("click",function(){var T=LD.type,i=T.stage,ap=LD.rows.filter(function(r){return r.on}),m=now()+" · Carga “"+LD.file+"” · "+T.who;UPD={};
+    var verdict=function(p){var pi=pipeOf(p);return'<span class="chip '+(pi.k==="REJ"?"out":"cur")+'">'+esc(pi.txt)+'</span>'};
+    if(T.k==="emp"){ap.forEach(function(r){var p=r.p,S=stateOf(p);
+        if(r.res==="emp"){p.emp=true;p.leg=r.leg;p.ing=r.ing;S.log.unshift({t:"Colaborador Bancor según la base del Banco"+(r.leg?" · legajo "+r.leg:""),m:m});}
+        else{p.emp=false;p.leg=null;p.ing=null;S.log.unshift({t:"Ya no figura en la base de empleados: no colaborador",m:m});}
+        UPD[p.d]=1;r.after=bancoCell(p);});
+      var vr=P.filter(function(p){return p.emp==null&&!LD.rows.some(function(r){return r.p===p})});
+      vr.forEach(function(p){p.emp=false;stateOf(p).log.unshift({t:"Verificado contra la base del Banco: no es colaborador",m:m});UPD[p.d]=1;ap.push({p:p,txt:"No figura en el archivo",res:"no",after:bancoCell(p)});});
+      var ne=LD.rows.filter(function(r){return r.k==="e"}).length,nn=LD.rows.filter(function(r){return r.k==="n"}).length;
+      audit("Cargas","Carga aplicada",LD.file+" · Base de empleados · "+ap.length+" postulante(s) verificados · "+nn+" filas de no postulantes descartadas · "+ne+" con error");
+      HIST.unshift(["Hoy "+now().slice(4),T.who+" · Base de empleados",LD.file,LD.rows.filter(function(r){return r.fila!=="—"}).length,ap.length,ne,CU.user]);
+      $("ld4-title").textContent="Se verificaron "+ap.length+" postulante"+(ap.length>1?"s":"")+" contra la base de empleados del Banco";
+      $("ld4-sub").textContent=nn+" fila"+(nn===1?"":"s")+" de personal que no se postuló no se guardaron. La antigüedad y el score se recalcularon.";
+      $("ld4-body").innerHTML=ap.map(function(r){return'<tr><td><b>'+esc(r.p.n)+'</b><br><small style="color:var(--muted)">DNI '+mask(r.p.d)+'</small></td><td>Base de empleados</td><td>'+esc(r.txt)+'</td><td>'+r.after+'</td><td class="r"><button class="eb" type="button" data-open="'+r.p.d+'">Ver ficha</button></td></tr>'}).join("");
+      drawHist();drawTypes();render();ldStep(4);toast("Listo: base de empleados aplicada.");return;}
     ap.forEach(function(r){var p=r.p,S=stateOf(p),old=S.st[i];S.st[i]=r.res;S.sc[i]=r.score==null?null:r.score;
-      for(var k=i+1;k<7;k++){if(r.res!=="ok")S.st[k]="na";else if(S.st[k]==="na"||S.st[k]==="wait")S.st[k]=(k===i+1)?"pend":"wait";}
-      p[T.col]=S.sc[i];S.log.unshift({t:ST_SHORT[i]+(old==="pend"?" cargado: ":" reemplazado: ")+(r.score!=null?n(r.score)+" · ":"")+lab(i,r.res),m:m});
-      sync(p,S);
-      if(p[4]==="out"){p[9]=null;p[10]=null;}else{var sw=0,sv=0;for(var j=2;j<7;j++)if(S.sc[j]!=null&&S.st[j]==="ok"){sw+=W5[j];sv+=W5[j]*S.sc[j];}p[9]=sw?Math.round(sv/sw*10)/10:null;}
-      UPD[p[1]]=1;r.after=p[4]==="out"?'<span class="chip out">'+esc(p[5])+'</span>':'<span class="chip cur">'+esc(p[5])+'</span>';});
+      for(var k=i+1;k<6;k++){if(r.res!=="ok")S.st[k]="na";else if(S.st[k]==="na"||S.st[k]==="wait")S.st[k]=(k===i+1)?"pend":"wait";}
+      S.log.unshift({t:ST_SHORT[i]+(old==="pend"?" cargado: ":" reemplazado: ")+r.txt+" · "+lab(i,r.res),m:m});
+      UPD[p.d]=1;r.after=verdict(p);});
     var ne=LD.rows.filter(function(r){return r.k==="e"}).length;
-    audit("Cargas","Carga aplicada",LD.file+" · "+T.who+" → "+T.name+" · "+ap.length+" aplicada(s), "+ne+" con error · "+ap.map(function(r){return r.p[0]+" "+lab(i,r.res)}).join(", "));
+    audit("Cargas","Carga aplicada",LD.file+" · "+T.who+" → "+T.name+" · "+ap.length+" aplicada(s), "+ne+" con error · "+ap.map(function(r){return r.p.n+" "+lab(i,r.res)}).join(", "));
     HIST.unshift(["Hoy "+now().slice(4),T.who+" · "+T.name,LD.file,LD.rows.length,ap.length,ne,CU.user]);
     $("ld4-title").textContent="Se aplicaron "+ap.length+" resultado"+(ap.length>1?"s":"")+" de "+T.who+" en "+T.name;
-    $("ld4-sub").textContent=(ne?ne+" fila"+(ne>1?"s":"")+" con error quedaron fuera. ":"")+"Cada cambio quedó en el historial de la ficha y en la auditoría.";
-    $("ld4-body").innerHTML=ap.map(function(r){return'<tr><td><b>'+esc(r.p[0])+'</b><br><small style="color:var(--muted)">DNI '+mask(r.p[1])+'</small></td><td>'+T.name+'</td><td>'+esc(r.txt)+' · '+chipFor(i,r.res)+'</td><td>'+r.after+'</td><td class="r"><button class="eb" type="button" data-open="'+r.p[1]+'">Ver ficha</button></td></tr>'}).join("");
+    $("ld4-sub").textContent=(ne?ne+" fila"+(ne>1?"s":"")+" con error quedaron fuera. ":"")+"Cada cambio quedó en el historial de la ficha y en la auditoría. Los scores se recalcularon.";
+    $("ld4-body").innerHTML=ap.map(function(r){return'<tr><td><b>'+esc(r.p.n)+'</b><br><small style="color:var(--muted)">DNI '+mask(r.p.d)+'</small></td><td>'+T.name+'</td><td>'+esc(r.txt)+' · '+chipFor(i,r.res)+'</td><td>'+r.after+'</td><td class="r"><button class="eb" type="button" data-open="'+r.p.d+'">Ver ficha</button></td></tr>'}).join("");
     drawHist();drawTypes();render();ldStep(4);toast("Listo: "+ap.length+" postulantes actualizados en la base.");});
-  $("ld4-body").addEventListener("click",function(e){var b=e.target.closest("[data-open]");if(b)openFicha(P.find(function(p){return p[1]===b.dataset.open}));});
+  $("ld4-body").addEventListener("click",function(e){var b=e.target.closest("[data-open]");if(b)openFicha(P.find(function(p){return p.d===b.dataset.open}));});
   $("ld-golist").addEventListener("click",function(){show("list");});
   document.querySelector('[data-screen="load"]').addEventListener("click",function(e){var b=e.target.closest("[data-back]");if(!b)return;var s=+b.dataset.back;if(s===1){drawTypes();}if(s===2)$("ld-file").value="";ldStep(s);});
   $("newload").addEventListener("click",function(){drawTypes();ldStep(1);var f=document.querySelector("#tgrid .tc");if(f)f.focus();});
@@ -1148,11 +1211,11 @@ textarea.fin{resize:vertical;line-height:1.45}
     ["Hoy 08:12:19",1,"Acceso","Inicio de sesión","Navegador Edge · segundo factor verificado"],
     ["11/10 17:30:55",2,"Postulantes","Exportación a Excel","“Psicotécnico Villa María” para Bancor · 46 filas · marca de agua con usuario y fecha"],
     ["11/10 17:02:30",4,"Cargas","Carga aplicada","Pedemonte_assessment_lote3.xlsx · Consultora Pedemonte → Assessment · 211 aplicada(s), 3 con error"],
-    ["11/10 16:05:08",1,"Ficha","Cambio de estado","Martina Ledesma (DNI 38.***.214) · Nota UNC 85,5 → 88,5 · Motivo: fe de erratas UNC, nota 1873"],
-    ["10/10 19:12:44",1,"Etapas y reglas","Etapa cerrada","Psicotécnico cerrada y bloqueada · 598 aptos, 144 no aptos"],
+    ["11/10 16:05:08",1,"Ficha","Cambio de estado","Martina Ledesma (DNI 38.***.214) · Nota UNC 80 → 90 · Motivo: fe de erratas UNC, nota 1873"],
+    ["10/10 19:12:44",1,"Etapas y reglas","Etapa cerrada","Psicotécnico cerrada y bloqueada · 742 con A, B o C · 378 con D"],
     ["10/10 18:20:16",5,"Cargas","Carga aplicada","Psico_lote4.xlsx · Consultoras psico → Psicotécnico · 742 aplicada(s), 0 con error"],
     ["03/10 11:00:02",1,"Usuarios","Alta de usuario","María Rossi · m.rossi@psicoconsult.com.ar · Consultora · Psicotécnico"],
-    ["28/09 15:30:27",1,"Etapas y reglas","Nueva versión de reglas","Versión 3 aprobada · pesos 35/20/15/20/10 · corte UNC 70"],
+    ["28/09 15:30:27",1,"Etapas y reglas","Nueva versión de reglas","Versión 3 aprobada · Cajero y Tesorero 45/20/5/15/15 · Atención al Cliente 45/20/10/15/10 · corte UNC 60"],
     ["25/09 10:00:51",1,"Usuarios","Desactivación de usuario","Julián Soria · Motivo: licencia"]].map(function(a){return{ts:a[0],uid:a[1],mod:a[2],acc:a[3],det:a[4]}});
   var freshN=0;
   function audit(mod,acc,det){AUD.unshift({ts:stamp(),uid:CU.id,mod:mod,acc:acc,det:det});freshN++;CU.last="Hoy "+stamp().slice(4,9);if(!$("a-body").closest(".sgp").hidden)drawAudit();drawUsers();}
