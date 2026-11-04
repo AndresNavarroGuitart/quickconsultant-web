@@ -440,6 +440,12 @@ textarea.fin{resize:vertical;line-height:1.45}
 .ldp:not(.panel){display:grid;gap:16px}
 #dup-det:not([hidden]){display:grid;gap:16px}
 .screen>.panels,.screen>.kpis,.screen>.panel,.screen>.tbl-scroll,.screen>.dgrid{margin:0}
+/* Letras de Psicotécnico y Entrevista: escala A (mejor) → D (peor) */
+.lt{display:inline-grid;place-items:center;min-width:26px;height:22px;padding:0 6px;border-radius:6px;font-weight:800;font-size:12.5px;font-family:var(--f-body)}
+.lt.A{background:#DDF2E6;color:#13744A}
+.lt.B{background:#ECF4D6;color:#5A7F12}
+.lt.C{background:#FBEBCF;color:#A86400}
+.lt.D{background:#FBE0E7;color:#C2002F}
 /* Pipeline unificado del tablero */
 .plw{display:flex;gap:10px;min-width:920px;align-items:stretch}
 .plb{all:unset;box-sizing:border-box;cursor:pointer;display:grid;justify-items:center;align-content:center;gap:2px;padding:10px 8px;border-radius:8px;flex:1;min-width:0;text-align:center}
@@ -881,6 +887,7 @@ textarea.fin{resize:vertical;line-height:1.45}
   var mask=function(d){return d.slice(0,2)+".***."+d.slice(-3)},UPD={};
   var n=function(v){return v==null?'<span class="lock">—</span>':typeof v!=="number"?esc(v):v.toLocaleString("es-AR",{minimumFractionDigits:1,maximumFractionDigits:1})};
   var nf=function(x){return String(Math.round(x*100)/100).replace(".",",")};
+  var lt=function(v){return v==null?'<span class="lock">—</span>':v==="aus"?"Aus.":/^[ABCD]$/.test(v)?'<span class="lt '+v+'" title="Letra '+v+'">'+v+'</span>':esc(v)};
   function antig(p){if(p.emp!==true)return p.emp===false?0:null;if(!p.ing)return null;var a=p.ing.split("/"),f=new Date(+a[2],+a[1]-1,+a[0]);return Math.max(0,(TODAY-f)/(365.25*DAY));}
   function ptsAnt(F,a){var pts=0;TRAMOS.forEach(function(t,k){if(t[1]?a>t[0]:a>=t[0])pts=F.tramos[k]});return pts;}
   // Ficha: estado por etapa
@@ -936,7 +943,7 @@ textarea.fin{resize:vertical;line-height:1.45}
       var tr=document.createElement("tr");tr.className="click"+(UPD[p.d]?" upd":"");tr.dataset.dni=p.d;tr.title="Abrir la ficha de "+p.n;tr.tabIndex=0;
       var chip=pi.k==="REJ"?'<span class="chip out">'+esc(pi.txt)+'</span><br><small style="color:var(--muted)">'+esc(pi.det)+'</small>':'<span class="chip '+(pi.k==="CONTRATADO"||pi.k==="OFRECIDO"?"ok":"cur")+'">'+esc(pi.txt)+'</span>';
       tr.innerHTML='<td class="nm"><b>'+esc(p.n)+'</b><small>DNI '+mask(p.d)+(UPD[p.d]?' <span class="newb">Actualizado por carga</span>':'')+'</small></td><td>'+VAC[p.v]+'<br><small style="color:var(--muted)">'+p.loc+'</small></td><td>'+chip+'</td><td>'+expChip(p.exp)+'</td><td>'+bancoCell(p)+'</td>'+
-        '<td class="r">'+(S.sc[2]==="aus"?"Aus.":n(S.sc[2]))+(typeof S.sc[2]==="number"?' <span class="lock">🔒</span>':'')+'</td><td class="r">'+n(S.sc[4])+'</td><td class="r">'+(S.sc[5]==="aus"?"Aus.":n(S.sc[5]))+'</td>'+
+        '<td class="r">'+(S.sc[2]==="aus"?"Aus.":n(S.sc[2]))+(typeof S.sc[2]==="number"?' <span class="lock">🔒</span>':'')+'</td><td class="r">'+lt(S.sc[4])+'</td><td class="r">'+lt(S.sc[5])+'</td>'+
         '<td class="r"><b>'+(po.score==null?'<span class="lock">—</span>':nf(po.score))+'</b>'+(po.score!=null&&po.parcial?'<br><small style="color:var(--muted)">parcial</small>':'')+'</td><td class="r">'+(me?me.pos+"°":'<span class="lock">—</span>')+'</td>';
       var open=function(){openFicha(p)};tr.addEventListener("click",open);tr.addEventListener("keydown",function(e){if(e.key==="Enter")open()});VIS.push(p);tb.appendChild(tr);});
     if(!VIS.length)tb.innerHTML='<tr><td colspan="10" style="color:var(--muted)">No hay postulantes con esos filtros.</td></tr>';}
@@ -953,7 +960,7 @@ textarea.fin{resize:vertical;line-height:1.45}
       var c={ok:"var(--ok)",fail:"var(--out)",aus:"var(--out)",pend:"var(--brand)",wait:"var(--line)",na:"var(--line)"}[s];
       var dot=s==="ok"?'<span class="dot full">✓</span>':(s==="fail"||s==="aus")?'<span class="dot full">✕</span>':'<span class="dot">'+(i+1)+'</span>';
       var src=s==="na"?"No aplica: rechazado en una etapa anterior":s==="wait"?"Se habilita al aprobar la etapa anterior":stSrc(i,p);
-      var v=S.sc[i],res=(v!=null&&v!=="aus"&&s!=="na"&&s!=="wait"?'<b class="num">'+n(v)+'</b>':'')+chipFor(i,s)+(i>0?'<button class="eb" type="button" data-ed="'+i+'" aria-label="Editar '+esc(stName(i,p))+'">'+(editing===i?"Cerrar":"Editar")+'</button>':'');
+      var v=S.sc[i],res=(v!=null&&v!=="aus"&&s!=="na"&&s!=="wait"?(i===4||i===5?lt(v):'<b class="num">'+n(v)+'</b>'):'')+chipFor(i,s)+(i>0?'<button class="eb" type="button" data-ed="'+i+'" aria-label="Editar '+esc(stName(i,p))+'">'+(editing===i?"Cerrar":"Editar")+'</button>':'');
       var ob=S.obs[i]?'<div class="obs"><p>'+esc(S.obs[i].t)+'</p><small>'+esc(S.obs[i].m)+'</small></div>':'';
       var ed=editing===i?'<form class="obsf ste" data-form="'+i+'" novalidate><div class="fgrid2"><label for="es-'+i+'">Estado<select id="es-'+i+'" class="fin">'+
         ["ok","fail","aus","pend"].filter(function(k){return !(k==="aus"&&i===1)&&!(k==="fail"&&i===5)}).map(function(k){return'<option value="'+k+'"'+(k===s?" selected":"")+'>'+lab(i,k)+'</option>'}).join("")+'</select></label>'+
