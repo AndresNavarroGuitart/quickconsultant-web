@@ -437,6 +437,20 @@ textarea.fin{resize:vertical;line-height:1.45}
 
 .fgrid label,.fgrid .fin{min-width:0}
 .main>.screen{min-width:0}
+/* Pipeline unificado del tablero */
+.plw{display:flex;gap:10px;min-width:920px;align-items:stretch}
+.plb{all:unset;box-sizing:border-box;cursor:pointer;display:grid;justify-items:center;align-content:center;gap:2px;padding:10px 8px;border-radius:8px;flex:1;min-width:0;text-align:center}
+.plb b{font-family:var(--f-display);font-size:22px;font-weight:600;line-height:1.1;color:var(--ink)}
+.plb span{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);white-space:nowrap}
+.plb:hover{background:var(--tint)}
+.plb:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.plb.lead{flex:0 0 120px;background:var(--ok-soft)}
+.plb.lead:hover{background:#d3eee0}
+.plb.rej b,.plb.rej span{color:var(--muted)}
+.plb.fin b,.plb.fin span{color:var(--ok)}
+.plb.zero b{color:var(--muted)}
+.plr{flex:1;display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:var(--paper);padding:0 4px}
+.plr i{font-style:normal;color:var(--ok);font-size:20px;font-weight:600;flex:none;padding:0 2px}
 /* Pipeline y ponderación */
 .pipe{display:flex;gap:6px;list-style:none;margin:0;padding:0;min-width:900px}
 .pipe li{flex:1}
@@ -526,6 +540,7 @@ textarea.fin{resize:vertical;line-height:1.45}
       </div>
       <p class="fchip" id="d-chip" hidden></p>
       <div class="kpis" id="kpis"></div>
+      <div class="panel"><div class="wtop"><h4>Pipeline de candidatos</h4><span class="cap" id="pl-cap">Todas las búsquedas · tocá una etapa para ver los postulantes</span></div><div class="tbl-scroll"><div class="plw" id="pl"></div></div></div>
 
       <div class="panels three">
         <div class="panel"><div class="wtop"><h4>Plazo del concurso</h4><span class="chip" id="g1-st"></span></div><span class="cap">90 días desde la apertura de la inscripción.</span><div class="gauge" id="g1"></div></div>
@@ -783,12 +798,24 @@ textarea.fin{resize:vertical;line-height:1.45}
   var HB=[22,61,140,262,412,568,657,640,470,178];
   var L6=["Córdoba Cap.","Villa María","Río Cuarto","San Francisco","V. Carlos Paz","Bell Ville"];
   var V4=[["Cajero de Sucursal",[1240,310,345,198,221,112]],["Tesorero de Sucursal",[520,120,140,80,90,40]],["Ejecutivo de Atención al Cliente",[745,160,185,111,117,78]]];
-  var GEN=[["Mujer","#008C9E",.519],["Hombre","#5B4FA8",.459],["No especifica","#B7741A",.022]],GEN_C=[399,333,10];
+  var PLC=[["LEAD","Leads",[0,0,0]],["REJ","Rechazados",[1866,712,1042]],["NUEVO","Nuevo",[0,0,0]],["EN_REVISION","En revisión",[15,8,15]],["EXAMEN","Examen",[180,92,140]],["ASSESSMENT","Assessment",[0,0,0]],["PSICO","Psico",[0,0,0]],["ENTREVISTA","Entrevista",[330,160,178]],["OFRECIDO","Ofrecido",[30,16,18]],["CONTRATADO","Contratado",[5,2,3]]];
+  var plVac=function(){var e=document.getElementById("f-vac");return e?e.selectedIndex-1:-1};
+  var plN=function(r,f){var v=plVac();return Math.round((v<0?r[2].reduce(function(a,b){return a+b},0):r[2][v])*f)};
+  function drawPipe(f){var v=plVac(),box=function(r,cls){var x=plN(r,f);return'<button type="button" class="plb'+(cls?" "+cls:"")+(x?"":" zero")+'" data-pl="'+r[0]+'" data-tip="<b>'+r[1]+'</b> · '+fmt(x)+' postulaciones"><b class="num">'+(x?fmt(x):r[0]==="LEAD"?"0":"-")+'</b><span>'+r[1]+'</span></button>'};
+    var h=box(PLC[0],"lead")+'<div class="plr">'+box(PLC[1],"rej")+'<i aria-hidden="true">‹</i>';
+    PLC.slice(2).forEach(function(r,k,a){h+=box(r,r[0]==="CONTRATADO"?"fin":"")+(k<a.length-1?'<i aria-hidden="true">›</i>':'')});
+    document.getElementById("pl").innerHTML=h+'</div>';
+    document.getElementById("pl-cap").textContent=(v<0?"Todas las búsquedas":BUS[v].n)+" · Rechazados se cuenta aparte: se llega desde cualquier etapa · tocá una etapa para ver los postulantes";}
+  document.getElementById("pl").addEventListener("click",function(e){var b=e.target.closest("[data-pl]");if(!b)return;var v=plVac();
+    PSEL=b.dataset.pl;document.getElementById("f-vacl").value=v<0?"":String(v);show("list");render();
+    toast("Postulantes en "+b.querySelector("span").textContent.toLowerCase()+(v<0?"":" · "+BUS[v].n)+". La demo muestra una muestra de 15 postulantes.");});
+  var GEN=[["Mujer","#008C9E",.519],["Hombre","#5B4FA8",.459],["No especifica","#B7741A",.022]],GEN_C=[619,551,22];
   function drawStats(){var tot=INS.slice(R.a,R.b+1).reduce(function(a,b){return a+b},0),f=tot/4812,sc=function(v){return Math.round(v*f)};
     var full=R.a===0&&R.b===29,chip=document.getElementById("d-chip");chip.hidden=full;
     if(!full)chip.textContent="Filtrado por fecha de postulación: "+dd(addD(D0,R.a))+" al "+dd(addD(D0,R.b))+" · "+fmt(tot)+" de 4.812 inscriptos ("+pc(f)+"). Los relojes y la proyección no dependen de este filtro.";
-    var car=sc(742),pres=sc(3410),apr=sc(1945);
-    document.getElementById("kpis").innerHTML=[["Inscriptos (HR)",fmt(tot),fmt(tot*.912)+" personas únicas"],["Siguen en carrera",fmt(car),pc(car/tot)+" de los inscriptos",1],["Excluidos",fmt(tot-car),"con motivo fundado"],["Aprobación examen UNC",pc(1945/3410),fmt(apr)+" de "+fmt(pres)+" presentes (60 o más)"],["Etapa en curso",sc(214)+" / "+fmt(car),"Entrevistas de línea hechas"]].map(function(k){return'<div class="kpi'+(k[3]?" hl":"")+'"><span class="l">'+k[0]+'</span><span class="v num">'+k[1]+'</span><span class="d">'+k[2]+'</span></div>'}).join("");
+    var car=PLC.filter(function(r){return r[0]!=="REJ"}).reduce(function(a,r){return a+sc(r[2].reduce(function(x,y){return x+y},0))},0),pres=sc(3410),apr=sc(1945);
+    document.getElementById("kpis").innerHTML=[["Inscriptos (HR)",fmt(tot),fmt(tot*.912)+" personas únicas"],["Siguen en carrera",fmt(car),pc(car/tot)+" de los inscriptos",1],["Excluidos",fmt(tot-car),"con motivo fundado"],["Aprobación examen UNC",pc(1945/3410),fmt(apr)+" de "+fmt(pres)+" presentes (60 o más)"],["Entrevistas de línea",sc(214)+" / "+fmt(sc(742)),"hechas sobre las que llegaron a la etapa"]].map(function(k){return'<div class="kpi'+(k[3]?" hl":"")+'"><span class="l">'+k[0]+'</span><span class="v num">'+k[1]+'</span><span class="d">'+k[2]+'</span></div>'}).join("");
+    drawPipe(f);
     // embudo con %
     var fe=document.getElementById("funnel"),F0=sc(F[0][1]);fe.innerHTML="";
     F.forEach(function(r,i){var v=sc(r[1]),prev=i?sc(F[i-1][1]):v,cur=i===F.length-1,out=prev-v,d=document.createElement("div");d.className="fr"+(cur?" cur":"");
@@ -977,7 +1004,7 @@ textarea.fin{resize:vertical;line-height:1.45}
   function toast(m){to.textContent=m;to.hidden=false;clearTimeout(tt);tt=setTimeout(function(){to.hidden=true},3800);}
   document.getElementById("exp").addEventListener("click",function(){audit("Postulantes","Exportación a Excel","Vista filtrada: "+VIS.length+" filas"+(q.value?" · búsqueda “"+q.value+"”":"")+" · marca de agua con usuario y fecha");toast("En la versión real se descarga un Excel con la vista filtrada, marcado con tu usuario y la fecha.")});
   document.querySelectorAll(".act:not(#al-dup)").forEach(function(a){a.setAttribute("role","button");a.tabIndex=0;a.style.cursor="pointer";a.addEventListener("click",function(){toast(a.textContent+": "+a.previousElementSibling.firstChild.textContent.trim())})});
-  document.getElementById("f-vac").addEventListener("change",function(){var v=this.selectedIndex;if(v){var g=document.getElementById("g2-sel");if(g.value!==String(v-1)){g.value=String(v-1);g.dispatchEvent(new Event("change"));}}document.querySelectorAll("#heat tbody tr").forEach(function(r,i){r.style.opacity=(!v||i===v-1||r.classList.contains("tot"))?1:.25})});
+  document.getElementById("f-vac").addEventListener("change",function(){var v=this.selectedIndex;if(v){var g=document.getElementById("g2-sel");if(g.value!==String(v-1)){g.value=String(v-1);g.dispatchEvent(new Event("change"));}}document.querySelectorAll("#heat tbody tr").forEach(function(r,i){r.style.opacity=(!v||i===v-1||r.classList.contains("tot"))?1:.25});drawPipe(INS.slice(R.a,R.b+1).reduce(function(a,b){return a+b},0)/4812);});
   // Etapas y reglas: ponderación por perfil. Solo Gerencia la modifica; cada versión pide motivo.
   var clonePerf=function(x){return JSON.parse(JSON.stringify(x))};
   var PERF0=clonePerf(PERF),RCHG=[],ver=3;
