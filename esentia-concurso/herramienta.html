@@ -754,7 +754,7 @@ textarea.fin{resize:vertical;line-height:1.45}
     el.innerHTML=s+'<span class="gv num">'+rem+' días</span><span class="gc">faltan para finalizar · <b>día '+o.el+' de '+o.total+'</b><br>'+o.cap+'</span>';
     var z=ZONES.find(function(z){return p<=z[1]})||ZONES[2];return{p:p,z:z};}
   function gaugeChip(id,res){var e=document.getElementById(id),k=res.z[3];e.className="chip "+(k==="En plazo"?"ok":k==="Atención"?"warn":"cur");e.textContent=k;}
-  var BUS=[{n:"Cajero de Sucursal",ini:new Date(2026,8,1),pl:75,pu:30,cu:5,bq:6,en:118},{n:"Tesorero de Sucursal",ini:new Date(2026,8,1),pl:75,pu:15,cu:2,bq:6,en:57},{n:"Ejecutivo de Atención al Cliente",ini:new Date(2026,8,8),pl:70,pu:20,cu:3,bq:6,en:39}];
+  var BUS=[{n:"Cajero de Sucursal",ini:new Date(2026,8,1),pl:75,pu:10,cu:5,bq:6,en:118},{n:"Tesorero de Sucursal",ini:new Date(2026,8,1),pl:75,pu:15,cu:2,bq:6,en:57},{n:"Ejecutivo de Atención al Cliente",ini:new Date(2026,8,8),pl:70,pu:25,cu:3,bq:6,en:39}];
   var g2=document.getElementById("g2-sel");g2.innerHTML=BUS.map(function(b,i){return'<option value="'+i+'">'+b.n+'</option>'}).join("");g2.value="1";
   function drawGauges(){var el1=diff(D0,TODAY);gaugeChip("g1-st",gauge(document.getElementById("g1"),{total:90,el:el1,cap:"Inicio 01/09 · fin "+dd(addD(D0,90))+"/2026",aria:"Concurso: día "+el1+" de 90"}));
     var b=BUS[+g2.value],e2=diff(b.ini,TODAY);gaugeChip("g2-st",gauge(document.getElementById("g2"),{total:b.pl,el:e2,cap:"Inicio "+dd(b.ini)+" · fin "+dd(addD(b.ini,b.pl))+" · "+b.cu+" de "+b.pu+" puestos cubiertos",aria:b.n+": día "+e2+" de "+b.pl}));
