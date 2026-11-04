@@ -437,6 +437,42 @@ textarea.fin{resize:vertical;line-height:1.45}
 
 .fgrid label,.fgrid .fin{min-width:0}
 .main>.screen{min-width:0}
+/* Colaboradores duplicados */
+.dupt td{vertical-align:middle}
+.dupt th,.dupt td{white-space:normal}
+.dupt td:first-child{white-space:nowrap}
+.dupt th:nth-child(4){min-width:200px}
+.dupt td:nth-child(2){min-width:190px}
+.dupt tr.click.sel td{background:var(--brand-soft)}
+.mb{display:flex;align-items:center;gap:8px;min-width:110px;max-width:220px}
+.dupt td:last-child{min-width:150px}
+.dupt .nm .ptag{display:table;margin-top:4px}
+.mb .tr{flex:1;height:7px;border-radius:99px;background:var(--tint);overflow:hidden}
+.mb .tr div{height:100%;border-radius:99px}
+.mb b{font-family:var(--f-display);font-size:15px;min-width:38px;text-align:right}
+.ptag{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:4px;margin-top:3px}
+.ptag.hi{background:var(--brand-soft);color:var(--brand)}.ptag.md{background:var(--warn-soft);color:var(--warn)}.ptag.lo{background:var(--out-soft);color:var(--ink)}.ptag.cf{background:#3B3A3F;color:#fff}
+.dgrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:980px){.dgrid{grid-template-columns:1fr}}
+.cmpd th,.cmpd td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:top}
+.cmpd th{font-size:11.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.cmpd td.k{color:var(--muted);white-space:nowrap}
+.rel{font-weight:700;white-space:nowrap;font-size:12px}
+.rel.eq{color:var(--ok)}.rel.ap{color:var(--warn)}.rel.ne{color:var(--brand)}.rel.sd{color:var(--muted)}
+.cmpd td.w{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px;white-space:nowrap}
+.dhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-start}
+.dhead .big{font-family:var(--f-display);font-size:34px;font-weight:600;line-height:1}
+.sug{border-left:3px solid var(--brand);background:var(--tint);padding:9px 12px;border-radius:0 6px 6px 0;font-size:13.5px}
+.sug b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--brand)}
+.dacts{display:flex;flex-wrap:wrap;gap:8px}
+.dform{display:grid;gap:10px;border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--tint)}
+.dform label{display:grid;gap:4px;font-size:12.5px;font-weight:600}
+.guion{font-size:13px;background:#fff;border:1px dashed var(--line);border-radius:6px;padding:10px 12px;white-space:pre-line}
+.dlog{display:grid;gap:8px;font-size:13px}
+.dlog div{border-left:2px solid var(--line);padding-left:10px}
+.dlog small{display:block;color:var(--muted);font-size:11.5px}
+.vchips{display:flex;flex-wrap:wrap;gap:4px}
+.vchip{font-size:11.5px;border:1px solid var(--line);border-radius:4px;padding:1px 6px;white-space:nowrap}
 @media (max-width:820px){body{display:block}.app{min-height:0}.main{overflow:visible;padding:16px}}
 </style>
 </head>
@@ -450,6 +486,7 @@ textarea.fin{resize:vertical;line-height:1.45}
       <div class="proj"><b>Concurso Bancor 2026</b>Cierre de inscripción: 30/09/2026</div>
       <button class="nav" data-s="dash" aria-current="true"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></svg>Tablero</button>
       <button class="nav" data-s="list"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6M16 5.5a3 3 0 0 1 0 5.6M18 14.6c1.4.7 2.3 2.2 2.6 4.4"/></svg>Postulantes</button>
+      <button class="nav" data-s="dup"><svg viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="3"/><circle cx="15.5" cy="8" r="3"/><path d="M3 19c.5-2.8 2.6-4.3 5.5-4.3 1.3 0 2.5.3 3.5 1 1-.7 2.2-1 3.5-1 2.9 0 5 1.5 5.5 4.3"/></svg>Colaboradores duplicados</button>
       <button class="nav" data-s="load"><svg viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M4.5 15v4.5h15V15"/></svg>Cargas de terceros</button>
       <button class="nav" data-s="rules"><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h9M5 18h5"/><circle cx="17.5" cy="16.5" r="2.5"/></svg>Etapas y reglas</button>
       <button class="nav" data-s="sec"><svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg>Seguridad y auditoría</button>
@@ -502,7 +539,7 @@ textarea.fin{resize:vertical;line-height:1.45}
           <div class="al" style="--c:var(--brand)"><i></i><div>3 DNI de Consultora Pedemonte no existen en la base<small>Carga del 11/10 retenida hasta revisar</small></div><span class="act">Revisar</span></div>
           <div class="al" style="--c:var(--warn)"><i></i><div>Consulta del Banco: postulantes de Villa María en psicotécnico<small>Pedido de M. Ferreyra, Bancor RRHH</small></div><span class="act">Exportar</span></div>
           <div class="al" style="--c:var(--ok)"><i></i><div>Psicotécnico cerrado y bloqueado<small>598 aptos · 144 no aptos · 10/10 por Gerencia</small></div><span class="act">Ver</span></div>
-          <div class="al" style="--c:var(--muted)"><i></i><div>422 personas con 2 o más vacantes<small>El examen UNC se aplica una vez por DNI</small></div><span class="act">Ver</span></div>
+          <div class="al" style="--c:var(--brand)"><i></i><div>7 posibles colaboradores duplicados<small>1 conflicto de DNI · 1 caso elevado al Banco esperando respuesta</small></div><span class="act" role="button" tabindex="0" id="al-dup" style="cursor:pointer">Revisar</span></div>
         </div></div>
       </div>
     </div>
@@ -531,6 +568,17 @@ textarea.fin{resize:vertical;line-height:1.45}
           <div class="panel"><h4>Historial de cambios</h4><div class="log" id="plog"></div><span class="foot">Para responder al Banco: este historial se exporta con la ficha.</span></div>
         </div>
       </div>
+    </div>
+
+    <!-- COLABORADORES DUPLICADOS -->
+    <div class="screen" data-screen="dup" hidden>
+      <div class="bar"><div><h3>Colaboradores duplicados</h3><span class="sub">Postulaciones que podrían ser de la misma persona en más de una de las 3 búsquedas. Se detectan solas al importar Hiring Room y al cruzar la base de empleados del Banco.</span></div><span class="sample">Datos de ejemplo</span></div>
+      <div class="kpis" id="dup-kpis"></div>
+      <p class="note" id="dup-ro" hidden></p>
+      <div class="filters afil"><select class="sel" id="dup-est" aria-label="Filtrar por estado"></select><select class="sel" id="dup-tipo" aria-label="Filtrar por tipo"></select><input class="search" id="dup-q" placeholder="Buscar por nombre o DNI" aria-label="Buscar caso"><button class="btn ghost" type="button" id="dup-exp">Exportar casos para el Banco</button></div>
+      <div class="tbl-scroll"><table class="dt num dupt"><thead><tr><th>Caso</th><th>Postulante(s)</th><th>Búsquedas</th><th>Probabilidad de que sea la misma persona</th><th>Estado</th><th>Próximo paso</th></tr></thead><tbody id="dup-body"></tbody></table></div>
+      <span class="foot">Tocá un caso para ver la comparación campo por campo y gestionarlo. Todo lo que hagas queda en el historial del caso y en el registro de actividad.</span>
+      <div id="dup-det" hidden></div>
     </div>
 
     <!-- CARGAS -->
@@ -1150,7 +1198,7 @@ textarea.fin{resize:vertical;line-height:1.45}
   function fillAuditFilters(){var su=$("a-user").value,sm=$("a-mod").value;
     var ids=[];AUD.forEach(function(a){if(ids.indexOf(a.uid)<0)ids.push(a.uid)});USERS.forEach(function(u){if(ids.indexOf(u.id)<0)ids.push(u.id)});
     AU_ALL=ids;$("a-user").innerHTML='<option value="">Todos los usuarios</option>'+ids.map(function(id){var u=U(id);return'<option value="'+id+'">'+(u?esc(u.name):"Usuario eliminado #"+id)+'</option>'}).join("");$("a-user").value=su;
-    var mods=["Acceso","Ficha","Cargas","Postulantes","Etapas y reglas","Usuarios"];$("a-mod").innerHTML='<option value="">Todos los módulos</option>'+mods.map(function(m){return"<option>"+m+"</option>"}).join("");$("a-mod").value=sm;}
+    var mods=["Acceso","Ficha","Cargas","Postulantes","Duplicados","Etapas y reglas","Usuarios"];$("a-mod").innerHTML='<option value="">Todos los módulos</option>'+mods.map(function(m){return"<option>"+m+"</option>"}).join("");$("a-mod").value=sm;}
   var NAMES={};USERS.forEach(function(u){NAMES[u.id]=u});
   function drawAudit(){var fu=$("a-user").value,fm=$("a-mod").value,fq=norm($("a-q").value||"");
     var L=AUD.filter(function(a){return(!fu||a.uid===+fu)&&(!fm||a.mod===fm)&&(!fq||norm(a.det+" "+a.acc).indexOf(fq)>=0)});
@@ -1164,10 +1212,116 @@ textarea.fin{resize:vertical;line-height:1.45}
     document.querySelectorAll(".sg").forEach(function(x){x.setAttribute("aria-selected",x===b?"true":"false")});
     document.querySelectorAll(".sgp").forEach(function(p){p.hidden=p.dataset.sgp!==b.dataset.sg});if(b.dataset.sg==="audit"){fillAuditFilters();drawAudit();}});
   drawCU();drawUsers();fillAuditFilters();drawAudit();
+  // Colaboradores duplicados: misma persona (o mismo DNI) en más de una búsqueda.
+  // Probabilidad de macheo: suma de evidencias por campo (log-odds, modelo Fellegi-Sunter simplificado).
+  (function(){
+    var BQ=["Cajero de Sucursal","Tesorero de Sucursal","Ejecutivo de Atención al Cliente"];
+    var nrm=function(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9@. ]/g," ").replace(/\s+/g," ").trim()};
+    function jw(a,b){if(a===b)return 1;var la=a.length,lb=b.length;if(!la||!lb)return 0;var w=Math.max(0,Math.floor(Math.max(la,lb)/2)-1),ma=[],mb=[],m=0,i,j;
+      for(i=0;i<la;i++)for(j=Math.max(0,i-w);j<Math.min(lb,i+w+1);j++)if(!mb[j]&&a[i]===b[j]){ma[i]=mb[j]=true;m++;break;}
+      if(!m)return 0;var t=0,k=0;for(i=0;i<la;i++)if(ma[i]){while(!mb[k])k++;if(a[i]!==b[k])t++;k++;}
+      var d=(m/la+m/lb+(m-t/2)/m)/3,p=0;while(p<4&&a[p]===b[p])p++;return d+p*.1*(1-d);}
+    var tok=function(s){return nrm(s).split(" ").filter(Boolean).sort().join(" ")};
+    function simNombre(a,b){var s1=jw(tok(a.nom+" "+a.ape),tok(b.nom+" "+b.ape)),s2=jw(nrm(a.ape),nrm(b.ape))*.6+jw(nrm(a.nom).split(" ")[0],nrm(b.nom).split(" ")[0])*.4;return Math.max(s1,s2);}
+    function relDni(a,b){a=a.replace(/\D/g,"");b=b.replace(/\D/g,"");if(a===b)return"igual";if(a.length!==b.length)return"distinto";var d=[];for(var i=0;i<a.length;i++)if(a[i]!==b[i])d.push(i);
+      if(d.length===1)return"un dígito distinto";if(d.length===2&&d[1]===d[0]+1&&a[d[0]]===b[d[1]]&&a[d[1]]===b[d[0]])return"dos dígitos invertidos";return"distinto";}
+    function relFecha(a,b){if(!a||!b)return"sd";if(a===b)return"igual";var p=a.split("/"),q=b.split("/");return p[0]===q[1]&&p[1]===q[0]&&p[2]===q[2]?"invertida":"distinta";}
+    var tel8=function(s){return String(s||"").replace(/\D/g,"").slice(-8)};
+    function comparar(a,b){var F=[],add=function(c,va,vb,rel,txt,w){F.push({c:c,a:va,b:vb,rel:rel,txt:txt,w:w})};
+      var rd=relDni(a.dni,b.dni);add("DNI",a.dni,b.dni,rd==="igual"?"eq":rd==="distinto"?"ne":"ap",rd==="igual"?"Igual":rd==="distinto"?"Distinto":"Parecido: "+rd,rd==="igual"?9:rd==="distinto"?-7:4);
+      var sn=simNombre(a,b),ig=nrm(a.nom+" "+a.ape)===nrm(b.nom+" "+b.ape);add("Nombre y apellido",a.nom+" "+a.ape,b.nom+" "+b.ape,ig?"eq":sn>=.85?"ap":"ne",ig?"Igual":sn>=.85?"Parecido ("+Math.round(sn*100)+"%)":"Distinto",ig?5:sn>=.85?3:sn>=.75?0:-6);
+      var rf=relFecha(a.nac,b.nac);add("Fecha de nacimiento",a.nac||"—",b.nac||"—",{igual:"eq",invertida:"ap",sd:"sd",distinta:"ne"}[rf],{igual:"Igual",invertida:"Día y mes invertidos",sd:"Sin dato",distinta:"Distinta"}[rf],{igual:4,invertida:1.5,sd:0,distinta:-3}[rf]);
+      var em=nrm(a.mail)===nrm(b.mail);add("Email",a.mail,b.mail,em?"eq":"ne",em?"Igual":"Distinto",em?5:-.5);
+      var tl=tel8(a.tel)===tel8(b.tel);add("Teléfono",a.tel,b.tel,tl?"eq":"ne",tl?"Igual":"Distinto",tl?4:-.5);
+      if(a.leg||b.leg){var lg=a.leg&&a.leg===b.leg;add("Legajo Bancor",a.leg||"—",b.leg||"—",lg?"eq":a.leg&&b.leg?"ne":"sd",lg?"Igual":a.leg&&b.leg?"Distinto":"Solo en uno",lg?3:a.leg&&b.leg?-3:0);}
+      var s=-3+F.reduce(function(x,f){return x+f.w},0),todo=F.every(function(f){return f.rel==="eq"});
+      return{p:todo?1:Math.min(1/(1+Math.pow(2,-s)),.99),F:F,dni:rd};}
+    var r=function(v,fecha,etapa,o){return Object.assign({v:v,fecha:fecha,etapa:etapa,nom:"",ape:"",dni:"",nac:"",mail:"",tel:"",loc:"Córdoba Capital",leg:""},o)};
+    var LUCIA={nom:"Lucía",ape:"Fernández",dni:"33.482.109",nac:"14/03/1988",mail:"lucia.fernandez@mail.com",tel:"351 555-0141",leg:"20417",ing:"03/2015"};
+    var MATI={nom:"Matías",ape:"Herrera",dni:"34.660.318",nac:"25/10/1989",mail:"mati.herrera@mail.com",tel:"351 555-0118",leg:"21983",ing:"08/2017",loc:"Villa María"};
+    var C=[
+      {id:"D-001",R:[r(0,"03/09","Examen",LUCIA),r(1,"05/09","Examen",LUCIA)],est:"nuevo",log:[]},
+      {id:"D-002",R:[r(0,"02/09","En revisión",MATI),r(1,"02/09","En revisión",MATI),r(2,"04/09","En revisión",MATI)],est:"elevado",log:[["11/10 10:20","Aldana Pérez","Elevado al Banco","Colaborador (legajo 21983) inscripto en las 3 búsquedas. Se pide definir en cuál sigue."]]},
+      {id:"D-003",R:[r(0,"01/09","Examen",{nom:"Gonzalo",ape:"Ríos",dni:"30.915.442",nac:"02/11/1984",mail:"gonzarios@mail.com",tel:"351 555-0172"}),r(2,"09/09","Examen",{nom:"Gonzalo Martín",ape:"Rios",dni:"30.915.442",nac:"02/11/1984",mail:"g.rios.trabajo@mail.com",tel:"351 555-0172"})],est:"contactado",log:[["10/10 16:45","Aldana Pérez","Llamado al candidato","Atendió. Confirma que se anotó dos veces; quiere seguir en Ejecutivo de Atención al Cliente. Se le pide que no use otro email."]]},
+      {id:"D-004",R:[r(1,"06/09","En revisión",{nom:"Romina",ape:"Sosa",dni:"35.207.611",nac:"21/06/1991",mail:"romi.sosa@mail.com",tel:"353 555-0190",loc:"Villa María"}),r(2,"12/09","Nuevo",{nom:"Carlos",ape:"Bustos",dni:"35.207.611",nac:"09/01/1979",mail:"cbustos@mail.com",tel:"358 555-0113",loc:"Río Cuarto"})],est:"nuevo",log:[]},
+      {id:"D-005",R:[r(0,"08/09","Examen",{nom:"Agustina",ape:"Molina",dni:"32.415.678",nac:"30/08/1986",mail:"agus.molina@mail.com",tel:"351 555-0128"}),r(1,"15/09","Nuevo",{nom:"Agustina",ape:"Molina",dni:"32.415.687",nac:"30/08/1986",mail:"agus.molina@mail.com",tel:"351 555-0164"})],est:"revision",log:[["12/10 09:10","Andrea Gómez","En revisión","Parece un error de tipeo en el DNI: pedir foto del documento."]]},
+      {id:"D-006",R:[r(0,"04/09","Examen",{nom:"Federico",ape:"Paz",dni:"31.778.205",nac:"04/07/1985",mail:"fede.paz@mail.com",tel:"351 555-0155"}),r(2,"20/09","Nuevo",{nom:"Federico",ape:"Paz",dni:"31.778.205",nac:"07/04/1985",mail:"fede.paz@mail.com",tel:"351 555-0199"})],est:"nuevo",log:[]},
+      {id:"D-007",R:[r(1,"10/09","Nuevo",{nom:"Valentina",ape:"Quiroga",dni:"36.120.884",nac:"",mail:"valen.quiroga@mail.com",tel:"351 555-0137"}),r(2,"11/09","Nuevo",{nom:"Valen",ape:"Quiroga",dni:"37.902.115",nac:"12/02/1993",mail:"valen.quiroga@mail.com",tel:"351 555-0137"})],est:"nuevo",log:[]},
+      {id:"D-008",R:[r(0,"05/09","Examen",{nom:"Juan Pablo",ape:"González",dni:"29.334.870",nac:"18/05/1982",mail:"jpgonzalez@mail.com",tel:"351 555-0103"}),r(2,"07/09","Examen",{nom:"Juan Pablo",ape:"González",dni:"28.016.452",nac:"18/05/1982",mail:"juanpablo.g@mail.com",tel:"358 555-0186",loc:"Río Cuarto"})],est:"resuelto",res:"Falso positivo: personas distintas",log:[["09/10 12:30","Andrea Gómez","Marcado como falso positivo","Homónimos: DNI y contactos distintos. Se verificó con Hiring Room."]]}
+    ];
+    // Probabilidad del caso: el par más parecido entre sus postulaciones.
+    C.forEach(function(c){var best=null;for(var i=0;i<c.R.length;i++)for(var j=i+1;j<c.R.length;j++){var x=comparar(c.R[i],c.R[j]);if(!best||x.p>best.p){best=x;best.i=i;best.j=j;}}c.cmp=best;
+      var mismoDni=c.R.every(function(x){return x.dni===c.R[0].dni});c.emp=c.R.some(function(x){return x.leg});
+      c.tipo=mismoDni&&best.p<.7?"cf":mismoDni?"dni":best.p>=.7?"otro":"homo";});
+    var TIPO={dni:"Mismo DNI en varias búsquedas",otro:"DNI distinto, misma persona probable",cf:"Conflicto: mismo DNI, otra persona",homo:"Posible homónimo"};
+    var EST={nuevo:["Nuevo","cur"],revision:["En revisión","warn"],contactado:["Candidato contactado","warn"],elevado:["Elevado al Banco","warn"],resuelto:["Resuelto","ok"]};
+    var nivel=function(c){return c.tipo==="cf"?["cf","Conflicto de DNI"]:c.cmp.p>=.9?["hi","Alta"]:c.cmp.p>=.7?["md","Media"]:["lo","Baja"]};
+    var color=function(c){return c.tipo==="cf"?"#3B3A3F":c.cmp.p>=.9?"var(--brand)":c.cmp.p>=.7?"var(--warn)":"var(--out)"};
+    var pct=function(p){return Math.round(p*100)+"%"};
+    function sugerencia(c){if(c.est==="resuelto")return"Caso cerrado";if(c.est==="elevado")return"Esperar respuesta del Banco";
+      if(c.tipo==="cf")return"Elevar al Banco y pedir el DNI";if(c.tipo==="homo")return"Revisar y descartar si son distintas";
+      if(c.tipo==="otro")return"Llamar para confirmar el DNI correcto";if(c.est==="contactado")return c.emp?"Elevar al Banco":"Registrar la búsqueda que mantiene";
+      return c.emp?"Elevar al Banco (es colaborador)":"Llamar al candidato";}
+    var sel=null,form=null,esESENTIA=function(){return CU.role==="ger"||CU.role==="ana"},esBanco=function(){return CU.role==="ban"};
+    var visibles=function(){return esBanco()?C.filter(function(c){return c.est==="elevado"||c.res&&c.res.indexOf("Banco")>=0}):esESENTIA()?C:[]};
+    var nombre=function(x){return x.nom+" "+x.ape};
+    $("dup-est").innerHTML='<option value="">Todos los estados</option>'+Object.keys(EST).map(function(k){return'<option value="'+k+'">'+EST[k][0]+'</option>'}).join("");
+    $("dup-tipo").innerHTML='<option value="">Todos los tipos</option>'+Object.keys(TIPO).map(function(k){return'<option value="'+k+'">'+TIPO[k]+'</option>'}).join("");
+    function drawDup(){var L=visibles(),fe=$("dup-est").value,ft=$("dup-tipo").value,fq=nrm($("dup-q").value);
+      var ro=$("dup-ro");ro.hidden=esESENTIA();ro.textContent=esBanco()?"Como Bancor ves solo los casos que ESENTIA te elevó. Podés registrar la medida que toma el Banco.":"Tu rol no tiene acceso a los casos de duplicados.";
+      var all=visibles(),k=function(f){return all.filter(f).length};
+      $("dup-kpis").innerHTML=[["Casos detectados",all.length,"en "+BQ.length+" búsquedas activas",1],["Alta probabilidad",k(function(c){return c.tipo!=="cf"&&c.cmp.p>=.9}),"90% o más: casi seguro la misma persona"],["Conflictos de DNI",k(function(c){return c.tipo==="cf"}),"mismo DNI con datos de otra persona"],["Elevados al Banco",k(function(c){return c.est==="elevado"}),"esperando respuesta"],["Resueltos",k(function(c){return c.est==="resuelto"}),"con resolución registrada"]].map(function(x){return'<div class="kpi'+(x[3]?" hl":"")+'"><span class="l">'+x[0]+'</span><span class="v num">'+x[1]+'</span><span class="d">'+x[2]+'</span></div>'}).join("");
+      L=L.filter(function(c){return(!fe||c.est===fe)&&(!ft||c.tipo===ft)&&(!fq||c.R.some(function(x){return nrm(nombre(x)).indexOf(fq)>=0||x.dni.replace(/\D/g,"").indexOf(fq.replace(/\D/g,"")||"#")>=0}))})
+        .sort(function(a,b){return(a.est==="resuelto")-(b.est==="resuelto")||(b.tipo==="cf")-(a.tipo==="cf")||b.cmp.p-a.cmp.p});
+      $("dup-body").innerHTML=L.map(function(c){var n=nivel(c),E=EST[c.est],noms=[];c.R.forEach(function(x){var t=nombre(x)+" · DNI "+x.dni;if(noms.indexOf(t)<0)noms.push(t)});
+        return'<tr class="click'+(sel===c?" sel":"")+'" data-c="'+c.id+'" tabindex="0"><td><b>'+c.id+'</b></td><td class="nm">'+noms.map(function(t,i){return i?"<small>"+esc(t)+"</small>":"<b>"+esc(t)+"</b>"}).join("")+(c.emp?'<span class="ptag md">Colaborador Bancor</span>':'')+'</td><td><div class="vchips">'+c.R.map(function(x){return'<span class="vchip">'+BQ[x.v]+'</span>'}).join("")+'</div></td>'+
+          '<td><div class="mb"><div class="tr"><div style="width:'+Math.max(4,c.cmp.p*100)+'%;background:'+color(c)+'"></div></div><b>'+pct(c.cmp.p)+'</b></div><span class="ptag '+n[0]+'">'+n[1]+'</span> <small style="color:var(--muted)">'+TIPO[c.tipo]+'</small></td>'+
+          '<td><span class="chip '+E[1]+'">'+E[0]+'</span>'+(c.res?'<br><small style="color:var(--muted)">'+esc(c.res)+'</small>':"")+'</td><td>'+sugerencia(c)+'</td></tr>'}).join("")||'<tr><td colspan="6" style="color:var(--muted)">'+(visibles().length?"No hay casos con esos filtros.":esBanco()?"Todavía no hay casos elevados al Banco.":"Sin acceso.")+'</td></tr>';
+      if(sel&&L.indexOf(sel)<0){sel=null;form=null;}drawDet();}
+    function guion(c){var a=c.R[c.cmp.i];return"Hola "+a.nom.split(" ")[0]+", te llamo de ESENTIA por el Concurso Bancor.\nVemos que figurás inscripto/a en más de una búsqueda ("+c.R.map(function(x){return BQ[x.v]}).join(", ")+")"+(c.cmp.dni!=="igual"?", y en una de las inscripciones el DNI no coincide":"")+".\nNecesitamos confirmar tus datos y en qué búsqueda querés continuar.";}
+    function informe(c){return"Caso "+c.id+" · "+TIPO[c.tipo]+" · probabilidad "+pct(c.cmp.p)+"\n"+c.R.map(function(x){return"- "+BQ[x.v]+" ("+x.fecha+"): "+nombre(x)+", DNI "+x.dni+(x.leg?", legajo "+x.leg:"")+" · etapa "+x.etapa}).join("\n")+"\nCoincidencias: "+c.cmp.F.map(function(f){return f.c+" "+f.txt.toLowerCase()}).join("; ")+".";}
+    function drawDet(){var d=$("dup-det");if(!sel){d.hidden=true;return;}var c=sel,n=nivel(c),a=c.R[c.cmp.i],b=c.R[c.cmp.j],ges=esESENTIA(),ban=esBanco(),abierto=c.est!=="resuelto";
+      var h='<div class="panel"><div class="dhead"><div><span class="eyebrow">Caso '+c.id+' · '+TIPO[c.tipo]+'</span><h4 style="margin:4px 0 2px">'+esc(nombre(a))+(nombre(a)!==nombre(b)?' / '+esc(nombre(b)):'')+'</h4><span class="cap">'+c.R.length+' postulaciones · '+(c.emp?"Colaborador de Bancor":"No figura en la base de empleados")+'</span></div>'+
+        '<div style="text-align:right"><span class="big num" style="color:'+color(c)+'">'+pct(c.cmp.p)+'</span><br><span class="ptag '+n[0]+'">'+n[1]+'</span><br><small style="color:var(--muted)">probabilidad de que sea la misma persona</small></div></div></div>';
+      h+='<div class="dgrid"><div class="panel"><h4>Comparación campo por campo</h4><span class="cap">'+(c.R.length>2?"Se muestran las dos postulaciones más parecidas de las "+c.R.length+". ":"")+'Cada coincidencia suma evidencia; cada diferencia resta.</span><div class="tbl-scroll"><table class="cmpd"><thead><tr><th>Dato</th><th>'+BQ[a.v]+' · '+a.fecha+'</th><th>'+BQ[b.v]+' · '+b.fecha+'</th><th>Resultado</th><th class="r">Peso</th></tr></thead><tbody>'+
+        c.cmp.F.map(function(f){return'<tr><td class="k">'+f.c+'</td><td>'+esc(f.a)+'</td><td>'+esc(f.b)+'</td><td><span class="rel '+f.rel+'">'+(f.rel==="eq"?"✓ ":f.rel==="ap"?"≈ ":f.rel==="ne"?"✗ ":"")+esc(f.txt)+'</span></td><td class="w">'+(f.w>0?"+":"")+String(f.w).replace(".",",")+'</td></tr>'}).join("")+
+        '<tr><td class="k">Etapa</td><td>'+a.etapa+'</td><td>'+b.etapa+'</td><td></td><td></td></tr></tbody></table></div>'+
+        '<span class="foot">Probabilidad alta (90% o más): casi seguro es la misma persona. Media (70–89%): revisar. Si el DNI es el mismo pero el resto no coincide, es un <b>conflicto de DNI</b>: puede ser un error de carga o el uso del DNI de otra persona.</span></div>';
+      h+='<div class="col"><div class="panel"><div class="sug"><b>Próximo paso sugerido</b>'+sugerencia(c)+'</div>';
+      if(ges&&abierto){h+='<div class="dacts" style="margin-top:12px"><button class="btn" type="button" data-da="llamar">Registrar llamado</button><button class="btn ghost" type="button" data-da="elevar"'+(c.est==="elevado"?" disabled":"")+'>Elevar al Banco</button><button class="btn ghost" type="button" data-da="resolver">Resolver caso</button>'+(c.est==="nuevo"?'<button class="btn ghost" type="button" data-da="tomar">Tomar el caso</button>':"")+'</div>';}
+      if(ban&&c.est==="elevado")h+='<div class="dacts" style="margin-top:12px"><button class="btn" type="button" data-da="banco">Registrar medida del Banco</button></div>';
+      if(!abierto&&ges)h+='<div class="dacts" style="margin-top:12px"><button class="btn ghost" type="button" data-da="reabrir">Reabrir caso</button></div>';
+      if(form==="llamar")h+='<form class="dform" data-df="llamar" style="margin-top:12px"><label>Teléfono<span style="font-weight:400">'+c.R.map(function(x){return esc(x.tel)}).filter(function(t,i,s){return s.indexOf(t)===i}).join(" · ")+'</span></label><div class="guion">'+esc(guion(c))+'</div><label for="dl-res">Resultado<select id="dl-res" class="fin"><option>Atendió y confirmó que es la misma persona</option><option>Atendió: son personas distintas</option><option>No atendió</option><option>Número equivocado</option></select></label><label for="dl-man">Búsqueda en la que sigue<select id="dl-man" class="fin"><option value="">Sin definir</option>'+c.R.map(function(x){return"<option>"+BQ[x.v]+"</option>"}).join("")+'</select></label><label for="dl-nota">Nota<textarea id="dl-nota" class="fin" rows="2" maxlength="400" placeholder="Qué dijo el candidato"></textarea></label><div class="filters"><button class="btn" type="submit">Guardar llamado</button><button class="btn ghost" type="button" data-da="cerrar">Cancelar</button></div></form>';
+      if(form==="elevar")h+='<form class="dform" data-df="elevar" style="margin-top:12px"><label for="de-mot">Qué le pedís al Banco<select id="de-mot" class="fin"><option>Definir en qué búsqueda sigue el colaborador</option><option>Verificar la identidad (posible uso de DNI ajeno)</option><option>Evaluar medidas por inscripción múltiple</option></select></label><label>Informe que recibe el Banco<div class="guion" id="de-inf">'+esc(informe(c))+'</div></label><label for="de-nota">Comentario<textarea id="de-nota" class="fin" rows="2" maxlength="400"></textarea></label><div class="filters"><button class="btn" type="submit">Elevar al Banco</button><button class="btn ghost" type="button" data-da="copiar">Copiar informe</button><button class="btn ghost" type="button" data-da="cerrar">Cancelar</button></div></form>';
+      if(form==="resolver")h+='<form class="dform" data-df="resolver" style="margin-top:12px"><label for="dr-res">Resolución<select id="dr-res" class="fin"><option>Duplicado confirmado: sigue en una sola búsqueda</option><option>Duplicado confirmado: el Banco tomó medidas</option><option>DNI corregido: era un error de carga</option><option>Falso positivo: personas distintas</option><option>Baja de las postulaciones</option></select></label><label for="dr-nota">Motivo (obligatorio)<textarea id="dr-nota" class="fin" rows="2" maxlength="400"></textarea></label><p class="ferr" id="dr-err" hidden>Escribí el motivo de la resolución.</p><div class="filters"><button class="btn" type="submit">Cerrar caso</button><button class="btn ghost" type="button" data-da="cerrar">Cancelar</button></div></form>';
+      if(form==="banco")h+='<form class="dform" data-df="banco" style="margin-top:12px"><label for="db-res">Medida del Banco<select id="db-res" class="fin"><option>Sigue en una sola búsqueda</option><option>Se da de baja de todas las búsquedas</option><option>Se verificó la identidad: es correcto</option><option>Sanción o actuación interna</option></select></label><label for="db-nota">Detalle<textarea id="db-nota" class="fin" rows="2" maxlength="400"></textarea></label><div class="filters"><button class="btn" type="submit">Guardar medida</button><button class="btn ghost" type="button" data-da="cerrar">Cancelar</button></div></form>';
+      h+='</div><div class="panel"><h4>Historial del caso</h4><div class="dlog">'+(c.log.length?c.log.map(function(l){return"<div><b>"+esc(l[2])+"</b> "+esc(l[3])+"<small>"+l[0]+" · "+esc(l[1])+"</small></div>"}).join(""):'<span class="cap">Detectado al importar Hiring Room. Todavía sin gestión.</span>')+'</div></div></div></div>';
+      d.innerHTML=h;d.hidden=false;}
+    function reg(c,acc,det){c.log.unshift([stamp().replace(/:\d\d$/,""),CU.name,acc,det]);audit("Duplicados",acc,c.id+" · "+c.R.map(function(x){return nombre(x)+" DNI "+x.dni}).filter(function(t,i,s){return s.indexOf(t)===i}).join(" / ")+(det?" · "+det:""));}
+    $("dup-body").addEventListener("click",function(e){var tr=e.target.closest("tr[data-c]");if(!tr)return;var c=C.find(function(x){return x.id===tr.dataset.c});sel=sel===c?null:c;form=null;drawDup();if(sel)$("dup-det").scrollIntoView({behavior:"smooth",block:"start"});});
+    $("dup-body").addEventListener("keydown",function(e){if(e.key==="Enter"){var tr=e.target.closest("tr[data-c]");if(tr)tr.click();}});
+    $("dup-det").addEventListener("click",function(e){var b=e.target.closest("[data-da]");if(!b||b.disabled||!sel)return;var a=b.dataset.da,c=sel;
+      if(a==="cerrar"){form=null;}else if(a==="copiar"){var t=informe(c);try{navigator.clipboard.writeText(t).then(function(){toast("Informe copiado.")},function(){toast("Copiá el informe desde el recuadro.")})}catch(x){toast("Copiá el informe desde el recuadro.")}return;}
+      else if(a==="tomar"){c.est="revision";reg(c,"En revisión","Tomado por "+CU.name);toast("El caso "+c.id+" quedó en revisión a tu nombre.");form=null;}
+      else if(a==="reabrir"){c.est="revision";delete c.res;reg(c,"Caso reabierto","");form=null;}
+      else form=form===a?null:a;drawDup();});
+    $("dup-det").addEventListener("submit",function(e){e.preventDefault();var f=e.target.dataset.df,c=sel,v=function(id){return($(id).value||"").trim()};
+      if(f==="llamar"){var res=v("dl-res"),man=v("dl-man");c.est=res.indexOf("distintas")>=0?c.est:"contactado";reg(c,"Llamado al candidato",res+(man?" · sigue en "+man:"")+(v("dl-nota")?" · "+v("dl-nota"):""));if(res.indexOf("distintas")>=0){c.est="resuelto";c.res="Falso positivo: personas distintas";}toast("Se registró el llamado en el caso "+c.id+".");}
+      if(f==="elevar"){c.est="elevado";reg(c,"Elevado al Banco",v("de-mot")+(v("de-nota")?" · "+v("de-nota"):""));toast("Caso "+c.id+" elevado. Bancor lo ve en su pestaña y recibe un aviso por email.");}
+      if(f==="resolver"){if(!v("dr-nota")){$("dr-err").hidden=false;return;}c.est="resuelto";c.res=v("dr-res");reg(c,"Caso resuelto",c.res+" · "+v("dr-nota"));toast("Caso "+c.id+" cerrado.");}
+      if(f==="banco"){c.est="resuelto";c.res="Medida del Banco: "+v("db-res");reg(c,"Medida del Banco",v("db-res")+(v("db-nota")?" · "+v("db-nota"):""));toast("Se registró la medida del Banco. ESENTIA ve el caso resuelto.");}
+      form=null;drawDup();});
+    ["dup-est","dup-tipo"].forEach(function(id){$(id).addEventListener("change",drawDup)});$("dup-q").addEventListener("input",drawDup);
+    $("dup-exp").addEventListener("click",function(){var n=C.filter(function(c){return c.est==="elevado"}).length;audit("Duplicados","Exportación para el Banco",n+" casos elevados");toast("En la versión real se descarga un Excel con los casos elevados, con marca de agua de usuario y fecha.");});
+    $("cu-sel").addEventListener("change",function(){sel=null;form=null;drawDup();});
+    window.__dupAlerta=C.filter(function(c){return c.est!=="resuelto"}).length;
+    drawDup();
+  })();
   // Navegación
   var navs=document.querySelectorAll(".nav"),scr=document.querySelectorAll(".screen");
   function show(k){scr.forEach(function(s){s.hidden=s.dataset.screen!==k});var nk=k==="ficha"?"list":k;navs.forEach(function(b){b.setAttribute("aria-current",b.dataset.s===nk?"true":"false")});}
   navs.forEach(function(b){b.addEventListener("click",function(){show(b.dataset.s)})});
+  $("al-dup").addEventListener("click",function(){show("dup")});$("al-dup").addEventListener("keydown",function(e){if(e.key==="Enter")show("dup")});
   openFicha(P[0]);show("dash");
 })();
 </script>
