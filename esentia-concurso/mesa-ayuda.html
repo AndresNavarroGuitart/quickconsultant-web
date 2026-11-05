@@ -186,6 +186,13 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center;d
 .vprep h4{font-size:1rem;font-weight:800}
 .vprep .qlist li{font-size:.93rem}
 @media (max-width:760px){.vsteps{grid-template-columns:1fr}.verif{padding:20px}}
+.esc{display:grid;font-size:.9rem;margin-top:2px}
+.esc>div{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border)}
+.esc>div>*:not(:first-child){text-align:right}
+.esc .eh{font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.esc .er:last-child{border-bottom:0}
+.esc .er.base{background:var(--grad-soft);border-radius:8px;font-weight:700}
+.esc b{white-space:nowrap}
 .badge{justify-self:start;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--purple);background:var(--grad-soft);border:1px solid rgba(123,45,139,.25);border-radius:100px;padding:3px 10px}
 .qlist{margin:0;padding:0;list-style:none;display:grid;gap:12px;max-width:820px}
 .qlist li{position:relative;padding-left:26px;font-size:1rem;color:var(--muted)}
@@ -318,7 +325,7 @@ footer{padding-block:28px;font-size:.8rem;color:var(--muted);text-align:center;d
     <div class="side-inv">
       <div class="mini num"><span class="l">Mensual · mientras dure el servicio</span><span class="v">USD 351 <small>/ mes</small></span>
         <div class="lines"><div><span>Soporte operativo durante la inscripción: actualizar respuestas, monitorear incidentes y enviar el reporte diario</span><b>USD 150</b></div><div><span>Licencia Wati Pro (bot y bandeja, 5 agentes)</span><b>USD 102</b></div><div><span>Licencia Astra Pro (asistente de IA)</span><b>USD 99</b></div></div></div>
-      <div class="mini"><span class="l">Mensajes de WhatsApp · según consumo</span><span class="badge">Costo estimado</span><span class="v">≈ USD 100 <small>en total</small></span><p>Meta cobra cada mensaje enviado (≈ USD 0,026 en Argentina, con 1.000 gratis por mes). Se factura según consumo real; el valor es una estimación para 1.000 inscriptos.</p></div>
+      <div class="mini"><span class="l">Mensajes de WhatsApp · según consumo</span><span class="badge">Costo estimado</span><div class="esc num"><div class="eh"><span>Inscriptos</span><span>Mensajes enviados</span><span>Costo estimado</span></div><div class="er"><span>500</span><span>1.755</span><b>≈ USD 30</b></div><div class="er base"><span>1.000</span><span>3.510</span><b>≈ USD 100</b></div><div class="er"><span>1.500</span><span>5.265</span><b>≈ USD 165</b></div><div class="er"><span>2.000</span><span>7.020</span><b>≈ USD 235</b></div></div><p>Meta cobra cada mensaje enviado (≈ USD 0,026 en Argentina, con 1.000 gratis por mes) y Wati suma un recargo, ya incluido. Estimado para un mes de inscripción con un 30 % de inscriptos que escribe; se factura según consumo real.</p></div>
       <div class="mini fx"><span class="l">Forma de pago</span><p>Valor expresado en dólares americanos, a abonar en un plazo no mayor a 10 días en pesos argentinos a cotización Dólar OFICIAL vendedor cotizado por Banco Nación al momento de la generación de la factura.</p></div>
     </div>
   </div>
