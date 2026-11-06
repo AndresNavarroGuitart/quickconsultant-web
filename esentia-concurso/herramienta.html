@@ -152,7 +152,7 @@ ol.q{margin:0;padding-left:22px;display:grid;gap:8px;max-width:760px}
 .chip{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
 .chip.ok{background:var(--ok-soft);color:var(--ok)}
 .chip.warn{background:var(--warn-soft);color:var(--warn)}
-.chip.out{background:var(--out-soft);color:var(--out);text-decoration:line-through}
+.chip.out{background:var(--out-soft);color:var(--out)}
 .chip.cur{background:var(--brand-soft);color:var(--brand)}
 /* Tabla postulantes */
 .dt th,.dt td{padding:9px 10px;font-size:13px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
@@ -540,7 +540,7 @@ textarea.fin{resize:vertical;line-height:1.45}
 
     <!-- TABLERO -->
     <div class="screen" data-screen="dash">
-      <div class="bar"><div><h3>Tablero de gestión de búsquedas</h3><span class="sub">Hoy 12/10/2026 · última carga: Entrevistas de línea (Bancor) 09:40</span></div><span class="sample">Datos de ejemplo</span></div>
+      <div class="bar"><div><h3>Tablero de gestión de vacantes</h3><span class="sub">Hoy 12/10/2026 · última carga: Entrevistas de línea (Bancor) 09:40</span></div><span class="sample">Datos de ejemplo</span></div>
       <div class="fbar">
         <div class="fgroup"><span class="flab">Fecha de postulación</span>
           <div class="filters"><label class="dlab" for="d-from">Desde<input type="date" id="d-from" class="sel" min="2026-09-01" max="2026-09-30" value="2026-09-01"></label><label class="dlab" for="d-to">Hasta<input type="date" id="d-to" class="sel" min="2026-09-01" max="2026-09-30" value="2026-09-30"></label>
@@ -914,10 +914,10 @@ textarea.fin{resize:vertical;line-height:1.45}
     if(sc[4]!=null)L.unshift({t:"Psicotécnico: letra "+sc[4]+(st[4]==="fail"?" · excluye":""),m:"08/10 18:20 · Carga “Psico_lote4.xlsx”"});
     if(sc[5]!=null)L.unshift({t:"Entrevista de línea: "+(sc[5]==="aus"?"Ausente":"letra "+sc[5]),m:"Hoy 09:40 · Carga “Bancor_entrevistas_semana1.xlsx”"});
     var f=st.findIndex(function(s){return s==="fail"||s==="aus"});
-    if(f>=0)L.unshift({t:"Rechazado en "+ST_SHORT[f]+": "+lab(f,st[f]),m:"Regla del concurso · motivo registrado"});
+    if(f>=0)L.unshift({t:"No aplica en "+ST_SHORT[f]+": "+lab(f,st[f]),m:"Regla del concurso · motivo registrado"});
     return FS[p.d]={st:st,sc:sc,obs:[null,null,null,null,null,null],gen:null,log:L};}
   function pipeOf(p){var S=stateOf(p),f=S.st.findIndex(function(s){return s==="fail"||s==="aus"});
-    if(f>=0)return{k:"REJ",at:f,txt:"Rechazado en "+ST_SHORT[f],det:lab(f,S.st[f])};
+    if(f>=0)return{k:"REJ",at:f,txt:"No aplica en "+ST_SHORT[f],det:lab(f,S.st[f])};
     if(p.hr)return{k:p.hr,txt:PIPE_N[p.hr]};var q=S.st.findIndex(function(s){return s==="pend"});
     var k=q<0?(p.fin||"OFRECIDO"):PIPE_AT[q];return{k:k,txt:PIPE_N[k]};}
   function pond(p){var F=perfilDe(p),S=stateOf(p),rows=[],rej=pipeOf(p).k==="REJ";
@@ -1172,7 +1172,7 @@ textarea.fin{resize:vertical;line-height:1.45}
       if(!o.p){o.k="e";o.msg="El DNI no está en la base del concurso";return;}
       if(e.err){o.k="e";o.msg=e.err;return;}
       o.res=e.res;o.score=e.score;var S=stateOf(o.p),cs=S.st[i];
-      if(cs==="na"){var f=S.st.findIndex(function(s){return s==="fail"||s==="aus"});o.k="e";o.msg="Rechazado en "+ST_SHORT[f]+": no corresponde cargarle esta etapa";return;}
+      if(cs==="na"){var f=S.st.findIndex(function(s){return s==="fail"||s==="aus"});o.k="e";o.msg="No aplica en "+ST_SHORT[f]+": no corresponde cargarle esta etapa";return;}
       if(cs==="wait"||o.p.hr){o.k="e";o.msg="Todavía no llegó a esta etapa";return;}
       if(cs==="pend"){o.k="o";o.msg="Coincide por DNI"+(o.norm?" (DNI normalizado sin puntos)":"");o.on=true;return;}
       if(cs===o.res&&S.sc[i]===o.score){o.k="i";o.msg="Sin cambios: ya tiene este resultado";return;}
